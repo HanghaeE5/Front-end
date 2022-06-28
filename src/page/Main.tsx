@@ -1,3 +1,5 @@
+import { Layout } from '../component/Layout';
+
 export const Main = () => {
-  return <>메인페이지</>;
+  return <Layout>메인페이지</Layout>;
 };
