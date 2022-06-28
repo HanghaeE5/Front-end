@@ -1,5 +1,11 @@
+import { RouterSwitch } from './route/RouterSwitch';
+
 function App() {
-  return <div className="App">투두 프로젝트</div>;
+  return (
+    <div className="App">
+      <RouterSwitch />
+    </div>
+  );
 }
 
 export default App;
