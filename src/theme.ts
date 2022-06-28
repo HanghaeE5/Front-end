@@ -3,5 +3,5 @@ interface Theme {
 }
 
 export const theme: Theme = {
-  mainColor: 'red',
+  mainColor: 'beige',
 };
