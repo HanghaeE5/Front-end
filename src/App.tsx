@@ -1,7 +1,7 @@
 import { ThemeProvider } from 'styled-components';
 
 import { RouterSwitch } from './route/RouterSwitch';
-import { theme } from './theme';
+import { theme } from './style/theme';
 
 function App() {
   return (
