@@ -3,8 +3,6 @@ import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
-import { Layout } from '../component/Layout';
-
 const RegisterContainer = styled.body`
   display: flex;
   flex-direction: column;
@@ -268,88 +266,84 @@ export const SignUpSNS = () => {
   const [view, setView] = useState<boolean>(true);
 
   return (
-    <Layout>
-      <header>
-        <HeaderContainer>
-          <RowBox margin={'17px 0px 15px 0px'}>
-            <FontBox width={110} height={27} margin={'0px 132px 0px 133px'}>
-              <KoreanFont size={18} color="#000000">
-                Sign Up
-              </KoreanFont>
-            </FontBox>
-          </RowBox>
-          <LineBox width={375} height={1} margin={'0'}></LineBox>
-        </HeaderContainer>
-      </header>
-      <body>
-        <RegisterContainer>
-          <FontBox width={168} height={24} margin={'52px auto 0px auto'}>
-            <LogoFontBig>TODOWITH</LogoFontBig>
+    <>
+      <HeaderContainer>
+        <RowBox margin={'17px 0px 15px 0px'}>
+          <FontBox width={110} height={27} margin={'0px 132px 0px 133px'}>
+            <KoreanFont size={18} color="#000000">
+              Sign Up
+            </KoreanFont>
           </FontBox>
+        </RowBox>
+        <LineBox width={375} height={1} margin={'0'}></LineBox>
+      </HeaderContainer>
+      <RegisterContainer>
+        <FontBox width={168} height={24} margin={'52px auto 0px auto'}>
+          <LogoFontBig>TODOWITH</LogoFontBig>
+        </FontBox>
 
-          <FontBox width={45} height={24} margin={'80px 310px 10px 20px'}>
-            {nickname ? (
-              <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
-                닉네임
-              </KoreanFont>
-            ) : (
-              ''
-            )}
-          </FontBox>
-          <RowBox margin={'0px 0px 0px 0px'}>
-            <InputInfo
-              width={251}
-              height={40}
-              margin={'0px 11px 0px 20px'}
-              type="text"
-              placeholder="닉네임    ex) 빨강바지3456"
-              name="nickname"
-              value={nickname}
-              onChange={onChangeNickname}
-            ></InputInfo>
-            {CheckNickname(nickname) ? (
-              <BtnAble width={73} height={42} margin={'0px 20px 0px 0px'}>
-                중복확인
-              </BtnAble>
-            ) : (
-              <BtnDisable width={73} height={42} margin={'0px 20px 0px 0px'}>
-                중복확인
-              </BtnDisable>
-            )}
-          </RowBox>
-          <FontBoxSide width={320} height={21} margin={'5px 35px 0px 20px'}>
-            {nickname ? (
-              CheckNickname(nickname) ? (
-                <CheckFont size={12} color={'blue'}>
-                  사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.
-                </CheckFont>
-              ) : (
-                <CheckFont size={12} color={'red'}>
-                  닉네임 형식을 확인해 주세요.
-                </CheckFont>
-              )
-            ) : (
-              <CheckFont size={12} color={'black'}>
-                닉네임은 2-15자의 한글, 영어, 숫자입니다.
-              </CheckFont>
-            )}
-          </FontBoxSide>
-
+        <FontBox width={45} height={24} margin={'80px 310px 10px 20px'}>
           {nickname ? (
-            <BtnAble width={335} height={64} margin={'82px 20px 0px 20px'}>
-              <KoreanFont size={17} color="white">
-                회원가입 완료
-              </KoreanFont>
+            <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
+              닉네임
+            </KoreanFont>
+          ) : (
+            ''
+          )}
+        </FontBox>
+        <RowBox margin={'0px 0px 0px 0px'}>
+          <InputInfo
+            width={251}
+            height={40}
+            margin={'0px 11px 0px 20px'}
+            type="text"
+            placeholder="닉네임    ex) 빨강바지3456"
+            name="nickname"
+            value={nickname}
+            onChange={onChangeNickname}
+          ></InputInfo>
+          {CheckNickname(nickname) ? (
+            <BtnAble width={73} height={42} margin={'0px 20px 0px 0px'}>
+              중복확인
             </BtnAble>
           ) : (
-            <BtnDisable width={335} height={64} margin={'82px 20px 0px 20px'}>
-              <KoreanFont size={17} color="white">
-                회원가입 완료
-              </KoreanFont>
+            <BtnDisable width={73} height={42} margin={'0px 20px 0px 0px'}>
+              중복확인
             </BtnDisable>
           )}
-        </RegisterContainer>
-      </body>
-    </Layout>
+        </RowBox>
+        <FontBoxSide width={320} height={21} margin={'5px 35px 0px 20px'}>
+          {nickname ? (
+            CheckNickname(nickname) ? (
+              <CheckFont size={12} color={'blue'}>
+                사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.
+              </CheckFont>
+            ) : (
+              <CheckFont size={12} color={'red'}>
+                닉네임 형식을 확인해 주세요.
+              </CheckFont>
+            )
+          ) : (
+            <CheckFont size={12} color={'black'}>
+              닉네임은 2-15자의 한글, 영어, 숫자입니다.
+            </CheckFont>
+          )}
+        </FontBoxSide>
+
+        {nickname ? (
+          <BtnAble width={335} height={64} margin={'82px 20px 0px 20px'}>
+            <KoreanFont size={17} color="white">
+              회원가입 완료
+            </KoreanFont>
+          </BtnAble>
+        ) : (
+          <BtnDisable width={335} height={64} margin={'82px 20px 0px 20px'}>
+            <KoreanFont size={17} color="white">
+              회원가입 완료
+            </KoreanFont>
+          </BtnDisable>
+        )}
+      </RegisterContainer>
+    </>
   );
 };

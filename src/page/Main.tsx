@@ -1,5 +1,5 @@
-import { Layout } from '../component/Layout';
+import { NavLayout } from '../component/layout/NavLayout';
 
 export const Main = () => {
-  return <Layout>메인페이지</Layout>;
+  return <NavLayout>메인페이지</NavLayout>;
 };

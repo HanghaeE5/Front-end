@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
-import { Layout } from '../component/Layout';
-
 const RegisterContainer = styled.body`
   display: flex;
   flex-direction: column;
@@ -158,130 +156,121 @@ export const Login = () => {
   // }, []);
   const nav = useNavigate();
   return (
-    <Layout>
-      <body>
-        <RegisterContainer>
-          <FontBox width={168} height={24} margin={'52px auto 30px auto'}>
-            <LogoFontBig>TODOWITH</LogoFontBig>
-          </FontBox>
-          <FontBox width={45} height={24} margin={'0px 310px 10px 20px'}>
-            {email ? (
-              <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
-                이메일
-              </KoreanFont>
-            ) : (
-              ''
-            )}
-          </FontBox>
-          <InputInfo
-            type="text"
-            placeholder="이메일을 입력하세요.    ex) todowith@naver.com"
-            name="email"
-            value={email}
-            onChange={onChange1}
-          ></InputInfo>
-          <FontBox width={59} height={24} margin={'13px 296px 10px 20px'}>
-            {password ? (
-              <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
-                비밀번호
-              </KoreanFont>
-            ) : (
-              ''
-            )}
-          </FontBox>
-          <InputInfo
-            placeholder="비밀번호를 입력하세요."
-            type="password"
-            value={password}
-            onChange={onChange2}
-          ></InputInfo>
-          {email && password ? (
-            <LoginBtn>
-              <KoreanFont size={17} color="white">
-                로그인
-              </KoreanFont>
-            </LoginBtn>
-          ) : (
-            <LoginBtnDisable>
-              <KoreanFont size={17} color="white">
-                로그인
-              </KoreanFont>
-            </LoginBtnDisable>
-          )}
-          <RowBox margin={'14px 0px 22px 0px'}>
-            <FontBox width={20} height={20} margin={'0px 9px 0px 33px'}>
-              <KoreanFont size={14} color="rgba(147, 147, 147, 1)">
-                ○
-              </KoreanFont>
-            </FontBox>
-            <FontBox width={68} height={21} margin={'0px 245px 0px 0px'}>
-              <KoreanFont size={14} color="rgba(147, 147, 147, 1)">
-                자동 로그인
-              </KoreanFont>
-            </FontBox>
-          </RowBox>
-          <RowBox margin={'0px 0px 38px 0px'}>
-            <FontBox width={110} height={21} margin={'0px 0px 0x 80px'}>
-              <KoreanFont size={14} color="rgba(147, 147, 147, 1)">
-                첫 방문이라면? 🙂
-              </KoreanFont>
-            </FontBox>
-            <FontBox width={60} height={21} margin={'0px 80px 0px 45px'}>
-              <KoreanFont
-                size={14}
-                color="rgba(147, 147, 147, 1)"
-                onClick={() => {
-                  nav('/signupemail');
-                }}
-              >
-                회원가입
-              </KoreanFont>
-            </FontBox>
-          </RowBox>
+    <RegisterContainer>
+      <FontBox width={168} height={24} margin={'52px auto 30px auto'}>
+        <LogoFontBig>TODOWITH</LogoFontBig>
+      </FontBox>
+      <FontBox width={45} height={24} margin={'0px 310px 10px 20px'}>
+        {email ? (
+          <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
+            이메일
+          </KoreanFont>
+        ) : (
+          ''
+        )}
+      </FontBox>
+      <InputInfo
+        type="text"
+        placeholder="이메일을 입력하세요.    ex) todowith@naver.com"
+        name="email"
+        value={email}
+        onChange={onChange1}
+      ></InputInfo>
+      <FontBox width={59} height={24} margin={'13px 296px 10px 20px'}>
+        {password ? (
+          <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
+            비밀번호
+          </KoreanFont>
+        ) : (
+          ''
+        )}
+      </FontBox>
+      <InputInfo placeholder="비밀번호를 입력하세요." type="password" value={password} onChange={onChange2}></InputInfo>
+      {email && password ? (
+        <LoginBtn>
+          <KoreanFont size={17} color="white">
+            로그인
+          </KoreanFont>
+        </LoginBtn>
+      ) : (
+        <LoginBtnDisable>
+          <KoreanFont size={17} color="white">
+            로그인
+          </KoreanFont>
+        </LoginBtnDisable>
+      )}
+      <RowBox margin={'14px 0px 22px 0px'}>
+        <FontBox width={20} height={20} margin={'0px 9px 0px 33px'}>
+          <KoreanFont size={14} color="rgba(147, 147, 147, 1)">
+            ○
+          </KoreanFont>
+        </FontBox>
+        <FontBox width={68} height={21} margin={'0px 245px 0px 0px'}>
+          <KoreanFont size={14} color="rgba(147, 147, 147, 1)">
+            자동 로그인
+          </KoreanFont>
+        </FontBox>
+      </RowBox>
+      <RowBox margin={'0px 0px 38px 0px'}>
+        <FontBox width={110} height={21} margin={'0px 0px 0x 80px'}>
+          <KoreanFont size={14} color="rgba(147, 147, 147, 1)">
+            첫 방문이라면? 🙂
+          </KoreanFont>
+        </FontBox>
+        <FontBox width={60} height={21} margin={'0px 80px 0px 45px'}>
+          <KoreanFont
+            size={14}
+            color="rgba(147, 147, 147, 1)"
+            onClick={() => {
+              nav('/signupemail');
+            }}
+          >
+            회원가입
+          </KoreanFont>
+        </FontBox>
+      </RowBox>
 
-          <RowBox margin={'0px 0px 26px 0px'}>
-            <hr style={{ width: '145px', marginLeft: '20px' }} />
-            <FontBox width={30} height={21} margin={'0px 10px 0px 10px'}>
-              <KoreanFont size={12} color="rgba(147, 147, 147, 1)">
-                또는
-              </KoreanFont>
-            </FontBox>
-            <hr style={{ width: '145px', marginRight: '20px' }} />
-          </RowBox>
-          <RowBox margin={'0px 0px 0px 0px'}>
-            <FontBox
-              width={60}
-              height={60}
-              margin={'0px 48px 0px 49px'}
-              onClick={() => {
-                nav('/signupsns');
-              }}
-            >
-              네이버
-            </FontBox>
-            <FontBox
-              width={60}
-              height={60}
-              margin={'0px 48px 0px 0px'}
-              onClick={() => {
-                nav('/signupsns');
-              }}
-            >
-              카카오
-            </FontBox>
-            <FontBox
-              width={60}
-              height={60}
-              margin={'0px 50px 0px 0px'}
-              onClick={() => {
-                nav('/signupsns');
-              }}
-            >
-              구글
-            </FontBox>
-          </RowBox>
-        </RegisterContainer>
-      </body>
-    </Layout>
+      <RowBox margin={'0px 0px 26px 0px'}>
+        <hr style={{ width: '145px', marginLeft: '20px' }} />
+        <FontBox width={30} height={21} margin={'0px 10px 0px 10px'}>
+          <KoreanFont size={12} color="rgba(147, 147, 147, 1)">
+            또는
+          </KoreanFont>
+        </FontBox>
+        <hr style={{ width: '145px', marginRight: '20px' }} />
+      </RowBox>
+      <RowBox margin={'0px 0px 0px 0px'}>
+        <FontBox
+          width={60}
+          height={60}
+          margin={'0px 48px 0px 49px'}
+          onClick={() => {
+            nav('/signupsns');
+          }}
+        >
+          네이버
+        </FontBox>
+        <FontBox
+          width={60}
+          height={60}
+          margin={'0px 48px 0px 0px'}
+          onClick={() => {
+            nav('/signupsns');
+          }}
+        >
+          카카오
+        </FontBox>
+        <FontBox
+          width={60}
+          height={60}
+          margin={'0px 50px 0px 0px'}
+          onClick={() => {
+            nav('/signupsns');
+          }}
+        >
+          구글
+        </FontBox>
+      </RowBox>
+    </RegisterContainer>
   );
 };

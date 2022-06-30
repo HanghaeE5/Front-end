@@ -3,8 +3,6 @@ import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
-import { Layout } from '../component/Layout';
-
 const RegisterContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -285,7 +283,7 @@ export const SignUpEmail = () => {
   const [view, setView] = useState<boolean>(true);
 
   return (
-    <Layout>
+    <>
       <HeaderContainer>
         <RowBox margin={'17px 0px 15px 0px'}>
           <IconBox
@@ -595,6 +593,6 @@ export const SignUpEmail = () => {
           </KoreanFont>
         </BtnBox>
       </RegisterContainer>
-    </Layout>
+    </>
   );
 };
