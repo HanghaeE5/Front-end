@@ -1,3 +1,5 @@
+import './App.css';
+
 import { ThemeProvider } from 'styled-components';
 
 import { RouterSwitch } from './route/RouterSwitch';

@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { Login, Main, SignIn } from './../page';
+import { Login, Main, SignUpEmail, SignUpSNS } from './../page';
 interface Route {
   id: string;
   path: string;
@@ -15,8 +15,13 @@ export const routeList: Route[] = [
   },
   {
     id: 'main',
-    path: '/signIn',
-    page: SignIn,
+    path: '/signupemail',
+    page: SignUpEmail,
+  },
+  {
+    id: 'main',
+    path: '/signupsns',
+    page: SignUpSNS,
   },
   {
     id: 'main',

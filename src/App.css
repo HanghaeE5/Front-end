@@ -1,0 +1,36 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  font-family: 'NotoMed';
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'NotoRegu';
+  src: url('./font/NOTOSANSCJKKR-REGULAR.OTF');
+}
+
+@font-face {
+  font-family: 'NotoMed';
+  src: url('./font/NOTOSANSCJKKR-MEDIUM.OTF');
+}
+
+@font-face {
+  font-family: 'NotoBold';
+  src: url('./font/NOTOSANSCJKKR-BOLD.OTF');
+}
+
+@font-face {
+  font-family: 'OpensansRegu';
+  src: url('./font/OPENSANS-REGULAR.TTF');
+}
+
+@font-face {
+  font-family: 'OpensansMed';
+  src: url('./font/OPENSANS-MEDIUM.TTF');
+}
+
+@font-face {
+  font-family: 'OpensansBold';
+  src: url('./font/OPENSANS-BOLD.TTF');
+}
