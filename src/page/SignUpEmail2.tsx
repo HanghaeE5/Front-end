@@ -8,10 +8,10 @@ const RegisterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 375px;
-  height: 678px;
+  width: 23.4375rem;
+  height: 42.375rem;
   background-color: #24c5c3;
-  margin: 0px auto 74px auto;
+  margin: 0px auto 4.625rem auto;
 `;
 
 const InfoContainer = styled.body`
@@ -20,7 +20,7 @@ const InfoContainer = styled.body`
   align-items: center;
   border: 1px solid black;
   height: 60%;
-  /* background-color: #f5e28d; */
+  background-color: #f5e28d;
   margin: 0px auto 0px auto;
 `;
 
@@ -35,18 +35,18 @@ const FontBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
+  width: ${(props: fontbox) => props.width}rem;
+  height: ${(props: fontbox) => props.height}rem;
   margin: ${(props: fontbox) => props.margin};
-  /* background-color: #deb3b3; */
+  background-color: #deb3b3;
 `;
 
 const FontBoxSide = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
+  width: ${(props: fontbox) => props.width}rem;
+  height: ${(props: fontbox) => props.height}rem;
   margin: ${(props: fontbox) => props.margin};
   /* background-color: #6922bb; */
 `;
@@ -72,21 +72,21 @@ const LineBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
+  width: ${(props: fontbox) => props.width}rem;
+  height: ${(props: fontbox) => props.height}rem;
   margin: ${(props: fontbox) => props.margin};
   background-color: #989898;
 `;
 
 const LogoFont = styled.p`
-  font-size: 27px;
+  font-size: 1.6875rem;
   font-family: 'OpensansBold';
   display: flex;
   margin: 0 0 0 0;
 `;
 
 const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}px;
+  font-size: ${(props: font) => props.size}rem;
   font-family: 'NotoMed';
   color: ${(props: font) => props.color};
   display: flex;
@@ -98,7 +98,7 @@ type font = {
   isCorrect?: boolean;
 };
 const KoreanFontBold = styled.p`
-  font-size: ${(props: font) => props.size}px;
+  font-size: ${(props: font) => props.size}rem;
   font-family: 'NotoMed';
   color: ${(props: font) => props.color};
   display: flex;
@@ -106,7 +106,7 @@ const KoreanFontBold = styled.p`
 `;
 
 const EnglishFont = styled.p`
-  font-size: ${(props: font) => props.size}px;
+  font-size: ${(props: font) => props.size}rem;
   font-family: 'OpensansBold';
   color: ${(props: font) => props.color};
   display: flex;
@@ -114,14 +114,14 @@ const EnglishFont = styled.p`
 `;
 
 const LogoFontSmall = styled.p`
-  font-size: 21px;
+  font-size: 1.3125rem;
   font-family: 'OpensansBold';
   display: flex;
   margin: 0 0 0 0;
 `;
 
 const CheckFont = styled.p`
-  font-size: ${(props: font) => props.size}px;
+  font-size: ${(props: font) => props.size}rem;
   font-family: 'NotoRegu';
   color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'blue' : 'red') : props.color)};
   display: flex;
@@ -136,8 +136,8 @@ const InputInfo = styled.input`
   border: 1px solid #dddddd;
   border-radius: 6px;
   padding: 0 0 0 10px;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
+  width: ${(props: fontbox) => props.width}rem;
+  height: ${(props: fontbox) => props.height}rem;
   margin: ${(props: fontbox) => props.margin};
   :focus {
     background-color: rgb(220, 237, 255);
@@ -150,9 +150,9 @@ const InputInfoNoneBorder = styled.input`
   background: #ffffff;
   border: 1px solid #dddddd;
   /* border-radius: 6px; */
-  padding: 0 0 0 10px;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
+  padding: 0 0 0 0.625rem;
+  width: ${(props: fontbox) => props.width}rem;
+  height: ${(props: fontbox) => props.height}rem;
   margin: ${(props: fontbox) => props.margin};
   :focus {
     background-color: rgb(220, 237, 255);
@@ -175,8 +175,8 @@ const BtnBox = styled.button`
   border-radius: 6px;
   border: 1px solid #989898;
 
-  width: ${(props: btnbox) => props.width}px;
-  height: ${(props: btnbox) => props.height}px;
+  width: ${(props: btnbox) => props.width}rem;
+  height: ${(props: btnbox) => props.height}rem;
   margin: ${(props: btnbox) => props.margin};
   background-color: ${(props: btnbox) => props.color};
   cursor: pointer;
@@ -187,63 +187,44 @@ const BtnBox = styled.button`
   }
 `;
 
-const Btn = styled.button<{ isDisable: boolean }>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: ${(props) => (props.isDisable ? '#f3f3f3' : '#769cbc')};
-  border-radius: 6px;
-
-  width: 335px;
-  height: 64px;
-  margin: 27px 20px 0px 20px;
-
-  cursor: ${(props) => (props.isDisable ? '' : 'pointer')};
-
-  &:hover {
-    ${(props) =>
-      props.isDisable
-        ? ''
-        : `color: white;
-    background-color: #1763a6;`}
-  }
-`;
+type btnable = {
+  width: number | string;
+  height: number | string;
+  margin: string;
+  isDisable: boolean;
+};
 
 const BtnAble = styled.button`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #769cbc;
+  border: 1px solid #dddddd;
   border-radius: 6px;
+  width: ${(props: btnable) => props.width}rem;
+  height: ${(props: btnable) => props.height}rem;
+  margin: ${(props: btnable) => props.margin};
+  background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
 
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
-  cursor: pointer;
+  cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
 
   &:hover {
-    color: white;
-    background-color: #1763a6;
+    ${(props: btnable) =>
+      props.isDisable
+        ? ''
+        : `color: white;
+    background-color: #358edc;`}
   }
 `;
 
-const BtnDisable = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #f3f3f3;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  margin: 37px 20px 0px 20px;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
-`;
-
 export const SignUpEmail2 = () => {
+  const [email, setNameText] = useState<string>('');
+  const [emailCheckNumber, setEmailCheckNumber] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [password2, setPassword2] = useState<string>('');
+  const [nickname, setNickname] = useState<string>('');
+  const [emailCheck, setEmailCheck] = useState<boolean>(true);
+
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNameText(e.target.value);
   };
@@ -260,8 +241,6 @@ export const SignUpEmail2 = () => {
     setNickname(e.target.value);
   };
 
-  const [emailCheck, setEmailCheck] = useState<boolean>(true);
-
   const rePass: any = useRef();
   const CheckEmail = (asValue: string) => {
     const regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
@@ -275,11 +254,6 @@ export const SignUpEmail2 = () => {
     const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{5,15}$/;
     return regExp.test(asValue);
   };
-  const [email, setNameText] = useState<string>('');
-  const [emailCheckNumber, setEmailCheckNumber] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [password2, setPassword2] = useState<string>('');
-  const [nickname, setNickname] = useState<string>('');
 
   const nav = useNavigate();
 
@@ -289,60 +263,48 @@ export const SignUpEmail2 = () => {
     <PageLayout title="SignUp">
       <PageLayout.Body>
         <InfoContainer>
-          <FontBox width={114} height={16} margin={'53px 131px 0px 130px'}>
+          <FontBox width={7.125} height={1} margin={'3.3125rem 8.1875rem 0rem 8.125rem'}>
             <LogoFontSmall>TODOWITH</LogoFontSmall>
           </FontBox>
 
-          <FontBox width={45} height={24} margin={'27px 310px 10px 20px'}>
-            {email ? (
-              <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
+          <FontBox width={2.8125} height={1.5} margin={'1.6875rem 19.375rem 0.625rem 1.25rem'}>
+            {email && (
+              <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
                 이메일
               </KoreanFont>
-            ) : (
-              ''
             )}
           </FontBox>
           <RowBox margin={'0px 0px 0px 0px'}>
             <InputInfo
-              width={251}
-              height={40}
-              margin={'0px 11px 0px 20px'}
+              width={15.6875}
+              height={2.5}
+              margin={'0rem 0.6875rem 0rem 1.25rem'}
               type="text"
               placeholder="이메일    ex) todowith@naver.com"
               name="email"
               value={email}
               onChange={onChangeEmail}
             ></InputInfo>
-            {CheckEmail(email) ? (
-              <BtnAble
-                width={73}
-                height={42}
-                margin={'0px 20px 0px 0px'}
-                onClick={() => {
-                  setEmailCheck(true);
-                }}
-              >
-                인증
-              </BtnAble>
-            ) : (
-              <BtnDisable width={73} height={42} margin={'0px 20px 0px 0px'}>
-                인증
-              </BtnDisable>
-            )}
+
+            <BtnAble
+              isDisable={!CheckEmail(email)}
+              width={4.5625}
+              height={2.625}
+              margin={'0px 1.25rem 0px 0px'}
+              onClick={() => {
+                setEmailCheck(true);
+              }}
+            >
+              인증
+            </BtnAble>
           </RowBox>
-          <FontBoxSide width={320} height={21} margin={'5px 35px 0px 20px'}>
+          <FontBoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
             {email ? (
-              CheckEmail(email) ? (
-                <CheckFont size={12} color={'blue'}>
-                  사용 가능한 형식입니다. 인증 버튼을 눌러주세요.
-                </CheckFont>
-              ) : (
-                <CheckFont size={12} color={'red'}>
-                  이메일을 확인해 주세요.
-                </CheckFont>
-              )
+              <CheckFont size={0.75} color={'blue'} isCorrect={CheckEmail(email)}>
+                {CheckEmail(email) ? '사용 가능한 형식입니다. 인증 버튼을 눌러주세요.' : '이메일을 확인해주세요'}
+              </CheckFont>
             ) : (
-              <CheckFont size={12} color={'black'}>
+              <CheckFont size={0.75} color={'black'}>
                 이메일은 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.
               </CheckFont>
             )}
@@ -350,9 +312,9 @@ export const SignUpEmail2 = () => {
 
           {emailCheck ? (
             <InputInfo
-              width={251}
-              height={38}
-              margin={'7px 104px 0px 20px'}
+              width={15.6875}
+              height={2.375}
+              margin={'0.4375rem 6.5rem 0px 1.25rem'}
               type="text"
               placeholder="이메일로 발송된 인증번호를 입력하세요."
               name="emailchecknumber"
@@ -363,9 +325,9 @@ export const SignUpEmail2 = () => {
             ''
           )}
 
-          <FontBox width={45} height={24} margin={'18px 310px 10px 20px'}>
+          <FontBox width={2.8125} height={1.5} margin={'1.125rem 19.375rem 0.625rem 1.25rem'}>
             {nickname ? (
-              <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
+              <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
                 닉네임
               </KoreanFont>
             ) : (
@@ -374,46 +336,41 @@ export const SignUpEmail2 = () => {
           </FontBox>
           <RowBox margin={'0px 0px 0px 0px'}>
             <InputInfo
-              width={251}
-              height={40}
-              margin={'0px 11px 0px 20px'}
+              width={15.6875}
+              height={2.5}
+              margin={'0px 0.6875rem 0px 1.25rem'}
               type="text"
               placeholder="닉네임    ex) 빨강바지3456"
               name="nickname"
               value={nickname}
               onChange={onChangeNickname}
             ></InputInfo>
-            {CheckNickname(nickname) ? (
-              <BtnAble width={73} height={42} margin={'0px 20px 0px 0px'}>
-                중복확인
-              </BtnAble>
-            ) : (
-              <BtnDisable width={73} height={42} margin={'0px 20px 0px 0px'}>
-                중복확인
-              </BtnDisable>
-            )}
+
+            <BtnAble isDisable={!CheckNickname(nickname)} width={4.5625} height={2.625} margin={'0px 1.25rem 0px 0px'}>
+              중복확인
+            </BtnAble>
           </RowBox>
-          <FontBoxSide width={320} height={21} margin={'5px 35px 0px 20px'}>
+          <FontBoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
             {nickname ? (
               CheckNickname(nickname) ? (
-                <CheckFont size={12} color={'blue'}>
+                <CheckFont size={0.75} color={'blue'}>
                   사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.
                 </CheckFont>
               ) : (
-                <CheckFont size={12} color={'red'}>
+                <CheckFont size={0.75} color={'red'}>
                   닉네임 형식을 확인해 주세요.
                 </CheckFont>
               )
             ) : (
-              <CheckFont size={12} color={'black'}>
+              <CheckFont size={0.75} color={'black'}>
                 닉네임은 2-15자의 한글, 영어, 숫자입니다.
               </CheckFont>
             )}
           </FontBoxSide>
 
-          <FontBox width={59} height={24} margin={'18px 296px 10px 20px'}>
+          <FontBox width={3.6875} height={1.5} margin={'1.125rem 18.5rem 0.625rem 1.25rem'}>
             {password ? (
-              <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
+              <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
                 비밀번호
               </KoreanFont>
             ) : (
@@ -423,9 +380,9 @@ export const SignUpEmail2 = () => {
 
           <RowBox margin={'0px 0px 0px 0px'}>
             <InputInfoNoneBorder
-              width={300}
-              height={40}
-              margin={'0px 0px 0px 15px'}
+              width={18.75}
+              height={2.5}
+              margin={'0px 0px 0px 0.9375rem'}
               placeholder="비밀번호를 입력하세요."
               type={view ? 'password' : 'text'}
               value={password}
@@ -437,9 +394,9 @@ export const SignUpEmail2 = () => {
               }}
             ></InputInfoNoneBorder>
             <FontBox
-              width={35}
-              height={40}
-              margin={'0px 15px 0px 0px'}
+              width={2.1875}
+              height={2.5}
+              margin={'0px 0.9375rem 0px 0px'}
               onMouseDown={() => setView(!view)}
               onMouseUp={() => setView(!view)}
               style={
@@ -452,7 +409,7 @@ export const SignUpEmail2 = () => {
                       backgroundImage: 'url(/assets/closeeye.png)',
                       backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'center',
-                      backgroundSize: '25px',
+                      backgroundSize: '1.5625rem',
                     }
                   : {
                       borderLeft: 'none',
@@ -462,7 +419,7 @@ export const SignUpEmail2 = () => {
                       backgroundImage: 'url(/assets/eye.png)',
                       backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'center',
-                      backgroundSize: '25px',
+                      backgroundSize: '1.5625rem',
                     }
               }
             ></FontBox>
@@ -470,11 +427,11 @@ export const SignUpEmail2 = () => {
 
           {password ? (
             CheckPassword(password) ? (
-              <RowBox margin={'7px 0px 0px 0px'}>
+              <RowBox margin={'0.4375rem 0px 0px 0px'}>
                 <InputInfoNoneBorder
-                  width={300}
-                  height={40}
-                  margin={'0px 0px 0px 15px'}
+                  width={18.75}
+                  height={2.5}
+                  margin={'0px 0px 0px 0.9375rem'}
                   placeholder="비밀번호를 재입력하세요."
                   type={view ? 'password' : 'text'}
                   value={password2}
@@ -486,9 +443,9 @@ export const SignUpEmail2 = () => {
                   }}
                 ></InputInfoNoneBorder>
                 <FontBox
-                  width={35}
-                  height={40}
-                  margin={'0px 15px 0px 0px'}
+                  width={2.1875}
+                  height={2.5}
+                  margin={'0px 0.9375rem 0px 0px'}
                   onMouseDown={() => setView(!view)}
                   onMouseUp={() => setView(!view)}
                   style={
@@ -501,7 +458,7 @@ export const SignUpEmail2 = () => {
                           backgroundImage: 'url(/assets/closeeye.png)',
                           backgroundRepeat: 'no-repeat',
                           backgroundPosition: 'center',
-                          backgroundSize: '25px',
+                          backgroundSize: '1.5625rem',
                         }
                       : {
                           // borderLeft: 'none',
@@ -511,50 +468,56 @@ export const SignUpEmail2 = () => {
                           backgroundImage: 'url(/assets/eye.png)',
                           backgroundRepeat: 'no-repeat',
                           backgroundPosition: 'center',
-                          backgroundSize: '25px',
+                          backgroundSize: '1.5625rem',
                         }
                   }
                 ></FontBox>
               </RowBox>
             ) : (
-              <FontBoxSide width={340} height={21} margin={'5px 15px 0px 20px'}>
-                <CheckFont size={12} color={'red'}>
+              <FontBoxSide width={21.25} height={1.3125} margin={'0.3125rem 0.9375rem 0px 1.25rem'}>
+                <CheckFont size={0.75} color={'red'}>
                   비밀번호 형식을 확인해 주세요.
                 </CheckFont>
               </FontBoxSide>
             )
           ) : (
-            <FontBoxSide width={340} height={21} margin={'5px 15px 0px 20px'}>
-              <CheckFont size={12} color={'black'}>
+            <FontBoxSide width={21.25} height={1.3125} margin={'0.3125rem 0.9375rem 0px 1.25rem'}>
+              <CheckFont size={0.75} color={'black'}>
                 비밀번호는 5-10자의 영문,숫자,특수문자(!@#$%^&*) 조합입니다.
               </CheckFont>
             </FontBoxSide>
           )}
-          <FontBoxSide width={340} height={21} margin={'5px 15px 0px 20px'}>
+          <FontBoxSide width={21.25} height={1.3125} margin={'0.3125rem 0.9375rem 0px 1.25rem'}>
             {password2 && (
-              <CheckFont size={12} color={'blue'} isCorrect={password === password2}>
+              <CheckFont size={0.75} color={'blue'} isCorrect={password === password2}>
                 {password === password2 ? '비밀번호가 일치합니다' : '비밀번호가 일치하지 않습니다'}
               </CheckFont>
             )}
           </FontBoxSide>
+          <BtnAble
+            isDisable={!email || !nickname || !password || !password2}
+            width={20.9375}
+            height={4}
+            margin={'1.6875rem 1.25rem 0rem 1.25rem'}
+          >
+            회원가입
+          </BtnAble>
+
+          <LineBox width={20.9375} height={0.0625} margin={'0.625rem 1.25rem 0.625rem 1.25rem'}></LineBox>
+          <BtnBox
+            width={20.9375}
+            height={2.6875}
+            margin={'0px 1.25rem 0px 1.25rem'}
+            color={'white'}
+            onClick={() => {
+              nav('/login');
+            }}
+          >
+            <KoreanFont size={0.875} color="#5F5F5F">
+              로그인 페이지로 돌아가기
+            </KoreanFont>
+          </BtnBox>
         </InfoContainer>
-
-        <Btn isDisable={!email || !password}>회원가입</Btn>
-
-        <LineBox width={335} height={1} margin={'10px 20px 10px 20px'}></LineBox>
-        <BtnBox
-          width={335}
-          height={43}
-          margin={'0px 20px 0px 20px'}
-          color={'white'}
-          onClick={() => {
-            nav('/login');
-          }}
-        >
-          <KoreanFont size={14} color="#5F5F5F">
-            로그인 페이지로 돌아가기
-          </KoreanFont>
-        </BtnBox>
       </PageLayout.Body>
     </PageLayout>
   );

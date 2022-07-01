@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { Login, Main, SignUpEmail2, SignUpSNS } from './../page';
+import { Login, Main, SignUpEmail, SignUpEmail2, SignUpSNS } from './../page';
 interface Route {
   id: string;
   path: string;
