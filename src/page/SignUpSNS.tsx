@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
-const RegisterContainer = styled.body`
+const RegisterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,7 +13,7 @@ const RegisterContainer = styled.body`
   margin: 0px auto 74px auto;
 `;
 
-const HeaderContainer = styled.body`
+const HeaderContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,7 +23,7 @@ const HeaderContainer = styled.body`
   margin: 0px auto 0px auto;
 `;
 
-const InfoContainer = styled.body`
+const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

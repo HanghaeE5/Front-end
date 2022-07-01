@@ -1,8 +1,14 @@
+import axios, { AxiosError } from 'axios';
 import { url } from 'inspector';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { FieldValues } from 'react-hook-form';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { registerApi } from '../api/callApi';
 import { PageLayout } from '../component/layout/PageLayout';
+import { tokenState } from '../recoil/store';
 
 const RegisterContainer = styled.div`
   display: flex;
@@ -14,13 +20,13 @@ const RegisterContainer = styled.div`
   margin: 0px auto 4.625rem auto;
 `;
 
-const InfoContainer = styled.body`
+const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   border: 1px solid black;
-  height: 60%;
-  background-color: #f5e28d;
+  height: calc(100% - 3.75rem);
+  background-color: #f5b9d5;
   margin: 0px auto 0px auto;
 `;
 
@@ -38,7 +44,7 @@ const FontBox = styled.div`
   width: ${(props: fontbox) => props.width}rem;
   height: ${(props: fontbox) => props.height}rem;
   margin: ${(props: fontbox) => props.margin};
-  background-color: #deb3b3;
+  background-color: #ffffff;
 `;
 
 const FontBoxSide = styled.div`
@@ -61,9 +67,6 @@ const RowBox = styled.div`
   align-items: center;
   justify-content: center;
   margin: ${(props: rowbox) => props.margin};
-  /* width: 168px;
-  height: 24px;
-  margin: 52px auto 30px auto; */
   /* background-color: #683b3b; */
 `;
 
@@ -124,6 +127,15 @@ const CheckFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
   font-family: 'NotoRegu';
   color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'blue' : 'red') : props.color)};
+  display: flex;
+  margin: 0 0 0 0;
+  text-align: left;
+`;
+
+const CheckFont2 = styled.p`
+  font-size: ${(props: font) => props.size}rem;
+  font-family: 'NotoRegu';
+  color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'black' : 'red') : props.color)};
   display: flex;
   margin: 0 0 0 0;
   text-align: left;
@@ -223,7 +235,15 @@ export const SignUpEmail2 = () => {
   const [password, setPassword] = useState<string>('');
   const [password2, setPassword2] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
-  const [emailCheck, setEmailCheck] = useState<boolean>(true);
+  const [emailCheck, setEmailCheck] = useState<boolean>(false);
+  const [send, setSend] = useState<boolean>(false);
+  const [view, setView] = useState<boolean>(false);
+  const localToken = localStorage.getItem('recoil-persist');
+  const loginToken = useSetRecoilState(tokenState);
+  const tokenUse = useRecoilValue(tokenState);
+
+  const rePass: any = useRef();
+  const nav = useNavigate();
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNameText(e.target.value);
@@ -241,7 +261,6 @@ export const SignUpEmail2 = () => {
     setNickname(e.target.value);
   };
 
-  const rePass: any = useRef();
   const CheckEmail = (asValue: string) => {
     const regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
     return regExp.test(asValue);
@@ -255,9 +274,78 @@ export const SignUpEmail2 = () => {
     return regExp.test(asValue);
   };
 
-  const nav = useNavigate();
+  // 이메일 인증번호 발송 API
+  const EmilCertificationData = useMutation((email: { email: string }) => registerApi.emilCertificationApi(email), {
+    onSuccess: (token) => {
+      // loginToken(token.headers.authorization.split(' ')[1]);
 
-  const [view, setView] = useState<boolean>(true);
+      alert(`${email} 메일로 발송된 인증번호를 입력해주세요🙂`);
+    },
+    onError: (error: AxiosError) => {
+      alert(error.response?.data);
+    },
+  });
+
+  const EmilCertification = (email: { email: string }) => {
+    EmilCertificationData.mutate(email);
+  };
+
+  //이메일 인증번호 일치 확인 API
+  const EmilCertificationNumberData = useMutation((data: FieldValues) => registerApi.emilCertificationNumberApi(data), {
+    onSuccess: (token) => {
+      // loginToken(token.headers.authorization.split(' ')[1]);
+      console.log();
+      alert('인증완료🙂');
+    },
+    onError: () => {
+      alert('인증번호를 다시 확인해주세요.');
+    },
+  });
+
+  const EmilCertificationNumber = (data: FieldValues) => {
+    EmilCertificationNumberData.mutate(data);
+  };
+
+  //닉네임 중복확인 API
+  const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
+    onSuccess: (token) => {
+      // loginToken(token.headers.authorization.split(' ')[1]);
+      console.log();
+      alert(`${nickname}으로 닉네임이 설정되었습니다.`);
+    },
+    onError: () => {
+      alert('중복된 닉네임입니다.');
+    },
+  });
+
+  const NickCertification = (nick: { nick: string }) => {
+    NickCertificationData.mutate(nick);
+  };
+
+  //회원가입 API
+  const JoinData = useMutation((data: FieldValues) => registerApi.joinApi(data), {
+    onSuccess: (token) => {
+      // loginToken(token.headers.authorization.split(' ')[1]);
+      console.log();
+      alert(`${nickname}님 반가워요! 로그인해주세요`);
+      nav('/login');
+    },
+    onError: () => {
+      alert('회원가입 실패');
+    },
+  });
+
+  const Join = (data: FieldValues) => {
+    JoinData.mutate(data);
+  };
+
+  useEffect(() => {
+    //useEffect 리턴 바로 위에 써주기.
+    if (localToken) {
+      alert('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
+      nav('/');
+    }
+  }, []);
 
   return (
     <PageLayout title="SignUp">
@@ -293,45 +381,67 @@ export const SignUpEmail2 = () => {
               margin={'0px 1.25rem 0px 0px'}
               onClick={() => {
                 setEmailCheck(true);
+                setSend(true);
+                const goEmilCertification = {
+                  email: email,
+                };
+                EmilCertification(goEmilCertification);
               }}
             >
               인증
             </BtnAble>
           </RowBox>
-          <FontBoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
-            {email ? (
-              <CheckFont size={0.75} color={'blue'} isCorrect={CheckEmail(email)}>
-                {CheckEmail(email) ? '사용 가능한 형식입니다. 인증 버튼을 눌러주세요.' : '이메일을 확인해주세요'}
-              </CheckFont>
-            ) : (
-              <CheckFont size={0.75} color={'black'}>
-                이메일은 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.
-              </CheckFont>
-            )}
-          </FontBoxSide>
+          {!send && (
+            <FontBoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
+              {email ? (
+                <CheckFont size={0.75} color={'blue'} isCorrect={CheckEmail(email)}>
+                  {CheckEmail(email) ? '사용 가능한 형식입니다. 인증 버튼을 눌러주세요.' : '이메일을 확인해주세요'}
+                </CheckFont>
+              ) : (
+                <CheckFont size={0.75} color={'black'}>
+                  이메일은 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.
+                </CheckFont>
+              )}
+            </FontBoxSide>
+          )}
 
-          {emailCheck ? (
-            <InputInfo
-              width={15.6875}
-              height={2.375}
-              margin={'0.4375rem 6.5rem 0px 1.25rem'}
-              type="text"
-              placeholder="이메일로 발송된 인증번호를 입력하세요."
-              name="emailchecknumber"
-              value={emailCheckNumber}
-              onChange={onChangeEmailCheckNumber}
-            ></InputInfo>
-          ) : (
-            ''
+          {emailCheck && CheckEmail(email) && (
+            <RowBox margin={'0.4375rem 0px 0px 0px'}>
+              <InputInfo
+                width={15.6875}
+                height={2.375}
+                margin={'0rem 0.6875rem 0rem 1.25rem'}
+                type="text"
+                placeholder="이메일로 발송된 인증번호를 입력하세요."
+                name="emailchecknumber"
+                value={emailCheckNumber}
+                onChange={onChangeEmailCheckNumber}
+              ></InputInfo>
+
+              <BtnAble
+                isDisable={!CheckEmail(email)}
+                width={4.5625}
+                height={2.375}
+                margin={'0px 1.25rem 0px 0px'}
+                onClick={() => {
+                  setEmailCheck(true);
+                  const goEmilCertificationNumber = {
+                    code: emailCheckNumber,
+                    email: email,
+                  };
+                  EmilCertificationNumber(goEmilCertificationNumber);
+                }}
+              >
+                확인
+              </BtnAble>
+            </RowBox>
           )}
 
           <FontBox width={2.8125} height={1.5} margin={'1.125rem 19.375rem 0.625rem 1.25rem'}>
-            {nickname ? (
+            {nickname && (
               <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
                 닉네임
               </KoreanFont>
-            ) : (
-              ''
             )}
           </FontBox>
           <RowBox margin={'0px 0px 0px 0px'}>
@@ -346,21 +456,28 @@ export const SignUpEmail2 = () => {
               onChange={onChangeNickname}
             ></InputInfo>
 
-            <BtnAble isDisable={!CheckNickname(nickname)} width={4.5625} height={2.625} margin={'0px 1.25rem 0px 0px'}>
+            <BtnAble
+              isDisable={!CheckNickname(nickname)}
+              width={4.5625}
+              height={2.625}
+              margin={'0px 1.25rem 0px 0px'}
+              onClick={() => {
+                const goNickCertification = {
+                  nick: nickname,
+                };
+                NickCertification(goNickCertification);
+              }}
+            >
               중복확인
             </BtnAble>
           </RowBox>
           <FontBoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
             {nickname ? (
-              CheckNickname(nickname) ? (
-                <CheckFont size={0.75} color={'blue'}>
-                  사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.
-                </CheckFont>
-              ) : (
-                <CheckFont size={0.75} color={'red'}>
-                  닉네임 형식을 확인해 주세요.
-                </CheckFont>
-              )
+              <CheckFont size={0.75} color={'blue'} isCorrect={CheckNickname(nickname)}>
+                {CheckNickname(nickname)
+                  ? '사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.'
+                  : '닉네임 형식을 확인해 주세요.'}
+              </CheckFont>
             ) : (
               <CheckFont size={0.75} color={'black'}>
                 닉네임은 2-15자의 한글, 영어, 숫자입니다.
@@ -369,26 +486,31 @@ export const SignUpEmail2 = () => {
           </FontBoxSide>
 
           <FontBox width={3.6875} height={1.5} margin={'1.125rem 18.5rem 0.625rem 1.25rem'}>
-            {password ? (
+            {password && (
               <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
                 비밀번호
               </KoreanFont>
-            ) : (
-              ''
             )}
           </FontBox>
 
-          <RowBox margin={'0px 0px 0px 0px'}>
+          <RowBox
+            margin={'0'}
+            style={{
+              border: '1px solid #dddddd',
+              borderRadius: '6px',
+            }}
+          >
             <InputInfoNoneBorder
               width={18.75}
               height={2.5}
-              margin={'0px 0px 0px 0.9375rem'}
+              margin={'0'}
+              // margin={'0px 0px 0px 0.9375rem'}
               placeholder="비밀번호를 입력하세요."
-              type={view ? 'password' : 'text'}
+              type={view ? 'text' : 'password'}
               value={password}
               onChange={onChangePw1}
               style={{
-                borderRight: 'none',
+                border: 'none',
                 borderTopLeftRadius: '6px',
                 borderBottomLeftRadius: '6px',
               }}
@@ -396,97 +518,70 @@ export const SignUpEmail2 = () => {
             <FontBox
               width={2.1875}
               height={2.5}
-              margin={'0px 0.9375rem 0px 0px'}
+              margin={'0'}
               onMouseDown={() => setView(!view)}
               onMouseUp={() => setView(!view)}
-              style={
-                view
-                  ? {
-                      borderLeft: 'none',
-                      border: '1px solid #dddddd',
-                      borderTopRightRadius: '6px',
-                      borderBottomRightRadius: '6px',
-                      backgroundImage: 'url(/assets/closeeye.png)',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center',
-                      backgroundSize: '1.5625rem',
-                    }
-                  : {
-                      borderLeft: 'none',
-                      border: '1px solid #dddddd',
-                      borderTopRightRadius: '6px',
-                      borderBottomRightRadius: '6px',
-                      backgroundImage: 'url(/assets/eye.png)',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center',
-                      backgroundSize: '1.5625rem',
-                    }
-              }
+              style={{
+                border: 'none',
+                borderTopRightRadius: '6px',
+                borderBottomRightRadius: '6px',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundSize: '1.5625rem',
+                backgroundImage: view ? 'url(/assets/eye.png)' : 'url(/assets/closeeye.png)',
+              }}
             ></FontBox>
           </RowBox>
 
-          {password ? (
-            CheckPassword(password) ? (
-              <RowBox margin={'0.4375rem 0px 0px 0px'}>
-                <InputInfoNoneBorder
-                  width={18.75}
-                  height={2.5}
-                  margin={'0px 0px 0px 0.9375rem'}
-                  placeholder="비밀번호를 재입력하세요."
-                  type={view ? 'password' : 'text'}
-                  value={password2}
-                  onChange={onChangePw2}
-                  style={{
-                    borderRight: 'none',
-                    borderTopLeftRadius: '6px',
-                    borderBottomLeftRadius: '6px',
-                  }}
-                ></InputInfoNoneBorder>
-                <FontBox
-                  width={2.1875}
-                  height={2.5}
-                  margin={'0px 0.9375rem 0px 0px'}
-                  onMouseDown={() => setView(!view)}
-                  onMouseUp={() => setView(!view)}
-                  style={
-                    view
-                      ? {
-                          // borderLeft: 'none',
-                          border: '1px solid #dddddd',
-                          borderTopRightRadius: '6px',
-                          borderBottomRightRadius: '6px',
-                          backgroundImage: 'url(/assets/closeeye.png)',
-                          backgroundRepeat: 'no-repeat',
-                          backgroundPosition: 'center',
-                          backgroundSize: '1.5625rem',
-                        }
-                      : {
-                          // borderLeft: 'none',
-                          border: '1px solid #dddddd',
-                          borderTopRightRadius: '6px',
-                          borderBottomRightRadius: '6px',
-                          backgroundImage: 'url(/assets/eye.png)',
-                          backgroundRepeat: 'no-repeat',
-                          backgroundPosition: 'center',
-                          backgroundSize: '1.5625rem',
-                        }
-                  }
-                ></FontBox>
-              </RowBox>
-            ) : (
-              <FontBoxSide width={21.25} height={1.3125} margin={'0.3125rem 0.9375rem 0px 1.25rem'}>
-                <CheckFont size={0.75} color={'red'}>
-                  비밀번호 형식을 확인해 주세요.
-                </CheckFont>
-              </FontBoxSide>
-            )
+          {password && CheckPassword(password) ? (
+            <RowBox
+              margin={'0.4375rem 0 0 0'}
+              style={{
+                border: '1px solid #dddddd',
+                borderRadius: '6px',
+              }}
+            >
+              <InputInfoNoneBorder
+                width={18.75}
+                height={2.5}
+                margin={'0'}
+                placeholder="비밀번호를 재입력하세요."
+                type={view ? 'text' : 'password'}
+                value={password2}
+                onChange={onChangePw2}
+                style={{
+                  border: 'none',
+                  borderTopLeftRadius: '6px',
+                  borderBottomLeftRadius: '6px',
+                }}
+              ></InputInfoNoneBorder>
+              <FontBox
+                width={2.1875}
+                height={2.5}
+                margin={'0'}
+                onMouseDown={() => setView(!view)}
+                onMouseUp={() => setView(!view)}
+                style={{
+                  border: 'none',
+                  borderTopRightRadius: '6px',
+                  borderBottomRightRadius: '6px',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  backgroundSize: '1.5625rem',
+                  backgroundImage: view ? 'url(/assets/eye.png)' : 'url(/assets/closeeye.png)',
+                }}
+              ></FontBox>
+            </RowBox>
           ) : (
             <FontBoxSide width={21.25} height={1.3125} margin={'0.3125rem 0.9375rem 0px 1.25rem'}>
-              <CheckFont size={0.75} color={'black'}>
-                비밀번호는 5-10자의 영문,숫자,특수문자(!@#$%^&*) 조합입니다.
-              </CheckFont>
+              <CheckFont2 size={0.75} color={'black'} isCorrect={!password}>
+                {password
+                  ? '비밀번호 형식을 확인해 주세요.'
+                  : '비밀번호는 5-10자의 영문,숫자,특수문자(!@#$%^&*) 조합입니다.'}
+              </CheckFont2>
             </FontBoxSide>
           )}
+
           <FontBoxSide width={21.25} height={1.3125} margin={'0.3125rem 0.9375rem 0px 1.25rem'}>
             {password2 && (
               <CheckFont size={0.75} color={'blue'} isCorrect={password === password2}>
@@ -499,6 +594,14 @@ export const SignUpEmail2 = () => {
             width={20.9375}
             height={4}
             margin={'1.6875rem 1.25rem 0rem 1.25rem'}
+            onClick={() => {
+              const goJoin = {
+                email: email,
+                nick: nickname,
+                password: password,
+              };
+              Join(goJoin);
+            }}
           >
             회원가입
           </BtnAble>
