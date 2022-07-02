@@ -3,3 +3,5 @@ export * from './Main';
 export * from './SignUpEmail';
 export * from './SignUpEmail2';
 export * from './SignUpSNS';
+export * from './CommunityPage';
+export * from './CommunityDetailPage';
