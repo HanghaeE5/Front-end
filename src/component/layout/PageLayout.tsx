@@ -41,7 +41,7 @@ const Header = ({ children }: PropsWithChildren) => {
 
 const BodyWrapper = styled.div`
   height: 100%;
-  background-color: yellow;
+  /* background-color: yellow; */
 `;
 
 const Body = ({ children }: PropsWithChildren) => {

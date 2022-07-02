@@ -26,7 +26,7 @@ const InfoContainer = styled.div`
   align-items: center;
   border: 1px solid black;
   height: 100%;
-  background-color: #f5b9d5;
+  /* background-color: #f5b9d5; */
   margin: 0px auto 0px auto;
 `;
 
