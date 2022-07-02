@@ -8,12 +8,12 @@ const HeaderWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color: #f8e8e8; */
   border-bottom: 1px solid #dddddd;
 
   span {
     font-size: 1.25rem;
-    font-family: 'OpensansBold';
+    font-family: 'Noto Sans CJK KR';
+    font-weight: 700;
   }
 
   svg {
@@ -41,7 +41,6 @@ const Header = ({ children }: PropsWithChildren) => {
 
 const BodyWrapper = styled.div`
   height: 100%;
-  background-color: yellow;
 `;
 
 const Body = ({ children }: PropsWithChildren) => {
