@@ -12,7 +12,6 @@ const HeaderWrapper = styled.div`
 
   span {
     font-size: 1.25rem;
-    font-family: 'Noto Sans CJK KR';
     font-weight: 700;
   }
 
