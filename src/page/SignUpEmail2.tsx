@@ -25,35 +25,35 @@ const InfoContainer = styled.div`
   flex-direction: column;
   align-items: center;
   border: 1px solid black;
-  height: calc(100% - 3.75rem);
+  height: 100%;
   background-color: #f5b9d5;
   margin: 0px auto 0px auto;
 `;
 
-type fontbox = {
+type box = {
   width: number | string;
   height: number | string;
   margin: string;
 };
 
-const FontBox = styled.div`
+const Box = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}rem;
-  height: ${(props: fontbox) => props.height}rem;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}rem;
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   background-color: #ffffff;
 `;
 
-const FontBoxSide = styled.div`
+const BoxSide = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}rem;
-  height: ${(props: fontbox) => props.height}rem;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}rem;
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   /* background-color: #6922bb; */
 `;
 
@@ -75,9 +75,9 @@ const LineBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}rem;
-  height: ${(props: fontbox) => props.height}rem;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}rem;
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   background-color: #989898;
 `;
 
@@ -88,21 +88,17 @@ const LogoFont = styled.p`
   margin: 0 0 0 0;
 `;
 
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoMed';
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
 type font = {
   size: number;
   color: string;
   isCorrect?: boolean;
+  isBold?: boolean;
 };
-const KoreanFontBold = styled.p`
+
+const KoreanFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoMed';
+
+  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
   color: ${(props: font) => props.color};
   display: flex;
   margin: 0 0 0 0;
@@ -110,7 +106,8 @@ const KoreanFontBold = styled.p`
 
 const EnglishFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
-  font-family: 'OpensansBold';
+
+  font-family: ${(props: font) => (props.isBold ? 'OpensansBold' : 'OpensansMed')};
   color: ${(props: font) => props.color};
   display: flex;
   margin: 0 0 0 0;
@@ -148,9 +145,9 @@ const InputInfo = styled.input`
   border: 1px solid #dddddd;
   border-radius: 6px;
   padding: 0 0 0 10px;
-  width: ${(props: fontbox) => props.width}rem;
-  height: ${(props: fontbox) => props.height}rem;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}rem;
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   :focus {
     background-color: rgb(220, 237, 255);
   }
@@ -163,9 +160,9 @@ const InputInfoNoneBorder = styled.input`
   border: 1px solid #dddddd;
   /* border-radius: 6px; */
   padding: 0 0 0 0.625rem;
-  width: ${(props: fontbox) => props.width}rem;
-  height: ${(props: fontbox) => props.height}rem;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}rem;
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   :focus {
     background-color: rgb(220, 237, 255);
   }
@@ -351,17 +348,17 @@ export const SignUpEmail2 = () => {
     <PageLayout title="SignUp">
       <PageLayout.Body>
         <InfoContainer>
-          <FontBox width={7.125} height={1} margin={'3.3125rem 8.1875rem 0rem 8.125rem'}>
+          <Box width={7.125} height={1} margin={'3.3125rem 8.1875rem 0rem 8.125rem'}>
             <LogoFontSmall>TODOWITH</LogoFontSmall>
-          </FontBox>
+          </Box>
 
-          <FontBox width={2.8125} height={1.5} margin={'1.6875rem 19.375rem 0.625rem 1.25rem'}>
+          <Box width={2.8125} height={1.5} margin={'1.6875rem 19.375rem 0.625rem 1.25rem'}>
             {email && (
               <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
                 이메일
               </KoreanFont>
             )}
-          </FontBox>
+          </Box>
           <RowBox margin={'0px 0px 0px 0px'}>
             <InputInfo
               width={15.6875}
@@ -392,7 +389,7 @@ export const SignUpEmail2 = () => {
             </BtnAble>
           </RowBox>
           {!send && (
-            <FontBoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
+            <BoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
               {email ? (
                 <CheckFont size={0.75} color={'blue'} isCorrect={CheckEmail(email)}>
                   {CheckEmail(email) ? '사용 가능한 형식입니다. 인증 버튼을 눌러주세요.' : '이메일을 확인해주세요'}
@@ -402,7 +399,7 @@ export const SignUpEmail2 = () => {
                   이메일은 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.
                 </CheckFont>
               )}
-            </FontBoxSide>
+            </BoxSide>
           )}
 
           {emailCheck && CheckEmail(email) && (
@@ -437,13 +434,13 @@ export const SignUpEmail2 = () => {
             </RowBox>
           )}
 
-          <FontBox width={2.8125} height={1.5} margin={'1.125rem 19.375rem 0.625rem 1.25rem'}>
+          <Box width={2.8125} height={1.5} margin={'1.125rem 19.375rem 0.625rem 1.25rem'}>
             {nickname && (
               <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
                 닉네임
               </KoreanFont>
             )}
-          </FontBox>
+          </Box>
           <RowBox margin={'0px 0px 0px 0px'}>
             <InputInfo
               width={15.6875}
@@ -471,7 +468,7 @@ export const SignUpEmail2 = () => {
               중복확인
             </BtnAble>
           </RowBox>
-          <FontBoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
+          <BoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
             {nickname ? (
               <CheckFont size={0.75} color={'blue'} isCorrect={CheckNickname(nickname)}>
                 {CheckNickname(nickname)
@@ -483,15 +480,15 @@ export const SignUpEmail2 = () => {
                 닉네임은 2-15자의 한글, 영어, 숫자입니다.
               </CheckFont>
             )}
-          </FontBoxSide>
+          </BoxSide>
 
-          <FontBox width={3.6875} height={1.5} margin={'1.125rem 18.5rem 0.625rem 1.25rem'}>
+          <Box width={3.6875} height={1.5} margin={'1.125rem 18.5rem 0.625rem 1.25rem'}>
             {password && (
               <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
                 비밀번호
               </KoreanFont>
             )}
-          </FontBox>
+          </Box>
 
           <RowBox
             margin={'0'}
@@ -515,7 +512,7 @@ export const SignUpEmail2 = () => {
                 borderBottomLeftRadius: '6px',
               }}
             ></InputInfoNoneBorder>
-            <FontBox
+            <Box
               width={2.1875}
               height={2.5}
               margin={'0'}
@@ -530,7 +527,7 @@ export const SignUpEmail2 = () => {
                 backgroundSize: '1.5625rem',
                 backgroundImage: view ? 'url(/assets/eye.png)' : 'url(/assets/closeeye.png)',
               }}
-            ></FontBox>
+            ></Box>
           </RowBox>
 
           {password && CheckPassword(password) ? (
@@ -555,7 +552,7 @@ export const SignUpEmail2 = () => {
                   borderBottomLeftRadius: '6px',
                 }}
               ></InputInfoNoneBorder>
-              <FontBox
+              <Box
                 width={2.1875}
                 height={2.5}
                 margin={'0'}
@@ -570,25 +567,25 @@ export const SignUpEmail2 = () => {
                   backgroundSize: '1.5625rem',
                   backgroundImage: view ? 'url(/assets/eye.png)' : 'url(/assets/closeeye.png)',
                 }}
-              ></FontBox>
+              ></Box>
             </RowBox>
           ) : (
-            <FontBoxSide width={21.25} height={1.3125} margin={'0.3125rem 0.9375rem 0px 1.25rem'}>
+            <BoxSide width={21.25} height={1.3125} margin={'0.3125rem 0.9375rem 0px 1.25rem'}>
               <CheckFont2 size={0.75} color={'black'} isCorrect={!password}>
                 {password
                   ? '비밀번호 형식을 확인해 주세요.'
                   : '비밀번호는 5-10자의 영문,숫자,특수문자(!@#$%^&*) 조합입니다.'}
               </CheckFont2>
-            </FontBoxSide>
+            </BoxSide>
           )}
 
-          <FontBoxSide width={21.25} height={1.3125} margin={'0.3125rem 0.9375rem 0px 1.25rem'}>
+          <BoxSide width={21.25} height={1.3125} margin={'0.3125rem 0.9375rem 0px 1.25rem'}>
             {password2 && (
               <CheckFont size={0.75} color={'blue'} isCorrect={password === password2}>
                 {password === password2 ? '비밀번호가 일치합니다' : '비밀번호가 일치하지 않습니다'}
               </CheckFont>
             )}
-          </FontBoxSide>
+          </BoxSide>
           <BtnAble
             isDisable={!email || !nickname || !password || !password2}
             width={20.9375}

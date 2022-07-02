@@ -33,30 +33,30 @@ const InfoContainer = styled.div`
   margin: 0px auto 0px auto;
 `;
 
-type fontbox = {
+type box = {
   width: number | string;
   height: number | string;
   margin: string;
 };
 
-const FontBox = styled.div`
+const Box = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}px;
+  height: ${(props: box) => props.height}px;
+  margin: ${(props: box) => props.margin};
   /* background-color: #deb3b3; */
 `;
 
-const FontBoxSide = styled.div`
+const BoxSide = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}px;
+  height: ${(props: box) => props.height}px;
+  margin: ${(props: box) => props.margin};
   /* background-color: #6922bb; */
 `;
 
@@ -65,9 +65,9 @@ const IconBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}px;
+  height: ${(props: box) => props.height}px;
+  margin: ${(props: box) => props.margin};
   /* background-color: #f1cfcf; */
   background-repeat: no-repeat;
   background-position: center;
@@ -95,9 +95,9 @@ const LineBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}px;
+  height: ${(props: box) => props.height}px;
+  margin: ${(props: box) => props.margin};
   background-color: #989898;
 `;
 
@@ -158,9 +158,9 @@ const InputInfo = styled.input`
   border: 1px solid #dddddd;
   border-radius: 6px;
   padding: 0 0 0 10px;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}px;
+  height: ${(props: box) => props.height}px;
+  margin: ${(props: box) => props.margin};
   :focus {
     background-color: rgb(220, 237, 255);
   }
@@ -173,9 +173,9 @@ const InputInfoNoneBorder = styled.input`
   border: 1px solid #dddddd;
   /* border-radius: 6px; */
   padding: 0 0 0 10px;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}px;
+  height: ${(props: box) => props.height}px;
+  margin: ${(props: box) => props.margin};
   :focus {
     background-color: rgb(220, 237, 255);
   }
@@ -216,9 +216,9 @@ const BtnAble = styled.button`
   background: #769cbc;
   border-radius: 6px;
 
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}px;
+  height: ${(props: box) => props.height}px;
+  margin: ${(props: box) => props.margin};
   cursor: pointer;
   &:hover {
     color: white;
@@ -235,9 +235,9 @@ const BtnDisable = styled.button`
   border: 1px solid #dddddd;
   border-radius: 6px;
   margin: 37px 20px 0px 20px;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}px;
+  height: ${(props: box) => props.height}px;
+  margin: ${(props: box) => props.margin};
 `;
 
 export const SignUpEmail = () => {
@@ -295,23 +295,23 @@ export const SignUpEmail = () => {
               nav('/login');
             }}
           ></IconBox>
-          <FontBox width={69} height={27} margin={'0px 153px 0px 125px'}>
+          <Box width={69} height={27} margin={'0px 153px 0px 125px'}>
             <EnglishFont size={18} color="#000000">
               Sign Up
             </EnglishFont>
-          </FontBox>
+          </Box>
         </RowBox>
         <LineBox width={375} height={1} margin={'0'}></LineBox>
       </HeaderContainer>
 
       <RegisterContainer>
         <InfoContainer>
-          <FontBox width={114} height={16} margin={'53px 131px 0px 130px'}>
+          <Box width={114} height={16} margin={'53px 131px 0px 130px'}>
             <LogoFontSmall>TODOWITH</LogoFontSmall>
-          </FontBox>
+          </Box>
 
           {/* 이메일 */}
-          <FontBox width={45} height={24} margin={'27px 310px 10px 20px'}>
+          <Box width={45} height={24} margin={'27px 310px 10px 20px'}>
             {email ? (
               <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
                 이메일
@@ -319,7 +319,7 @@ export const SignUpEmail = () => {
             ) : (
               ''
             )}
-          </FontBox>
+          </Box>
           <RowBox margin={'0px 0px 0px 0px'}>
             <InputInfo
               width={251}
@@ -348,7 +348,7 @@ export const SignUpEmail = () => {
               </BtnDisable>
             )}
           </RowBox>
-          <FontBoxSide width={320} height={21} margin={'5px 35px 0px 20px'}>
+          <BoxSide width={320} height={21} margin={'5px 35px 0px 20px'}>
             {email ? (
               CheckEmail(email) ? (
                 <CheckFont size={12} color={'blue'}>
@@ -364,7 +364,7 @@ export const SignUpEmail = () => {
                 이메일은 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.
               </CheckFont>
             )}
-          </FontBoxSide>
+          </BoxSide>
 
           {emailCheck ? (
             <InputInfo
@@ -381,7 +381,7 @@ export const SignUpEmail = () => {
             ''
           )}
 
-          <FontBox width={45} height={24} margin={'18px 310px 10px 20px'}>
+          <Box width={45} height={24} margin={'18px 310px 10px 20px'}>
             {nickname ? (
               <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
                 닉네임
@@ -389,7 +389,7 @@ export const SignUpEmail = () => {
             ) : (
               ''
             )}
-          </FontBox>
+          </Box>
           <RowBox margin={'0px 0px 0px 0px'}>
             <InputInfo
               width={251}
@@ -411,7 +411,7 @@ export const SignUpEmail = () => {
               </BtnDisable>
             )}
           </RowBox>
-          <FontBoxSide width={320} height={21} margin={'5px 35px 0px 20px'}>
+          <BoxSide width={320} height={21} margin={'5px 35px 0px 20px'}>
             {nickname ? (
               CheckNickname(nickname) ? (
                 <CheckFont size={12} color={'blue'}>
@@ -427,9 +427,9 @@ export const SignUpEmail = () => {
                 닉네임은 2-15자의 한글, 영어, 숫자입니다.
               </CheckFont>
             )}
-          </FontBoxSide>
+          </BoxSide>
 
-          <FontBox width={59} height={24} margin={'18px 296px 10px 20px'}>
+          <Box width={59} height={24} margin={'18px 296px 10px 20px'}>
             {password ? (
               <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
                 비밀번호
@@ -437,7 +437,7 @@ export const SignUpEmail = () => {
             ) : (
               ''
             )}
-          </FontBox>
+          </Box>
 
           <RowBox margin={'0px 0px 0px 0px'}>
             <InputInfoNoneBorder
@@ -454,7 +454,7 @@ export const SignUpEmail = () => {
                 borderBottomLeftRadius: '6px',
               }}
             ></InputInfoNoneBorder>
-            <FontBox
+            <Box
               width={35}
               height={40}
               margin={'0px 15px 0px 0px'}
@@ -483,7 +483,7 @@ export const SignUpEmail = () => {
                       backgroundSize: '25px',
                     }
               }
-            ></FontBox>
+            ></Box>
           </RowBox>
 
           {password ? (
@@ -503,7 +503,7 @@ export const SignUpEmail = () => {
                     borderBottomLeftRadius: '6px',
                   }}
                 ></InputInfoNoneBorder>
-                <FontBox
+                <Box
                   width={35}
                   height={40}
                   margin={'0px 15px 0px 0px'}
@@ -532,23 +532,23 @@ export const SignUpEmail = () => {
                           backgroundSize: '25px',
                         }
                   }
-                ></FontBox>
+                ></Box>
               </RowBox>
             ) : (
-              <FontBoxSide width={340} height={21} margin={'5px 15px 0px 20px'}>
+              <BoxSide width={340} height={21} margin={'5px 15px 0px 20px'}>
                 <CheckFont size={12} color={'red'}>
                   비밀번호 형식을 확인해 주세요.
                 </CheckFont>
-              </FontBoxSide>
+              </BoxSide>
             )
           ) : (
-            <FontBoxSide width={340} height={21} margin={'5px 15px 0px 20px'}>
+            <BoxSide width={340} height={21} margin={'5px 15px 0px 20px'}>
               <CheckFont size={12} color={'black'}>
                 비밀번호는 5-10자의 영문,숫자,특수문자(!@#$%^&*) 조합입니다.
               </CheckFont>
-            </FontBoxSide>
+            </BoxSide>
           )}
-          <FontBoxSide width={340} height={21} margin={'5px 15px 0px 20px'}>
+          <BoxSide width={340} height={21} margin={'5px 15px 0px 20px'}>
             {password2 ? (
               password === password2 ? (
                 <CheckFont size={12} color={'blue'}>
@@ -562,7 +562,7 @@ export const SignUpEmail = () => {
             ) : (
               ''
             )}
-          </FontBoxSide>
+          </BoxSide>
         </InfoContainer>
 
         {email && password ? (

@@ -17,20 +17,20 @@ const RegisterContainer = styled.div`
   margin: 60px auto 74px auto;
 `;
 
-type fontbox = {
+type box = {
   width: number;
   height: number;
   margin: string;
 };
 
-const FontBox = styled.div`
+const Box = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}rem;
-  height: ${(props: fontbox) => props.height}rem;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}rem;
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   /* background-color: #f1cfcf; */
 `;
 
@@ -153,16 +153,16 @@ export const Login = () => {
   }, []);
   return (
     <RegisterContainer>
-      <FontBox width={10.5} height={1.5} margin={'52px auto 30px auto'}>
+      <Box width={10.5} height={1.5} margin={'52px auto 30px auto'}>
         <LogoFontBig>TODOWITH</LogoFontBig>
-      </FontBox>
-      <FontBox width={2.8125} height={1.5} margin={'0px 310px 10px 20px'}>
+      </Box>
+      <Box width={2.8125} height={1.5} margin={'0px 310px 10px 20px'}>
         {email && (
           <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
             이메일
           </KoreanFont>
         )}
-      </FontBox>
+      </Box>
       <InputInfo
         type="text"
         placeholder="이메일을 입력하세요.    ex) todowith@naver.com"
@@ -170,13 +170,13 @@ export const Login = () => {
         value={email}
         onChange={onChange1}
       ></InputInfo>
-      <FontBox width={3.6875} height={1.5} margin={'13px 296px 10px 20px'}>
+      <Box width={3.6875} height={1.5} margin={'13px 296px 10px 20px'}>
         {password && (
           <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
             비밀번호
           </KoreanFont>
         )}
-      </FontBox>
+      </Box>
       <InputInfo placeholder="비밀번호를 입력하세요." type="password" value={password} onChange={onChange2}></InputInfo>
 
       <BtnAble
@@ -198,24 +198,24 @@ export const Login = () => {
       </BtnAble>
 
       <RowBox margin={'0.875rem 0 1.375rem 0'}>
-        <FontBox width={1.25} height={1.25} margin={'0 0.5625rem 0 2.0625rem'}>
+        <Box width={1.25} height={1.25} margin={'0 0.5625rem 0 2.0625rem'}>
           <KoreanFont size={0.874} color="rgba(147, 147, 147, 1)">
             ○
           </KoreanFont>
-        </FontBox>
-        <FontBox width={4.25} height={1.3125} margin={'0px 15.3125rem 0px 0px'}>
+        </Box>
+        <Box width={4.25} height={1.3125} margin={'0px 15.3125rem 0px 0px'}>
           <KoreanFont size={0.874} color="rgba(147, 147, 147, 1)">
             자동 로그인
           </KoreanFont>
-        </FontBox>
+        </Box>
       </RowBox>
       <RowBox margin={'0px 0px 2.375rem 0px'}>
-        <FontBox width={6.875} height={1.3125} margin={'0px 0px 0x 5rem'}>
+        <Box width={6.875} height={1.3125} margin={'0px 0px 0x 5rem'}>
           <KoreanFont size={0.874} color="rgba(147, 147, 147, 1)">
             첫 방문이라면? 🙂
           </KoreanFont>
-        </FontBox>
-        <FontBox width={3.75} height={1.3125} margin={'0px 5rem 0px 2.8125rem'}>
+        </Box>
+        <Box width={3.75} height={1.3125} margin={'0px 5rem 0px 2.8125rem'}>
           <KoreanFont
             size={0.875}
             color="rgba(147, 147, 147, 1)"
@@ -225,20 +225,20 @@ export const Login = () => {
           >
             회원가입
           </KoreanFont>
-        </FontBox>
+        </Box>
       </RowBox>
 
       <RowBox margin={'0px 0px 1.625rem 0px'}>
         <hr style={{ width: '9.0625rem', marginLeft: '1.25rem' }} />
-        <FontBox width={1.875} height={1.3125} margin={'0px 0.625rem 0px 0.625rem'}>
+        <Box width={1.875} height={1.3125} margin={'0px 0.625rem 0px 0.625rem'}>
           <KoreanFont size={0.75} color="rgba(147, 147, 147, 1)">
             또는
           </KoreanFont>
-        </FontBox>
+        </Box>
         <hr style={{ width: '9.0625rem', marginRight: '1.25rem' }} />
       </RowBox>
       <RowBox margin={'0'}>
-        <FontBox
+        <Box
           width={3.75}
           height={3.75}
           margin={'0px 3rem 0px 3.0625rem'}
@@ -247,8 +247,8 @@ export const Login = () => {
           }}
         >
           네이버
-        </FontBox>
-        <FontBox
+        </Box>
+        <Box
           width={3.75}
           height={3.75}
           margin={'0px 48px 0px 0px'}
@@ -257,8 +257,8 @@ export const Login = () => {
           }}
         >
           카카오
-        </FontBox>
-        <FontBox
+        </Box>
+        <Box
           width={3.75}
           height={3.75}
           margin={'0px 3.125rem 0px 0px'}
@@ -267,7 +267,7 @@ export const Login = () => {
           }}
         >
           구글
-        </FontBox>
+        </Box>
       </RowBox>
     </RegisterContainer>
   );

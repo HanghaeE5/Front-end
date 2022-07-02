@@ -8,8 +8,8 @@ const HeaderWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white;
-  border-bottom: 1px solid #989898;
+  /* background-color: #f8e8e8; */
+  border-bottom: 1px solid #dddddd;
 
   span {
     font-size: 1.25rem;

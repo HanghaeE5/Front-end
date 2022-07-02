@@ -1,77 +1,57 @@
 import { url } from 'inspector';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { tokenState } from '../recoil/store';
+import { registerApi } from '../api/callApi';
 
 const RegisterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 375px;
-  height: 678px;
+  width: 23.4375rem;
+  height: 42.375rem;
   background-color: #ffffff;
-  margin: 0px auto 74px auto;
+  margin: 0px auto 4.625rem auto;
 `;
 
 const HeaderContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 375px;
-  height: 60px;
+  width: 23.4375rem;
+  height: 3.75rem;
   background-color: #ffffff;
   margin: 0px auto 0px auto;
 `;
 
-const InfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 375px;
-  height: 508px;
-  background-color: #f5e28d;
-  margin: 0px auto 0px auto;
-`;
-
-type fontbox = {
+type box = {
   width: number | string;
   height: number | string;
   margin: string;
 };
 
-const FontBox = styled.div`
+const Box = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}rem;
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   /* background-color: #deb3b3; */
 `;
 
-const FontBoxSide = styled.div`
+const BoxSide = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}rem;
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   /* background-color: #6922bb; */
-`;
-
-const IconBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
-  /* background-color: #f1cfcf; */
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
 `;
 
 type rowbox = {
@@ -84,9 +64,6 @@ const RowBox = styled.div`
   align-items: center;
   justify-content: center;
   margin: ${(props: rowbox) => props.margin};
-  /* width: 168px;
-  height: 24px;
-  margin: 52px auto 30px auto; */
   /* background-color: #683b3b; */
 `;
 
@@ -95,62 +72,37 @@ const LineBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}rem;
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   background-color: #989898;
 `;
 
-const LogoFont = styled.p`
-  font-size: 27px;
-  font-family: 'OpensansBold';
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}px;
-  font-family: 'NotoMed';
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
 type font = {
   size: number;
   color: string;
+  isCorrect?: boolean;
+  isBold?: boolean;
 };
-const KoreanFontBold = styled.p`
-  font-size: ${(props: font) => props.size}px;
-  font-family: 'NotoMed';
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
 
-const EnglishFont = styled.p`
-  font-size: ${(props: font) => props.size}px;
-  font-family: 'OpensansBold';
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
+const KoreanFont = styled.p`
+  font-size: ${(props: font) => props.size}rem;
 
-const LogoFontSmall = styled.p`
-  font-size: 21px;
-  font-family: 'OpensansBold';
+  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
+  color: ${(props: font) => props.color};
   display: flex;
   margin: 0 0 0 0;
 `;
 
 const LogoFontBig = styled.p`
-  font-size: 27px;
+  font-size: 1.6875rem;
   font-family: 'OpensansBold';
   display: flex;
   margin: 0 0 0 0;
 `;
 
 const CheckFont = styled.p`
-  font-size: ${(props: font) => props.size}px;
+  font-size: ${(props: font) => props.size}rem;
   font-family: 'NotoRegu';
   color: ${(props: font) => props.color};
   display: flex;
@@ -165,24 +117,9 @@ const InputInfo = styled.input`
   border: 1px solid #dddddd;
   border-radius: 6px;
   padding: 0 0 0 10px;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
-const InputInfoNoneBorder = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  /* border-radius: 6px; */
-  padding: 0 0 0 10px;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
+  width: ${(props: box) => props.width}rem;
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   :focus {
     background-color: rgb(220, 237, 255);
   }
@@ -195,63 +132,43 @@ type btnbox = {
   color: string;
 };
 
-const BtnBox = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #769cbc;
-  border-radius: 6px;
-  border: 1px solid #989898;
-
-  width: ${(props: btnbox) => props.width}px;
-  height: ${(props: btnbox) => props.height}px;
-  margin: ${(props: btnbox) => props.margin};
-  background-color: ${(props: btnbox) => props.color};
-  cursor: pointer;
-  &:hover {
-    color: white;
-    background-color: #ecee73;
-  }
-`;
+type btnable = {
+  width: number | string;
+  height: number | string;
+  margin: string;
+  isDisable: boolean;
+};
 
 const BtnAble = styled.button`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #769cbc;
+  border: 1px solid #dddddd;
   border-radius: 6px;
+  width: ${(props: btnable) => props.width}rem;
+  height: ${(props: btnable) => props.height}rem;
+  margin: ${(props: btnable) => props.margin};
+  background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
 
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
-  cursor: pointer;
+  cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
+
   &:hover {
-    color: white;
-    background-color: #1763a6;
+    ${(props: btnable) =>
+      props.isDisable
+        ? ''
+        : `color: white;
+    background-color: #358edc;`}
   }
 `;
 
-const BtnDisable = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #f3f3f3;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  margin: 37px 20px 0px 20px;
-  width: ${(props: fontbox) => props.width}px;
-  height: ${(props: fontbox) => props.height}px;
-  margin: ${(props: fontbox) => props.margin};
-`;
-
 export const SignUpSNS = () => {
-  const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
-  };
+  const [nickname, setNickname] = useState<string>('');
+  const localToken = localStorage.getItem('recoil-persist');
+  const loginToken = useSetRecoilState(tokenState);
+  const tokenUse = useRecoilValue(tokenState);
 
+  const nav = useNavigate();
   const rePass: any = useRef();
 
   const CheckNickname = (asValue: string) => {
@@ -259,90 +176,103 @@ export const SignUpSNS = () => {
     return regExp.test(asValue);
   };
 
-  const [nickname, setNickname] = useState<string>('');
+  const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value);
+  };
 
-  const nav = useNavigate();
+  //닉네임 중복확인 API
+  const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
+    onSuccess: (token) => {
+      // loginToken(token.headers.authorization.split(' ')[1]);
+      console.log();
+      alert(`${nickname}으로 닉네임이 설정되었습니다.`);
+    },
+    onError: () => {
+      alert('중복된 닉네임입니다.');
+    },
+  });
 
-  const [view, setView] = useState<boolean>(true);
+  const NickCertification = (nick: { nick: string }) => {
+    NickCertificationData.mutate(nick);
+  };
+
+  useEffect(() => {
+    //useEffect 리턴 바로 위에 써주기.
+    if (localToken) {
+      alert('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
+      nav('/');
+    }
+  }, []);
 
   return (
     <>
-      <HeaderContainer>
-        <RowBox margin={'17px 0px 15px 0px'}>
-          <FontBox width={110} height={27} margin={'0px 132px 0px 133px'}>
-            <KoreanFont size={18} color="#000000">
+      <HeaderContainer style={{ borderBottom: '1px solid #989898 ' }}>
+        <RowBox margin={'1rem 0px 1rem   0px'}>
+          <Box width={6.85} height={1.6875} margin={'0px 8.25rem 0px 8.3125rem'}>
+            <KoreanFont size={1.125} color="#000000">
               Sign Up
             </KoreanFont>
-          </FontBox>
+          </Box>
         </RowBox>
-        <LineBox width={375} height={1} margin={'0'}></LineBox>
       </HeaderContainer>
       <RegisterContainer>
-        <FontBox width={168} height={24} margin={'52px auto 0px auto'}>
+        <Box width={10.5} height={1.5} margin={'3.25rem auto 0px auto'}>
           <LogoFontBig>TODOWITH</LogoFontBig>
-        </FontBox>
+        </Box>
 
-        <FontBox width={45} height={24} margin={'80px 310px 10px 20px'}>
-          {nickname ? (
-            <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
+        <Box width={2.8125} height={1.5} margin={'5rem 19.375rem 0.625rem 1.25rem'}>
+          {nickname && (
+            <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
               닉네임
             </KoreanFont>
-          ) : (
-            ''
           )}
-        </FontBox>
+        </Box>
         <RowBox margin={'0px 0px 0px 0px'}>
           <InputInfo
-            width={251}
-            height={40}
-            margin={'0px 11px 0px 20px'}
+            width={15.6875}
+            height={2.5}
+            margin={'0px 0.6875rem 0px 1.25rem'}
             type="text"
             placeholder="닉네임    ex) 빨강바지3456"
             name="nickname"
             value={nickname}
             onChange={onChangeNickname}
           ></InputInfo>
-          {CheckNickname(nickname) ? (
-            <BtnAble width={73} height={42} margin={'0px 20px 0px 0px'}>
-              중복확인
-            </BtnAble>
-          ) : (
-            <BtnDisable width={73} height={42} margin={'0px 20px 0px 0px'}>
-              중복확인
-            </BtnDisable>
-          )}
+
+          <BtnAble
+            isDisable={!CheckNickname(nickname)}
+            width={4.5625}
+            height={2.625}
+            margin={'0px 1.25rem 0px 0px'}
+            onClick={() => {
+              const goNickCertification = {
+                nick: nickname,
+              };
+              NickCertification(goNickCertification);
+            }}
+          >
+            중복확인
+          </BtnAble>
         </RowBox>
-        <FontBoxSide width={320} height={21} margin={'5px 35px 0px 20px'}>
+        <BoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
           {nickname ? (
-            CheckNickname(nickname) ? (
-              <CheckFont size={12} color={'blue'}>
-                사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.
-              </CheckFont>
-            ) : (
-              <CheckFont size={12} color={'red'}>
-                닉네임 형식을 확인해 주세요.
-              </CheckFont>
-            )
+            <CheckFont size={0.75} color={'blue'} isCorrect={CheckNickname(nickname)}>
+              {CheckNickname(nickname)
+                ? '사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.'
+                : '닉네임 형식을 확인해 주세요.'}
+            </CheckFont>
           ) : (
-            <CheckFont size={12} color={'black'}>
+            <CheckFont size={0.75} color={'black'}>
               닉네임은 2-15자의 한글, 영어, 숫자입니다.
             </CheckFont>
           )}
-        </FontBoxSide>
+        </BoxSide>
 
-        {nickname ? (
-          <BtnAble width={335} height={64} margin={'82px 20px 0px 20px'}>
-            <KoreanFont size={17} color="white">
-              회원가입 완료
-            </KoreanFont>
-          </BtnAble>
-        ) : (
-          <BtnDisable width={335} height={64} margin={'82px 20px 0px 20px'}>
-            <KoreanFont size={17} color="white">
-              회원가입 완료
-            </KoreanFont>
-          </BtnDisable>
-        )}
+        <BtnAble isDisable={!nickname} width={20.9375} height={4} margin={'5.125rem 1.25rem 0px 1.25rem'}>
+          <KoreanFont size={1.0625} color="white">
+            회원가입 완료
+          </KoreanFont>
+        </BtnAble>
       </RegisterContainer>
     </>
   );
