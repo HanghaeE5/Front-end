@@ -18,8 +18,8 @@ interface WrapperProps {
   height?: string;
   margin?: string;
   padding?: string;
-  justifyContent?: string;
-  alignItems?: string;
+  justifyContent?: 'start' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
+  alignItems?: 'stretch' | 'center' | 'start' | 'end';
 }
 
 export const Wrapper = ({ children, ...style }: PropsWithChildren<WrapperProps>) => {

@@ -7,6 +7,7 @@ declare module 'styled-components' {
       grayLight: string;
       grayMedium: string;
       grayDark: string;
+      grayText: string;
     };
     radius: string;
     inputPadding: string;

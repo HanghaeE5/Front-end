@@ -154,3 +154,10 @@ body {
 input:focus {
   outline: none;
 }
+
+@font-face {
+  font-family: 'Noto Sans CJK Light KR';
+  src: url('../asset/font/NOTOSANSCJKKR-LIGHT.OTF');
+  font-weight: 400;
+  font-style: normal;
+}
