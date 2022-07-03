@@ -24,7 +24,7 @@ const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   height: 100%;
   /* background-color: #f5b9d5; */
   margin: 0px auto 0px auto;
@@ -345,7 +345,7 @@ export const SignUpEmail2 = () => {
   }, []);
 
   return (
-    <PageLayout title="SignUp">
+    <PageLayout title="회원가입">
       <PageLayout.Body>
         <InfoContainer>
           <Box width={7.125} height={1} margin={'3.3125rem 8.1875rem 0rem 8.125rem'}>
