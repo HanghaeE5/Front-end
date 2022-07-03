@@ -31,7 +31,6 @@ const Box = styled.div`
   width: ${(props: box) => props.width}rem;
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
-  /* background-color: #f1cfcf; */
 `;
 
 type rowbox = {
