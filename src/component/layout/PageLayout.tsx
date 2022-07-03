@@ -40,6 +40,7 @@ const Header = ({ children }: PropsWithChildren) => {
 
 const BodyWrapper = styled.div`
   height: 100%;
+  /* background-color: yellow; */
 `;
 
 const Body = ({ children }: PropsWithChildren) => {
@@ -52,10 +53,28 @@ const LayoutContainer = styled.div`
   height: 100%;
 `;
 
+type font = {
+  size: number;
+  color?: string;
+  isCorrect?: boolean;
+  isBold?: boolean;
+};
+
+const KoreanFont = styled.p`
+  font-size: ${(props: font) => props.size}rem;
+
+  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
+  color: ${(props: font) => props.color};
+  display: flex;
+  margin: 0 0 0 0;
+`;
+
 export const PageLayout = ({ children, title }: PropsWithChildren<{ title: string }>) => {
   return (
     <LayoutContainer>
-      <Header>{title}</Header>
+      <Header>
+        <KoreanFont size={1.125}>{title}</KoreanFont>
+      </Header>
       <PageLayout.Body>{children}</PageLayout.Body>
     </LayoutContainer>
   );

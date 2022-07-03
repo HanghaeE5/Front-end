@@ -5,6 +5,7 @@ import { TopNavLayout } from './TopNavLayout';
 
 const BodyWrapper = styled.div`
   height: calc(100% - 3.75rem - 3.75rem);
+  /* background-color: yellow; */
 `;
 
 const Body = ({ children }: PropsWithChildren) => {

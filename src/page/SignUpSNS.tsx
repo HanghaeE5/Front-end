@@ -21,7 +21,7 @@ const HeaderContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 23.4375rem;
+  width: 100%;
   height: 3.75rem;
   background-color: #ffffff;
   margin: 0px auto 0px auto;
@@ -210,7 +210,7 @@ export const SignUpSNS = () => {
         <RowBox margin={'1rem 0px 1rem   0px'}>
           <Box width={6.85} height={1.6875} margin={'0px 8.25rem 0px 8.3125rem'}>
             <KoreanFont size={1.125} color="#000000">
-              Sign Up
+              회원가입
             </KoreanFont>
           </Box>
         </RowBox>
