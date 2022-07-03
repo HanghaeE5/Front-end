@@ -17,3 +17,8 @@ export interface Post {
   type: PostType;
   gather: number;
 }
+
+export interface PostDetail extends Post {
+  postNumber: number;
+  date: string;
+}

@@ -1,10 +1,10 @@
 import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
-import { Post } from '../Types/community';
+import { Post, PostDetail } from '../Types/community';
 import { Badge, Img, Wrapper } from './element';
 
 interface PostCardProps {
-  onClick: (id: string) => void;
+  onClick?: (id: string) => void;
 }
 
 const CardWrapper = styled(Wrapper)<PostCardProps>`
@@ -14,7 +14,14 @@ const CardWrapper = styled(Wrapper)<PostCardProps>`
 const UserName = styled.span`
   font-size: 0.875rem;
   font-weight: 500;
-  margin-left: 0.5rem;
+`;
+
+const PostInfo = styled.span`
+  font-size: 12px;
+  font-family: 'Noto Sans CJK Light KR';
+  font-weight: 600;
+  color: ${({ theme }) => theme.color.grayText};
+  margin-top: 0.25rem;
 `;
 
 const Title = styled.div`
@@ -36,28 +43,42 @@ const ContentWrapper = styled.div<ContentWrapperProps>`
   line-height: 19.6px;
   font-family: 'Noto Sans CJK Light KR';
   font-weight: 400;
-  height: 2.5rem;
+  height: ${({ isSummary }) => (isSummary ? '2.5rem' : '100%')};
   overflow-y: ${({ isSummary }) => (isSummary ? 'hidden' : 'scroll')};
+  padding: 0 1rem;
 `;
 
 const StyledGather = styled.div`
   font-weight: 400;
   font-size: 13px;
   margin: 1rem 0;
+  padding: 0 1rem;
 `;
 
-const PostHeader = ({ userImg, userName }: Pick<Post, 'userImg' | 'userName'>) => {
+const PostHeader = ({
+  userImg,
+  userName,
+  postNumber,
+  date,
+}: Pick<Post, 'userImg' | 'userName'> & Partial<PostDetail>) => {
   return (
-    <Wrapper margin="0.5rem 0">
-      <Img url={userImg} type="profile" />
-      <UserName>{userName}</UserName>
+    <Wrapper margin="0.5rem 0" padding="0.5rem 1rem">
+      <Wrapper width="2rem">
+        <Img url={userImg} type="profile" />
+      </Wrapper>
+
+      <Wrapper isColumn alignItems="start" margin="0 0 0 0.5rem">
+        <UserName>{userName}</UserName>
+        {(postNumber || date) && <PostInfo>{`${date} | ${postNumber}`}</PostInfo>}
+      </Wrapper>
+      {postNumber && <div>드롭다운</div>}
     </Wrapper>
   );
 };
 
 const PostTitle = ({ children, type }: PropsWithChildren<Pick<Post, 'type'>>) => {
   return (
-    <Wrapper justifyContent="space-between">
+    <Wrapper justifyContent="space-between" padding="0 1rem">
       <Title>{children}</Title>
       <Badge>{type === 'challange' ? '챌린저스' : '일상'}</Badge>
     </Wrapper>
@@ -71,9 +92,10 @@ const Content = ({ children, isSummary }: PropsWithChildren<ContentWrapperProps>
 const Gather = ({ children }: PropsWithChildren) => {
   return <StyledGather>{children}명 참여중!</StyledGather>;
 };
+
 export const PostCard = ({ children, onClick }: PropsWithChildren<PostCardProps>) => {
   return (
-    <CardWrapper isColumn alignItems="start" padding="1rem" margin="0.5rem 0 0 0" onClick={onClick}>
+    <CardWrapper isColumn alignItems="start" padding="1rem 0" margin="0.5rem 0 0 0" onClick={onClick}>
       {children}
     </CardWrapper>
   );

@@ -136,7 +136,11 @@ export const CommunityPage = () => {
             {postList.map((post) => (
               <PostCard key={post.id} onClick={onClickPost}>
                 <PostCard.PostHeader userImg={post.userImg} userName={post.userName} />
-                {post.imgUrl && <Img url={post.imgUrl} type="round" />}
+                {post.imgUrl && (
+                  <Wrapper padding="0 1rem">
+                    <Img url={post.imgUrl} type="round" />
+                  </Wrapper>
+                )}
                 <PostCard.PostTitle type={post.type}>{post.title}</PostCard.PostTitle>
                 <PostCard.Content isSummary>{post.content}</PostCard.Content>
                 <PostCard.Gather>{post.gather}</PostCard.Gather>
