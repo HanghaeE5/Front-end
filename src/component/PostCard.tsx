@@ -46,9 +46,10 @@ const ContentWrapper = styled.div<ContentWrapperProps>`
   height: ${({ isSummary }) => (isSummary ? '2.5rem' : '100%')};
   overflow-y: ${({ isSummary }) => (isSummary ? 'hidden' : 'scroll')};
   padding: 0 1rem;
+  max-height: 18rem;
 `;
 
-const StyledGather = styled.div`
+const StyledGather = styled.span`
   font-weight: 400;
   font-size: 13px;
   margin: 1rem 0;

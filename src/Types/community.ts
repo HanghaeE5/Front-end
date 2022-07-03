@@ -21,4 +21,5 @@ export interface Post {
 export interface PostDetail extends Post {
   postNumber: number;
   date: string;
+  isOpenChallange: boolean;
 }
