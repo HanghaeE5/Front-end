@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { Select, SelectOption, TextInput, Wrapper } from '../component/element';
+import { Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
@@ -89,6 +90,7 @@ const postList: Post[] = [
   },
 ];
 export const CommunityPage = () => {
+  const nav = useNavigate();
   const [control, setControl] = useState<CommunitySearchControl>({
     category: 'title',
     keyword: '',
@@ -96,7 +98,7 @@ export const CommunityPage = () => {
   });
 
   const onClickPost = (id: string) => {
-    console.log('포스트클릭', id);
+    nav(`/community/${id}`);
   };
 
   return (
@@ -132,7 +134,13 @@ export const CommunityPage = () => {
           </section>
           <section>
             {postList.map((post) => (
-              <PostCard key={post.id} {...post} onClick={onClickPost} />
+              <PostCard key={post.id} onClick={onClickPost}>
+                <PostCard.PostHeader userImg={post.userImg} userName={post.userName} />
+                {post.imgUrl && <Img url={post.imgUrl} type="round" />}
+                <PostCard.PostTitle type={post.type}>{post.title}</PostCard.PostTitle>
+                <PostCard.Content isSummary>{post.content}</PostCard.Content>
+                <PostCard.Gather>{post.gather}</PostCard.Gather>
+              </PostCard>
             ))}
           </section>
         </ContentWrapper>

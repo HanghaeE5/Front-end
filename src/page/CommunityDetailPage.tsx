@@ -1,3 +1,12 @@
+import { NavLayout } from '../component/layout/NavLayout';
+import { PageLayout } from '../component/layout/PageLayout';
+
 export const CommunityDetailPage = () => {
-  return <>커뮤니티 디테일 페이지</>;
+  return (
+    <NavLayout>
+      <PageLayout title="커뮤니티">
+        <PageLayout.Body>dfsfds</PageLayout.Body>
+      </PageLayout>
+    </NavLayout>
+  );
 };
