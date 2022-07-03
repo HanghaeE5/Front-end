@@ -5,9 +5,11 @@ declare module 'styled-components' {
     mainColor: string;
     color: {
       grayLight: string;
+      grayMediumLight: string;
       grayMedium: string;
       grayDark: string;
       grayText: string;
+      grayMediumDark: string;
     };
     radius: string;
     inputPadding: string;
