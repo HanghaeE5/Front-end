@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import { Post, PostDetail } from '../Types/community';
-import { Badge, Img, Wrapper } from './element';
+import { Badge, DropdownMenu, Img, Wrapper } from './element';
 
 interface PostCardProps {
   onClick?: (id: string) => void;
@@ -71,7 +71,7 @@ const PostHeader = ({
         <UserName>{userName}</UserName>
         {(postNumber || date) && <PostInfo>{`${date} | ${postNumber}`}</PostInfo>}
       </Wrapper>
-      {postNumber && <div>드롭다운</div>}
+      {postNumber && <DropdownMenu />}
     </Wrapper>
   );
 };
