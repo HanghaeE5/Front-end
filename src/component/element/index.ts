@@ -3,3 +3,4 @@ export * from './Wrapper';
 export * from './Select';
 export * from './Img';
 export * from './Badge';
+export * from './DropdownMenu';
