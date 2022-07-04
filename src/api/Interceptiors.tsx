@@ -3,13 +3,14 @@ import { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'ax
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   // console.info(`[request] [${JSON.stringify(config)}]`);
 
-  const localToken = localStorage.getItem('recoil-persist');
+  const localToken = localStorage.getItem('accessToken');
 
   if (localToken) {
     const toto = JSON.parse(localToken);
 
     // console.log(toto.tokenState);
     if (toto) {
+      console.log(config);
       config.headers = {
         Authorization: toto.tokenState || 0 || false,
         'Content-Type': 'application/json',

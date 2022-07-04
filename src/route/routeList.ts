@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { Login, Main, SignUpEmail2, SignUpSNS, CommunityPage, CommunityDetailPage } from './../page';
+import { Login, Main, SignUpEmail, SignUpSNS, CommunityPage, CommunityDetailPage } from './../page';
 
 export interface IRoute {
   id: string;
@@ -18,7 +18,7 @@ export const routeList: IRoute[] = [
   {
     id: 'signUpEmail',
     path: '/signupemail',
-    page: SignUpEmail2,
+    page: SignUpEmail,
   },
   {
     id: 'signUpSns',

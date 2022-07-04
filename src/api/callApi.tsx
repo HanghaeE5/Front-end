@@ -32,55 +32,12 @@ const nickCertificationApi = async (nick: { nick: string }) => {
 };
 
 const joinSocialApi = async (nick: { nick: string }) => {
-  const jsa = await callApi.put('/register/social', nick, {
-    headers: {
-      'content-type': 'multipart/form-data',
-    },
-  });
+  const jsa = await callApi.put('/register/social', nick);
   return jsa;
 };
 
 const loginApi = async (data: FieldValues) => {
   const la = await callApi.post('/login', data);
-  return la;
-};
-
-const logoutApi = async () => {
-  const loa = await callApi.get('/logout');
-  return loa;
-};
-
-const postWriteApi = async (forms: FormData) => {
-  // console.log("aa", tokenUse);
-  const pwa = await callApi.post('/boards', forms, {
-    headers: {
-      'content-type': 'multipart/form-data',
-    },
-  });
-  return pwa;
-};
-
-const deleteApi = async (Id: number) => {
-  const da = await callApi.delete(`/boards/${Id}`);
-  return da;
-};
-
-const editApi = async (Id: number, formData: FormData) => {
-  const ea = await callApi.put(`/boards/${Id}`, formData, {
-    headers: {
-      'content-type': 'multipart/form-data',
-    },
-  });
-  return ea;
-};
-
-const likeApi = async (Id: number) => {
-  const la = await callApi.post(`/boards/${Id}/likes`);
-  return la;
-};
-
-const unlikeApi = async (Id: number) => {
-  const la = await callApi.delete(`/boards/${Id}/likes`);
   return la;
 };
 
@@ -90,13 +47,6 @@ export const registerApi = {
   emilCertificationNumberApi: (data: FieldValues) => emilCertificationNumberApi(data),
   nickCertificationApi: (nick: { nick: string }) => nickCertificationApi(nick),
   loginApi: (data: FieldValues) => loginApi(data),
-  logoutApi: () => logoutApi(),
-};
 
-export const boardApi = {
-  postWriteApi: (data: FormData) => postWriteApi(data),
-  deleteApi: (Id: number) => deleteApi(Id),
-  editApi: (Id: number, formData: FormData) => editApi(Id, formData),
-  likeApi: (Id: number) => likeApi(Id),
-  unlikeApi: (Id: number) => unlikeApi(Id),
+  joinSocialApi: (nick: { nick: string }) => joinSocialApi(nick),
 };

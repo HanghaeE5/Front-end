@@ -1,42 +1,39 @@
+import axios, { AxiosError } from 'axios';
 import { url } from 'inspector';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { FieldValues } from 'react-hook-form';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { registerApi } from '../api/callApi';
+import { PageLayout } from '../component/layout/PageLayout';
+import { tokenState } from '../recoil/store';
 
 const RegisterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 375px;
-  height: 678px;
+  width: 23.4375rem;
+  height: 42.375rem;
   background-color: #24c5c3;
-  margin: 0px auto 74px auto;
-`;
-
-const HeaderContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 375px;
-  height: 60px;
-  background-color: #883838;
-  margin: 0px auto 0px auto;
+  margin: 0px auto 4.625rem auto;
 `;
 
 const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 375px;
-  height: 508px;
-  /* background-color: #f5e28d; */
+  /* border: 1px solid black; */
+  height: 100%;
+  /* background-color: #f5b9d5; */
   margin: 0px auto 0px auto;
 `;
 
 type box = {
-  width: number | string;
-  height: number | string;
-  margin: string;
+  width?: number | string;
+  height?: number | string;
+  margin?: string;
 };
 
 const Box = styled.div`
@@ -44,49 +41,30 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: box) => props.width}px;
-  height: ${(props: box) => props.height}px;
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
-  /* background-color: #deb3b3; */
+  background-color: #ffffff;
 `;
 
 const BoxSide = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: ${(props: box) => props.width}px;
-  height: ${(props: box) => props.height}px;
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   /* background-color: #6922bb; */
 `;
-
-const IconBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width}px;
-  height: ${(props: box) => props.height}px;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #f1cfcf; */
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-`;
-
-type rowbox = {
-  margin: string;
-};
 
 const RowBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin: ${(props: rowbox) => props.margin};
-  /* width: 168px;
-  height: 24px;
-  margin: 52px auto 30px auto; */
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   /* background-color: #683b3b; */
 `;
 
@@ -95,57 +73,64 @@ const LineBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: box) => props.width}px;
-  height: ${(props: box) => props.height}px;
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   background-color: #989898;
 `;
 
 const LogoFont = styled.p`
-  font-size: 27px;
+  font-size: 1.6875rem;
   font-family: 'OpensansBold';
   display: flex;
   margin: 0 0 0 0;
 `;
 
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}px;
-  font-family: 'NotoMed';
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
 type font = {
   size: number;
   color: string;
+  isCorrect?: boolean;
+  isBold?: boolean;
 };
-const KoreanFontBold = styled.p`
-  font-size: ${(props: font) => props.size}px;
-  font-family: 'NotoMed';
+
+const KoreanFont = styled.p`
+  font-size: ${(props: font) => props.size}rem;
+
+  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
   color: ${(props: font) => props.color};
   display: flex;
   margin: 0 0 0 0;
 `;
 
 const EnglishFont = styled.p`
-  font-size: ${(props: font) => props.size}px;
-  font-family: 'OpensansBold';
+  font-size: ${(props: font) => props.size}rem;
+
+  font-family: ${(props: font) => (props.isBold ? 'OpensansBold' : 'OpensansMed')};
   color: ${(props: font) => props.color};
   display: flex;
   margin: 0 0 0 0;
 `;
 
 const LogoFontSmall = styled.p`
-  font-size: 21px;
+  font-size: 1.3125rem;
   font-family: 'OpensansBold';
   display: flex;
   margin: 0 0 0 0;
 `;
 
 const CheckFont = styled.p`
-  font-size: ${(props: font) => props.size}px;
+  font-size: ${(props: font) => props.size}rem;
   font-family: 'NotoRegu';
-  color: ${(props: font) => props.color};
+  color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'blue' : 'red') : props.color)};
+  display: flex;
+  margin: 0 0 0 0;
+  text-align: left;
+`;
+
+const CheckFont2 = styled.p`
+  font-size: ${(props: font) => props.size}rem;
+  font-family: 'NotoRegu';
+  color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'black' : 'red') : props.color)};
   display: flex;
   margin: 0 0 0 0;
   text-align: left;
@@ -158,8 +143,8 @@ const InputInfo = styled.input`
   border: 1px solid #dddddd;
   border-radius: 6px;
   padding: 0 0 0 10px;
-  width: ${(props: box) => props.width}px;
-  height: ${(props: box) => props.height}px;
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   :focus {
     background-color: rgb(220, 237, 255);
@@ -173,8 +158,8 @@ const InputInfoNoneBorder = styled.input`
   border: 1px solid #dddddd;
   /* border-radius: 6px; */
   padding: 0 0 0 10px;
-  width: ${(props: box) => props.width}px;
-  height: ${(props: box) => props.height}px;
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   :focus {
     background-color: rgb(220, 237, 255);
@@ -197,50 +182,65 @@ const BtnBox = styled.button`
   border-radius: 6px;
   border: 1px solid #989898;
 
-  width: ${(props: btnbox) => props.width}px;
-  height: ${(props: btnbox) => props.height}px;
+  width: ${(props: btnbox) => props.width};
+  height: ${(props: btnbox) => props.height}rem;
   margin: ${(props: btnbox) => props.margin};
   background-color: ${(props: btnbox) => props.color};
   cursor: pointer;
+
   &:hover {
     color: white;
     background-color: #ecee73;
   }
 `;
 
+type btnable = {
+  width: number | string;
+  height: number | string;
+  margin: string;
+  isDisable: boolean;
+};
+
 const BtnAble = styled.button`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #769cbc;
+  border: 1px solid #dddddd;
   border-radius: 6px;
+  width: ${(props: btnable) => props.width};
+  height: ${(props: btnable) => props.height}rem;
+  margin: ${(props: btnable) => props.margin};
+  background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
 
-  width: ${(props: box) => props.width}px;
-  height: ${(props: box) => props.height}px;
-  margin: ${(props: box) => props.margin};
-  cursor: pointer;
+  cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
+
   &:hover {
-    color: white;
-    background-color: #1763a6;
+    ${(props: btnable) =>
+      props.isDisable
+        ? ''
+        : `color: white;
+    background-color: #358edc;`}
   }
 `;
 
-const BtnDisable = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #f3f3f3;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  margin: 37px 20px 0px 20px;
-  width: ${(props: box) => props.width}px;
-  height: ${(props: box) => props.height}px;
-  margin: ${(props: box) => props.margin};
-`;
-
 export const SignUpEmail = () => {
+  const [email, setNameText] = useState<string>('');
+  const [emailCheckNumberInput, setEmailCheckNumberInput] = useState<boolean>(false);
+  const [emailCheckNumber, setEmailCheckNumber] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [password2, setPassword2] = useState<string>('');
+  const [nickname, setNickname] = useState<string>('');
+  const [emailCheck, setEmailCheck] = useState<boolean>(false);
+  const [send, setSend] = useState<boolean>(false);
+  const [view, setView] = useState<boolean>(false);
+  const localToken = localStorage.getItem('recoil-persist');
+  const loginToken = useSetRecoilState(tokenState);
+  const tokenUse = useRecoilValue(tokenState);
+
+  const rePass: any = useRef();
+  const nav = useNavigate();
+
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNameText(e.target.value);
   };
@@ -257,9 +257,6 @@ export const SignUpEmail = () => {
     setNickname(e.target.value);
   };
 
-  const [emailCheck, setEmailCheck] = useState<boolean>(true);
-
-  const rePass: any = useRef();
   const CheckEmail = (asValue: string) => {
     const regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
     return regExp.test(asValue);
@@ -272,327 +269,370 @@ export const SignUpEmail = () => {
     const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{5,15}$/;
     return regExp.test(asValue);
   };
-  const [email, setNameText] = useState<string>('');
-  const [emailCheckNumber, setEmailCheckNumber] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [password2, setPassword2] = useState<string>('');
-  const [nickname, setNickname] = useState<string>('');
 
-  const nav = useNavigate();
+  // 이메일 인증번호 발송 API
+  const EmilCertificationData = useMutation((email: { email: string }) => registerApi.emilCertificationApi(email), {
+    onSuccess: (token) => {
+      alert(`${email} 메일로 발송된 인증번호를 입력해주세요🙂`);
+      setEmailCheckNumberInput(true);
+    },
+    onError: (error: AxiosError) => {
+      alert(error.response?.data);
+    },
+  });
 
-  const [view, setView] = useState<boolean>(true);
+  const EmilCertification = (email: { email: string }) => {
+    EmilCertificationData.mutate(email);
+  };
+
+  //이메일 인증번호 일치 확인 API
+  const EmilCertificationNumberData = useMutation((data: FieldValues) => registerApi.emilCertificationNumberApi(data), {
+    onSuccess: (token) => {
+      // loginToken(token.headers.authorization.split(' ')[1]);
+      console.log();
+      alert('인증완료🙂');
+    },
+    onError: () => {
+      alert('인증번호를 다시 확인해주세요.');
+    },
+  });
+
+  const EmilCertificationNumber = (data: FieldValues) => {
+    EmilCertificationNumberData.mutate(data);
+  };
+
+  //닉네임 중복확인 API
+  const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
+    onSuccess: (token) => {
+      // loginToken(token.headers.authorization.split(' ')[1]);
+      console.log();
+      alert(`${nickname}으로 닉네임이 설정되었습니다.`);
+    },
+    onError: () => {
+      alert('중복된 닉네임입니다.');
+    },
+  });
+
+  const NickCertification = (nick: { nick: string }) => {
+    NickCertificationData.mutate(nick);
+  };
+
+  //회원가입 API
+  const JoinData = useMutation((data: FieldValues) => registerApi.joinApi(data), {
+    onSuccess: (token) => {
+      // loginToken(token.headers.authorization.split(' ')[1]);
+      console.log();
+      alert(`${nickname}님 반가워요! 로그인해주세요`);
+      nav('/login');
+    },
+    onError: (error: AxiosError) => {
+      alert(error.response?.data);
+    },
+  });
+
+  const Join = (data: FieldValues) => {
+    JoinData.mutate(data);
+  };
+
+  useEffect(() => {
+    //useEffect 리턴 바로 위에 써주기.
+    if (localToken) {
+      alert('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
+      nav('/');
+    }
+  }, []);
 
   return (
-    <>
-      <HeaderContainer>
-        <RowBox margin={'17px 0px 15px 0px'}>
-          <IconBox
-            width={8}
-            height={16}
-            margin={'0px 0px 0x 20px'}
-            style={{ backgroundImage: 'url(/assets/back.png)' }}
-            onClick={() => {
-              nav('/login');
-            }}
-          ></IconBox>
-          <Box width={69} height={27} margin={'0px 153px 0px 125px'}>
-            <EnglishFont size={18} color="#000000">
-              Sign Up
-            </EnglishFont>
-          </Box>
-        </RowBox>
-        <LineBox width={375} height={1} margin={'0'}></LineBox>
-      </HeaderContainer>
-
-      <RegisterContainer>
+    <PageLayout title="회원가입">
+      <PageLayout.Body>
         <InfoContainer>
-          <Box width={114} height={16} margin={'53px 131px 0px 130px'}>
+          <Box width={7.125} height={1} margin={'3.3125rem auto 0rem auto'}>
             <LogoFontSmall>TODOWITH</LogoFontSmall>
           </Box>
 
-          {/* 이메일 */}
-          <Box width={45} height={24} margin={'27px 310px 10px 20px'}>
-            {email ? (
-              <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
+          <Box width={2.8125} height={1.5} margin={'1.6875rem auto 0.625rem 5.7%'}>
+            {email && (
+              <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
                 이메일
               </KoreanFont>
-            ) : (
-              ''
             )}
           </Box>
-          <RowBox margin={'0px 0px 0px 0px'}>
+          <RowBox width={'100%'} margin={'0px 0px 0px 0px'}>
             <InputInfo
-              width={251}
-              height={40}
-              margin={'0px 11px 0px 20px'}
+              width={'67%'}
+              height={2.5}
+              margin={'0rem 0.6875rem 0rem 1.25rem'}
               type="text"
               placeholder="이메일    ex) todowith@naver.com"
               name="email"
               value={email}
               onChange={onChangeEmail}
             ></InputInfo>
-            {CheckEmail(email) ? (
-              <BtnAble
-                width={73}
-                height={42}
-                margin={'0px 20px 0px 0px'}
-                onClick={() => {
-                  setEmailCheck(true);
-                }}
-              >
-                인증
-              </BtnAble>
-            ) : (
-              <BtnDisable width={73} height={42} margin={'0px 20px 0px 0px'}>
-                인증
-              </BtnDisable>
-            )}
+
+            <BtnAble
+              isDisable={!CheckEmail(email)}
+              width={'19.4%'}
+              height={2.625}
+              margin={'0px 1.25rem 0px 0px'}
+              // onClick={() => {
+              //   setEmailCheck(true);
+              //   setSend(true);
+              //   const goEmilCertification = {
+              //     email: email,
+              //   };
+              //   EmilCertification(goEmilCertification);
+              // }}
+              onClick={
+                CheckEmail(email)
+                  ? () => {
+                      setEmailCheck(true);
+                      setSend(true);
+                      const goEmilCertification = {
+                        email: email,
+                      };
+                      EmilCertification(goEmilCertification);
+                    }
+                  : () => {
+                      null;
+                    }
+              }
+            >
+              인증
+            </BtnAble>
           </RowBox>
-          <BoxSide width={320} height={21} margin={'5px 35px 0px 20px'}>
-            {email ? (
-              CheckEmail(email) ? (
-                <CheckFont size={12} color={'blue'}>
-                  사용 가능한 형식입니다. 인증 버튼을 눌러주세요.
+          {(!send || !emailCheckNumberInput) && (
+            <BoxSide width={20} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
+              {email ? (
+                <CheckFont size={0.75} color={'blue'} isCorrect={CheckEmail(email)}>
+                  {CheckEmail(email) ? '사용 가능한 형식입니다. 인증 버튼을 눌러주세요.' : '이메일을 확인해주세요'}
                 </CheckFont>
               ) : (
-                <CheckFont size={12} color={'red'}>
-                  이메일을 확인해 주세요.
+                <CheckFont size={0.75} color={'black'}>
+                  이메일은 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.
                 </CheckFont>
-              )
-            ) : (
-              <CheckFont size={12} color={'black'}>
-                이메일은 영문과 숫자와 일부 특수문자(._-)만 입력 가능합니다.
-              </CheckFont>
-            )}
-          </BoxSide>
-
-          {emailCheck ? (
-            <InputInfo
-              width={251}
-              height={38}
-              margin={'7px 104px 0px 20px'}
-              type="text"
-              placeholder="이메일로 발송된 인증번호를 입력하세요."
-              name="emailchecknumber"
-              value={emailCheckNumber}
-              onChange={onChangeEmailCheckNumber}
-            ></InputInfo>
-          ) : (
-            ''
+              )}
+            </BoxSide>
           )}
 
-          <Box width={45} height={24} margin={'18px 310px 10px 20px'}>
-            {nickname ? (
-              <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
+          {emailCheckNumberInput && CheckEmail(email) && (
+            <RowBox width={'100%'} margin={'0.4375rem 0px 0px 0px'}>
+              <InputInfo
+                width={'67%'}
+                height={2.375}
+                margin={'0rem 0.6875rem 0rem 1.25rem'}
+                type="text"
+                placeholder="이메일로 발송된 인증번호를 입력하세요."
+                name="emailchecknumber"
+                value={emailCheckNumber}
+                onChange={onChangeEmailCheckNumber}
+              ></InputInfo>
+
+              <BtnAble
+                isDisable={!CheckEmail(email)}
+                width={'19.4%'}
+                height={2.375}
+                margin={'0px 1.25rem 0px 0px'}
+                onClick={() => {
+                  setEmailCheck(true);
+                  const goEmilCertificationNumber = {
+                    code: emailCheckNumber,
+                    email: email,
+                  };
+                  EmilCertificationNumber(goEmilCertificationNumber);
+                }}
+              >
+                확인
+              </BtnAble>
+            </RowBox>
+          )}
+
+          <Box width={2.8125} height={1.5} margin={'1.125rem auto 0.625rem 5.7%'}>
+            {nickname && (
+              <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
                 닉네임
               </KoreanFont>
-            ) : (
-              ''
             )}
           </Box>
-          <RowBox margin={'0px 0px 0px 0px'}>
+          <RowBox width={'100%'} margin={'0px 0px 0px 0px'}>
             <InputInfo
-              width={251}
-              height={40}
-              margin={'0px 11px 0px 20px'}
+              width={'67%'}
+              height={2.5}
+              margin={'0px 0.6875rem 0px 1.25rem'}
               type="text"
               placeholder="닉네임    ex) 빨강바지3456"
               name="nickname"
               value={nickname}
               onChange={onChangeNickname}
             ></InputInfo>
-            {CheckNickname(nickname) ? (
-              <BtnAble width={73} height={42} margin={'0px 20px 0px 0px'}>
-                중복확인
-              </BtnAble>
-            ) : (
-              <BtnDisable width={73} height={42} margin={'0px 20px 0px 0px'}>
-                중복확인
-              </BtnDisable>
-            )}
+
+            <BtnAble
+              isDisable={!CheckNickname(nickname)}
+              width={'19.4%'}
+              height={2.625}
+              margin={'0px 1.25rem 0px 0px'}
+              onClick={() => {
+                const goNickCertification = {
+                  nick: nickname,
+                };
+                NickCertification(goNickCertification);
+              }}
+            >
+              중복확인
+            </BtnAble>
           </RowBox>
-          <BoxSide width={320} height={21} margin={'5px 35px 0px 20px'}>
+          <BoxSide width={20} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
             {nickname ? (
-              CheckNickname(nickname) ? (
-                <CheckFont size={12} color={'blue'}>
-                  사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.
-                </CheckFont>
-              ) : (
-                <CheckFont size={12} color={'red'}>
-                  닉네임 형식을 확인해 주세요.
-                </CheckFont>
-              )
+              <CheckFont size={0.75} color={'blue'} isCorrect={CheckNickname(nickname)}>
+                {CheckNickname(nickname)
+                  ? '사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.'
+                  : '닉네임 형식을 확인해 주세요.'}
+              </CheckFont>
             ) : (
-              <CheckFont size={12} color={'black'}>
+              <CheckFont size={0.75} color={'black'}>
                 닉네임은 2-15자의 한글, 영어, 숫자입니다.
               </CheckFont>
             )}
           </BoxSide>
 
-          <Box width={59} height={24} margin={'18px 296px 10px 20px'}>
-            {password ? (
-              <KoreanFont size={16} color="rgba(147, 147, 147, 1)">
+          <Box width={3.6875} height={1.5} margin={'1.125rem auto 0.625rem 5.7%'}>
+            {password && (
+              <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
                 비밀번호
               </KoreanFont>
-            ) : (
-              ''
             )}
           </Box>
 
-          <RowBox margin={'0px 0px 0px 0px'}>
+          <RowBox
+            width={'88.3%'}
+            margin={'0'}
+            style={{
+              border: '1px solid #dddddd',
+              borderRadius: '6px',
+            }}
+          >
             <InputInfoNoneBorder
-              width={300}
-              height={40}
-              margin={'0px 0px 0px 15px'}
+              width={'85%'}
+              height={2.5}
+              margin={'0'}
+              // margin={'0px 0px 0px 0.9375rem'}
               placeholder="비밀번호를 입력하세요."
-              type={view ? 'password' : 'text'}
+              type={view ? 'text' : 'password'}
               value={password}
               onChange={onChangePw1}
               style={{
-                borderRight: 'none',
+                border: 'none',
                 borderTopLeftRadius: '6px',
                 borderBottomLeftRadius: '6px',
               }}
             ></InputInfoNoneBorder>
             <Box
-              width={35}
-              height={40}
-              margin={'0px 15px 0px 0px'}
+              width={'15%'}
+              height={2.5}
+              margin={'0'}
               onMouseDown={() => setView(!view)}
               onMouseUp={() => setView(!view)}
-              style={
-                view
-                  ? {
-                      borderLeft: 'none',
-                      border: '1px solid #dddddd',
-                      borderTopRightRadius: '6px',
-                      borderBottomRightRadius: '6px',
-                      backgroundImage: 'url(/assets/closeeye.png)',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center',
-                      backgroundSize: '25px',
-                    }
-                  : {
-                      borderLeft: 'none',
-                      border: '1px solid #dddddd',
-                      borderTopRightRadius: '6px',
-                      borderBottomRightRadius: '6px',
-                      backgroundImage: 'url(/assets/eye.png)',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center',
-                      backgroundSize: '25px',
-                    }
-              }
+              style={{
+                border: 'none',
+                borderTopRightRadius: '6px',
+                borderBottomRightRadius: '6px',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundSize: '1.5625rem',
+                backgroundImage: view ? 'url(/assets/eye.png)' : 'url(/assets/closeeye.png)',
+              }}
             ></Box>
           </RowBox>
 
-          {password ? (
-            CheckPassword(password) ? (
-              <RowBox margin={'7px 0px 0px 0px'}>
-                <InputInfoNoneBorder
-                  width={300}
-                  height={40}
-                  margin={'0px 0px 0px 15px'}
-                  placeholder="비밀번호를 재입력하세요."
-                  type={view ? 'password' : 'text'}
-                  value={password2}
-                  onChange={onChangePw2}
-                  style={{
-                    borderRight: 'none',
-                    borderTopLeftRadius: '6px',
-                    borderBottomLeftRadius: '6px',
-                  }}
-                ></InputInfoNoneBorder>
-                <Box
-                  width={35}
-                  height={40}
-                  margin={'0px 15px 0px 0px'}
-                  onMouseDown={() => setView(!view)}
-                  onMouseUp={() => setView(!view)}
-                  style={
-                    view
-                      ? {
-                          // borderLeft: 'none',
-                          border: '1px solid #dddddd',
-                          borderTopRightRadius: '6px',
-                          borderBottomRightRadius: '6px',
-                          backgroundImage: 'url(/assets/closeeye.png)',
-                          backgroundRepeat: 'no-repeat',
-                          backgroundPosition: 'center',
-                          backgroundSize: '25px',
-                        }
-                      : {
-                          // borderLeft: 'none',
-                          border: '1px solid #dddddd',
-                          borderTopRightRadius: '6px',
-                          borderBottomRightRadius: '6px',
-                          backgroundImage: 'url(/assets/eye.png)',
-                          backgroundRepeat: 'no-repeat',
-                          backgroundPosition: 'center',
-                          backgroundSize: '25px',
-                        }
-                  }
-                ></Box>
-              </RowBox>
-            ) : (
-              <BoxSide width={340} height={21} margin={'5px 15px 0px 20px'}>
-                <CheckFont size={12} color={'red'}>
-                  비밀번호 형식을 확인해 주세요.
-                </CheckFont>
-              </BoxSide>
-            )
+          {password && CheckPassword(password) ? (
+            <RowBox
+              width={'88.3%'}
+              margin={'0.4375rem 0 0 0'}
+              style={{
+                border: '1px solid #dddddd',
+                borderRadius: '6px',
+              }}
+            >
+              <InputInfoNoneBorder
+                width={'85%'}
+                height={2.5}
+                margin={'0'}
+                placeholder="비밀번호를 재입력하세요."
+                type={view ? 'text' : 'password'}
+                value={password2}
+                onChange={onChangePw2}
+                style={{
+                  border: 'none',
+                  borderTopLeftRadius: '6px',
+                  borderBottomLeftRadius: '6px',
+                }}
+              ></InputInfoNoneBorder>
+              <Box
+                width={'15%'}
+                height={2.5}
+                margin={'0'}
+                onMouseDown={() => setView(!view)}
+                onMouseUp={() => setView(!view)}
+                style={{
+                  border: 'none',
+                  borderTopRightRadius: '6px',
+                  borderBottomRightRadius: '6px',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  backgroundSize: '1.5625rem',
+                  backgroundImage: view ? 'url(/assets/eye.png)' : 'url(/assets/closeeye.png)',
+                }}
+              ></Box>
+            </RowBox>
           ) : (
-            <BoxSide width={340} height={21} margin={'5px 15px 0px 20px'}>
-              <CheckFont size={12} color={'black'}>
-                비밀번호는 5-10자의 영문,숫자,특수문자(!@#$%^&*) 조합입니다.
-              </CheckFont>
+            <BoxSide width={21.25} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
+              <CheckFont2 size={0.75} color={'black'} isCorrect={!password}>
+                {password
+                  ? '비밀번호 형식을 확인해 주세요.'
+                  : '비밀번호는 5-10자의 영문,숫자,특수문자(!@#$%^&*) 조합입니다.'}
+              </CheckFont2>
             </BoxSide>
           )}
-          <BoxSide width={340} height={21} margin={'5px 15px 0px 20px'}>
-            {password2 ? (
-              password === password2 ? (
-                <CheckFont size={12} color={'blue'}>
-                  비밀번호가 일치합니다.
-                </CheckFont>
-              ) : (
-                <CheckFont size={12} color={'red'}>
-                  비밀번호가 일치하지 않습니다.
-                </CheckFont>
-              )
-            ) : (
-              ''
+
+          <BoxSide width={21.25} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
+            {password2 && (
+              <CheckFont size={0.75} color={'blue'} isCorrect={password === password2}>
+                {password === password2 ? '비밀번호가 일치합니다' : '비밀번호가 일치하지 않습니다'}
+              </CheckFont>
             )}
           </BoxSide>
-        </InfoContainer>
-
-        {email && password ? (
-          <BtnAble width={335} height={64} margin={'27px 20px 0px 20px'}>
-            <KoreanFont size={17} color="white">
-              회원가입
-            </KoreanFont>
+          <BtnAble
+            isDisable={!email || !nickname || !password || !password2}
+            width={'88.2%'}
+            height={4}
+            margin={'1.6875rem 1.25rem 0rem 1.25rem'}
+            onClick={() => {
+              const goJoin = {
+                email: email,
+                nick: nickname,
+                password: password,
+              };
+              Join(goJoin);
+            }}
+          >
+            회원가입
           </BtnAble>
-        ) : (
-          <BtnDisable width={335} height={64} margin={'27px 20px 0px 20px'}>
-            <KoreanFont size={17} color="white">
-              회원가입
+
+          <LineBox width={20.9375} height={0.0625} margin={'0.625rem 1.25rem 0.625rem 1.25rem'}></LineBox>
+          <BtnBox
+            width={'88.2%'}
+            height={2.6875}
+            margin={'0px 1.25rem 0px 1.25rem'}
+            color={'white'}
+            onClick={() => {
+              nav('/login');
+            }}
+          >
+            <KoreanFont size={0.875} color="#5F5F5F">
+              로그인 페이지로 돌아가기
             </KoreanFont>
-          </BtnDisable>
-        )}
-        <LineBox width={335} height={1} margin={'10px 20px 10px 20px'}></LineBox>
-        <BtnBox
-          width={335}
-          height={43}
-          margin={'0px 20px 0px 20px'}
-          color={'white'}
-          onClick={() => {
-            nav('/login');
-          }}
-        >
-          <KoreanFont size={14} color="#5F5F5F">
-            로그인 페이지로 돌아가기
-          </KoreanFont>
-        </BtnBox>
-      </RegisterContainer>
-    </>
+          </BtnBox>
+        </InfoContainer>
+      </PageLayout.Body>
+    </PageLayout>
   );
 };
