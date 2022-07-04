@@ -6,9 +6,11 @@ interface ButtonProps {
   size?: 'small' | 'large';
   isSquare?: boolean;
   onClick?: () => void;
+  margin?: string;
 }
 
 const StyledButton = styled.button<ButtonProps>`
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,6 +27,7 @@ const StyledButton = styled.button<ButtonProps>`
     buttonType === 'default' ? 'white' : buttonType === 'primary' ? theme.color.grayDark : theme.color.grayMediumLight};
   height: ${({ size }) => (size === 'small' ? '3rem' : '4rem')};
   cursor: ${({ buttonType }) => buttonType && 'disable'};
+  margin: ${({ margin }) => margin && margin};
 `;
 
 export const Button = ({

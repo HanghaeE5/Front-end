@@ -2,6 +2,7 @@ import { PropsWithChildren } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FiChevronLeft } from 'react-icons/fi';
+import { Wrapper } from '../element';
 
 const HeaderWrapper = styled.div`
   height: 3.75rem;
@@ -23,29 +24,10 @@ const HeaderWrapper = styled.div`
   }
 `;
 
-const Header = ({ children }: PropsWithChildren) => {
-  const nav = useNavigate();
-
-  return (
-    <HeaderWrapper>
-      <FiChevronLeft
-        onClick={() => {
-          nav(-1);
-        }}
-      />
-      <span>{children}</span>
-    </HeaderWrapper>
-  );
-};
-
 const BodyWrapper = styled.div`
-  height: 100%;
-  /* background-color: yellow; */
+  height: calc(100% - 3.75rem);
+  overflow: hidden;
 `;
-
-const Body = ({ children }: PropsWithChildren) => {
-  return <BodyWrapper>{children}</BodyWrapper>;
-};
 
 const LayoutContainer = styled.div`
   width: 100%;
@@ -70,14 +52,18 @@ const KoreanFont = styled.p`
 `;
 
 export const PageLayout = ({ children, title }: PropsWithChildren<{ title: string }>) => {
+  const nav = useNavigate();
   return (
     <LayoutContainer>
-      <Header>
+      <HeaderWrapper>
+        <FiChevronLeft
+          onClick={() => {
+            nav(-1);
+          }}
+        />
         <KoreanFont size={1.125}>{title}</KoreanFont>
-      </Header>
-      <PageLayout.Body>{children}</PageLayout.Body>
+      </HeaderWrapper>
+      <BodyWrapper>{children}</BodyWrapper>
     </LayoutContainer>
   );
 };
-
-PageLayout.Body = Body;

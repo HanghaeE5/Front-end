@@ -8,8 +8,9 @@ import { PostCard } from '../component/PostCard';
 import { CommunitySearchControl, Post } from '../Types/community';
 
 const ContentWrapper = styled.div`
-  height: 100%;
+  height: calc(100% - 3.75rem);
   section:nth-of-type(1) {
+    max-height: 10rem;
     height: 10rem;
     display: flex;
     flex-direction: column;
@@ -18,8 +19,8 @@ const ContentWrapper = styled.div`
   }
 
   section:nth-of-type(2) {
+    height: calc(100% - 6.5rem);
     overflow-y: scroll;
-    height: 100%;
     background-color: ${({ theme }) => theme.color.grayLight};
   }
 `;

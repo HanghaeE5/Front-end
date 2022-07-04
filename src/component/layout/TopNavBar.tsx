@@ -1,9 +1,7 @@
-import { PropsWithChildren } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { FiChevronLeft } from 'react-icons/fi';
 
-const TopNavWrapper = styled.div`
+const TopNavWrapper = styled.nav`
   height: 3.75rem;
   width: 100%;
   display: flex;
@@ -25,7 +23,7 @@ const TopNavWrapper = styled.div`
   }
 `;
 
-export const TopNavLayout = () => {
+export const TopNavBar = () => {
   const nav = useNavigate();
 
   return (

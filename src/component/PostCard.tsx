@@ -43,7 +43,7 @@ const ContentWrapper = styled.div<ContentWrapperProps>`
   line-height: 19.6px;
   font-family: 'Noto Sans CJK Light KR';
   font-weight: 400;
-  height: ${({ isSummary }) => (isSummary ? '2.5rem' : '100%')};
+  height: ${({ isSummary }) => (isSummary ? '2.5rem' : '14rem')};
   overflow-y: ${({ isSummary }) => (isSummary ? 'hidden' : 'scroll')};
   padding: 0 1rem;
   max-height: 18rem;

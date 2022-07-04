@@ -9,7 +9,8 @@ const Div = styled.div<WrapperProps>`
   margin: ${({ margin }) => (margin ? margin : 0)};
   padding: ${({ padding }) => (padding ? padding : 0)};
   justify-content: ${({ justifyContent }) => (justifyContent ? justifyContent : '')};
-  align-items: ${({ alignItems }) => (alignItems ? alignItems : 'center')}; ;
+  align-items: ${({ alignItems }) => (alignItems ? alignItems : 'center')};
+  box-sizing: border-box;
 `;
 
 interface WrapperProps {

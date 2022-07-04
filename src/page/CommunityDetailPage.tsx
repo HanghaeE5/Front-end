@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { Button, Img, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
@@ -27,35 +28,36 @@ const postDetail: PostDetail = {
   isOpenChallange: true,
 };
 
+const Container = styled.section`
+  border: 1px solid black;
+  height: calc(100%);
+`;
+
 export const CommunityDetailPage = () => {
   return (
     <NavLayout>
       <PageLayout title="커뮤니티">
-        <PageLayout.Body>
-          <Wrapper isColumn justifyContent="space-between" height="100%">
-            <Wrapper isColumn alignItems="start">
-              <PostCard.PostHeader
-                userImg={postDetail.userImg}
-                userName={postDetail.userName}
-                date={postDetail.date}
-                postNumber={postDetail.postNumber}
-              />
-              {postDetail.imgUrl && (
-                <Wrapper>
-                  <Img url={postDetail.imgUrl} type="square" />
-                </Wrapper>
-              )}
-              <PostCard.PostTitle type={postDetail.type}>{postDetail.title}</PostCard.PostTitle>
-              <PostCard.Content>{postDetail.content}</PostCard.Content>
-              <PostCard.Gather>{postDetail.gather}</PostCard.Gather>
+        <Wrapper isColumn alignItems="start" height="100%">
+          <PostCard.PostHeader
+            userImg={postDetail.userImg}
+            userName={postDetail.userName}
+            date={postDetail.date}
+            postNumber={postDetail.postNumber}
+          />
+          {postDetail.imgUrl && (
+            <Wrapper>
+              <Img url={postDetail.imgUrl} type="square" />
             </Wrapper>
-            <Wrapper padding="1rem">
-              <Button buttonType={postDetail.isOpenChallange ? 'primary' : 'disable'}>
-                {postDetail.isOpenChallange ? '챌린져스 참여하기' : '마감된 챌린져스입니다'}
-              </Button>
-            </Wrapper>
+          )}
+          <PostCard.PostTitle type={postDetail.type}>{postDetail.title}</PostCard.PostTitle>
+          <PostCard.Content>{postDetail.content}</PostCard.Content>
+          <PostCard.Gather>{postDetail.gather}</PostCard.Gather>
+          <Wrapper>
+            <Button margin="1rem" buttonType={postDetail.isOpenChallange ? 'primary' : 'disable'}>
+              {postDetail.isOpenChallange ? '챌린져스 참여하기' : '마감된 챌린져스입니다'}
+            </Button>
           </Wrapper>
-        </PageLayout.Body>
+        </Wrapper>
       </PageLayout>
     </NavLayout>
   );

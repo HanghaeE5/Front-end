@@ -9,6 +9,8 @@ const BottomNavWrapper = styled.div`
   justify-content: row;
   align-items: center;
   background-color: #a1e1ec;
+  z-index: 1;
+  width: 100%;
 
   span {
     font-size: 1.25rem;
@@ -26,14 +28,5 @@ const BottomNavWrapper = styled.div`
 export const BottomNavLayout = () => {
   const nav = useNavigate();
 
-  return (
-    <BottomNavWrapper
-      style={{
-        backgroundImage: 'url(/assets/TabBar.svg)',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-      }}
-    ></BottomNavWrapper>
-  );
+  return <BottomNavWrapper>123123</BottomNavWrapper>;
 };
