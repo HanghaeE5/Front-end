@@ -20,3 +20,21 @@ export const editPasswordModalState = atom({
   default: false,
   effects_UNSTABLE: [persistAtom],
 });
+
+export const notiModalState = atom({
+  key: 'notiModalState',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const editPhotoModalState = atom({
+  key: 'editPhotoModalState',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const profileMenuModalState = atom({
+  key: 'profileMenuModalState',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});

@@ -1,6 +1,16 @@
 import { ReactElement } from 'react';
+import { Chatting } from '../page/Chatting';
 
-import { Login, Main, SignUpEmail, SignUpSNS, CommunityPage, CommunityDetailPage } from './../page';
+import {
+  Login,
+  Main,
+  SignUpEmail,
+  SignUpSNS,
+  CommunityPage,
+  CommunityDetailPage,
+  ToDoPage,
+  FriendList,
+} from './../page';
 
 export interface IRoute {
   id: string;
@@ -40,5 +50,20 @@ export const routeList: IRoute[] = [
     id: 'communityDetail',
     path: '/community/:id',
     page: CommunityDetailPage,
+  },
+  {
+    id: 'todo',
+    path: '/todo',
+    page: ToDoPage,
+  },
+  {
+    id: 'friendlist',
+    path: '/friendlist',
+    page: FriendList,
+  },
+  {
+    id: 'chatting',
+    path: '/chatting',
+    page: Chatting,
   },
 ];
