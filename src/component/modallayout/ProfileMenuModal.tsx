@@ -186,7 +186,10 @@ const ProfileMenuModal = () => {
               e.stopPropagation();
             }}
           >
-            프로필 메뉴
+            비밀번호 변경
+            <br />
+            <br />
+            로그아웃
           </BoxWrap>
         </ModalBackground>
       )}
