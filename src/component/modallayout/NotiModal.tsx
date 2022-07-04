@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { editNicknameModalState, editPasswordModalState } from '../../recoil/store';
+import { notiModalState } from '../../recoil/store';
 import { Children, useState } from 'react';
 import { PropsWithChildren } from 'react';
 import { useMutation } from 'react-query';
@@ -172,39 +172,12 @@ const BtnAble = styled.button`
   }
 `;
 
-const EditNicknameModal = () => {
-  const [modalEditNickname, setModalEditNickname] = useRecoilState(editNicknameModalState);
-
-  const [nickname, setNickname] = useState<string>('');
-  const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
-  };
-
-  const CheckNickname = (asValue: string) => {
-    const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
-    return regExp.test(asValue);
-  };
-
-  //닉네임 중복확인 API
-  const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
-    onSuccess: (token) => {
-      // loginToken(token.headers.authorization.split(' ')[1]);
-      console.log();
-      alert(`${nickname}으로 닉네임이 설정되었습니다.`);
-    },
-    onError: () => {
-      alert('중복된 닉네임입니다.');
-    },
-  });
-
-  const NickCertification = (nick: { nick: string }) => {
-    NickCertificationData.mutate(nick);
-  };
-
+const NotiModal = () => {
+  const [modalNoti, setModalNoti] = useRecoilState(notiModalState);
   return (
     <>
-      {modalEditNickname && (
-        <ModalBackground onClick={() => setModalEditNickname(false)}>
+      {modalNoti && (
+        <ModalBackground onClick={() => setModalNoti(false)}>
           <BoxWrap
             width={'100%'}
             height={15}
@@ -213,62 +186,11 @@ const EditNicknameModal = () => {
               e.stopPropagation();
             }}
           >
-            <Box width={'350px'} height={1.5} margin={'1.125rem auto 0.625rem 1.25rem'}>
-              <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
-                닉네임
-              </KoreanFont>
-            </Box>
-            <Box width={2.8125} height={1.5} margin={'1.5rem 19.375rem 0.625rem 1.25rem'}>
-              {nickname && (
-                <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
-                  닉네임
-                </KoreanFont>
-              )}
-            </Box>
-            <RowBox width={'100%'} margin={'0px 0px 0px 0px'}>
-              <InputInfo
-                width={15.6875}
-                height={2.5}
-                margin={'0px 0.6875rem 0px 1.25rem'}
-                type="text"
-                placeholder="닉네임    ex) 빨강바지3456"
-                name="nickname"
-                value={nickname}
-                onChange={onChangeNickname}
-              ></InputInfo>
-
-              <BtnAble
-                isDisable={!CheckNickname(nickname)}
-                width={4.5625}
-                height={2.625}
-                margin={'0px 1.25rem 0px 0px'}
-                onClick={() => {
-                  const goNickCertification = {
-                    nick: nickname,
-                  };
-                  NickCertification(goNickCertification);
-                }}
-              >
-                중복확인
-              </BtnAble>
-            </RowBox>
-            <BoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
-              {nickname ? (
-                <CheckFont size={0.75} color={'blue'} isCorrect={CheckNickname(nickname)}>
-                  {CheckNickname(nickname)
-                    ? '사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.'
-                    : '닉네임 형식을 확인해 주세요.'}
-                </CheckFont>
-              ) : (
-                <CheckFont size={0.75} color={'black'}>
-                  닉네임은 2-15자의 한글, 영어, 숫자입니다.
-                </CheckFont>
-              )}
-            </BoxSide>
+            알림
           </BoxWrap>
         </ModalBackground>
       )}
     </>
   );
 };
-export default EditNicknameModal;
+export default NotiModal;

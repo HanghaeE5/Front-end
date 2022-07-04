@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
+import NotiModal from '../component/modallayout/NotiModal';
 import { PostCard } from '../component/PostCard';
 import { CommunitySearchControl, Post } from '../Types/community';
 

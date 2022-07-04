@@ -1,11 +1,19 @@
 import styled from 'styled-components';
 import { NavLayout } from '../component/layout/NavLayout';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { editNicknameModalState, editPasswordModalState, tokenState } from '../recoil/store';
+import {
+  editNicknameModalState,
+  editPasswordModalState,
+  editPhotoModalState,
+  notiModalState,
+  tokenState,
+} from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import EditPasswordModal from '../component/modallayout/EditPasswordModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import NotiModal from '../component/modallayout/NotiModal';
+import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 
 const MainContainer = styled.div`
   display: flex;
@@ -216,6 +224,8 @@ console.log(window.location.href);
 export const Main = () => {
   const [modalEditNickname, setmodalEditNickname] = useRecoilState(editNicknameModalState);
   const [modalEditPassword, setModalEditPassword] = useRecoilState(editPasswordModalState);
+  const [modalNoti, setModalNoti] = useRecoilState(notiModalState);
+  const [modalEditPhoto, setModalEditPhoto] = useRecoilState(editPhotoModalState);
   const all = window.location.href;
   const url = new URL(window.location.href);
   const first = all.split('&');
@@ -280,8 +290,13 @@ export const Main = () => {
             backgroundPosition: 'center',
             backgroundSize: 'cover',
             backgroundImage: 'url(/assets/camera.svg)',
+            cursor: 'pointer',
+          }}
+          onClick={() => {
+            setModalEditPhoto(true);
           }}
         ></Box>
+        <EditPhotoModal></EditPhotoModal>
         <RowBox margin={'0.628rem 0px 0px 0px'}>
           <Box
             height={1.5}
@@ -426,18 +441,6 @@ export const Main = () => {
             </BoxSide>
           </RowBox>
         </Box>
-        <BoxSide
-          width={'60%'}
-          height={1.6875}
-          margin={'0.8125rem auto 0 8%'}
-          onClick={() => {
-            setModalEditPassword(true);
-          }}
-        >
-          <KoreanFont size={1.25} color="#000000">
-            닉네임
-          </KoreanFont>
-        </BoxSide>
         <EditPasswordModal></EditPasswordModal>
       </MainContainer>
     </NavLayout>
