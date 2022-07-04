@@ -5,6 +5,8 @@ import { FiChevronLeft } from 'react-icons/fi';
 import { Wrapper } from '../element';
 
 const HeaderWrapper = styled.div`
+  width: 100%;
+  max-width: 768px;
   height: 3.75rem;
   display: flex;
   justify-content: center;

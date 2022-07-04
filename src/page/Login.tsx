@@ -11,16 +11,17 @@ const RegisterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 23.4375rem;
+  width: 100%;
+  max-width: 768px;
   height: 42.375rem;
   background-color: #ffffff;
   margin: 60px auto 74px auto;
 `;
 
 type box = {
-  width: number;
-  height: number;
-  margin: string;
+  width?: number | string;
+  height?: number;
+  margin?: string;
 };
 
 const Box = styled.div`
@@ -28,21 +29,18 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
 `;
-
-type rowbox = {
-  margin: string;
-};
 
 const RowBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin: ${(props: rowbox) => props.margin};
+  margin: ${(props: box) => props.margin};
+  width: ${(props: box) => props.width};
   /* background-color: #ffffff; */
 `;
 
@@ -67,15 +65,30 @@ const KoreanFont = styled.p`
 `;
 
 const InputInfo = styled.input`
-  width: 20.9375rem;
-  height: 2.5rem;
   display: flex;
   flex-direction: column;
   background: #ffffff;
   border: 1px solid #dddddd;
   border-radius: 6px;
   padding: 0 0 0 10px;
-  margin: 0px 1.25rem 0.8125rem 1.25rem;
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
+  :focus {
+    background-color: rgb(220, 237, 255);
+  }
+`;
+
+const InputInfoNoneBorder = styled.input`
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  /* border-radius: 6px; */
+  padding: 0 0 0 10px;
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   :focus {
     background-color: rgb(220, 237, 255);
   }
@@ -85,7 +98,7 @@ type btnable = {
   width: number | string;
   height: number | string;
   margin: string;
-  isDisable: boolean;
+  isDisable?: boolean;
 };
 
 const BtnAble = styled.button`
@@ -95,7 +108,7 @@ const BtnAble = styled.button`
   justify-content: center;
   border: 1px solid #dddddd;
   border-radius: 6px;
-  width: ${(props: btnable) => props.width}rem;
+  width: ${(props: btnable) => props.width};
   height: ${(props: btnable) => props.height}rem;
   margin: ${(props: btnable) => props.margin};
   background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
@@ -117,6 +130,7 @@ export const Login = () => {
   const tokenUse = useRecoilValue(tokenState);
   const [email, setNameText] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [autoLogin, setAutoLogin] = useState<boolean>(false);
 
   const nav = useNavigate();
 
@@ -155,7 +169,7 @@ export const Login = () => {
       <Box width={10.5} height={1.5} margin={'52px auto 30px auto'}>
         <LogoFontBig>TODOWITH</LogoFontBig>
       </Box>
-      <Box width={2.8125} height={1.5} margin={'0px 310px 10px 20px'}>
+      <Box width={2.8125} height={1.5} margin={'0px auto 10px 5.7%'}>
         {email && (
           <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
             이메일
@@ -163,26 +177,58 @@ export const Login = () => {
         )}
       </Box>
       <InputInfo
+        width={'89%'}
+        height={2.5}
+        margin={'0px 1.25rem 0px 1.25rem'}
         type="text"
         placeholder="이메일을 입력하세요.    ex) todowith@naver.com"
         name="email"
         value={email}
         onChange={onChange1}
       ></InputInfo>
-      <Box width={3.6875} height={1.5} margin={'13px 296px 10px 20px'}>
+      <Box width={3.6875} height={1.5} margin={'13px auto 10px 5.7%'}>
         {password && (
           <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
             비밀번호
           </KoreanFont>
         )}
       </Box>
-      <InputInfo placeholder="비밀번호를 입력하세요." type="password" value={password} onChange={onChange2}></InputInfo>
+      <InputInfo
+        width="89%"
+        height={2.5}
+        margin={'0px 1.25rem 0px 1.25rem'}
+        placeholder="비밀번호를 입력하세요."
+        type="password"
+        value={password}
+        onChange={onChange2}
+      ></InputInfo>
 
+      <RowBox width="100%" margin={'1.5rem 0 1rem 0'}>
+        <Box
+          width={'1.25rem'}
+          height={1.25}
+          margin={'0 0.5625rem 0 5.7%'}
+          style={{
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundImage: autoLogin ? 'url(/assets/checkempty.png)' : 'url(/assets/checkfull.png)',
+          }}
+          onClick={() => {
+            setAutoLogin(!autoLogin);
+          }}
+        ></Box>
+        <Box width={4.25} height={1.3125} margin={'0px auto 0px 0px'}>
+          <KoreanFont size={0.874} color="rgba(147, 147, 147, 1)">
+            자동 로그인
+          </KoreanFont>
+        </Box>
+      </RowBox>
       <BtnAble
         isDisable={!email || !password}
-        width={20.9375}
+        width={'89%'}
         height={4}
-        margin={'2.3125rem 1.25rem 0rem 1.25rem'}
+        margin={'0rem 1.25rem 2rem 1.25rem'}
         onClick={() => {
           const goLogin = {
             email: email,
@@ -196,77 +242,73 @@ export const Login = () => {
         </KoreanFont>
       </BtnAble>
 
-      <RowBox margin={'0.875rem 0 1.375rem 0'}>
-        <Box width={1.25} height={1.25} margin={'0 0.5625rem 0 2.0625rem'}>
-          <KoreanFont size={0.874} color="rgba(147, 147, 147, 1)">
-            ○
-          </KoreanFont>
-        </Box>
-        <Box width={4.25} height={1.3125} margin={'0px 15.3125rem 0px 0px'}>
-          <KoreanFont size={0.874} color="rgba(147, 147, 147, 1)">
-            자동 로그인
-          </KoreanFont>
-        </Box>
-      </RowBox>
-      <RowBox margin={'0px 0px 2.375rem 0px'}>
-        <Box width={6.875} height={1.3125} margin={'0px 0px 0x 5rem'}>
-          <KoreanFont size={0.874} color="rgba(147, 147, 147, 1)">
-            첫 방문이라면? 🙂
-          </KoreanFont>
-        </Box>
-        <Box width={3.75} height={1.3125} margin={'0px 5rem 0px 2.8125rem'}>
-          <KoreanFont
-            size={0.875}
-            color="rgba(147, 147, 147, 1)"
-            onClick={() => {
-              nav('/signupemail');
-            }}
-          >
-            회원가입
-          </KoreanFont>
-        </Box>
-      </RowBox>
+      <BtnAble
+        width={'89%'}
+        height={4}
+        margin={'0rem 1.25rem 2.375rem 1.25rem'}
+        onClick={() => {
+          nav('/signupemail');
+        }}
+      >
+        <KoreanFont size={1.0625} color="white">
+          회원가입
+        </KoreanFont>
+      </BtnAble>
 
-      <RowBox margin={'0px 0px 1.625rem 0px'}>
-        <hr style={{ width: '9.0625rem', marginLeft: '1.25rem' }} />
+      <RowBox margin={'0px 0px 1.625rem 0px'} width={'100%'}>
+        <hr style={{ width: '41.2%', marginLeft: '1.25rem' }} />
         <Box width={1.875} height={1.3125} margin={'0px 0.625rem 0px 0.625rem'}>
           <KoreanFont size={0.75} color="rgba(147, 147, 147, 1)">
             또는
           </KoreanFont>
         </Box>
-        <hr style={{ width: '9.0625rem', marginRight: '1.25rem' }} />
+        <hr style={{ width: '41.2%', marginRight: '1.25rem' }} />
       </RowBox>
-      <RowBox margin={'0'}>
+      <RowBox margin={'0'} width={'100%'}>
         <Box
-          width={3.75}
+          width={'3.75rem'}
           height={3.75}
           margin={'0px 3rem 0px 3.0625rem'}
-          onClick={() => {
-            nav('/signupsns');
+          style={{
+            border: 'none',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundImage: 'url(/assets/navericon.png)',
           }}
-        >
-          네이버
-        </Box>
+        ></Box>
         <Box
-          width={3.75}
+          width={'3.75rem'}
           height={3.75}
           margin={'0px 48px 0px 0px'}
+          style={{
+            border: 'none',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundImage: 'url(/assets/kakaoicon.png)',
+          }}
           onClick={() => {
             nav('/signupsns');
           }}
-        >
-          카카오
-        </Box>
+        ></Box>
         <Box
-          width={3.75}
+          width={'3.75rem'}
           height={3.75}
           margin={'0px 3.125rem 0px 0px'}
-          onClick={() => {
-            nav('/signupsns');
+          style={{
+            border: 'none',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundImage: 'url(/assets/googleicon.png)',
           }}
-        >
-          구글
-        </Box>
+          onClick={() => {
+            window.location.replace(
+              'http://todowith.shop/oauth2/authorization/google?redirect_uri=http://localhost:3000',
+            );
+          }}
+        ></Box>
       </RowBox>
     </RegisterContainer>
   );

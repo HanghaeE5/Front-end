@@ -6,12 +6,13 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { tokenState } from '../recoil/store';
 import { registerApi } from '../api/callApi';
+import { AxiosError } from 'axios';
 
 const RegisterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 23.4375rem;
+  width: 100%;
   height: 42.375rem;
   background-color: #ffffff;
   margin: 0px auto 4.625rem auto;
@@ -28,9 +29,9 @@ const HeaderContainer = styled.div`
 `;
 
 type box = {
-  width: number | string;
-  height: number | string;
-  margin: string;
+  width?: number | string;
+  height?: number | string;
+  margin?: string;
 };
 
 const Box = styled.div`
@@ -38,7 +39,7 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   /* background-color: #deb3b3; */
@@ -48,7 +49,7 @@ const BoxSide = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   /* background-color: #6922bb; */
@@ -63,7 +64,9 @@ const RowBox = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin: ${(props: rowbox) => props.margin};
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   /* background-color: #683b3b; */
 `;
 
@@ -102,7 +105,7 @@ const LogoFontBig = styled.p`
 `;
 
 const CheckFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
+  font-size: ${(props: font) => props.size};
   font-family: 'NotoRegu';
   color: ${(props: font) => props.color};
   display: flex;
@@ -117,7 +120,7 @@ const InputInfo = styled.input`
   border: 1px solid #dddddd;
   border-radius: 6px;
   padding: 0 0 0 10px;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   :focus {
@@ -146,7 +149,7 @@ const BtnAble = styled.button`
   justify-content: center;
   border: 1px solid #dddddd;
   border-radius: 6px;
-  width: ${(props: btnable) => props.width}rem;
+  width: ${(props: btnable) => props.width};
   height: ${(props: btnable) => props.height}rem;
   margin: ${(props: btnable) => props.margin};
   background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
@@ -164,9 +167,8 @@ const BtnAble = styled.button`
 
 export const SignUpSNS = () => {
   const [nickname, setNickname] = useState<string>('');
-  const localToken = localStorage.getItem('recoil-persist');
-  const loginToken = useSetRecoilState(tokenState);
-  const tokenUse = useRecoilValue(tokenState);
+  // const loginToken = useSetRecoilState(tokenState);
+  // const tokenUse = useRecoilValue(tokenState);
 
   const nav = useNavigate();
   const rePass: any = useRef();
@@ -180,11 +182,26 @@ export const SignUpSNS = () => {
     setNickname(e.target.value);
   };
 
-  //닉네임 중복확인 API
-  const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
+  //소셜로그인 닉네임 저장 API
+  const joinSocialApiData = useMutation((nick: { nick: string }) => registerApi.joinSocialApi(nick), {
     onSuccess: (token) => {
       // loginToken(token.headers.authorization.split(' ')[1]);
       console.log();
+      alert(`${nickname}님 반가워요! 로그인해주세요`);
+      nav('/');
+    },
+    onError: (error: AxiosError) => {
+      alert(error.response?.data);
+    },
+  });
+
+  const joinSocial = (nick: { nick: string }) => {
+    joinSocialApiData.mutate(nick);
+  };
+
+  //닉네임 중복확인 API
+  const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
+    onSuccess: (token) => {
       alert(`${nickname}으로 닉네임이 설정되었습니다.`);
     },
     onError: () => {
@@ -196,13 +213,22 @@ export const SignUpSNS = () => {
     NickCertificationData.mutate(nick);
   };
 
-  useEffect(() => {
-    //useEffect 리턴 바로 위에 써주기.
-    if (localToken) {
-      alert('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
-      nav('/');
-    }
-  }, []);
+  // const localToken = localStorage.getItem('accessToken');
+
+  // console.log(localToken);
+  // if (localToken != null) {
+  //   const toto = JSON.parse(localToken);
+
+  //   console.log(toto);
+  // }
+
+  // useEffect(() => {
+  //   //useEffect 리턴 바로 위에 써주기.
+  //   if (localToken) {
+  //     alert('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
+  //     nav('/');
+  //   }
+  // }, []);
 
   return (
     <>
@@ -220,16 +246,16 @@ export const SignUpSNS = () => {
           <LogoFontBig>TODOWITH</LogoFontBig>
         </Box>
 
-        <Box width={2.8125} height={1.5} margin={'5rem 19.375rem 0.625rem 1.25rem'}>
+        <Box width={2.8125} height={1.5} margin={'5rem auto 0.625rem 5.7%'}>
           {nickname && (
             <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
               닉네임
             </KoreanFont>
           )}
         </Box>
-        <RowBox margin={'0px 0px 0px 0px'}>
+        <RowBox width={'100%'} margin={'0px 0px 0px 0px'}>
           <InputInfo
-            width={15.6875}
+            width={'67%'}
             height={2.5}
             margin={'0px 0.6875rem 0px 1.25rem'}
             type="text"
@@ -241,7 +267,7 @@ export const SignUpSNS = () => {
 
           <BtnAble
             isDisable={!CheckNickname(nickname)}
-            width={4.5625}
+            width={'19.4%'}
             height={2.625}
             margin={'0px 1.25rem 0px 0px'}
             onClick={() => {
@@ -254,7 +280,7 @@ export const SignUpSNS = () => {
             중복확인
           </BtnAble>
         </RowBox>
-        <BoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
+        <BoxSide width={20} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
           {nickname ? (
             <CheckFont size={0.75} color={'blue'} isCorrect={CheckNickname(nickname)}>
               {CheckNickname(nickname)
@@ -268,7 +294,18 @@ export const SignUpSNS = () => {
           )}
         </BoxSide>
 
-        <BtnAble isDisable={!nickname} width={20.9375} height={4} margin={'5.125rem 1.25rem 0px 1.25rem'}>
+        <BtnAble
+          isDisable={!nickname}
+          width={'88.2%'}
+          height={4}
+          margin={'5.125rem 1.25rem 0px 1.25rem'}
+          onClick={() => {
+            const gojoinSocial = {
+              nick: nickname,
+            };
+            joinSocial(gojoinSocial);
+          }}
+        >
           <KoreanFont size={1.0625} color="white">
             회원가입 완료
           </KoreanFont>

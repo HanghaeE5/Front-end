@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 import { NavLayout } from '../component/layout/NavLayout';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { editNicknameModalState, editPasswordModalState, tokenState } from '../recoil/store';
+import EditNicknameModal from '../component/modallayout/EditNicknameModal';
+import EditPasswordModal from '../component/modallayout/EditPasswordModal';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 const MainContainer = styled.div`
   display: flex;
@@ -22,7 +28,7 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   background-color: #ffffff;
@@ -32,22 +38,20 @@ const BoxSide = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   /* background-color: #6922bb; */
 `;
-
-type rowbox = {
-  margin?: string;
-};
 
 const RowBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin: ${(props: rowbox) => props.margin};
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
   /* background-color: #683b3b; */
 `;
 
@@ -56,7 +60,7 @@ const LineBox = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   background-color: #989898;
@@ -126,7 +130,7 @@ const InputInfo = styled.input`
   border: 1px solid #dddddd;
   border-radius: 6px;
   padding: 0 0 0 10px;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   :focus {
@@ -141,7 +145,7 @@ const InputInfoNoneBorder = styled.input`
   border: 1px solid #dddddd;
   /* border-radius: 6px; */
   padding: 0 0 0 0.625rem;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   :focus {
@@ -165,7 +169,7 @@ const BtnBox = styled.button`
   border-radius: 6px;
   border: 1px solid #989898;
 
-  width: ${(props: btnbox) => props.width}rem;
+  width: ${(props: btnbox) => props.width};
   height: ${(props: btnbox) => props.height}rem;
   margin: ${(props: btnbox) => props.margin};
   background-color: ${(props: btnbox) => props.color};
@@ -191,7 +195,7 @@ const BtnAble = styled.button`
   justify-content: center;
   border: 1px solid #dddddd;
   border-radius: 6px;
-  width: ${(props: btnable) => props.width}rem;
+  width: ${(props: btnable) => props.width};
   height: ${(props: btnable) => props.height}rem;
   margin: ${(props: btnable) => props.margin};
   background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
@@ -207,12 +211,54 @@ const BtnAble = styled.button`
   }
 `;
 
+console.log(window.location.href);
+
 export const Main = () => {
+  const [modalEditNickname, setmodalEditNickname] = useRecoilState(editNicknameModalState);
+  const [modalEditPassword, setModalEditPassword] = useRecoilState(editPasswordModalState);
+  const all = window.location.href;
+  const url = new URL(window.location.href);
+  const first = all.split('&');
+  const accessToken = first[0].split('=')[1];
+  const nav = useNavigate();
+  if (accessToken != null) {
+    console.log(accessToken);
+    const refreshToken = first[1].split('=')[1];
+    console.log(refreshToken);
+    const isNickname = first[2].split('=')[1];
+    console.log(isNickname);
+
+    useEffect(() => {
+      localStorage.clear();
+
+      if (isNickname === 'N') {
+        nav('/signupsns');
+      }
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+    }, []);
+  }
+
+  // const [params] = useSearchParams();
+  // console.log(params.get('token'));
+
+  // useEffect(() => {
+  //   const loginToken = useSetRecoilState(tokenState);
+  //   loginToken(accessToken);
+
+  //   if (isNickname === 'N') {
+  //     nav('/signupsns');
+  //   }
+  // }, []);
+  // loginToken(token.headers.authorization.split(" ")[1]);
+  // const urlParams = url.searchParams;
+  // console.log(urlParams.get('Authorization'));
+
   return (
     <NavLayout>
       <MainContainer>
         <Box
-          width={4.75}
+          width={'4.75rem'}
           height={4.75}
           margin={'1.1875rem 9.375rem 0 9.3125rem'}
           style={{
@@ -225,7 +271,7 @@ export const Main = () => {
           }}
         />
         <Box
-          width={1.3294}
+          width={'1.3294rem'}
           height={1.2468}
           margin={'-1.3rem 8.7731rem 0 13.3356rem'}
           style={{
@@ -247,7 +293,7 @@ export const Main = () => {
             </KoreanFont>
           </Box>
           <Box
-            width={1}
+            width={'1rem'}
             height={1}
             margin={'-0.5rem 0 0 0.2rem '}
             style={{
@@ -256,11 +302,16 @@ export const Main = () => {
               backgroundPosition: 'center',
               backgroundSize: 'cover',
               backgroundImage: 'url(/assets/pencil.svg)',
+              cursor: 'pointer',
+            }}
+            onClick={() => {
+              setmodalEditNickname(true);
             }}
           ></Box>
+          <EditNicknameModal></EditNicknameModal>
         </RowBox>
         <Box
-          width={11.8125}
+          width={'11.8125rem'}
           height={12.5625}
           margin={'1.75rem 5.8125rem 0 5.8125rem '}
           style={{
@@ -272,7 +323,7 @@ export const Main = () => {
           }}
         ></Box>
         <Box
-          width={5.25}
+          width={'5.25rem'}
           height={0.75}
           margin={'1.125rem 9.0625rem 0 9.0625rem '}
           style={{
@@ -283,54 +334,53 @@ export const Main = () => {
             backgroundImage: 'url(/assets/shadow.svg)',
           }}
         ></Box>
-        <BoxSide width={14} height={1.6875} margin={'0.8125rem 7.56rem 0 1.875rem'}>
+        <BoxSide width={'60%'} height={1.6875} margin={'0.8125rem auto 0 8%'}>
           <KoreanFont size={1.25} color="#000000">
             ToDo의 고수늘보
           </KoreanFont>
         </BoxSide>
 
-        <Box margin={'0.4rem 1.25rem 0rem 1.25rem'}>
-          <Box
-            width={20.9375}
-            height={1.3125}
-            margin={'0'}
-            style={{ border: '1px solid #DDDDDD', borderRadius: '30px' }}
-          >
+        <Box width={'100%'} margin={'0.4rem 1.25rem 0rem 1.25rem'}>
+          <Box width={'89%'} height={1.3125} margin={'0'} style={{ border: '1px solid #DDDDDD', borderRadius: '30px' }}>
             <KoreanFont size={0.85} color="#000000" style={{ zIndex: '3', margin: '0 1rem 0 auto' }}>
               41.8%
             </KoreanFont>
           </Box>
           <BoxSide
-            width={10}
+            width={'42.6%'}
             height={1.3125}
-            margin={'-1.3125rem auto 0 0'}
+            margin={'-1.3125rem auto auto 5.6%'}
             style={{
               background: 'linear-gradient(90deg, #F4D687 0%, #F08C15 161.46%)',
               borderRadius: '30px 0px 0px 30px',
             }}
           ></BoxSide>
         </Box>
-        <RowBox margin={'0.25rem 1.875rem 0rem 1.875rem'}>
-          <BoxSide width={1.8} height={1.375} style={{ margin: '0 16.0875rem 0 0rem' }}>
+        <RowBox
+          width={'84%'}
+          margin={'0.25rem 1.875rem 0rem 1.875rem'}
+          style={{ display: 'flex', justifyContent: 'space-between' }}
+        >
+          <BoxSide width={1.8} height={1.375}>
             <KoreanFont size={1} color="#000000">
               23
             </KoreanFont>
           </BoxSide>
-          <BoxSide width={1.8} height={1.375} style={{ margin: '0' }}>
+          <BoxSide width={1.8} height={1.375}>
             <KoreanFont size={1} color="#000000">
               24
             </KoreanFont>
           </BoxSide>
         </RowBox>
-        <Box width={10.0625} height={1.6875} margin={'1.6875rem 11.5rem 0 1.875rem'}>
+        <Box width={10.0625} height={1.6875} margin={'1.6875rem auto 0 8%'}>
           <EnglishFont size={1.25} color="#000000">
             Today_ to do list
           </EnglishFont>
         </Box>
 
         <Box
-          width={20.9375}
-          margin={'0.375rem 1.25rem 0 1.25rem'}
+          width={'89%'}
+          margin={'0.375rem 5.6% 0 5.6%'}
           style={{
             padding: '0.8125rem 0',
             gap: '0.7rem',
@@ -339,43 +389,56 @@ export const Main = () => {
             borderRadius: '6px',
           }}
         >
-          <RowBox>
-            <Box width={0.825} margin={'0rem 0 0 1.034rem'}>
+          <RowBox width={'100%'}>
+            <Box width={'0.825rem'} margin={'0rem 0.5rem 0 1rem'}>
               <KoreanFont size={0.87} color="#000000">
                 ✔
               </KoreanFont>
             </Box>
-            <BoxSide width={17.1875} margin={'0rem 0.9375rem 0 0.953125rem'}>
+            <BoxSide width={'82%'} margin={'0rem auto 0 0'}>
               <KoreanFont size={0.87} color="#000000">
                 영어듣기 1시간 하기
               </KoreanFont>
             </BoxSide>
           </RowBox>
-          <RowBox>
-            <Box width={0.825} margin={'0rem 0 0 1.034rem'}>
+          <RowBox width={'100%'}>
+            <Box width={'0.825rem'} margin={'0rem 0.5rem 0 1rem'}>
               <KoreanFont size={0.87} color="#000000">
                 ✔
               </KoreanFont>
             </Box>
-            <BoxSide width={17.1875} margin={'0rem 0.9375rem 0 0.953125rem'}>
+            <BoxSide width={'82%'} margin={'0rem auto 0 0'}>
               <KoreanFont size={0.87} color="#000000">
                 강아지 산책 시키기
               </KoreanFont>
             </BoxSide>
           </RowBox>
-          <RowBox>
-            <Box width={0.825} margin={'0rem 0 0 1.034rem'}>
+          <RowBox width={'100%'}>
+            <Box width={'0.825rem'} margin={'0rem 0.5rem 0 1rem'}>
               <KoreanFont size={0.87} color="#000000">
                 ✔
               </KoreanFont>
             </Box>
-            <BoxSide width={17.1875} margin={'0rem 0.9375rem 0 0.953125rem'}>
+            <BoxSide width={'82%'} margin={'0rem auto 0 0'}>
               <KoreanFont size={0.87} color="#000000">
-                사당자동차운전연습장가서 운전연수 2시간 받기
+                사당자동차운전연습장에서 운전연수 2시간 받기
               </KoreanFont>
             </BoxSide>
           </RowBox>
         </Box>
+        <BoxSide
+          width={'60%'}
+          height={1.6875}
+          margin={'0.8125rem auto 0 8%'}
+          onClick={() => {
+            setModalEditPassword(true);
+          }}
+        >
+          <KoreanFont size={1.25} color="#000000">
+            닉네임
+          </KoreanFont>
+        </BoxSide>
+        <EditPasswordModal></EditPasswordModal>
       </MainContainer>
     </NavLayout>
   );
