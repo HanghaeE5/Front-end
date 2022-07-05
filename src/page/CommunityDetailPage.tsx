@@ -1,9 +1,11 @@
 import styled from 'styled-components';
-import { Button, Img, Wrapper } from '../component/element';
+import { Button, Img, PopConfirm, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
 import { PostDetail } from '../Types/community';
+import { AiFillFire } from 'react-icons/ai';
+import { usePopConfirm } from '../hooks/usePopConfirm';
 
 const postDetail: PostDetail = {
   id: 1,
@@ -28,14 +30,41 @@ const postDetail: PostDetail = {
   isOpenChallange: true,
 };
 
-const Container = styled.section`
-  border: 1px solid black;
-  height: calc(100%);
-`;
-
 export const CommunityDetailPage = () => {
+  const { visible: visibleChallange, openConfirm: openChallange, closeConfirm: closeChallange } = usePopConfirm();
+  const { visible: visibleChat, openConfirm: openChatConfirm, closeConfirm: closeChatConfirm } = usePopConfirm();
   return (
     <NavLayout>
+      <PopConfirm
+        icon={<AiFillFire />}
+        visible={visibleChallange}
+        onConfirm={() => {
+          console.log('네');
+          closeChallange();
+          openChatConfirm();
+        }}
+        onCancel={() => {
+          console.log('아니오');
+          closeChallange();
+          openChatConfirm();
+        }}
+      >
+        챌린져스에 참여하시겠어요?
+      </PopConfirm>
+      <PopConfirm
+        icon={<AiFillFire />}
+        visible={visibleChat}
+        onConfirm={() => {
+          console.log('네');
+          closeChatConfirm();
+        }}
+        onCancel={() => {
+          console.log('아니오');
+          closeChatConfirm();
+        }}
+      >
+        채팅방에도 참여하시겠어요?
+      </PopConfirm>
       <PageLayout title="커뮤니티">
         <Wrapper isColumn alignItems="start" height="100%">
           <PostCard.PostHeader
@@ -53,7 +82,11 @@ export const CommunityDetailPage = () => {
           <PostCard.Content>{postDetail.content}</PostCard.Content>
           <PostCard.Gather>{postDetail.gather}</PostCard.Gather>
           <Wrapper>
-            <Button margin="1rem" buttonType={postDetail.isOpenChallange ? 'primary' : 'disable'}>
+            <Button
+              margin="1rem"
+              buttonType={postDetail.isOpenChallange ? 'primary' : 'disable'}
+              onClick={openChallange}
+            >
               {postDetail.isOpenChallange ? '챌린져스 참여하기' : '마감된 챌린져스입니다'}
             </Button>
           </Wrapper>
