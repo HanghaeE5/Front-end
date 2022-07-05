@@ -2,11 +2,12 @@ import styled from 'styled-components';
 import { NavLayout } from '../component/layout/NavLayout';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
+  accessTokenState,
   editNicknameModalState,
   editPasswordModalState,
   editPhotoModalState,
   notiModalState,
-  tokenState,
+  refreshTokenState,
 } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import EditPasswordModal from '../component/modallayout/EditPasswordModal';
@@ -226,6 +227,8 @@ export const Main = () => {
   const [modalEditPassword, setModalEditPassword] = useRecoilState(editPasswordModalState);
   const [modalNoti, setModalNoti] = useRecoilState(notiModalState);
   const [modalEditPhoto, setModalEditPhoto] = useRecoilState(editPhotoModalState);
+  const accessLoginToken = useSetRecoilState(accessTokenState);
+  const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const all = window.location.href;
   const url = new URL(window.location.href);
   const first = all.split('&');
@@ -244,8 +247,8 @@ export const Main = () => {
       if (isNickname === 'N') {
         nav('/signupsns');
       }
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
+      accessLoginToken(accessToken);
+      refreshLoginToken(refreshToken);
     }, []);
   }
 

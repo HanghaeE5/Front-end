@@ -4,7 +4,6 @@ import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { tokenState } from '../recoil/store';
 import { registerApi } from '../api/callApi';
 import { AxiosError } from 'axios';
 
@@ -192,6 +191,8 @@ export const SignUpSNS = () => {
     },
     onError: (error: AxiosError) => {
       alert(error.response?.data);
+      console.log(error);
+      console.log;
     },
   });
 

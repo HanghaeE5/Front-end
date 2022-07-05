@@ -3,7 +3,7 @@ import { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'ax
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   // console.info(`[request] [${JSON.stringify(config)}]`);
 
-  const localToken = localStorage.getItem('accessToken');
+  const localToken = localStorage.getItem('recoil-persist');
 
   if (localToken) {
     const toto = JSON.parse(localToken);
@@ -12,7 +12,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
     if (toto) {
       console.log(config);
       config.headers = {
-        Authorization: toto.tokenState || 0 || false,
+        Authorization: toto.accessTokenState || 0 || false,
         'Content-Type': 'application/json',
       };
     }

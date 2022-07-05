@@ -23,45 +23,18 @@ const BottomNavWrapper = styled.div`
   }
 `;
 
-type box = {
-  width?: number | string;
-  height?: number | string;
-  margin?: string;
-};
-
 const NavBox = styled.div`
-  width: 3.6rem;
-  height: 3.375rem;
+  width: 3.125rem;
+  height: 2.5625rem;
   margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* background-color: #f88181; */
-`;
-
-const NavSmallBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 1.25rem;
-  margin: 0.7rem auto 0px auto;
   background-repeat: no-repeat;
   background-position: center;
-  cursor: pointer;
-`;
-
-const NavFontBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 3.6rem;
-  height: 0.81rem;
-  margin: 0.3125rem auto 0.3rem auto;
-  cursor: pointer;
+  background-size: cover;
+  /* background-color: #f88181; */
 `;
 
 const NavRowBox = styled.div`
@@ -75,121 +48,56 @@ const NavRowBox = styled.div`
   row-gap: 1rem;
 `;
 
-type font = {
-  isCorrect?: boolean;
-  isBold?: boolean;
-};
-
-const NavFont = styled.p`
-  font-size: 0.7rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
 export const BottomNavLayout = () => {
   const nav = useNavigate();
 
   return (
     <BottomNavWrapper>
       <NavRowBox>
-        <NavBox>
-          <NavSmallBox
-            style={{
-              backgroundImage: 'url(/assets/nav/homeicon.svg)',
-              backgroundSize: '20px',
-            }}
-            onClick={() => {
-              nav('/');
-            }}
-          ></NavSmallBox>
-          <NavFontBox
-            onClick={() => {
-              nav('/');
-            }}
-          >
-            <NavFont>홈</NavFont>
-          </NavFontBox>
-        </NavBox>
+        <NavBox
+          style={{
+            backgroundImage: 'url(/assets/nav/홈off.svg)',
+          }}
+          onClick={() => {
+            nav('/');
+          }}
+        ></NavBox>
 
-        <NavBox>
-          <NavSmallBox
-            style={{
-              backgroundImage: 'url(/assets/nav/people.png)',
-              backgroundSize: '25px',
-            }}
-            onClick={() => {
-              nav('/community');
-            }}
-          ></NavSmallBox>
-          <NavFontBox
-            onClick={() => {
-              nav('/community');
-            }}
-          >
-            <NavFont>커뮤니티</NavFont>
-          </NavFontBox>
-        </NavBox>
+        <NavBox
+          style={{
+            backgroundImage: 'url(/assets/nav/커뮤니티off.svg)',
+          }}
+          onClick={() => {
+            nav('/community');
+          }}
+        ></NavBox>
 
-        <NavBox>
-          <NavSmallBox
-            style={{
-              backgroundImage: 'url(/assets/nav/to-do.png)',
-              backgroundSize: '20px',
-            }}
-            onClick={() => {
-              nav('/todo');
-            }}
-          ></NavSmallBox>
-          <NavFontBox
-            onClick={() => {
-              nav('/todo');
-            }}
-          >
-            <NavFont>투 두 리스트</NavFont>
-          </NavFontBox>
-        </NavBox>
+        <NavBox
+          style={{
+            backgroundImage: 'url(/assets/nav/투두리스트off.svg)',
+          }}
+          onClick={() => {
+            nav('/todo');
+          }}
+        ></NavBox>
 
-        <NavBox>
-          <NavSmallBox
-            style={{
-              backgroundImage: 'url(/assets/nav/friendicon.svg)',
-              backgroundSize: '25px',
-            }}
-            onClick={() => {
-              nav('/friendlist');
-            }}
-          ></NavSmallBox>
-          <NavFontBox>
-            <NavFont
-              onClick={() => {
-                nav('/friendlist');
-              }}
-            >
-              친구 목록
-            </NavFont>
-          </NavFontBox>
-        </NavBox>
+        <NavBox
+          style={{
+            backgroundImage: 'url(/assets/nav/친구목록off.svg)',
+          }}
+          onClick={() => {
+            nav('/friendlist');
+          }}
+        ></NavBox>
 
-        <NavBox>
-          <NavSmallBox
-            style={{
-              backgroundImage: 'url(/assets/nav/채팅.png)',
-              backgroundSize: '20px',
-            }}
-            onClick={() => {
-              nav('/chatting');
-            }}
-          ></NavSmallBox>
-          <NavFontBox
-            onClick={() => {
-              nav('/chatting');
-            }}
-          >
-            <NavFont>채팅</NavFont>
-          </NavFontBox>
-        </NavBox>
+        <NavBox
+          style={{
+            backgroundImage: 'url(/assets/nav/채팅off.svg)',
+          }}
+          onClick={() => {
+            nav('/chatting');
+          }}
+        ></NavBox>
       </NavRowBox>
     </BottomNavWrapper>
   );

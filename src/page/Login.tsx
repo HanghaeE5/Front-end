@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { registerApi } from '../api/callApi';
 import { FieldValues } from 'react-hook-form';
-import { tokenState } from '../recoil/store';
+import { accessTokenState, refreshTokenState } from '../recoil/store';
 
 const RegisterContainer = styled.div`
   display: flex;
@@ -126,8 +126,8 @@ const BtnAble = styled.button`
 
 export const Login = () => {
   const localToken = localStorage.getItem('recoil-persist');
-  const loginToken = useSetRecoilState(tokenState);
-  const tokenUse = useRecoilValue(tokenState);
+  const accessLoginToken = useSetRecoilState(accessTokenState);
+  const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const [email, setNameText] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [autoLogin, setAutoLogin] = useState<boolean>(false);
@@ -136,7 +136,7 @@ export const Login = () => {
 
   const loginUserData = useMutation((data: FieldValues) => registerApi.loginApi(data), {
     onSuccess: (token) => {
-      loginToken(token.headers.authorization);
+      accessLoginToken(token.headers.authorization);
       console.log(token);
       alert('로그인 성공!');
       nav('/');

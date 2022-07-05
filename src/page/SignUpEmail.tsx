@@ -8,7 +8,6 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { registerApi } from '../api/callApi';
 import { PageLayout } from '../component/layout/PageLayout';
-import { tokenState } from '../recoil/store';
 
 const RegisterContainer = styled.div`
   display: flex;
@@ -235,8 +234,6 @@ export const SignUpEmail = () => {
   const [send, setSend] = useState<boolean>(false);
   const [view, setView] = useState<boolean>(false);
   const localToken = localStorage.getItem('recoil-persist');
-  const loginToken = useSetRecoilState(tokenState);
-  const tokenUse = useRecoilValue(tokenState);
 
   const rePass: any = useRef();
   const nav = useNavigate();

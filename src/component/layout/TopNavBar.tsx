@@ -41,6 +41,9 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
@@ -89,54 +92,42 @@ export const TopNavLayout = () => {
         margin={'auto auto auto 5.3%'}
         style={{
           backgroundImage: 'url(/assets/로고.svg)',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
           backgroundSize: 'cover',
-          cursor: 'pointer',
         }}
         onClick={() => {
           nav('/');
         }}
       ></Box>
       <RowBox
-        width="5.8rem"
+        width="5rem"
         height={2.02}
         margin={'auto 5.3% auto auto'}
         style={{
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
           gap: '1rem',
         }}
       >
         {' '}
         <Box
-          width="4.1875rem"
+          width="2rem"
           height={2.02}
           margin={'auto'}
           style={{
-            backgroundImage: 'url(/assets/nav/notiicon.svg)',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: '3.7rem',
-            cursor: 'pointer',
+            backgroundImage: 'url(/assets/nav/알림.svg)',
+            backgroundSize: '1.8rem',
           }}
           onClick={() => {
             setModalNoti(true);
           }}
         ></Box>
         <Box
-          width="3rem"
-          height={2.02}
+          width="2rem"
+          height={2}
           margin={'auto'}
           style={{
             backgroundImage: 'url(/assets/토끼.PNG)',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
             backgroundSize: 'cover',
             borderRadius: '50%',
             border: '2px solid black',
-            cursor: 'pointer',
           }}
           onClick={() => {
             setModalProfileMenu(true);
