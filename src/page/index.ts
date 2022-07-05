@@ -4,5 +4,6 @@ export * from './SignUpEmail';
 export * from './SignUpSNS';
 export * from './CommunityPage';
 export * from './CommunityDetailPage';
+export * from './CommunityPostingPage';
 export * from './ToDoPage';
 export * from './FriendList';
