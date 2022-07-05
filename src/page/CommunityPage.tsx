@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';
+import { ButtonFloating, Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import NotiModal from '../component/modallayout/NotiModal';
 import { PostCard } from '../component/PostCard';
+import { PATH } from '../route/routeList';
 import { CommunitySearchControl, Post } from '../Types/community';
 
 const ContentWrapper = styled.div`
@@ -103,6 +103,10 @@ export const CommunityPage = () => {
     nav(`/community/${id}`);
   };
 
+  const onClickWriteButton = () => {
+    nav(PATH.communityPosting);
+  };
+
   return (
     <NavLayout>
       <PageLayout title="커뮤니티">
@@ -150,6 +154,7 @@ export const CommunityPage = () => {
             ))}
           </section>
         </ContentWrapper>
+        <ButtonFloating onClick={onClickWriteButton} />
       </PageLayout>
     </NavLayout>
   );
