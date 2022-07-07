@@ -59,13 +59,6 @@ const RowBox = styled.div`
   /* background-color: #683b3b; */
 `;
 
-type font = {
-  size: number;
-  color: string;
-  isCorrect?: boolean;
-  isBold?: boolean;
-};
-
 export const TopNavLayout = () => {
   const [, setModalNoti] = useRecoilState(notiModalState);
   const [, setModalProfileMenu] = useRecoilState(profileMenuModalState);

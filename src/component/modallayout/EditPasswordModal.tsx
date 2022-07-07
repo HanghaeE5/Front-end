@@ -46,10 +46,6 @@ const BoxSide = styled.div`
   /* background-color: #6922bb; */
 `;
 
-type rowbox = {
-  margin?: string;
-};
-
 const RowBox = styled.div`
   display: flex;
   flex-direction: row;
@@ -167,7 +163,7 @@ const EditPasswordModal = () => {
             width={23.4375}
             height={15}
             style={{ borderRadius: '20px' }}
-            onClick={(e: any) => {
+            onClick={(e) => {
               e.stopPropagation();
             }}
           >

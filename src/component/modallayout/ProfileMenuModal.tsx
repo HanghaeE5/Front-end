@@ -68,7 +68,7 @@ const ProfileMenuModal = () => {
             width={'7rem'}
             height={6}
             style={{ borderRadius: ' 0px 0px 20px 20px' }}
-            onClick={(e: any) => {
+            onClick={(e) => {
               e.stopPropagation();
             }}
           >

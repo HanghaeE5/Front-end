@@ -59,16 +59,6 @@ const Box = styled.div`
   /* background-color: #d07272; */
 `;
 
-const BoxSide = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: ${(props: box) => props.width}rem;
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #6922bb; */
-`;
-
 const RowBox = styled.div`
   display: flex;
   flex-direction: row;
@@ -190,7 +180,7 @@ const EditPhotoModal = () => {
           <BoxWrap
             width={'100%'}
             height={34.8}
-            onClick={(e: any) => {
+            onClick={(e) => {
               e.stopPropagation();
             }}
           >

@@ -174,7 +174,7 @@ const EditNicknameModal = () => {
       alert(`${nickname}으로 닉네임이 설정되었습니다.`);
       setnicknameOk(true);
     },
-    onError: (error: AxiosError | any) => {
+    onError: (error: AxiosError<{ msg: string }>) => {
       alert(error.response?.data.msg);
     },
   });
@@ -191,7 +191,7 @@ const EditNicknameModal = () => {
       setUserNickname(nickname);
       alert(`변경 완료!`);
     },
-    onError: (error: AxiosError | any) => {
+    onError: (error: AxiosError<{ msg: string }>) => {
       if (error.message === 'Request failed with status code 401') {
         setTimeout(() => NicknameEdit(), 200);
       } else {
@@ -211,7 +211,7 @@ const EditNicknameModal = () => {
           <BoxWrap
             width={'100%'}
             height={34.8}
-            onClick={(e: any) => {
+            onClick={(e) => {
               e.stopPropagation();
             }}
           >

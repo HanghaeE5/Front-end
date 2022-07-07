@@ -132,7 +132,7 @@ export const Main = () => {
       setUserNickname(data.data.nick);
       setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
     },
-    onError: (error: AxiosError | any) => {
+    onError: (error: AxiosError<{ msg: string }>) => {
       // nav('/login');
     },
   });
