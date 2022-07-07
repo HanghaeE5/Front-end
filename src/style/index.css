@@ -129,8 +129,35 @@ body {
   margin: 0;
   height: 100%;
   overflow: hidden;
+  font-family: 'Noto Sans CJK KR';
 }
 
 #root {
   height: 100%;
+}
+
+@font-face {
+  /* 사용할 폰트의 이름 */
+  font-family: 'Noto Sans CJK KR';
+  font-display: fallback;
+
+  src: url('../asset/font/NOTOSANSCJKKR-REGULAR.OTF'), url('../asset/font/NOTOSANSCJKKR-LIGHT.OTF'),
+    url('../asset/font/NOTOSANSCJKKR-BLACK.OTF'), url('../asset/font/NOTOSANSCJKKR-BOLD.OTF'),
+    url('../asset/font/NOTOSANSCJKKR-DEMILIGHT.OTF'), url('../asset/font/NOTOSANSCJKKR-MEDIUM.OTF'),
+    url('../asset/font/NOTOSANSCJKKR-THIN.OTF'), url('../asset/font/NOTOSANSCJKKR-LIGHT.OTF');
+
+  /* 사용할 폰트의 기본 스타일 */
+  font-weight: 400;
+  font-style: normal;
+}
+
+input:focus {
+  outline: none;
+}
+
+@font-face {
+  font-family: 'Noto Sans CJK Light KR';
+  src: url('../asset/font/NOTOSANSCJKKR-LIGHT.OTF');
+  font-weight: 400;
+  font-style: normal;
 }
