@@ -13,5 +13,28 @@ declare module 'styled-components' {
     };
     radius: string;
     inputPadding: string;
+    button: {
+      color: {
+        primary: string;
+        default: string;
+        disable: string;
+        dashed: string;
+        ghost: string;
+      };
+      borderColor: {
+        primary: string;
+        default: string;
+        disable: string;
+        dashed: string;
+        ghost: string;
+      };
+      backgroundColor: {
+        primary: string;
+        default: string;
+        disable: string;
+        dashed: string;
+        ghost: string;
+      };
+    };
   }
 }

@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
 interface ButtonProps {
-  buttonType?: 'primary' | 'default' | 'disable' | 'dashed';
+  buttonType?: 'primary' | 'default' | 'disable' | 'dashed' | 'ghost';
   size?: 'small' | 'large';
   isSquare?: boolean;
   onClick?: () => void;
@@ -23,12 +23,16 @@ const StyledButton = styled.button<ButtonProps>`
   height: ${({ size }) => (size === 'small' ? '3rem' : '4rem')};
   cursor: ${({ buttonType }) => buttonType && 'disable'};
   margin: ${({ margin }) => margin && margin};
-
-  color: ${({ buttonType, theme }) =>
-    buttonType === 'default' ? theme.color.grayMediumDark : buttonType === 'dashed' ? theme.color.grayDark : 'white'};
   border: 1px ${({ buttonType }) => (buttonType === 'dashed' ? 'dashed' : 'solid')};
-  border-color: ${({ buttonType, theme }) => (buttonType === 'default' ? theme.color.grayMediumDark : '')};
+
+  color: ${({ buttonType, theme }) => theme.button.color[buttonType || 'primary']};
+  border-color: ${({ buttonType, theme }) => theme.button.borderColor[buttonType || 'primary']};
+  background-color: ${({ buttonType, theme }) => theme.button.backgroundColor[buttonType || 'primary']};
+
   border-radius: ${({ isSquare, theme }) => (isSquare ? '' : theme.radius)};
+
+  border-color: ${({ buttonType, theme }) => (buttonType === 'default' ? theme.color.grayMediumDark : '')};
+
   background-color: ${({ buttonType, theme }) =>
     buttonType === 'default' || buttonType === 'dashed'
       ? 'white'

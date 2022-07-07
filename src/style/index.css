@@ -155,6 +155,10 @@ input:focus {
   outline: none;
 }
 
+textarea:focus {
+  outline: none;
+}
+
 @font-face {
   font-family: 'Noto Sans CJK Light KR';
   src: url('../asset/font/NOTOSANSCJKKR-LIGHT.OTF');
