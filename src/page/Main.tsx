@@ -132,61 +132,6 @@ const EnglishFont = styled.p`
   margin: 0 0 0 0;
 `;
 
-const LogoFontSmall = styled.p`
-  font-size: 1.3125rem;
-  font-family: 'OpensansBold';
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
-const CheckFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoRegu';
-  color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'blue' : 'red') : props.color)};
-  display: flex;
-  margin: 0 0 0 0;
-  text-align: left;
-`;
-
-const CheckFont2 = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoRegu';
-  color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'black' : 'red') : props.color)};
-  display: flex;
-  margin: 0 0 0 0;
-  text-align: left;
-`;
-
-const InputInfo = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  padding: 0 0 0 10px;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
-const InputInfoNoneBorder = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  /* border-radius: 6px; */
-  padding: 0 0 0 0.625rem;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
 type btnbox = {
   width: number | string;
   height: number | string;
@@ -194,56 +139,12 @@ type btnbox = {
   color: string;
 };
 
-const BtnBox = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #769cbc;
-  border-radius: 6px;
-  border: 1px solid #989898;
-
-  width: ${(props: btnbox) => props.width};
-  height: ${(props: btnbox) => props.height}rem;
-  margin: ${(props: btnbox) => props.margin};
-  background-color: ${(props: btnbox) => props.color};
-  cursor: pointer;
-
-  &:hover {
-    color: white;
-    background-color: #ecee73;
-  }
-`;
-
 type btnable = {
   width: number | string;
   height: number | string;
   margin: string;
   isDisable: boolean;
 };
-
-const BtnAble = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  width: ${(props: btnable) => props.width};
-  height: ${(props: btnable) => props.height}rem;
-  margin: ${(props: btnable) => props.margin};
-  background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
-
-  cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
-
-  &:hover {
-    ${(props: btnable) =>
-      props.isDisable
-        ? ''
-        : `color: white;
-    background-color: #358edc;`}
-  }
-`;
 
 console.log(window.location.href);
 
@@ -253,51 +154,21 @@ export const Main = () => {
   const [modalNoti, setModalNoti] = useRecoilState(notiModalState);
   const [modalEditPhoto, setModalEditPhoto] = useRecoilState(editPhotoModalState);
   const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
-  const [userprofilephoto, setuserprofilephoto] = useRecoilState(userprofilephotoState);
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);
+  const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
   const all = window.location.href;
-  const url = new URL(window.location.href);
+
   const first = all.split('&');
   const accessToken = first[0].split('=')[1];
   const nav = useNavigate();
-  const localToken = localStorage.getItem('recoil-persist');
-  const img: any = useRef();
-
-  //파일 url을 저장해줄 state
-  const [fileImage, setFileImage] = useState('');
-  const [fileImageUrl, setFileImageUrl] = useState<string>('');
-
-  const profilePhotoEditData = useMutation((forms: FormData) => UserApi.profilePhotoEditApi(forms), {
-    onSuccess: () => {
-      nav('/');
-    },
-  });
-
-  // 사진 변경 API
-  const onSubmit = () => {
-    const formData = new FormData();
-    if (fileImage) {
-      formData.append('file', fileImage);
-    }
-    profilePhotoEditData.mutate(formData);
-  };
-
-  const photoChange = async (e: any) => {
-    setFileImage(e.target.files[0]);
-    setFileImageUrl(URL.createObjectURL(e.target.files[0]));
-    await (() => {
-      onSubmit();
-      setuserprofilephoto(fileImageUrl);
-    });
-  };
 
   //유저정보 가져오기 API
   const userInformData = useMutation(() => UserApi.userInformApi(), {
     onSuccess: (data) => {
       console.log(data);
       setUserNickname(data.data.nick);
-      setuserprofilephoto(data.data.profileImageUrl);
+      setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
     },
     onError: (error: AxiosError | any) => {
       // nav('/login');
@@ -339,7 +210,7 @@ export const Main = () => {
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             backgroundSize: 'cover',
-            backgroundImage: `url(${userprofilephoto})`,
+            backgroundImage: `url(${fileImage.img_show})`,
           }}
         />
 
@@ -360,7 +231,6 @@ export const Main = () => {
           }}
         />
 
-        <input id="img" type="file" accept="image/*" style={{ display: 'none' }} onChange={photoChange} />
         <EditPhotoModal></EditPhotoModal>
         <RowBox margin={'0.628rem 0px 0px 0px'}>
           <Box

@@ -46,5 +46,8 @@ export const userNicknameState = atom({
 
 export const userprofilephotoState = atom({
   key: 'userprofilephotoState',
-  default: '',
+  default: {
+    img_show: '',
+    img_file: '',
+  },
 });

@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { editPhotoModalState, notiModalState } from '../../recoil/store';
+import { editPhotoModalState, notiModalState, userprofilephotoState } from '../../recoil/store';
 import { Children, useRef, useState } from 'react';
 import { PropsWithChildren } from 'react';
 import { useMutation } from 'react-query';
@@ -58,7 +58,7 @@ const Box = styled.div`
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
-  background-color: #d07272;
+  /* background-color: #d07272; */
 `;
 
 const BoxSide = styled.div`
@@ -88,8 +88,8 @@ const RowBox = styled.div`
 
 const ImgLable = styled.label`
   justify-content: center;
-  width: 7.5rem;
-  height: 2.5rem;
+  width: 25%;
+  height: 3rem;
   background-color: #94cef2;
   border: 1px solid white;
   border-radius: 6px;
@@ -159,9 +159,8 @@ const InputInfo = styled.input`
 `;
 
 export const Img = styled.img`
-  max-width: 100%;
-  max-height: 100%;
-  background-repeat: 0;
+  width: 100%;
+  /* height: 100%; */
 `;
 
 type btnable = {
@@ -201,10 +200,7 @@ const EditPhotoModal = () => {
   const [text, setText] = useState();
 
   //파일 미리볼 url을 저장해줄 state
-  const [fileImage, setFileImage] = useState({
-    img_show: '',
-    img_file: '',
-  });
+  const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
 
   // 파일 저장
   const saveFileImage = (e: any) => {
@@ -231,8 +227,8 @@ const EditPhotoModal = () => {
 
   const onSubmit = () => {
     const formData = new FormData();
-    if (fileImage && text) {
-      formData.append('img', fileImage.img_file);
+    if (fileImage) {
+      formData.append('file', fileImage.img_file);
     }
     profilePhotoEditData.mutate(formData);
   };
@@ -263,11 +259,32 @@ const EditPhotoModal = () => {
                   backgroundPosition: 'center',
                   backgroundSize: 'cover',
                   backgroundImage: 'url(/assets/X.svg)',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  setModalEditPhoto(false);
                 }}
               ></Box>
             </RowBox>
 
-            <RowBox width="92%" height={2} margin={'1rem 1.25rem 0rem 1.25rem'}>
+            <Box
+              width={'20rem'}
+              height="20"
+              margin="2rem auto 2rem auto"
+              style={{
+                borderRadius: '50%',
+                border: '1px solid #989898',
+                overflow: 'hidden',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                backgroundImage: `url(${fileImage.img_show})`,
+              }}
+            >
+              {!fileImage.img_show && <Box style={{ margin: 'auto' }}>📷사진 업로드를 클릭! </Box>}
+            </Box>
+
+            <RowBox width="92%" height={2} margin={'1rem 1.25rem auto 1.25rem'}>
               <ImgLable
                 htmlFor="img"
                 style={{
@@ -288,43 +305,37 @@ const EditPhotoModal = () => {
               />
               {fileImage ? (
                 <BtnAble
-                  width={'7.5rem'}
-                  height={2.5}
-                  margin={'0 0 0 1rem'}
+                  width={'25%'}
+                  height={3}
+                  margin={'0 0 0 1.5rem'}
                   onClick={() => {
                     deleteFileImage();
                     img.current.value = '';
                   }}
                 >
-                  <KoreanFont size={1}>삭제</KoreanFont>
+                  <KoreanFont size={1}>기본이미지</KoreanFont>
                 </BtnAble>
               ) : (
                 ''
               )}
+              <BtnAble
+                isDisable={!fileImage}
+                width={'25%'}
+                height={3}
+                margin={'0 0 0 1.5rem'}
+                onClick={
+                  fileImage
+                    ? () => {
+                        onSubmit();
+                      }
+                    : () => {
+                        null;
+                      }
+                }
+              >
+                <KoreanFont size={1}>사진변경 완료</KoreanFont>
+              </BtnAble>
             </RowBox>
-
-            <Box width={'82%'}>
-              {fileImage.img_show ? '' : <Box style={{ margin: 'auto' }}>📷사진 업로드를 클릭! </Box>}
-              {fileImage.img_show && <Img alt="sample" src={fileImage.img_show} style={{ margin: 'auto' }} />}
-            </Box>
-
-            <BtnAble
-              isDisable={!fileImage}
-              width={'89%'}
-              height={4}
-              margin={'7.375rem auto 12.8125rem auto'}
-              onClick={
-                fileImage
-                  ? () => {
-                      onSubmit();
-                    }
-                  : () => {
-                      null;
-                    }
-              }
-            >
-              사진 변경 완료
-            </BtnAble>
           </BoxWrap>
         </ModalBackground>
       )}
