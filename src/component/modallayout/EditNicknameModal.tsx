@@ -1,10 +1,12 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { editNicknameModalState, editPasswordModalState } from '../../recoil/store';
+import { editNicknameModalState, editPasswordModalState, userNicknameState } from '../../recoil/store';
 import { Children, useState } from 'react';
 import { PropsWithChildren } from 'react';
-import { useMutation } from 'react-query';
-import { registerApi } from '../../api/callApi';
+import { useMutation, useQueryClient } from 'react-query';
+import { registerApi, UserApi } from '../../api/callApi';
+import { AxiosError } from 'axios';
+import { FieldValues } from 'react-hook-form';
 
 const Slide = keyframes`
     0% {
@@ -42,8 +44,9 @@ const BoxWrap = styled.div`
   align-items: center;
   justify-content: center;
   width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
+  height: 34.8rem;
+  border-radius: 20px 20px 0px 0px;
+  margin: auto auto 0 auto;
   background-color: #ffffff;
   animation: ${Slide} 0.6s ease;
 `;
@@ -53,17 +56,17 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
-  background-color: #ffffff;
+  /* background-color: #caff8a; */
 `;
 
 const BoxSide = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   /* background-color: #6922bb; */
@@ -81,7 +84,7 @@ const RowBox = styled.div`
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
-  /* background-color: #683b3b; */
+  /* background-color: #ff6969; */
 `;
 
 type font = {
@@ -131,10 +134,9 @@ const InputInfo = styled.input`
   display: flex;
   flex-direction: column;
   background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
+  border: none;
   padding: 0 0 0 10px;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   :focus {
@@ -174,8 +176,9 @@ const BtnAble = styled.button`
 
 const EditNicknameModal = () => {
   const [modalEditNickname, setModalEditNickname] = useRecoilState(editNicknameModalState);
-
+  const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
   const [nickname, setNickname] = useState<string>('');
+  const [nicknameOk, setnicknameOk] = useState<boolean>(false);
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
   };
@@ -185,20 +188,44 @@ const EditNicknameModal = () => {
     return regExp.test(asValue);
   };
 
+  const goNicknameEdit = { nick: nickname };
+
   //닉네임 중복확인 API
   const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
     onSuccess: (token) => {
       // loginToken(token.headers.authorization.split(' ')[1]);
       console.log();
       alert(`${nickname}으로 닉네임이 설정되었습니다.`);
+      setnicknameOk(true);
     },
-    onError: () => {
-      alert('중복된 닉네임입니다.');
+    onError: (error: AxiosError | any) => {
+      alert(error.response?.data.msg);
     },
   });
 
   const NickCertification = (nick: { nick: string }) => {
     NickCertificationData.mutate(nick);
+  };
+
+  //닉네임 변경 완료 API
+
+  const NicknameEditData = useMutation((nick: { nick: string }) => UserApi.nicknameEditApi(nick), {
+    onSuccess: (token) => {
+      setModalEditNickname(false);
+      setUserNickname(nickname);
+      alert(`변경 완료!`);
+    },
+    onError: (error: AxiosError | any) => {
+      if (error.message === 'Request failed with status code 401') {
+        setTimeout(() => NicknameEdit(), 200);
+      } else {
+        alert(error.response?.data.msg);
+      }
+    },
+  });
+
+  const NicknameEdit = () => {
+    NicknameEditData.mutate(goNicknameEdit);
   };
 
   return (
@@ -207,52 +234,78 @@ const EditNicknameModal = () => {
         <ModalBackground onClick={() => setModalEditNickname(false)}>
           <BoxWrap
             width={'100%'}
-            height={15}
-            style={{ borderRadius: '20px 20px 0px 0px' }}
+            height={34.8}
             onClick={(e: any) => {
               e.stopPropagation();
             }}
           >
-            <Box width={'350px'} height={1.5} margin={'1.125rem auto 0.625rem 1.25rem'}>
-              <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
-                닉네임
-              </KoreanFont>
-            </Box>
-            <Box width={2.8125} height={1.5} margin={'1.5rem 19.375rem 0.625rem 1.25rem'}>
-              {nickname && (
+            <RowBox width="92%" height={1.875} margin={'2.5rem 1.25rem 0rem 1.25rem'}>
+              <Box width={'3.5rem'} margin={'auto auto auto 0rem'}>
                 <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
                   닉네임
                 </KoreanFont>
-              )}
-            </Box>
-            <RowBox width={'100%'} margin={'0px 0px 0px 0px'}>
-              <InputInfo
-                width={15.6875}
-                height={2.5}
-                margin={'0px 0.6875rem 0px 1.25rem'}
-                type="text"
-                placeholder="닉네임    ex) 빨강바지3456"
-                name="nickname"
-                value={nickname}
-                onChange={onChangeNickname}
-              ></InputInfo>
-
+              </Box>
+              <Box
+                width={'1.5rem'}
+                height={1.5}
+                margin={'auto 0rem auto auto'}
+                style={{
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                  backgroundImage: 'url(/assets/X.svg)',
+                }}
+              ></Box>
+            </RowBox>
+            <RowBox width={'92%'} margin={'2.3125rem 1.25rem 0rem 1.25rem'}>
+              <RowBox width={'73.3%'} margin={'0'} style={{ borderBottom: '1px solid black' }}>
+                <InputInfo
+                  width={'85%'}
+                  height={2.5}
+                  margin={'0px auto 0px 0rem'}
+                  type="text"
+                  placeholder="ex) 빨강바지3456"
+                  name="nickname"
+                  value={nickname}
+                  onChange={onChangeNickname}
+                ></InputInfo>
+                <Box
+                  width={'8%'}
+                  height={1.5}
+                  margin={'auto 0rem auto auto'}
+                  style={{
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    backgroundSize: '24px',
+                    backgroundImage: nicknameOk ? 'url(/assets/checkfull.png)' : 'url(/assets/checkempty.svg)',
+                  }}
+                  onClick={() => {
+                    setModalEditNickname(false);
+                  }}
+                ></Box>
+              </RowBox>
               <BtnAble
                 isDisable={!CheckNickname(nickname)}
-                width={4.5625}
+                width={'21.1%'}
                 height={2.625}
-                margin={'0px 1.25rem 0px 0px'}
-                onClick={() => {
-                  const goNickCertification = {
-                    nick: nickname,
-                  };
-                  NickCertification(goNickCertification);
-                }}
+                margin={'0px 0rem 0px auto'}
+                onClick={
+                  CheckNickname(nickname)
+                    ? () => {
+                        const goNickCertification = {
+                          nick: nickname,
+                        };
+                        NickCertification(goNickCertification);
+                      }
+                    : () => {
+                        null;
+                      }
+                }
               >
                 중복확인
               </BtnAble>
             </RowBox>
-            <BoxSide width={20} height={1.3125} margin={'0.3125rem 2.1875rem 0px 1.25rem'}>
+            <BoxSide width={'92%'} height={1.3125} margin={'0.375rem auto 0px auto'}>
               {nickname ? (
                 <CheckFont size={0.75} color={'blue'} isCorrect={CheckNickname(nickname)}>
                   {CheckNickname(nickname)
@@ -265,6 +318,23 @@ const EditNicknameModal = () => {
                 </CheckFont>
               )}
             </BoxSide>
+            <BtnAble
+              isDisable={!CheckNickname(nickname)}
+              width={'89%'}
+              height={4}
+              margin={'7.375rem auto 12.8125rem auto'}
+              onClick={
+                nicknameOk
+                  ? () => {
+                      NicknameEdit();
+                    }
+                  : () => {
+                      null;
+                    }
+              }
+            >
+              닉네임 변경 완료
+            </BtnAble>
           </BoxWrap>
         </ModalBackground>
       )}

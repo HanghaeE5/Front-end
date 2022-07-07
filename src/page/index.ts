@@ -6,3 +6,5 @@ export * from './CommunityPage';
 export * from './CommunityDetailPage';
 export * from './ToDoPage';
 export * from './FriendList';
+export * from './Chatting';
+export * from './ChattingRoom';

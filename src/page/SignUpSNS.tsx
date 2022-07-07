@@ -6,6 +6,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { registerApi } from '../api/callApi';
 import { AxiosError } from 'axios';
+import { accessTokenState, refreshTokenState } from '../recoil/store';
 
 const RegisterContainer = styled.div`
   display: flex;
@@ -166,8 +167,9 @@ const BtnAble = styled.button`
 
 export const SignUpSNS = () => {
   const [nickname, setNickname] = useState<string>('');
-  // const loginToken = useSetRecoilState(tokenState);
-  // const tokenUse = useRecoilValue(tokenState);
+  const accessLoginToken = useSetRecoilState(accessTokenState);
+  const refreshLoginToken = useSetRecoilState(refreshTokenState);
+  const localToken = localStorage.getItem('accessToken');
 
   const nav = useNavigate();
   const rePass: any = useRef();
@@ -184,15 +186,15 @@ export const SignUpSNS = () => {
   //소셜로그인 닉네임 저장 API
   const joinSocialApiData = useMutation((nick: { nick: string }) => registerApi.joinSocialApi(nick), {
     onSuccess: (token) => {
-      // loginToken(token.headers.authorization.split(' ')[1]);
+      localStorage.clear();
+      accessLoginToken(token.headers.authorization);
+      refreshLoginToken(token.headers.refresh);
       console.log();
-      alert(`${nickname}님 반가워요! 로그인해주세요`);
+      alert(`${nickname}님 반가워요!`);
       nav('/');
     },
     onError: (error: AxiosError) => {
       alert(error.response?.data);
-      console.log(error);
-      console.log;
     },
   });
 
@@ -214,22 +216,13 @@ export const SignUpSNS = () => {
     NickCertificationData.mutate(nick);
   };
 
-  // const localToken = localStorage.getItem('accessToken');
-
-  // console.log(localToken);
-  // if (localToken != null) {
-  //   const toto = JSON.parse(localToken);
-
-  //   console.log(toto);
-  // }
-
-  // useEffect(() => {
-  //   //useEffect 리턴 바로 위에 써주기.
-  //   if (localToken) {
-  //     alert('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
-  //     nav('/');
-  //   }
-  // }, []);
+  useEffect(() => {
+    //useEffect 리턴 바로 위에 써주기.
+    if (localToken) {
+      alert('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
+      nav('/');
+    }
+  }, []);
 
   return (
     <>

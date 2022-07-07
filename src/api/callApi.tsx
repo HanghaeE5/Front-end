@@ -41,12 +41,32 @@ const loginApi = async (data: FieldValues) => {
   return la;
 };
 
+const userInformApi = async () => {
+  const loa = await callApi.get('/user');
+  return loa;
+};
+
+const nicknameEditApi = async (nick: { nick: string }) => {
+  const nea = await callApi.put('/user/nick', nick);
+  return nea;
+};
+
+const profilePhotoEditApi = async (forms: FormData) => {
+  const ppea = await callApi.put('/user/profile', forms);
+  return ppea;
+};
+
 export const registerApi = {
   joinApi: (data: FieldValues) => joinApi(data),
   emilCertificationApi: (email: { email: string }) => emilCertificationApi(email),
   emilCertificationNumberApi: (data: FieldValues) => emilCertificationNumberApi(data),
   nickCertificationApi: (nick: { nick: string }) => nickCertificationApi(nick),
   loginApi: (data: FieldValues) => loginApi(data),
-
   joinSocialApi: (nick: { nick: string }) => joinSocialApi(nick),
+};
+
+export const UserApi = {
+  userInformApi: () => userInformApi(),
+  nicknameEditApi: (nick: { nick: string }) => nicknameEditApi(nick),
+  profilePhotoEditApi: (forms: FormData) => profilePhotoEditApi(forms),
 };

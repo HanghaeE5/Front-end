@@ -42,8 +42,9 @@ const BoxWrap = styled.div`
   align-items: center;
   justify-content: center;
   width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
+  height: 34.8rem;
+  border-radius: 20px 20px 0px 0px;
+  margin: auto auto 0 auto;
   background-color: #ffffff;
   animation: ${Slide} 0.6s ease;
 `;

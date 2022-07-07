@@ -137,6 +137,7 @@ export const Login = () => {
   const loginUserData = useMutation((data: FieldValues) => registerApi.loginApi(data), {
     onSuccess: (token) => {
       accessLoginToken(token.headers.authorization);
+      refreshLoginToken(token.headers.refresh);
       console.log(token);
       alert('로그인 성공!');
       nav('/');
@@ -212,7 +213,7 @@ export const Login = () => {
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             backgroundSize: 'cover',
-            backgroundImage: autoLogin ? 'url(/assets/checkempty.png)' : 'url(/assets/checkfull.png)',
+            backgroundImage: autoLogin ? 'url(/assets/checkempty.svg)' : 'url(/assets/checkfull.png)',
           }}
           onClick={() => {
             setAutoLogin(!autoLogin);
@@ -289,7 +290,9 @@ export const Login = () => {
             backgroundImage: 'url(/assets/kakaoicon.png)',
           }}
           onClick={() => {
-            nav('/signupsns');
+            window.location.replace(
+              'http://todowith.shop/oauth2/authorization/kakao?redirect_uri=http://localhost:3000',
+            );
           }}
         ></Box>
         <Box

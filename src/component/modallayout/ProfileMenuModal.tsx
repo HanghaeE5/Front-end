@@ -5,6 +5,7 @@ import { Children, useState } from 'react';
 import { PropsWithChildren } from 'react';
 import { useMutation } from 'react-query';
 import { registerApi } from '../../api/callApi';
+import { useNavigate } from 'react-router';
 
 const Slide = keyframes`
     0% {
@@ -55,7 +56,7 @@ const Box = styled.div`
   justify-content: center;
   width: ${(props: box) => props.width}rem;
   height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
+  margin: 5px 0;
   background-color: #ffffff;
 `;
 
@@ -174,6 +175,7 @@ const BtnAble = styled.button`
 
 const ProfileMenuModal = () => {
   const [modalProfileMenu, setModalProfileMenu] = useRecoilState(profileMenuModalState);
+  const nav = useNavigate();
   return (
     <>
       {modalProfileMenu && (
@@ -186,10 +188,23 @@ const ProfileMenuModal = () => {
               e.stopPropagation();
             }}
           >
-            비밀번호 변경
-            <br />
-            <br />
-            로그아웃
+            <Box>비밀번호 변경</Box>
+            <Box
+              onClick={() => {
+                nav('/login');
+              }}
+            >
+              Log(삭제예정)
+            </Box>
+            <Box
+              onClick={() => {
+                localStorage.clear();
+                alert('로그아웃되었습니다');
+                nav('/login');
+              }}
+            >
+              로그아웃
+            </Box>
           </BoxWrap>
         </ModalBackground>
       )}

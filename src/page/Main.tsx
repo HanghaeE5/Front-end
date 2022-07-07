@@ -8,13 +8,21 @@ import {
   editPhotoModalState,
   notiModalState,
   refreshTokenState,
+  userNicknameState,
+  userprofilephotoState,
 } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import EditPasswordModal from '../component/modallayout/EditPasswordModal';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import NotiModal from '../component/modallayout/NotiModal';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
+import { jwtUtils } from '../utils/jwtUtils';
+import { useMutation } from 'react-query';
+import { FieldValues } from 'react-hook-form';
+import { UserApi } from '../api/callApi';
+import { AxiosError } from 'axios';
+import { resolve } from 'path';
 
 const MainContainer = styled.div`
   display: flex;
@@ -37,6 +45,23 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
+  background-color: #ffffff;
+`;
+
+const ToDoBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  //스크롤바 없애기
+  ::-webkit-scrollbar {
+    display: none;
+  }
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
@@ -223,10 +248,12 @@ const BtnAble = styled.button`
 console.log(window.location.href);
 
 export const Main = () => {
-  const [modalEditNickname, setmodalEditNickname] = useRecoilState(editNicknameModalState);
+  const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
   const [modalEditPassword, setModalEditPassword] = useRecoilState(editPasswordModalState);
   const [modalNoti, setModalNoti] = useRecoilState(notiModalState);
   const [modalEditPhoto, setModalEditPhoto] = useRecoilState(editPhotoModalState);
+  const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
+  const [userprofilephoto, setuserprofilephoto] = useRecoilState(userprofilephotoState);
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const all = window.location.href;
@@ -234,38 +261,69 @@ export const Main = () => {
   const first = all.split('&');
   const accessToken = first[0].split('=')[1];
   const nav = useNavigate();
-  if (accessToken != null) {
-    console.log(accessToken);
-    const refreshToken = first[1].split('=')[1];
-    console.log(refreshToken);
-    const isNickname = first[2].split('=')[1];
-    console.log(isNickname);
+  const localToken = localStorage.getItem('recoil-persist');
+  const img: any = useRef();
 
-    useEffect(() => {
-      localStorage.clear();
+  //파일 url을 저장해줄 state
+  const [fileImage, setFileImage] = useState('');
+  const [fileImageUrl, setFileImageUrl] = useState<string>('');
+
+  const profilePhotoEditData = useMutation((forms: FormData) => UserApi.profilePhotoEditApi(forms), {
+    onSuccess: () => {
+      nav('/');
+    },
+  });
+
+  // 사진 변경 API
+  const onSubmit = () => {
+    const formData = new FormData();
+    if (fileImage) {
+      formData.append('file', fileImage);
+    }
+    profilePhotoEditData.mutate(formData);
+  };
+
+  //유저정보 가져오기 API
+  const userInformData = useMutation(() => UserApi.userInformApi(), {
+    onSuccess: (data) => {
+      console.log(data);
+      setUserNickname(data.data.nick);
+      setuserprofilephoto(data.data.profileImageUrl);
+    },
+    onError: (error: AxiosError | any) => {
+      // nav('/login');
+    },
+  });
+  const userInform = () => {
+    userInformData.mutate();
+  };
+  const photoChange = async (e: any) => {
+    setFileImage(e.target.files[0]);
+    setFileImageUrl(URL.createObjectURL(e.target.files[0]));
+    await (() => {
+      onSubmit();
+      setuserprofilephoto(fileImageUrl);
+    });
+  };
+
+  useEffect(() => {
+    userInform();
+    if (accessToken != null) {
+      console.log();
+      const refreshToken = first[1].split('=')[1];
+      console.log(refreshToken);
+      const isNickname = first[2].split('=')[1];
+      console.log(isNickname);
 
       if (isNickname === 'N') {
         nav('/signupsns');
+      } else {
+        accessLoginToken(accessToken);
+        refreshLoginToken(refreshToken);
+        // window.location.replace('/');
       }
-      accessLoginToken(accessToken);
-      refreshLoginToken(refreshToken);
-    }, []);
-  }
-
-  // const [params] = useSearchParams();
-  // console.log(params.get('token'));
-
-  // useEffect(() => {
-  //   const loginToken = useSetRecoilState(tokenState);
-  //   loginToken(accessToken);
-
-  //   if (isNickname === 'N') {
-  //     nav('/signupsns');
-  //   }
-  // }, []);
-  // loginToken(token.headers.authorization.split(" ")[1]);
-  // const urlParams = url.searchParams;
-  // console.log(urlParams.get('Authorization'));
+    }
+  }, [userNickname]);
 
   return (
     <NavLayout>
@@ -280,25 +338,25 @@ export const Main = () => {
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             backgroundSize: 'cover',
-            backgroundImage: 'url(/assets/토끼.png)',
+            backgroundImage: `url(${userprofilephoto})`,
           }}
         />
-        <Box
-          width={'1.3294rem'}
-          height={1.2468}
-          margin={'-1.3rem 8.7731rem 0 13.3356rem'}
-          style={{
-            border: 'none',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundImage: 'url(/assets/camera.svg)',
-            cursor: 'pointer',
-          }}
-          onClick={() => {
-            setModalEditPhoto(true);
-          }}
-        ></Box>
+        <label htmlFor="img">
+          <Box
+            width={'1.3294rem'}
+            height={1.2468}
+            margin={'-1.3rem 8.7731rem 0 13.3356rem'}
+            style={{
+              border: 'none',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              backgroundImage: 'url(/assets/camera.svg)',
+              cursor: 'pointer',
+            }}
+          />
+        </label>
+        <input id="img" type="file" accept="image/*" style={{ display: 'none' }} onChange={photoChange} />
         <EditPhotoModal></EditPhotoModal>
         <RowBox margin={'0.628rem 0px 0px 0px'}>
           <Box
@@ -307,7 +365,7 @@ export const Main = () => {
             style={{ display: 'flex', justifyContent: 'initial', borderBottom: '0.5px solid #000000' }}
           >
             <KoreanFont size={0.875} color="#000000">
-              강남스타일1234
+              {userNickname}
             </KoreanFont>
           </Box>
           <Box
@@ -396,7 +454,7 @@ export const Main = () => {
           </EnglishFont>
         </Box>
 
-        <Box
+        <ToDoBox
           width={'89%'}
           margin={'0.375rem 5.6% 0 5.6%'}
           style={{
@@ -443,7 +501,7 @@ export const Main = () => {
               </KoreanFont>
             </BoxSide>
           </RowBox>
-        </Box>
+        </ToDoBox>
         <EditPasswordModal></EditPasswordModal>
       </MainContainer>
     </NavLayout>

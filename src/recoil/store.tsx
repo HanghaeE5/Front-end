@@ -1,6 +1,5 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-
 const { persistAtom } = recoilPersist();
 
 export const accessTokenState = atom({
@@ -38,4 +37,14 @@ export const editPhotoModalState = atom({
 export const profileMenuModalState = atom({
   key: 'profileMenuModalState',
   default: false,
+});
+
+export const userNicknameState = atom({
+  key: 'userNicknameState',
+  default: '',
+});
+
+export const userprofilephotoState = atom({
+  key: 'userprofilephotoState',
+  default: '',
 });

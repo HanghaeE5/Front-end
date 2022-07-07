@@ -273,8 +273,8 @@ export const SignUpEmail = () => {
       alert(`${email} 메일로 발송된 인증번호를 입력해주세요🙂`);
       setEmailCheckNumberInput(true);
     },
-    onError: (error: AxiosError) => {
-      alert(error.response?.data);
+    onError: (error: AxiosError | any) => {
+      alert(error.response?.data.msg);
     },
   });
 
@@ -305,8 +305,8 @@ export const SignUpEmail = () => {
       console.log();
       alert(`${nickname}으로 닉네임이 설정되었습니다.`);
     },
-    onError: () => {
-      alert('중복된 닉네임입니다.');
+    onError: (error: AxiosError | any) => {
+      alert(error.response?.data.msg);
     },
   });
 
