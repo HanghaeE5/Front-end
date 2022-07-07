@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import { Button, Img, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
