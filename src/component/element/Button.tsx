@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 interface ButtonProps {
   buttonType?: 'primary' | 'default' | 'disable' | 'dashed' | 'ghost';
-  size?: 'small' | 'large';
+  size?: 'small' | 'medium' | 'large';
   isSquare?: boolean;
   onClick?: () => void;
   margin?: string;
@@ -16,11 +16,12 @@ const StyledButton = styled.button<ButtonProps>`
   align-items: center;
   justify-content: center;
   width: ${(props) => props.width || '100%'};
-  font-weight: 700;
-  font-family: 'Noto Sans CJK Light KR';
-  font-size: ${({ size }) => (size === 'small' ? '0.875rem' : '1rem')};
+  font: ${({ size, theme }) => theme.button.font[size || 'medium']};
+  // font-weight: 700;
+  // font-family: 'Noto Sans CJK Light KR';
+  // font-size: ${({ size }) => (size === 'medium' ? '0.875rem' : '1rem')};
   padding: 1rem 0;
-  height: ${({ size }) => (size === 'small' ? '3rem' : '4rem')};
+  height: ${({ size, theme }) => theme.button.height[size || 'medium']};
   cursor: ${({ buttonType }) => buttonType && 'disable'};
   margin: ${({ margin }) => margin && margin};
   border: 1px ${({ buttonType }) => (buttonType === 'dashed' ? 'dashed' : 'solid')};
@@ -32,18 +33,11 @@ const StyledButton = styled.button<ButtonProps>`
   border-radius: ${({ isSquare, theme }) => (isSquare ? '' : theme.radius)};
 
   border-color: ${({ buttonType, theme }) => (buttonType === 'default' ? theme.color.grayMediumDark : '')};
-
-  background-color: ${({ buttonType, theme }) =>
-    buttonType === 'default' || buttonType === 'dashed'
-      ? 'white'
-      : buttonType === 'primary'
-      ? theme.color.grayDark
-      : theme.color.grayMediumLight};
 `;
 
 export const Button = ({
   buttonType = 'primary',
-  size = 'small',
+  size = 'medium',
   children,
   onClick,
   ...style
