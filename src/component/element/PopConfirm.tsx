@@ -1,6 +1,7 @@
 import { PropsWithChildren, ReactNode } from 'react';
 import styled, { keyframes } from 'styled-components';
 
+// TODO : Modal 중복많아서 하나도 빼보기
 const Slide = keyframes`
     0% {
         transform: translateY(20%);
