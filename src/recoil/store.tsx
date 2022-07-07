@@ -44,7 +44,12 @@ export const userNicknameState = atom({
   default: '',
 });
 
-export const userprofilephotoState = atom({
+type Img = {
+  img_show: string;
+  img_file: File | string | Blob;
+};
+
+export const userprofilephotoState = atom<Img>({
   key: 'userprofilephotoState',
   default: {
     img_show: '',

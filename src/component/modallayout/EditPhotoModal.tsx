@@ -1,7 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { editPhotoModalState, userprofilephotoState } from '../../recoil/store';
-import { useRef } from 'react';
+import React from 'react';
 import { useMutation } from 'react-query';
 import { UserApi } from '../../api/callApi';
 
@@ -137,17 +137,21 @@ const BtnAble = styled.button`
 
 const EditPhotoModal = () => {
   const [modalEditPhoto, setModalEditPhoto] = useRecoilState(editPhotoModalState);
-  const img: any = useRef();
 
   //파일 미리볼 url을 저장해줄 state
   const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
 
   // 파일 저장
-  const saveFileImage = (e: any) => {
-    setFileImage({
-      img_show: URL.createObjectURL(e.target.files[0]),
-      img_file: e.target.files[0],
-    });
+  const saveFileImage = (event: React.ChangeEvent) => {
+    const e = event.target as HTMLInputElement;
+    const files: FileList | null = e.files;
+
+    if (files) {
+      setFileImage({
+        img_show: URL.createObjectURL(files[0]),
+        img_file: files[0],
+      });
+    }
   };
 
   // 파일 삭제
@@ -235,14 +239,7 @@ const EditPhotoModal = () => {
               >
                 <KoreanFont size={1}>사진 업로드</KoreanFont>
               </ImgLable>
-              <input
-                id="img"
-                type="file"
-                ref={img}
-                accept="image/*"
-                onChange={saveFileImage}
-                style={{ display: 'none' }}
-              />
+              <input id="img" type="file" accept="image/*" onChange={saveFileImage} style={{ display: 'none' }} />
               {fileImage ? (
                 <BtnAble
                   width={'25%'}
@@ -250,7 +247,6 @@ const EditPhotoModal = () => {
                   margin={'0 0 0 1.5rem'}
                   onClick={() => {
                     deleteFileImage();
-                    img.current.value = '';
                   }}
                 >
                   <KoreanFont size={1}>기본이미지</KoreanFont>

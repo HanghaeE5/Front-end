@@ -4,9 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   accessTokenState,
   editNicknameModalState,
-  editPasswordModalState,
   editPhotoModalState,
-  notiModalState,
   refreshTokenState,
   userNicknameState,
   userprofilephotoState,
@@ -18,7 +16,6 @@ import { useNavigate } from 'react-router';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 import { useMutation } from 'react-query';
 import { UserApi } from '../api/callApi';
-import { AxiosError } from 'axios';
 
 const MainContainer = styled.div`
   display: flex;
@@ -128,11 +125,11 @@ export const Main = () => {
   //유저정보 가져오기 API
   const userInformData = useMutation(() => UserApi.userInformApi(), {
     onSuccess: (data) => {
-      console.log(data);
+      // console.log(data);
       setUserNickname(data.data.nick);
       setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
     },
-    onError: (error: AxiosError<{ msg: string }>) => {
+    onError: () => {
       // nav('/login');
     },
   });
@@ -143,11 +140,11 @@ export const Main = () => {
   useEffect(() => {
     userInform();
     if (accessToken != null) {
-      console.log();
+      // console.log();
       const refreshToken = first[1].split('=')[1];
-      console.log(refreshToken);
+      // console.log(refreshToken);
       const isNickname = first[2].split('=')[1];
-      console.log(isNickname);
+      // console.log(isNickname);
 
       if (isNickname === 'N') {
         nav('/signupsns');

@@ -44,13 +44,6 @@ const BoxWrap = styled.div`
   animation: ${Slide} 0.6s ease;
 `;
 
-type font = {
-  size: number;
-  color: string;
-  isCorrect?: boolean;
-  isBold?: boolean;
-};
-
 const NotiModal = () => {
   const [modalNoti, setModalNoti] = useRecoilState(notiModalState);
   return (
