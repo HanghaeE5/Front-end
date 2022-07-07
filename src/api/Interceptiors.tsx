@@ -1,6 +1,4 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { useSetRecoilState } from 'recoil';
-import { accessTokenState, refreshTokenState } from '../recoil/store';
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   // console.info(`[request] [${JSON.stringify(config)}]`);

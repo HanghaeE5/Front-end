@@ -1,9 +1,7 @@
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { FiChevronLeft } from 'react-icons/fi';
 import { useRecoilState } from 'recoil';
-import { editNicknameModalState, notiModalState, profileMenuModalState } from '../../recoil/store';
+import { notiModalState, profileMenuModalState } from '../../recoil/store';
 import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
 
@@ -75,11 +73,10 @@ const KoreanFont = styled.p`
 `;
 
 export const TopNavLayout = () => {
-  const [modalNoti, setModalNoti] = useRecoilState(notiModalState);
-  const [modalProfileMenu, setModalProfileMenu] = useRecoilState(profileMenuModalState);
+  const [, setModalNoti] = useRecoilState(notiModalState);
+  const [, setModalProfileMenu] = useRecoilState(profileMenuModalState);
 
   const nav = useNavigate();
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   return (
     <TopNavWrapper>

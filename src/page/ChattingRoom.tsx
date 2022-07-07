@@ -1,11 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { PostCard } from '../component/PostCard';
-import { CommunitySearchControl, Post } from '../Types/community';
 
 const ContentWrapper = styled.div`
   height: calc(100% - 4rem);
@@ -173,8 +170,6 @@ const MessageSendBox = styled.div`
 `;
 
 export const ChattingRoom = () => {
-  const [chattingList, setChattingList] = useState<boolean>(true);
-  const [friendList, setFriendList] = useState<boolean>(false);
   const nav = useNavigate();
 
   const [myText, setmyText] = useState<string>('');

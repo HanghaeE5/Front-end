@@ -1,9 +1,7 @@
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { FiChevronLeft } from 'react-icons/fi';
 import { useRecoilState } from 'recoil';
-import { editNicknameModalState, notiModalState, profileMenuModalState } from '../../recoil/store';
+import { notiModalState, profileMenuModalState } from '../../recoil/store';
 import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
 
@@ -68,21 +66,11 @@ type font = {
   isBold?: boolean;
 };
 
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
 export const TopNavLayout = () => {
-  const [modalNoti, setModalNoti] = useRecoilState(notiModalState);
-  const [modalProfileMenu, setModalProfileMenu] = useRecoilState(profileMenuModalState);
+  const [, setModalNoti] = useRecoilState(notiModalState);
+  const [, setModalProfileMenu] = useRecoilState(profileMenuModalState);
 
   const nav = useNavigate();
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   return (
     <TopNavWrapper>

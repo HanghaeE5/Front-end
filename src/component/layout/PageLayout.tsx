@@ -2,7 +2,6 @@ import { PropsWithChildren } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FiChevronLeft } from 'react-icons/fi';
-import { Wrapper } from '../element';
 
 const HeaderWrapper = styled.div`
   width: 100%;

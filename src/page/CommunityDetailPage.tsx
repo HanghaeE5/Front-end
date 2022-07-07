@@ -28,11 +28,6 @@ const postDetail: PostDetail = {
   isOpenChallange: true,
 };
 
-const Container = styled.section`
-  border: 1px solid black;
-  height: calc(100%);
-`;
-
 export const CommunityDetailPage = () => {
   return (
     <NavLayout>

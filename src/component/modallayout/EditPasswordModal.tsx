@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { editPasswordModalState } from '../../recoil/store';
-import { Children, useState } from 'react';
-import { PropsWithChildren } from 'react';
+import { useState } from 'react';
 import { useMutation } from 'react-query';
 import { registerApi } from '../../api/callApi';
 
@@ -78,28 +77,10 @@ const KoreanFont = styled.p`
   margin: 0 0 0 0;
 `;
 
-const EnglishFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'OpensansBold' : 'OpensansMed')};
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
 const CheckFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
   font-family: 'NotoRegu';
   color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'blue' : 'red') : props.color)};
-  display: flex;
-  margin: 0 0 0 0;
-  text-align: left;
-`;
-
-const CheckFont2 = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoRegu';
-  color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'black' : 'red') : props.color)};
   display: flex;
   margin: 0 0 0 0;
   text-align: left;
@@ -152,7 +133,6 @@ const BtnAble = styled.button`
 
 const EditPasswordModal = () => {
   const [modalEditPassword, setModalEditPassword] = useRecoilState(editPasswordModalState);
-
   const [nickname, setNickname] = useState<string>('');
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
@@ -165,7 +145,7 @@ const EditPasswordModal = () => {
 
   //닉네임 중복확인 API
   const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
-    onSuccess: (token) => {
+    onSuccess: () => {
       // loginToken(token.headers.authorization.split(' ')[1]);
       console.log();
       alert(`${nickname}으로 닉네임이 설정되었습니다.`);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { NavLayout } from '../component/layout/NavLayout';
@@ -24,16 +24,6 @@ const ContentWrapper = styled.div`
     height: 100%;
     background-color: ${({ theme }) => theme.color.grayLight};
   }
-`;
-
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
-  /* background-color: #f5d7e5; */
-  margin: 0px auto 0px auto;
-  position: relative;
 `;
 
 type box = {
@@ -90,13 +80,6 @@ const RowChattingBox = styled.div`
   cursor: pointer;
 `;
 
-const LogoFont = styled.p`
-  font-size: 1.6875rem;
-  font-family: 'OpensansBold';
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
 type font = {
   size?: number;
   color?: string;
@@ -111,70 +94,6 @@ const KoreanFont = styled.p`
   color: ${(props: font) => props.color};
   display: flex;
   margin: 0 0 0 0;
-`;
-
-const EnglishFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'OpensansBold' : 'OpensansMed')};
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
-const LogoFontSmall = styled.p`
-  font-size: 1.3125rem;
-  font-family: 'OpensansBold';
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
-const CheckFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoRegu';
-  color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'blue' : 'red') : props.color)};
-  display: flex;
-  margin: 0 0 0 0;
-  text-align: left;
-`;
-
-const CheckFont2 = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoRegu';
-  color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'black' : 'red') : props.color)};
-  display: flex;
-  margin: 0 0 0 0;
-  text-align: left;
-`;
-
-const InputInfo = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  padding: 0 0 0 10px;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
-const InputInfoNoneBorder = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  /* border-radius: 6px; */
-  padding: 0 0 0 0.625rem;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
 `;
 
 type btnbox = {
@@ -205,36 +124,6 @@ const BtnBox = styled.button`
   &:hover {
     color: white;
     background-color: #ecee73;
-  }
-`;
-
-type btnable = {
-  width: number | string;
-  height: number | string;
-  margin: string;
-  isDisable: boolean;
-};
-
-const BtnAble = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  width: ${(props: btnable) => props.width};
-  height: ${(props: btnable) => props.height}rem;
-  margin: ${(props: btnable) => props.margin};
-  background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
-
-  cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
-
-  &:hover {
-    ${(props: btnable) =>
-      props.isDisable
-        ? ''
-        : `color: white;
-    background-color: #358edc;`}
   }
 `;
 

@@ -13,16 +13,12 @@ import {
 } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import EditPasswordModal from '../component/modallayout/EditPasswordModal';
-import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
-import NotiModal from '../component/modallayout/NotiModal';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
-import { jwtUtils } from '../utils/jwtUtils';
 import { useMutation } from 'react-query';
-import { FieldValues } from 'react-hook-form';
 import { UserApi } from '../api/callApi';
 import { AxiosError } from 'axios';
-import { resolve } from 'path';
 
 const MainContainer = styled.div`
   display: flex;
@@ -89,24 +85,6 @@ const RowBox = styled.div`
   /* background-color: #683b3b; */
 `;
 
-const LineBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  background-color: #989898;
-`;
-
-const LogoFont = styled.p`
-  font-size: 1.6875rem;
-  font-family: 'OpensansBold';
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
 type font = {
   size: number;
   color: string;
@@ -132,27 +110,11 @@ const EnglishFont = styled.p`
   margin: 0 0 0 0;
 `;
 
-type btnbox = {
-  width: number | string;
-  height: number | string;
-  margin: string;
-  color: string;
-};
-
-type btnable = {
-  width: number | string;
-  height: number | string;
-  margin: string;
-  isDisable: boolean;
-};
-
 console.log(window.location.href);
 
 export const Main = () => {
   const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
-  const [modalEditPassword, setModalEditPassword] = useRecoilState(editPasswordModalState);
-  const [modalNoti, setModalNoti] = useRecoilState(notiModalState);
-  const [modalEditPhoto, setModalEditPhoto] = useRecoilState(editPhotoModalState);
+  const [, setModalEditPhoto] = useRecoilState(editPhotoModalState);
   const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);

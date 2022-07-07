@@ -1,23 +1,11 @@
-import axios, { AxiosError } from 'axios';
-import { url } from 'inspector';
-import React, { useEffect, useRef, useState } from 'react';
+import { AxiosError } from 'axios';
+import React, { useEffect, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { registerApi } from '../api/callApi';
 import { PageLayout } from '../component/layout/PageLayout';
-
-const RegisterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 23.4375rem;
-  height: 42.375rem;
-  background-color: #24c5c3;
-  margin: 0px auto 4.625rem auto;
-`;
 
 const InfoContainer = styled.div`
   display: flex;
@@ -78,13 +66,6 @@ const LineBox = styled.div`
   background-color: #989898;
 `;
 
-const LogoFont = styled.p`
-  font-size: 1.6875rem;
-  font-family: 'OpensansBold';
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
 type font = {
   size: number;
   color: string;
@@ -96,15 +77,6 @@ const KoreanFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
 
   font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
-const EnglishFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'OpensansBold' : 'OpensansMed')};
   color: ${(props: font) => props.color};
   display: flex;
   margin: 0 0 0 0;
@@ -230,12 +202,11 @@ export const SignUpEmail = () => {
   const [password, setPassword] = useState<string>('');
   const [password2, setPassword2] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
-  const [emailCheck, setEmailCheck] = useState<boolean>(false);
+  const [, setEmailCheck] = useState<boolean>(false);
   const [send, setSend] = useState<boolean>(false);
   const [view, setView] = useState<boolean>(false);
   const localToken = localStorage.getItem('recoil-persist');
 
-  const rePass: any = useRef();
   const nav = useNavigate();
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -269,11 +240,11 @@ export const SignUpEmail = () => {
 
   // 이메일 인증번호 발송 API
   const EmilCertificationData = useMutation((email: { email: string }) => registerApi.emilCertificationApi(email), {
-    onSuccess: (token) => {
+    onSuccess: () => {
       alert(`${email} 메일로 발송된 인증번호를 입력해주세요🙂`);
       setEmailCheckNumberInput(true);
     },
-    onError: (error: AxiosError | any) => {
+    onError: (error: AxiosError<{ msg: string }>) => {
       alert(error.response?.data.msg);
     },
   });
@@ -284,7 +255,7 @@ export const SignUpEmail = () => {
 
   //이메일 인증번호 일치 확인 API
   const EmilCertificationNumberData = useMutation((data: FieldValues) => registerApi.emilCertificationNumberApi(data), {
-    onSuccess: (token) => {
+    onSuccess: () => {
       // loginToken(token.headers.authorization.split(' ')[1]);
       console.log();
       alert('인증완료🙂');
@@ -300,12 +271,12 @@ export const SignUpEmail = () => {
 
   //닉네임 중복확인 API
   const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
-    onSuccess: (token) => {
+    onSuccess: () => {
       // loginToken(token.headers.authorization.split(' ')[1]);
       console.log();
       alert(`${nickname}으로 닉네임이 설정되었습니다.`);
     },
-    onError: (error: AxiosError | any) => {
+    onError: (error: AxiosError<{ msg: string }>) => {
       alert(error.response?.data.msg);
     },
   });
@@ -316,7 +287,7 @@ export const SignUpEmail = () => {
 
   //회원가입 API
   const JoinData = useMutation((data: FieldValues) => registerApi.joinApi(data), {
-    onSuccess: (token) => {
+    onSuccess: () => {
       // loginToken(token.headers.authorization.split(' ')[1]);
       console.log();
       alert(`${nickname}님 반가워요! 로그인해주세요`);
