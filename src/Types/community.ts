@@ -1,9 +1,9 @@
-type PostType = 'challange' | 'daily' | 'all';
+type PostType = 'challange' | 'daily';
 
 export interface CommunitySearchControl {
   category: string;
   keyword: string;
-  type: PostType;
+  type: PostType | 'all';
 }
 
 export interface Post {
