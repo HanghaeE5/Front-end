@@ -283,6 +283,15 @@ export const Main = () => {
     profilePhotoEditData.mutate(formData);
   };
 
+  const photoChange = async (e: any) => {
+    setFileImage(e.target.files[0]);
+    setFileImageUrl(URL.createObjectURL(e.target.files[0]));
+    await (() => {
+      onSubmit();
+      setuserprofilephoto(fileImageUrl);
+    });
+  };
+
   //유저정보 가져오기 API
   const userInformData = useMutation(() => UserApi.userInformApi(), {
     onSuccess: (data) => {
@@ -296,14 +305,6 @@ export const Main = () => {
   });
   const userInform = () => {
     userInformData.mutate();
-  };
-  const photoChange = async (e: any) => {
-    setFileImage(e.target.files[0]);
-    setFileImageUrl(URL.createObjectURL(e.target.files[0]));
-    await (() => {
-      onSubmit();
-      setuserprofilephoto(fileImageUrl);
-    });
   };
 
   useEffect(() => {
@@ -341,21 +342,24 @@ export const Main = () => {
             backgroundImage: `url(${userprofilephoto})`,
           }}
         />
-        <label htmlFor="img">
-          <Box
-            width={'1.3294rem'}
-            height={1.2468}
-            margin={'-1.3rem 8.7731rem 0 13.3356rem'}
-            style={{
-              border: 'none',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-              backgroundImage: 'url(/assets/camera.svg)',
-              cursor: 'pointer',
-            }}
-          />
-        </label>
+
+        <Box
+          width={'1.3294rem'}
+          height={1.2468}
+          margin={'-1.3rem 8.7731rem 0 13.3356rem'}
+          style={{
+            border: 'none',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundImage: 'url(/assets/camera.svg)',
+            cursor: 'pointer',
+          }}
+          onClick={() => {
+            setModalEditPhoto(true);
+          }}
+        />
+
         <input id="img" type="file" accept="image/*" style={{ display: 'none' }} onChange={photoChange} />
         <EditPhotoModal></EditPhotoModal>
         <RowBox margin={'0.628rem 0px 0px 0px'}>

@@ -89,7 +89,7 @@ const RowBox = styled.div`
 
 type font = {
   size: number;
-  color: string;
+  color?: string;
   isCorrect?: boolean;
   isBold?: boolean;
 };
@@ -242,7 +242,7 @@ const EditNicknameModal = () => {
             <RowBox width="92%" height={1.875} margin={'2.5rem 1.25rem 0rem 1.25rem'}>
               <Box width={'3.5rem'} margin={'auto auto auto 0rem'}>
                 <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
-                  닉네임
+                  프로필 사진
                 </KoreanFont>
               </Box>
               <Box
@@ -302,7 +302,7 @@ const EditNicknameModal = () => {
                       }
                 }
               >
-                중복확인
+                <KoreanFont size={1}>닉네임 변경 완료</KoreanFont>
               </BtnAble>
             </RowBox>
             <BoxSide width={'92%'} height={1.3125} margin={'0.375rem auto 0px auto'}>
@@ -322,7 +322,7 @@ const EditNicknameModal = () => {
               isDisable={!CheckNickname(nickname)}
               width={'89%'}
               height={4}
-              margin={'7.375rem auto 12.8125rem auto'}
+              margin={'7.375rem auto 10rem auto'}
               onClick={
                 nicknameOk
                   ? () => {
@@ -333,7 +333,7 @@ const EditNicknameModal = () => {
                     }
               }
             >
-              닉네임 변경 완료
+              <KoreanFont size={1}>닉네임 변경 완료</KoreanFont>
             </BtnAble>
           </BoxWrap>
         </ModalBackground>

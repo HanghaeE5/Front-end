@@ -1,10 +1,11 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { editPhotoModalState, notiModalState } from '../../recoil/store';
-import { Children, useState } from 'react';
+import { Children, useRef, useState } from 'react';
 import { PropsWithChildren } from 'react';
 import { useMutation } from 'react-query';
-import { registerApi } from '../../api/callApi';
+import { registerApi, UserApi } from '../../api/callApi';
+import { useNavigate } from 'react-router';
 
 const Slide = keyframes`
     0% {
@@ -54,10 +55,10 @@ const Box = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: box) => props.width}rem;
+  width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
-  background-color: #ffffff;
+  background-color: #d07272;
 `;
 
 const BoxSide = styled.div`
@@ -85,9 +86,23 @@ const RowBox = styled.div`
   /* background-color: #683b3b; */
 `;
 
+const ImgLable = styled.label`
+  justify-content: center;
+  width: 7.5rem;
+  height: 2.5rem;
+  background-color: #94cef2;
+  border: 1px solid white;
+  border-radius: 6px;
+  cursor: pointer;
+  &:hover {
+    color: white;
+    background-color: #1763a6;
+  }
+`;
+
 type font = {
   size: number;
-  color: string;
+  color?: string;
   isCorrect?: boolean;
   isBold?: boolean;
 };
@@ -143,11 +158,17 @@ const InputInfo = styled.input`
   }
 `;
 
+export const Img = styled.img`
+  max-width: 100%;
+  max-height: 100%;
+  background-repeat: 0;
+`;
+
 type btnable = {
-  width: number | string;
-  height: number | string;
-  margin: string;
-  isDisable: boolean;
+  width?: number | string;
+  height?: number | string;
+  margin?: string;
+  isDisable?: boolean;
 };
 
 const BtnAble = styled.button`
@@ -175,19 +196,135 @@ const BtnAble = styled.button`
 
 const EditPhotoModal = () => {
   const [modalEditPhoto, setModalEditPhoto] = useRecoilState(editPhotoModalState);
+  const img: any = useRef();
+  const nav = useNavigate();
+  const [text, setText] = useState();
+
+  //파일 미리볼 url을 저장해줄 state
+  const [fileImage, setFileImage] = useState({
+    img_show: '',
+    img_file: '',
+  });
+
+  // 파일 저장
+  const saveFileImage = (e: any) => {
+    setFileImage({
+      img_show: URL.createObjectURL(e.target.files[0]),
+      img_file: e.target.files[0],
+    });
+  };
+
+  // 파일 삭제
+  const deleteFileImage = () => {
+    URL.revokeObjectURL(fileImage.img_show);
+    setFileImage({
+      img_show: '',
+      img_file: '',
+    });
+  };
+
+  const profilePhotoEditData = useMutation((forms: FormData) => UserApi.profilePhotoEditApi(forms), {
+    onSuccess: () => {
+      setModalEditPhoto(false);
+    },
+  });
+
+  const onSubmit = () => {
+    const formData = new FormData();
+    if (fileImage && text) {
+      formData.append('img', fileImage.img_file);
+    }
+    profilePhotoEditData.mutate(formData);
+  };
+
   return (
     <>
       {modalEditPhoto && (
         <ModalBackground onClick={() => setModalEditPhoto(false)}>
           <BoxWrap
             width={'100%'}
-            height={15}
-            style={{ borderRadius: '20px 20px 0px 0px' }}
+            height={34.8}
             onClick={(e: any) => {
               e.stopPropagation();
             }}
           >
-            프로필 사진 바꾸기
+            <RowBox width="92%" height={1.875} margin={'2.5rem 1.25rem 0rem 1.25rem'}>
+              <Box width={'5rem'} margin={'auto auto auto 0rem'}>
+                <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
+                  프로필사진
+                </KoreanFont>
+              </Box>
+              <Box
+                width={'1.5rem'}
+                height={1.5}
+                margin={'auto 0rem auto auto'}
+                style={{
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                  backgroundImage: 'url(/assets/X.svg)',
+                }}
+              ></Box>
+            </RowBox>
+
+            <RowBox width="92%" height={2} margin={'1rem 1.25rem 0rem 1.25rem'}>
+              <ImgLable
+                htmlFor="img"
+                style={{
+                  alignItems: 'center',
+
+                  display: 'flex',
+                }}
+              >
+                <KoreanFont size={1}>사진 업로드</KoreanFont>
+              </ImgLable>
+              <input
+                id="img"
+                type="file"
+                ref={img}
+                accept="image/*"
+                onChange={saveFileImage}
+                style={{ display: 'none' }}
+              />
+              {fileImage ? (
+                <BtnAble
+                  width={'7.5rem'}
+                  height={2.5}
+                  margin={'0 0 0 1rem'}
+                  onClick={() => {
+                    deleteFileImage();
+                    img.current.value = '';
+                  }}
+                >
+                  <KoreanFont size={1}>삭제</KoreanFont>
+                </BtnAble>
+              ) : (
+                ''
+              )}
+            </RowBox>
+
+            <Box width={'82%'}>
+              {fileImage.img_show ? '' : <Box style={{ margin: 'auto' }}>📷사진 업로드를 클릭! </Box>}
+              {fileImage.img_show && <Img alt="sample" src={fileImage.img_show} style={{ margin: 'auto' }} />}
+            </Box>
+
+            <BtnAble
+              isDisable={!fileImage}
+              width={'89%'}
+              height={4}
+              margin={'7.375rem auto 12.8125rem auto'}
+              onClick={
+                fileImage
+                  ? () => {
+                      onSubmit();
+                    }
+                  : () => {
+                      null;
+                    }
+              }
+            >
+              사진 변경 완료
+            </BtnAble>
           </BoxWrap>
         </ModalBackground>
       )}
