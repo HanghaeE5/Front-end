@@ -17,9 +17,7 @@ const StyledButton = styled.button<ButtonProps>`
   justify-content: center;
   width: ${(props) => props.width || '100%'};
   font: ${({ size, theme }) => theme.button.font[size || 'medium']};
-  // font-weight: 700;
-  // font-family: 'Noto Sans CJK Light KR';
-  // font-size: ${({ size }) => (size === 'medium' ? '0.875rem' : '1rem')};
+
   padding: 1rem 0;
   height: ${({ size, theme }) => theme.button.height[size || 'medium']};
   cursor: ${({ buttonType }) => buttonType && 'disable'};
@@ -31,7 +29,6 @@ const StyledButton = styled.button<ButtonProps>`
   background-color: ${({ buttonType, theme }) => theme.button.backgroundColor[buttonType || 'primary']};
 
   border-radius: ${({ isSquare, theme }) => (isSquare ? '' : theme.radius)};
-
   border-color: ${({ buttonType, theme }) => (buttonType === 'default' ? theme.color.grayMediumDark : '')};
 `;
 
