@@ -94,21 +94,19 @@ export const TopNavLayout = () => {
           margin={'auto'}
           style={{
             backgroundImage: 'url(/assets/nav/알림.svg)',
-            backgroundSize: '1.8rem',
           }}
           onClick={() => {
             setModalNoti(true);
           }}
         ></Box>
         <Box
-          width="2rem"
-          height={2}
+          width="1.6rem"
+          height={1.6}
           margin={'auto'}
           style={{
-            backgroundImage: 'url(/assets/토끼.PNG)',
+            backgroundImage: 'url(/assets/nav/회원사진.PNG)',
             backgroundSize: 'cover',
             borderRadius: '50%',
-            border: '2px solid black',
           }}
           onClick={() => {
             setModalProfileMenu(true);
