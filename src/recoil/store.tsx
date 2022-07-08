@@ -44,6 +44,16 @@ export const userNicknameState = atom({
   default: '',
 });
 
+export const friendAddModalState = atom({
+  key: 'friendAddModalState',
+  default: false,
+});
+
+export const friendNicknameState = atom({
+  key: 'friendNicknameState',
+  default: '',
+});
+
 type Img = {
   img_show: string;
   img_file: File | string | Blob;
@@ -55,4 +65,24 @@ export const userprofilephotoState = atom<Img>({
     img_show: '',
     img_file: '',
   },
+});
+
+type friend = {
+  id: number;
+  userId: string;
+  nick: string;
+  level: number;
+  profileImageUrl: string;
+};
+
+type friendList = friend[];
+
+export const friendListState = atom<friendList>({
+  key: 'friendListState',
+  default: [],
+});
+
+export const requestFriendListState = atom<friendList>({
+  key: 'requestFriendListState',
+  default: [],
 });

@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 import { editNicknameModalState, userNicknameState } from '../../recoil/store';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
-import { registerApi, UserApi } from '../../api/callApi';
+import { registerApi, userApi } from '../../api/callApi';
 import { AxiosError } from 'axios';
 
 const Slide = keyframes`
@@ -164,8 +164,6 @@ const EditNicknameModal = () => {
     return regExp.test(asValue);
   };
 
-  const goNicknameEdit = { nick: nickname };
-
   //닉네임 중복확인 API
   const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
     onSuccess: () => {
@@ -185,7 +183,7 @@ const EditNicknameModal = () => {
 
   //닉네임 변경 완료 API
 
-  const NicknameEditData = useMutation((nick: { nick: string }) => UserApi.nicknameEditApi(nick), {
+  const NicknameEditData = useMutation((nick: { nick: string }) => userApi.nicknameEditApi(nick), {
     onSuccess: () => {
       setModalEditNickname(false);
       setUserNickname(nickname);
@@ -199,6 +197,8 @@ const EditNicknameModal = () => {
       }
     },
   });
+
+  const goNicknameEdit = { nick: nickname };
 
   const NicknameEdit = () => {
     NicknameEditData.mutate(goNicknameEdit);

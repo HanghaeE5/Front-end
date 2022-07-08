@@ -33,7 +33,7 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
       const refreshToken = toto.refreshTokenState;
 
       axios
-        .get('http://13.209.96.69/refresh', {
+        .get('https://todowith.shop/refresh', {
           headers: {
             Authorization: accessToken,
             Refresh: refreshToken,
@@ -74,7 +74,7 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
       const refreshToken = toto.refreshTokenState;
 
       axios
-        .get('http://13.209.96.69/refresh', {
+        .get('https://todowith.shop/refresh', {
           headers: {
             Authorization: accessToken,
             Refresh: refreshToken,

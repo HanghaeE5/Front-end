@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 import { editPhotoModalState, userprofilephotoState } from '../../recoil/store';
 import React from 'react';
 import { useMutation } from 'react-query';
-import { UserApi } from '../../api/callApi';
+import { userApi } from '../../api/callApi';
 
 const Slide = keyframes`
     0% {
@@ -163,7 +163,7 @@ const EditPhotoModal = () => {
     });
   };
 
-  const profilePhotoEditData = useMutation((forms: FormData) => UserApi.profilePhotoEditApi(forms), {
+  const profilePhotoEditData = useMutation((forms: FormData) => userApi.profilePhotoEditApi(forms), {
     onSuccess: () => {
       setModalEditPhoto(false);
     },

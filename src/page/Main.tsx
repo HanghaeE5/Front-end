@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 import { useMutation } from 'react-query';
-import { UserApi } from '../api/callApi';
+import { userApi } from '../api/callApi';
 
 const MainContainer = styled.div`
   display: flex;
@@ -123,7 +123,7 @@ export const Main = () => {
   const nav = useNavigate();
 
   //유저정보 가져오기 API
-  const userInformData = useMutation(() => UserApi.userInformApi(), {
+  const userInformData = useMutation(() => userApi.userInformApi(), {
     onSuccess: (data) => {
       // console.log(data);
       setUserNickname(data.data.nick);
@@ -133,6 +133,7 @@ export const Main = () => {
       // nav('/login');
     },
   });
+
   const userInform = () => {
     userInformData.mutate();
   };

@@ -3,7 +3,7 @@ import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
-import { registerApi } from '../api/callApi';
+import { friendApi, registerApi } from '../api/callApi';
 import { FieldValues } from 'react-hook-form';
 import { accessTokenState, refreshTokenState } from '../recoil/store';
 
@@ -293,7 +293,7 @@ export const Login = () => {
           }}
           onClick={() => {
             window.location.replace(
-              'http://todowith.shop/oauth2/authorization/google?redirect_uri=http://localhost:3000',
+              'https://todowith.shop/oauth2/authorization/google?redirect_uri=https://www.todowith.co.kr',
             );
           }}
         ></Box>
