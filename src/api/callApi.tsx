@@ -5,7 +5,7 @@ import { FieldValues } from 'react-hook-form';
 import setupInterceptorsTo from './Interceptiors';
 
 const baseApi = axios.create({
-  baseURL: 'http://13.209.96.69',
+  baseURL: 'https://todowith.shop',
   timeout: 1000,
 });
 
