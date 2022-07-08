@@ -52,6 +52,7 @@ export const CommunitiPostingPage = () => {
   };
 
   const onChangeImg = (input: ChangeEvent<HTMLInputElement>) => {
+    console.log(input.target.files);
     if (input.target.files && input.target.files[0]) {
       const reader = new FileReader();
 
@@ -66,9 +67,8 @@ export const CommunitiPostingPage = () => {
   };
 
   const removeImg = () => {
-    // TODO : 삭제 안됨..
     if (imageInput.current) {
-      imageInput.current.files = null;
+      imageInput.current.value = '';
     }
 
     setPreview('');
