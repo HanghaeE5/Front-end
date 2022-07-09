@@ -187,7 +187,11 @@ export const CommunitiPostingPage = () => {
         </Wrapper>
       </PageLayout>
       {modalVisible && (
-        <TodoModal closeModal={() => setModalVisible(false)} setTodoDataFromModal={setTodoDataFromModal} />
+        <TodoModal
+          modalTitle="챌린저스 추가하기"
+          closeModal={() => setModalVisible(false)}
+          setTodoDataFromModal={setTodoDataFromModal}
+        />
       )}
     </NavLayout>
   );

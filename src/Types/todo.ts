@@ -2,15 +2,17 @@ export type Category = 'study' | 'excercise' | 'shopping' | 'promise' | 'etc';
 
 export type Access = 'public' | 'freind' | 'private';
 
-export type TodoStatus = 'done' | 'doing';
+export type TodoStatus = 'done-list' | 'doing-list';
 
 export type TodoStatusFilter = TodoStatus | 'all';
 
-export type Order = 'latest' | 'old';
+export type Sort = 'desc' | 'asc';
 
-export interface TodoFiler {
-  todoStatus: TodoStatusFilter;
-  order: Order;
+export interface TodoParams {
+  filter: TodoStatusFilter;
+  sort: Sort;
+  page: number;
+  size: number;
 }
 
 // TODO : TodoAddData로 바꿔야겄네
