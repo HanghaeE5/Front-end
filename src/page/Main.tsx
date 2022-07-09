@@ -4,17 +4,18 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   accessTokenState,
   editNicknameModalState,
-  editPasswordModalState,
   editPhotoModalState,
-  notiModalState,
   refreshTokenState,
+  userNicknameState,
+  userprofilephotoState,
 } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import EditPasswordModal from '../component/modallayout/EditPasswordModal';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import NotiModal from '../component/modallayout/NotiModal';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
+import { useMutation } from 'react-query';
+import { userApi } from '../api/callApi';
 
 const MainContainer = styled.div`
   display: flex;
@@ -43,6 +44,23 @@ const Box = styled.div`
   background-color: #ffffff;
 `;
 
+const ToDoBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  //스크롤바 없애기
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
+  background-color: #ffffff;
+`;
+
 const BoxSide = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,24 +80,6 @@ const RowBox = styled.div`
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   /* background-color: #683b3b; */
-`;
-
-const LineBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  background-color: #989898;
-`;
-
-const LogoFont = styled.p`
-  font-size: 1.6875rem;
-  font-family: 'OpensansBold';
-  display: flex;
-  margin: 0 0 0 0;
 `;
 
 type font = {
@@ -107,165 +107,55 @@ const EnglishFont = styled.p`
   margin: 0 0 0 0;
 `;
 
-const LogoFontSmall = styled.p`
-  font-size: 1.3125rem;
-  font-family: 'OpensansBold';
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
-const CheckFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoRegu';
-  color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'blue' : 'red') : props.color)};
-  display: flex;
-  margin: 0 0 0 0;
-  text-align: left;
-`;
-
-const CheckFont2 = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoRegu';
-  color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'black' : 'red') : props.color)};
-  display: flex;
-  margin: 0 0 0 0;
-  text-align: left;
-`;
-
-const InputInfo = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  padding: 0 0 0 10px;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
-const InputInfoNoneBorder = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  /* border-radius: 6px; */
-  padding: 0 0 0 0.625rem;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
-type btnbox = {
-  width: number | string;
-  height: number | string;
-  margin: string;
-  color: string;
-};
-
-const BtnBox = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #769cbc;
-  border-radius: 6px;
-  border: 1px solid #989898;
-
-  width: ${(props: btnbox) => props.width};
-  height: ${(props: btnbox) => props.height}rem;
-  margin: ${(props: btnbox) => props.margin};
-  background-color: ${(props: btnbox) => props.color};
-  cursor: pointer;
-
-  &:hover {
-    color: white;
-    background-color: #ecee73;
-  }
-`;
-
-type btnable = {
-  width: number | string;
-  height: number | string;
-  margin: string;
-  isDisable: boolean;
-};
-
-const BtnAble = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  width: ${(props: btnable) => props.width};
-  height: ${(props: btnable) => props.height}rem;
-  margin: ${(props: btnable) => props.margin};
-  background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
-
-  cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
-
-  &:hover {
-    ${(props: btnable) =>
-      props.isDisable
-        ? ''
-        : `color: white;
-    background-color: #358edc;`}
-  }
-`;
-
 console.log(window.location.href);
 
 export const Main = () => {
-  const [modalEditNickname, setmodalEditNickname] = useRecoilState(editNicknameModalState);
-  const [modalEditPassword, setModalEditPassword] = useRecoilState(editPasswordModalState);
-  const [modalNoti, setModalNoti] = useRecoilState(notiModalState);
-  const [modalEditPhoto, setModalEditPhoto] = useRecoilState(editPhotoModalState);
+  const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
+  const [, setModalEditPhoto] = useRecoilState(editPhotoModalState);
+  const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);
+  const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
   const all = window.location.href;
-  const url = new URL(window.location.href);
+
   const first = all.split('&');
   const accessToken = first[0].split('=')[1];
   const nav = useNavigate();
-  if (accessToken != null) {
-    console.log(accessToken);
-    const refreshToken = first[1].split('=')[1];
-    console.log(refreshToken);
-    const isNickname = first[2].split('=')[1];
-    console.log(isNickname);
 
-    useEffect(() => {
-      localStorage.clear();
+  //유저정보 가져오기 API
+  const userInformData = useMutation(() => userApi.userInformApi(), {
+    onSuccess: (data) => {
+      // console.log(data);
+      setUserNickname(data.data.nick);
+      setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
+    },
+    onError: () => {
+      // nav('/login');
+    },
+  });
+
+  const userInform = () => {
+    userInformData.mutate();
+  };
+
+  useEffect(() => {
+    userInform();
+    if (accessToken != null) {
+      // console.log();
+      const refreshToken = first[1].split('=')[1];
+      // console.log(refreshToken);
+      const isNickname = first[2].split('=')[1];
+      // console.log(isNickname);
 
       if (isNickname === 'N') {
         nav('/signupsns');
+      } else {
+        accessLoginToken(accessToken);
+        refreshLoginToken(refreshToken);
+        // window.location.replace('/');
       }
-      accessLoginToken(accessToken);
-      refreshLoginToken(refreshToken);
-    }, []);
-  }
-
-  // const [params] = useSearchParams();
-  // console.log(params.get('token'));
-
-  // useEffect(() => {
-  //   const loginToken = useSetRecoilState(tokenState);
-  //   loginToken(accessToken);
-
-  //   if (isNickname === 'N') {
-  //     nav('/signupsns');
-  //   }
-  // }, []);
-  // loginToken(token.headers.authorization.split(" ")[1]);
-  // const urlParams = url.searchParams;
-  // console.log(urlParams.get('Authorization'));
+    }
+  }, [userNickname]);
 
   return (
     <NavLayout>
@@ -280,9 +170,10 @@ export const Main = () => {
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             backgroundSize: 'cover',
-            backgroundImage: 'url(/assets/토끼.png)',
+            backgroundImage: `url(${fileImage.img_show})`,
           }}
         />
+
         <Box
           width={'1.3294rem'}
           height={1.2468}
@@ -298,7 +189,8 @@ export const Main = () => {
           onClick={() => {
             setModalEditPhoto(true);
           }}
-        ></Box>
+        />
+
         <EditPhotoModal></EditPhotoModal>
         <RowBox margin={'0.628rem 0px 0px 0px'}>
           <Box
@@ -307,7 +199,7 @@ export const Main = () => {
             style={{ display: 'flex', justifyContent: 'initial', borderBottom: '0.5px solid #000000' }}
           >
             <KoreanFont size={0.875} color="#000000">
-              강남스타일1234
+              {userNickname}
             </KoreanFont>
           </Box>
           <Box
@@ -396,7 +288,7 @@ export const Main = () => {
           </EnglishFont>
         </Box>
 
-        <Box
+        <ToDoBox
           width={'89%'}
           margin={'0.375rem 5.6% 0 5.6%'}
           style={{
@@ -443,7 +335,7 @@ export const Main = () => {
               </KoreanFont>
             </BoxSide>
           </RowBox>
-        </Box>
+        </ToDoBox>
         <EditPasswordModal></EditPasswordModal>
       </MainContainer>
     </NavLayout>

@@ -1,11 +1,6 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { PostCard } from '../component/PostCard';
-import { CommunitySearchControl, Post } from '../Types/community';
 
 const ContentWrapper = styled.div`
   height: 100%;

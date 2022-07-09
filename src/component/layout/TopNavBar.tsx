@@ -1,9 +1,7 @@
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { FiChevronLeft } from 'react-icons/fi';
 import { useRecoilState } from 'recoil';
-import { editNicknameModalState, notiModalState, profileMenuModalState } from '../../recoil/store';
+import { notiModalState, profileMenuModalState } from '../../recoil/store';
 import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
 
@@ -61,28 +59,11 @@ const RowBox = styled.div`
   /* background-color: #683b3b; */
 `;
 
-type font = {
-  size: number;
-  color: string;
-  isCorrect?: boolean;
-  isBold?: boolean;
-};
-
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
 export const TopNavLayout = () => {
-  const [modalNoti, setModalNoti] = useRecoilState(notiModalState);
-  const [modalProfileMenu, setModalProfileMenu] = useRecoilState(profileMenuModalState);
+  const [, setModalNoti] = useRecoilState(notiModalState);
+  const [, setModalProfileMenu] = useRecoilState(profileMenuModalState);
 
   const nav = useNavigate();
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   return (
     <TopNavWrapper>
@@ -113,21 +94,19 @@ export const TopNavLayout = () => {
           margin={'auto'}
           style={{
             backgroundImage: 'url(/assets/nav/알림.svg)',
-            backgroundSize: '1.8rem',
           }}
           onClick={() => {
             setModalNoti(true);
           }}
         ></Box>
         <Box
-          width="2rem"
-          height={2}
+          width="1.6rem"
+          height={1.6}
           margin={'auto'}
           style={{
-            backgroundImage: 'url(/assets/토끼.PNG)',
+            backgroundImage: 'url(/assets/nav/회원사진.PNG)',
             backgroundSize: 'cover',
             borderRadius: '50%',
-            border: '2px solid black',
           }}
           onClick={() => {
             setModalProfileMenu(true);

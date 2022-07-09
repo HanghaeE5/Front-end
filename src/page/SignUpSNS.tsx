@@ -1,11 +1,11 @@
-import { url } from 'inspector';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { registerApi } from '../api/callApi';
 import { AxiosError } from 'axios';
+import { accessTokenState, refreshTokenState } from '../recoil/store';
 
 const RegisterContainer = styled.div`
   display: flex;
@@ -54,10 +54,6 @@ const BoxSide = styled.div`
   /* background-color: #6922bb; */
 `;
 
-type rowbox = {
-  margin: string;
-};
-
 const RowBox = styled.div`
   display: flex;
   flex-direction: row;
@@ -67,17 +63,6 @@ const RowBox = styled.div`
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   /* background-color: #683b3b; */
-`;
-
-const LineBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width}rem;
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  background-color: #989898;
 `;
 
 type font = {
@@ -127,13 +112,6 @@ const InputInfo = styled.input`
   }
 `;
 
-type btnbox = {
-  width: number | string;
-  height: number | string;
-  margin: string;
-  color: string;
-};
-
 type btnable = {
   width: number | string;
   height: number | string;
@@ -166,11 +144,11 @@ const BtnAble = styled.button`
 
 export const SignUpSNS = () => {
   const [nickname, setNickname] = useState<string>('');
-  // const loginToken = useSetRecoilState(tokenState);
-  // const tokenUse = useRecoilValue(tokenState);
+  const accessLoginToken = useSetRecoilState(accessTokenState);
+  const refreshLoginToken = useSetRecoilState(refreshTokenState);
+  const localToken = localStorage.getItem('accessToken');
 
   const nav = useNavigate();
-  const rePass: any = useRef();
 
   const CheckNickname = (asValue: string) => {
     const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
@@ -184,15 +162,15 @@ export const SignUpSNS = () => {
   //소셜로그인 닉네임 저장 API
   const joinSocialApiData = useMutation((nick: { nick: string }) => registerApi.joinSocialApi(nick), {
     onSuccess: (token) => {
-      // loginToken(token.headers.authorization.split(' ')[1]);
+      localStorage.clear();
+      accessLoginToken(token.headers.authorization);
+      refreshLoginToken(token.headers.refresh);
       console.log();
-      alert(`${nickname}님 반가워요! 로그인해주세요`);
+      alert(`${nickname}님 반가워요!`);
       nav('/');
     },
     onError: (error: AxiosError) => {
       alert(error.response?.data);
-      console.log(error);
-      console.log;
     },
   });
 
@@ -202,7 +180,7 @@ export const SignUpSNS = () => {
 
   //닉네임 중복확인 API
   const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
-    onSuccess: (token) => {
+    onSuccess: () => {
       alert(`${nickname}으로 닉네임이 설정되었습니다.`);
     },
     onError: () => {
@@ -214,22 +192,13 @@ export const SignUpSNS = () => {
     NickCertificationData.mutate(nick);
   };
 
-  // const localToken = localStorage.getItem('accessToken');
-
-  // console.log(localToken);
-  // if (localToken != null) {
-  //   const toto = JSON.parse(localToken);
-
-  //   console.log(toto);
-  // }
-
-  // useEffect(() => {
-  //   //useEffect 리턴 바로 위에 써주기.
-  //   if (localToken) {
-  //     alert('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
-  //     nav('/');
-  //   }
-  // }, []);
+  useEffect(() => {
+    //useEffect 리턴 바로 위에 써주기.
+    if (localToken) {
+      alert('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
+      nav('/');
+    }
+  }, []);
 
   return (
     <>

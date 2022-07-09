@@ -1,9 +1,10 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { editPasswordModalState } from '../../recoil/store';
+import { editNicknameModalState, friendAddModalState, userNicknameState } from '../../recoil/store';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
-import { registerApi } from '../../api/callApi';
+import { friendApi, registerApi, userApi } from '../../api/callApi';
+import { AxiosError } from 'axios';
 
 const Slide = keyframes`
     0% {
@@ -41,7 +42,7 @@ const BoxWrap = styled.div`
   align-items: center;
   justify-content: center;
   width: 76%;
-  height: 30rem;
+  height: 17.8125rem;
   border-radius: 12px;
   margin: auto 2.8125rem;
   background-color: #ffffff;
@@ -142,22 +143,39 @@ const BtnAble = styled.button`
   }
 `;
 
-const EditPasswordModal = () => {
-  const [modalEditPassword, setModalEditPassword] = useRecoilState(editPasswordModalState);
-  const [nickname, setNickname] = useState<string>('');
+const FriendAddModal = () => {
+  const [modalFriendAdd, setModalFriendAdd] = useRecoilState(friendAddModalState);
+  const [friendnickname, setFriendNickname] = useState<string>('');
+
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
+    setFriendNickname(e.target.value);
   };
 
-  const CheckNickname = (asValue: string) => {
-    const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
-    return regExp.test(asValue);
+  //닉네임 친구추가 API
+  const friendAddData = useMutation((nick: { nick: string }) => friendApi.friendAddApi(nick), {
+    onSuccess: (token) => {
+      console.log(token);
+      alert(`${friendnickname}님께 친구 요청을 보냈습니다!`);
+    },
+    onError: (error: AxiosError<{ msg: string }>) => {
+      if (error.message === 'Request failed with status code 401') {
+        setTimeout(() => friendAdd(), 200);
+      } else {
+        alert(error.response?.data.msg);
+      }
+    },
+  });
+
+  const goFriendAdd = { nick: friendnickname };
+
+  const friendAdd = () => {
+    friendAddData.mutate(goFriendAdd);
   };
 
   return (
     <>
-      {modalEditPassword && (
-        <ModalBackground onClick={() => setModalEditPassword(false)}>
+      {modalFriendAdd && (
+        <ModalBackground onClick={() => setModalFriendAdd(false)}>
           <BoxWrap
             onClick={(e) => {
               e.stopPropagation();
@@ -165,34 +183,24 @@ const EditPasswordModal = () => {
           >
             <Box margin={'1.875rem auto 0.9375rem auto'}>
               <KoreanFont size={1.25} color="rgba(147, 147, 147, 1)">
-                비밀번호 변경
+                친구 추가
               </KoreanFont>
             </Box>
             <InputInfo
               type="text"
-              placeholder="기존 비밀번호"
+              placeholder="친구의 닉네임을 입력해주세요"
               name="nickname"
-              value={nickname}
+              value={friendnickname}
               onChange={onChangeNickname}
             ></InputInfo>
-            <InputInfo
-              type="text"
-              placeholder="새 비밀번호"
-              name="nickname"
-              value={nickname}
-              onChange={onChangeNickname}
-              margin="0.5rem auto"
-            ></InputInfo>
-            <InputInfo
-              type="text"
-              placeholder="새 비밀번호 확인"
-              name="nickname"
-              value={nickname}
-              onChange={onChangeNickname}
-            ></InputInfo>
-            <BtnAble margin="0.625rem auto 1.875rem auto">
+            <BtnAble
+              margin="0.625rem auto 1.875rem auto"
+              onClick={() => {
+                friendAdd();
+              }}
+            >
               <KoreanFont size={0.9375} color="rgba(147, 147, 147, 1)">
-                비밀번호 변경 완료
+                추가하기
               </KoreanFont>
             </BtnAble>
           </BoxWrap>
@@ -201,4 +209,4 @@ const EditPasswordModal = () => {
     </>
   );
 };
-export default EditPasswordModal;
+export default FriendAddModal;

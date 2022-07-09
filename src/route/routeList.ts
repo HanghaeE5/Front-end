@@ -1,6 +1,5 @@
 import { CommunitiPostingPage } from './../page/CommunityPostingPage';
 import { ReactElement } from 'react';
-import { Chatting } from '../page/Chatting';
 
 import {
   Login,
@@ -11,6 +10,8 @@ import {
   CommunityDetailPage,
   ToDoPage,
   FriendList,
+  Chatting,
+  ChattingRoom,
 } from './../page';
 
 export interface IRoute {
@@ -75,5 +76,10 @@ export const routeList: IRoute[] = [
     id: 'chatting',
     path: '/chatting',
     page: Chatting,
+  },
+  {
+    id: 'chattingroom',
+    path: '/chattingroom',
+    page: ChattingRoom, //뒤에 방번호 넣기
   },
 ];

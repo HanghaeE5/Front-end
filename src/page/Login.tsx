@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { registerApi } from '../api/callApi';
+import { useSetRecoilState } from 'recoil';
+import { friendApi, registerApi } from '../api/callApi';
 import { FieldValues } from 'react-hook-form';
 import { accessTokenState, refreshTokenState } from '../recoil/store';
 
@@ -79,21 +79,6 @@ const InputInfo = styled.input`
   }
 `;
 
-const InputInfoNoneBorder = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  /* border-radius: 6px; */
-  padding: 0 0 0 10px;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
 type btnable = {
   width: number | string;
   height: number | string;
@@ -137,6 +122,7 @@ export const Login = () => {
   const loginUserData = useMutation((data: FieldValues) => registerApi.loginApi(data), {
     onSuccess: (token) => {
       accessLoginToken(token.headers.authorization);
+      refreshLoginToken(token.headers.refresh);
       console.log(token);
       alert('로그인 성공!');
       nav('/');
@@ -150,10 +136,10 @@ export const Login = () => {
     loginUserData.mutate(data);
   };
 
-  const onChange1 = (e: any) => {
+  const onChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNameText(e.target.value);
   };
-  const onChange2 = (e: any) => {
+  const onChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
@@ -212,7 +198,7 @@ export const Login = () => {
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             backgroundSize: 'cover',
-            backgroundImage: autoLogin ? 'url(/assets/checkempty.png)' : 'url(/assets/checkfull.png)',
+            backgroundImage: autoLogin ? 'url(/assets/checkempty.svg)' : 'url(/assets/checkfull.png)',
           }}
           onClick={() => {
             setAutoLogin(!autoLogin);
@@ -289,7 +275,9 @@ export const Login = () => {
             backgroundImage: 'url(/assets/kakaoicon.png)',
           }}
           onClick={() => {
-            nav('/signupsns');
+            window.location.replace(
+              'http://todowith.shop/oauth2/authorization/kakao?redirect_uri=http://localhost:3000',
+            );
           }}
         ></Box>
         <Box
@@ -305,7 +293,7 @@ export const Login = () => {
           }}
           onClick={() => {
             window.location.replace(
-              'http://todowith.shop/oauth2/authorization/google?redirect_uri=http://localhost:3000',
+              'https://todowith.shop/oauth2/authorization/google?redirect_uri=https://www.todowith.co.kr',
             );
           }}
         ></Box>
