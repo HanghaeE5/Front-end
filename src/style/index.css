@@ -160,7 +160,7 @@ textarea:focus {
 }
 
 @font-face {
-  font-family: 'Noto Sans CJK Light KR';
+  font-family: 'Noto Light';
   src: url('../asset/font/NOTOSANSCJKKR-LIGHT.OTF');
   font-weight: 400;
   font-style: normal;
