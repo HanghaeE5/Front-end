@@ -7,3 +7,5 @@ export * from './DropdownMenu';
 export * from './Button';
 export * from './ButtonFloating';
 export * from './PopConfirm';
+export * from './Typography';
+export * from './Tab';

@@ -129,7 +129,8 @@ body {
   margin: 0;
   height: 100%;
   overflow: hidden;
-  font-family: 'Noto Sans CJK KR';
+  font-family: 'Noto Sans CJK Light KR';
+  /* 'Noto Sans CJK KR'; */
 }
 
 #root {
@@ -161,7 +162,7 @@ textarea:focus {
 
 @font-face {
   font-family: 'Noto Sans CJK Light KR';
-  src: url('../asset/font/NOTOSANSCJKKR-LIGHT.OTF');
+  src: url('../asset/font/NOTOSANSCJKKR-THIN.OTF');
   font-weight: 400;
   font-style: normal;
 }

@@ -11,6 +11,7 @@ const Div = styled.div<WrapperProps>`
   justify-content: ${({ justifyContent }) => (justifyContent ? justifyContent : '')};
   align-items: ${({ alignItems }) => (alignItems ? alignItems : 'center')};
   box-sizing: border-box;
+  border: ${({ border }) => border};
 `;
 
 interface WrapperProps {
@@ -21,6 +22,7 @@ interface WrapperProps {
   padding?: string;
   justifyContent?: 'start' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
   alignItems?: 'stretch' | 'center' | 'start' | 'end';
+  border?: string;
 }
 
 export const Wrapper = ({ children, ...style }: PropsWithChildren<WrapperProps>) => {

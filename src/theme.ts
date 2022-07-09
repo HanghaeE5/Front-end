@@ -1,5 +1,5 @@
 export const theme = {
-  mainColor: 'beige',
+  mainColor: '#FFD600',
   color: {
     grayLight: '#F5F5F5',
     grayMediumLight: '#BCBCBC',
@@ -18,7 +18,7 @@ export const theme = {
     },
     font: {
       small: 'NotoRegu 400 0.813rem',
-      medium: '500 0.875rem',
+      medium: '20 0.875rem',
       large: '500 1rem',
     },
     color: {
