@@ -1,12 +1,10 @@
-import styled, { keyframes } from 'styled-components';
 import { useInput } from '../hooks/useInput';
 import { Button, TextInput, Wrapper } from './element';
 import { WarningText } from './WarningText';
 import { BsFillHandbagFill, BsX } from 'react-icons/bs';
-import { PropsWithChildren, ReactNode, useEffect, useRef, useState } from 'react';
-import { DateRange, DayPicker, Row, RowProps } from 'react-day-picker';
+import { PropsWithChildren, ReactNode, useState } from 'react';
+import { DayPicker, Row, RowProps } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
-// import '../style/day-picker.css';
 import { ko } from 'date-fns/locale';
 import { differenceInCalendarDays } from 'date-fns';
 import { Category, TodoData } from '../Types/todo';
@@ -68,12 +66,14 @@ interface TodoModalProps {
   modalTitle: string;
   setTodoDataFromModal: (todo: TodoData) => void;
   closeModal: () => void;
+  todoData?: TodoData;
 }
-export const TodoModal = ({ modalTitle, setTodoDataFromModal, closeModal }: TodoModalProps) => {
-  const { value: title, onChangeValue: onChangeTitle } = useInput();
+export const TodoModal = ({ todoData, modalTitle, setTodoDataFromModal, closeModal }: TodoModalProps) => {
+  const { value: title, onChangeValue: onChangeTitle } = useInput(todoData?.content);
+  const [isRequired, setIsRequired] = useState(false);
   const [category, setCategory] = useState<Category>('study');
   const [showCalendar, setShowCalendar] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<Date[] | undefined>([]);
+  const [selectedDay, setSelectedDay] = useState<Date[] | undefined>([new Date()]);
 
   const onCloseCalendar = () => setShowCalendar(false);
 
@@ -81,8 +81,18 @@ export const TodoModal = ({ modalTitle, setTodoDataFromModal, closeModal }: Todo
     setCategory(category);
   };
 
+  const onChangeTitleInput = (value: string) => {
+    if (value) setIsRequired(false);
+    onChangeTitle(value);
+  };
+
   const onClickAddButton = () => {
-    if (!title || !selectedDay?.length) return;
+    setIsRequired(false);
+
+    if (!title) {
+      setIsRequired(true);
+      return;
+    }
 
     const date: { [key in string]: null } = {};
 
@@ -91,7 +101,7 @@ export const TodoModal = ({ modalTitle, setTodoDataFromModal, closeModal }: Todo
       date[dateKey] = null;
     });
 
-    setTodoDataFromModal({ title, category, date });
+    setTodoDataFromModal({ content: title, category, todoDate: Object.keys(date)[0], todoDateList: date });
     closeModal();
   };
 
@@ -105,7 +115,12 @@ export const TodoModal = ({ modalTitle, setTodoDataFromModal, closeModal }: Todo
         </HeaderTitle>
 
         <Wrapper isColumn padding="1rem">
-          <TextInput value={title} onChange={onChangeTitle} placeholder="투 두 제목을 입력해주세요" />
+          <TextInput
+            value={title}
+            onChange={onChangeTitleInput}
+            placeholder="투 두 제목을 입력해주세요"
+            isValidError={isRequired}
+          />
           <WarningText>투 두 제목은 필수사항입니다!</WarningText>
         </Wrapper>
         <CategorySection isColumn alignItems="start">

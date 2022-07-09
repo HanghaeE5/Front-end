@@ -1,4 +1,4 @@
-import { TodoParams } from '../Types/todo';
+import { TodoData, TodoParams } from '../Types/todo';
 import { callApi } from './callApi';
 
 export const todoQueryKey = {
@@ -6,9 +6,32 @@ export const todoQueryKey = {
 };
 
 export const fetchTodoList = async (params: TodoParams) => {
-  console.log('fetchTodo', params);
-  const res = await callApi.get('/todo', {
+  const { data } = await callApi.get('/todo', {
     params,
   });
-  return res.data;
+  return data;
+};
+
+export const createTodo = async (params: TodoData) => {
+  const { data } = await callApi.post('/todo', {
+    params,
+  });
+  return data;
+};
+
+export const updateTodo = async (todoId: number, params: TodoData) => {
+  const { data } = await callApi.put(`/todo/${todoId}`, {
+    params,
+  });
+  return data;
+};
+
+export const updateDoneTodo = async (todoId: number) => {
+  const { data } = await callApi.post(`/todo/${todoId}`);
+  return data;
+};
+
+export const deleteTodo = async (todoId: number) => {
+  const { data } = await callApi.delete(`/todo/${todoId}`);
+  return data;
 };

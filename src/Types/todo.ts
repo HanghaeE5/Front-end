@@ -17,9 +17,11 @@ export interface TodoParams {
 
 // TODO : TodoAddData로 바꿔야겄네
 export interface TodoData {
-  title: string;
+  content: string;
   category: Category;
-  date: { [key in string]: null };
+  todoDate: string;
+  todoDateList: { [key in string]: null };
+  todoId?: number;
 }
 
 export interface ITodoItem {

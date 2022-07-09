@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 import { BiSearch } from 'react-icons/bi';
 import { Wrapper } from './Wrapper';
-import { HTMLProps } from 'react';
 
-const TextElement = styled.input`
+const TextElement = styled.input<{ isValidError?: boolean }>`
   height: 3rem;
   border-radius: ${(props) => props.theme.radius};
   background-color: ${(props) => props.theme.color.grayLight};
@@ -13,6 +12,7 @@ const TextElement = styled.input`
     color: ${(props) => props.theme.color.grayMedium};
   }
   width: 100%;
+  border: ${({ isValidError }) => isValidError && `1px solid red`};
 `;
 
 const SearchButton = styled(BiSearch)`
@@ -51,9 +51,17 @@ interface TextInputProps {
   showSearch?: {
     onSearch: () => void;
   };
+  isValidError?: boolean;
 }
 
-export const TextInput = ({ type = 'text', placeholder, showSearch, value, onChange }: TextInputProps) => {
+export const TextInput = ({
+  type = 'text',
+  placeholder,
+  showSearch,
+  value,
+  onChange,
+  isValidError,
+}: TextInputProps) => {
   if (type === 'text') {
     return (
       <Wrapper>
@@ -63,6 +71,7 @@ export const TextInput = ({ type = 'text', placeholder, showSearch, value, onCha
           onChange={(e) => {
             onChange(e.target.value);
           }}
+          isValidError={isValidError}
         />
         {showSearch && <SearchButton onClick={() => showSearch.onSearch()} />}
       </Wrapper>

@@ -113,7 +113,7 @@ export const CommunitiPostingPage = () => {
   const getDateCount = () => {
     if (!todoData) return;
 
-    const date = Object.keys(todoData.date);
+    const date = Object.keys(todoData.todoDateList);
 
     return `${date[0]} ${date.length > 1 ? `외 ${date.length - 1}` : ``}`;
   };
@@ -140,7 +140,7 @@ export const CommunitiPostingPage = () => {
           </Wrapper>
           {postType === 'challanger' && todoData && (
             <ChallangersSection>
-              <span>{todoData.title}</span>
+              <span>{todoData.content}</span>
               <span>{getDateCount()}</span>
             </ChallangersSection>
           )}
