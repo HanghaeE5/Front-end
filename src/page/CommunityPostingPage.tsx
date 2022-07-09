@@ -6,6 +6,8 @@ import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
 import { useInput } from '../hooks/useInput';
 import { BiErrorCircle, BiCamera } from 'react-icons/bi';
+import { TodoModal } from '../component/TodoModal';
+import { Category, TodoData } from '../Types/todo';
 
 const WarningText = styled.div`
   color: ${({ theme }) => theme.color.grayDark};
@@ -36,9 +38,34 @@ const ImgPreviewSection = styled(Wrapper)`
   }
 `;
 
+const ChallangersSection = styled.div`
+  background-color: ${({ theme }) => theme.color.grayDark};
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 5.875rem;
+  border-radius: ${({ theme }) => theme.radius};
+  margin: 0.5rem;
+  justify-content: center;
+  align-items: center;
+
+  & span:nth-of-type(1) {
+    color: white;
+    font-size: 1.25rem;
+    padding: 0.5rem;
+  }
+
+  & span:nth-of-type(2) {
+    color: #adadad;
+    font-size: 0.875rem;
+  }
+`;
+
 export const CommunitiPostingPage = () => {
   const [postType, setPostType] = useState<'post' | 'challanger'>('post');
   const [preview, setPreview] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [todoData, setTodoData] = useState<TodoData>();
 
   const { value: title, onChangeValue: onChangeTitle } = useInput();
   const { value: content, onChangeValue: onChangeContent } = useInput();
@@ -74,12 +101,28 @@ export const CommunitiPostingPage = () => {
     setPreview('');
   };
 
+  const onClickChallangersButton = () => {
+    setPostType('challanger');
+    setModalVisible(true);
+  };
+
+  const setTodoDataFromModal = (todo: TodoData) => {
+    setTodoData(todo);
+  };
+
+  const getDateCount = () => {
+    if (!todoData) return;
+
+    const date = Object.keys(todoData.date);
+
+    return `${date[0]} ${date.length > 1 ? `외 ${date.length - 1}` : ``}`;
+  };
+
   return (
     <NavLayout>
       <PageLayout title="글쓰기">
-        <Wrapper isColumn>
-          <PostCard.PostHeader userName="강남스타일 124" userImg="" />
-          <Wrapper justifyContent="space-between" padding="0 1rem">
+        <Wrapper isColumn padding="1rem">
+          <Wrapper justifyContent="space-between">
             <Button
               buttonType={postType === 'post' ? 'primary' : 'default'}
               width="49%"
@@ -90,19 +133,26 @@ export const CommunitiPostingPage = () => {
             <Button
               buttonType={postType === 'challanger' ? 'primary' : 'default'}
               width="49%"
-              onClick={() => setPostType('challanger')}
+              onClick={() => onClickChallangersButton()}
             >
               챌린저스
             </Button>
           </Wrapper>
-          <Wrapper isColumn padding="1rem" justifyContent="start">
+          {postType === 'challanger' && todoData && (
+            <ChallangersSection>
+              <span>{todoData.title}</span>
+              <span>{getDateCount()}</span>
+            </ChallangersSection>
+          )}
+
+          <Wrapper isColumn justifyContent="start" padding="0.5rem 0">
             <TextInput value={title} onChange={onChangeTitle} placeholder="제목을 입력해주세요" />
             <WarningText>
               <BiErrorCircle />
               필수사항입니다!
             </WarningText>
           </Wrapper>
-          <Wrapper isColumn padding="1rem" justifyContent="start">
+          <Wrapper isColumn justifyContent="start">
             <TextInput type="area" value={content} onChange={onChangeContent} placeholder="내용을 입력해주세요" />
             <WarningText>
               <BiErrorCircle />
@@ -110,7 +160,7 @@ export const CommunitiPostingPage = () => {
             </WarningText>
           </Wrapper>
         </Wrapper>
-        <Wrapper padding="0 1rem" isColumn>
+        <Wrapper isColumn padding="1rem">
           <Button buttonType="dashed" onClick={() => onClickImgUploadButton()}>
             <BiCamera /> &nbsp; 사진 업로드
           </Button>
@@ -136,6 +186,9 @@ export const CommunitiPostingPage = () => {
           <Button>등록하기</Button>
         </Wrapper>
       </PageLayout>
+      {modalVisible && (
+        <TodoModal closeModal={() => setModalVisible(false)} setTodoDataFromModal={setTodoDataFromModal} />
+      )}
     </NavLayout>
   );
 };
