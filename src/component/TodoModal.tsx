@@ -71,9 +71,11 @@ interface TodoModalProps {
 export const TodoModal = ({ todoData, modalTitle, setTodoDataFromModal, closeModal }: TodoModalProps) => {
   const { value: title, onChangeValue: onChangeTitle } = useInput(todoData?.content);
   const [isRequired, setIsRequired] = useState(false);
-  const [category, setCategory] = useState<Category>('study');
+  const [category, setCategory] = useState<Category>(todoData?.category || 'study');
   const [showCalendar, setShowCalendar] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<Date[] | undefined>([new Date()]);
+  const [selectedDay, setSelectedDay] = useState<Date[] | undefined>(
+    todoData ? [new Date(todoData.todoDate)] : [new Date()],
+  );
 
   const onCloseCalendar = () => setShowCalendar(false);
 

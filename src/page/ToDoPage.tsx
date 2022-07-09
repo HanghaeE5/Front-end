@@ -9,7 +9,7 @@ import { PageLayout } from '../component/layout/PageLayout';
 import { ContentWrapper, TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
 import { TodoItem } from '../component/TodoItem';
 import { TodoModal } from '../component/TodoModal';
-import { Access, ITodoItem, Sort, TodoData, TodoParams, TodoStatus, TodoStatusFilter } from '../Types/todo';
+import { Access, Category, ITodoItem, Sort, TodoData, TodoParams, TodoStatus, TodoStatusFilter } from '../Types/todo';
 
 const AccessTabList: { label: string; value: TodoStatus | 'all' }[] = [
   { label: '전체', value: 'all' },
@@ -104,9 +104,14 @@ export const ToDoPage = () => {
     setAccess(accessType);
   };
 
-  const onEditButton = (todo: ITodoItem) => {
-    console.log(';gg');
-    // setTodoData()
+  const onEditButton = ({ category, todoContent, todoId, todoDate }: ITodoItem) => {
+    setTodoData({
+      content: todoContent,
+      category: category as Category,
+      todoDate: todoDate,
+      todoDateList: { todoDate: null },
+      todoId,
+    });
     setTodoModalState({ modalType: 'edit', modalVisible: true });
   };
 
