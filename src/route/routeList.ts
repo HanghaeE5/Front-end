@@ -1,3 +1,4 @@
+import { CommunitiPostingPage } from './../page/CommunityPostingPage';
 import { ReactElement } from 'react';
 
 import {
@@ -19,6 +20,10 @@ export interface IRoute {
   page: () => ReactElement;
   children?: IRoute[];
 }
+
+export const PATH = {
+  communityPosting: '/community/post',
+};
 
 export const routeList: IRoute[] = [
   {
@@ -51,6 +56,11 @@ export const routeList: IRoute[] = [
     id: 'communityDetail',
     path: '/community/:id',
     page: CommunityDetailPage,
+  },
+  {
+    id: 'community',
+    path: PATH.communityPosting,
+    page: CommunitiPostingPage,
   },
   {
     id: 'todo',

@@ -2,11 +2,12 @@ import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
 interface ButtonProps {
-  buttonType?: 'primary' | 'default' | 'disable';
-  size?: 'small' | 'large';
+  buttonType?: 'primary' | 'default' | 'disable' | 'dashed' | 'ghost';
+  size?: 'small' | 'medium' | 'large';
   isSquare?: boolean;
   onClick?: () => void;
   margin?: string;
+  width?: string;
 }
 
 const StyledButton = styled.button<ButtonProps>`
@@ -14,25 +15,26 @@ const StyledButton = styled.button<ButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  font-weight: 700;
-  font-family: 'Noto Sans CJK Light KR';
-  font-size: ${({ size }) => (size === 'small' ? '0.875rem' : '1rem')};
+  width: ${(props) => props.width || '100%'};
+  font: ${({ size, theme }) => theme.button.font[size || 'medium']};
+
   padding: 1rem 0;
-  color: ${({ buttonType, theme }) => (buttonType === 'default' ? theme.color.grayMediumDark : 'white')};
-  border: 1px solid;
-  border-color: ${({ buttonType, theme }) => (buttonType === 'default' ? theme.color.grayMediumDark : '')};
-  border-radius: ${({ isSquare, theme }) => (isSquare ? '' : theme.radius)};
-  background-color: ${({ buttonType, theme }) =>
-    buttonType === 'default' ? 'white' : buttonType === 'primary' ? theme.color.grayDark : theme.color.grayMediumLight};
-  height: ${({ size }) => (size === 'small' ? '3rem' : '4rem')};
+  height: ${({ size, theme }) => theme.button.height[size || 'medium']};
   cursor: ${({ buttonType }) => buttonType && 'disable'};
   margin: ${({ margin }) => margin && margin};
+  border: 1px ${({ buttonType }) => (buttonType === 'dashed' ? 'dashed' : 'solid')};
+
+  color: ${({ buttonType, theme }) => theme.button.color[buttonType || 'primary']};
+  border-color: ${({ buttonType, theme }) => theme.button.borderColor[buttonType || 'primary']};
+  background-color: ${({ buttonType, theme }) => theme.button.backgroundColor[buttonType || 'primary']};
+
+  border-radius: ${({ isSquare, theme }) => (isSquare ? '' : theme.radius)};
+  border-color: ${({ buttonType, theme }) => (buttonType === 'default' ? theme.color.grayMediumDark : '')};
 `;
 
 export const Button = ({
   buttonType = 'primary',
-  size = 'small',
+  size = 'medium',
   children,
   onClick,
   ...style
