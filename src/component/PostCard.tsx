@@ -3,14 +3,6 @@ import styled from 'styled-components';
 import { Board } from '../Types/community';
 import { Badge, DropdownMenu, Img, Wrapper } from './element';
 
-interface PostCardProps {
-  onClick?: (id: string) => void;
-}
-
-const CardWrapper = styled(Wrapper)<PostCardProps>`
-  background-color: white;
-`;
-
 const UserName = styled.span`
   font-size: 0.875rem;
   font-weight: 500;
@@ -61,11 +53,17 @@ const PostHeader = ({
   userName,
   date,
   boardId,
+  dropDownProps,
 }: {
   userImg?: string;
   userName: string;
   date?: string;
   boardId?: number;
+  dropDownProps?: {
+    onShare: () => void;
+    onEdit: () => void;
+    onDelete: () => void;
+  };
 }) => {
   return (
     <Wrapper margin="0.5rem 0" padding="0.5rem 1rem">
@@ -77,7 +75,7 @@ const PostHeader = ({
         <UserName>{userName}</UserName>
         {(boardId || date) && <PostInfo>{`${date} | ${boardId}`}</PostInfo>}
       </Wrapper>
-      {boardId && <DropdownMenu />}
+      {boardId && dropDownProps && <DropdownMenu {...dropDownProps} />}
     </Wrapper>
   );
 };
@@ -99,11 +97,18 @@ const Gather = ({ children }: PropsWithChildren) => {
   return <StyledGather>{children}명 참여중!</StyledGather>;
 };
 
-export const PostCard = ({ children, onClick }: PropsWithChildren<PostCardProps>) => {
+export const PostCard = ({ children, onClick }: PropsWithChildren<{ onClick: () => void }>) => {
   return (
-    <CardWrapper isColumn alignItems="start" padding="1rem 0" margin="0.5rem 0 0 0" onClick={onClick}>
+    <Wrapper
+      isColumn
+      alignItems="start"
+      padding="1rem 0"
+      margin="0.5rem 0 0 0"
+      onClick={() => onClick()}
+      backgroundColor="white"
+    >
       {children}
-    </CardWrapper>
+    </Wrapper>
   );
 };
 

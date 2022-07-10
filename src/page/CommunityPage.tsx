@@ -53,10 +53,6 @@ export const CommunityPage = () => {
     },
   );
 
-  const onClickPost = (id: string) => {
-    nav(`/community/${id}`);
-  };
-
   const onClickWriteButton = () => {
     nav(PATH.communityPosting);
   };
@@ -81,7 +77,7 @@ export const CommunityPage = () => {
                   optionList={serachOptions}
                   value={control.sub || 'all'}
                   onChange={(value) =>
-                    setControl({ ...control, sub: value === 'all' ? undefined : (value as KeywordFilter) })
+                    setControl({ ...control, page: 0, sub: value === 'all' ? undefined : (value as KeywordFilter) })
                   }
                 />
               </Wrapper>
@@ -101,13 +97,13 @@ export const CommunityPage = () => {
               value={control.filter || 'all'}
               optionList={postFilterOptions}
               onChange={(value) =>
-                setControl({ ...control, filter: value === 'all' ? undefined : (value as FilterType) })
+                setControl({ ...control, page: 0, filter: value === 'all' ? undefined : (value as FilterType) })
               }
             />
           </section>
           <section>
             {list.map((post: Board) => (
-              <PostCard key={post.boardId} onClick={onClickPost}>
+              <PostCard key={post.boardId} onClick={() => nav(`${PATH.COMMUNITY}/${post.boardId}`)}>
                 <PostCard.PostHeader userImg="" userName={post.authorEmail} />
                 {post.imageUrl && (
                   <Wrapper padding="0 1rem">

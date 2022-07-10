@@ -50,7 +50,13 @@ const Menu = styled.div<{ isActive: boolean }>`
 
 const MenuItem = styled.li``;
 
-export const DropdownMenu = () => {
+interface DropDownMenuProps {
+  onShare: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+export const DropdownMenu = ({ onShare, onEdit, onDelete }: DropDownMenuProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
 
@@ -83,19 +89,19 @@ export const DropdownMenu = () => {
       <Menu isActive={isActive} ref={dropdownRef}>
         <ul>
           <MenuItem>
-            <Wrapper justifyContent="space-between">
+            <Wrapper justifyContent="space-between" onClick={onShare}>
               <span>공유</span>
               <BiShareAlt />
             </Wrapper>
           </MenuItem>
           <MenuItem>
-            <Wrapper justifyContent="space-between">
+            <Wrapper justifyContent="space-between" onClick={onEdit}>
               <span>수정</span>
               <BiEdit />
             </Wrapper>
           </MenuItem>
           <MenuItem>
-            <Wrapper justifyContent="space-between">
+            <Wrapper justifyContent="space-between" onClick={onDelete}>
               <span>삭제</span>
               <BiX />
             </Wrapper>

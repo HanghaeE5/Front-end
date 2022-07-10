@@ -60,6 +60,11 @@ export const routeList: IRoute[] = [
   },
   {
     id: 'community',
+    path: `${PATH.communityPosting}/:boardId`,
+    page: CommunitiPostingPage,
+  },
+  {
+    id: 'community',
     path: PATH.communityPosting,
     page: CommunitiPostingPage,
   },

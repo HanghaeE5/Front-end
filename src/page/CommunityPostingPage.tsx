@@ -6,20 +6,28 @@ import { useInput } from '../hooks/useInput';
 import { BiCamera } from 'react-icons/bi';
 import { TodoModal } from '../component/TodoModal';
 import { Category, TodoData } from '../Types/todo';
-import { useMutation, useQueryClient } from 'react-query';
-import { communityQueryKey, postCummunityFn, uploadImageFn } from '../api/communityApi';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  communityQueryKey,
+  fetchBoardDetailFn,
+  postCummunityFn,
+  updateBoardFn,
+  uploadImageFn,
+} from '../api/communityApi';
 import { PostType } from '../Types/community';
 import { ChallangersSection, ImgPreviewSection } from '../component/styledComponent/CommunityPostingElements';
 import { WarningText } from '../component/WarningText';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { PATH } from '../route/routeList';
 
 export const CommunitiPostingPage = () => {
   const nav = useNavigate();
+  const { boardId } = useParams();
   const queryClient = useQueryClient();
 
   const refectchBoardList = () => {
     queryClient.invalidateQueries(communityQueryKey.fetchBoard);
+    nav(PATH.COMMUNITY);
   };
 
   const [postType, setPostType] = useState<PostType>('DAILY');
@@ -34,8 +42,25 @@ export const CommunitiPostingPage = () => {
   const { value: title, onChangeValue: setTitleValue } = useInput();
   const { value: content, onChangeValue: setContentValue } = useInput();
 
+  const { data } = useQuery([communityQueryKey.fetchBoardDetail], () => fetchBoardDetailFn(Number(boardId)), {
+    enabled: !!boardId,
+    onSuccess: (data) => {
+      setPostType(data.category);
+      setContentValue(data.boardContent);
+      setTitleValue(data.title);
+
+      if (data.imageUrl) {
+        setPreview(data.imageUrl);
+      }
+
+      // TODO : 챌린저스 일때 투두 셋팅해야함
+      // setTodoData(data.todos);
+    },
+  });
+
   const { mutate: uploadImage } = useMutation(uploadImageFn);
   const { mutate: postBoard } = useMutation(postCummunityFn);
+  const { mutate: updateBoard } = useMutation(updateBoardFn);
 
   const imageInput = useRef<HTMLInputElement>(null);
 
@@ -85,23 +110,43 @@ export const CommunitiPostingPage = () => {
 
     const todo = postType === 'CHALLENGE' ? { todo: todoData } : undefined;
 
-    postBoard(
-      {
-        board: {
-          category: postType,
-          content,
-          title,
-          imageUrl: preview,
+    console.log(title, content);
+    if (boardId) {
+      // 수정
+      updateBoard(
+        {
+          boardId: Number(boardId),
+          params: {
+            board: {
+              category: postType,
+              content,
+              title,
+              imageUrl: preview,
+            },
+            ...todo,
+          },
         },
-        ...todo,
-      },
-      {
-        onSuccess: () => {
-          refectchBoardList();
-          nav(PATH.COMMUNITY);
+        {
+          onSuccess: () => refectchBoardList(),
         },
-      },
-    );
+      );
+    } else {
+      //추가
+      postBoard(
+        {
+          board: {
+            category: postType,
+            content,
+            title,
+            imageUrl: preview,
+          },
+          ...todo,
+        },
+        {
+          onSuccess: () => refectchBoardList(),
+        },
+      );
+    }
   };
 
   // TODO : 리팩토링
@@ -192,7 +237,7 @@ export const CommunitiPostingPage = () => {
           <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImg} accept="image/*" />
         </Wrapper>
         <Wrapper padding="0 1rem" margin="0.5rem 0">
-          <Button onClick={onClickAddPostButton}>등록하기</Button>
+          <Button onClick={onClickAddPostButton}>{boardId ? '수정하기' : '등록하기'}</Button>
         </Wrapper>
       </PageLayout>
       {modalVisible && (

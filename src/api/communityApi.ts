@@ -18,7 +18,7 @@ export const fetchBoardFn = async (params: CommunitySearchControl) => {
 };
 
 export const fetchBoardDetailFn = async (id: number) => {
-  const { data } = await callApi.get<Board>(`COMMUNITY_URL/${id}`);
+  const { data } = await callApi.get<Board>(`${COMMUNITY_URL}/${id}`);
   return data;
 };
 
@@ -32,15 +32,15 @@ export const postCummunityFn = async (post: AddBoardData) => {
   return data;
 };
 
-export const updateBoardFn = async (boardId: number, params: AddBoardData) => {
-  const { data } = await callApi.put(`COMMUNITY_URL/${boardId}`, {
+export const updateBoardFn = async ({ boardId, params }: { boardId: number; params: AddBoardData }) => {
+  const { data } = await callApi.put(`${COMMUNITY_URL}/${boardId}`, {
     params,
   });
   return data;
 };
 
 export const deleteBoardFn = async (boardId: number) => {
-  const { data } = await callApi.delete(`COMMUNITY_URL/${boardId}`);
+  const { data } = await callApi.delete(`${COMMUNITY_URL}/${boardId}`);
   return data;
 };
 

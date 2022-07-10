@@ -5,42 +5,77 @@ import { PostCard } from '../component/PostCard';
 import { Board } from '../Types/community';
 import { AiFillFire } from 'react-icons/ai';
 import { usePopConfirm } from '../hooks/usePopConfirm';
-
-const postDetail: Board = {
-  boardId: 1,
-  authorEmail: '1',
-  imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png',
-  title: '즐거운 토요일 일 ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ',
-  boardContent: `어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다!
-    어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다!
-    어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다!
-    어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다!
-    어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다!
-    어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다!
-    어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다!
-    어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다!
-    어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다!`,
-  category: 'CHALLENGE',
-  participatingCount: 0,
-  boardCreatedDate: new Date('2022.6.28 18:20:47'),
-  participating: true,
-};
+import { useNavigate, useParams } from 'react-router';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { communityQueryKey, deleteBoardFn, fetchBoardDetailFn, joinChallengeFn } from '../api/communityApi';
+import { PATH } from '../route/routeList';
 
 export const CommunityDetailPage = () => {
+  const nav = useNavigate();
+  const { id } = useParams();
+
+  // TODO : 얘도 훅으로 빼기
+  const queryClient = useQueryClient();
+
+  const refectchBoardList = () => {
+    queryClient.invalidateQueries(communityQueryKey.fetchBoard);
+    nav(PATH.COMMUNITY);
+  };
+
   const { visible: visibleChallange, openConfirm: openChallange, closeConfirm: closeChallange } = usePopConfirm();
   const { visible: visibleChat, openConfirm: openChatConfirm, closeConfirm: closeChatConfirm } = usePopConfirm();
+
+  const { data: postDetail, isLoading } = useQuery<Board>([communityQueryKey.fetchBoardDetail], () =>
+    fetchBoardDetailFn(Number(id)),
+  );
+
+  const { mutate: joinChallenge } = useMutation(joinChallengeFn);
+  const { mutate: deleteBoard } = useMutation(deleteBoardFn);
+
+  const onConfirmChallenge = () => {
+    if (!postDetail) return;
+
+    joinChallenge(postDetail?.boardId, {
+      onSuccess: () => {
+        closeChallange();
+        openChatConfirm();
+      },
+      onError: (error) => {
+        alert('처리에 실패했습니다');
+        closeChallange();
+      },
+    });
+  };
+
+  const onEditBoard = () => {
+    if (!postDetail) return;
+
+    if (postDetail.category === 'CHALLENGE') {
+      alert('챌린지는 수정이 불가능합니다');
+      return;
+    }
+    nav(`${PATH.communityPosting}/${postDetail.boardId}`);
+  };
+
+  const onDeleteBoard = () => {
+    if (!postDetail) return;
+    deleteBoard(postDetail.boardId, {
+      onSuccess: () => refectchBoardList(),
+    });
+  };
+
+  const onShare = () => {
+    console.log('공유하기');
+  };
+
+  if (isLoading || !postDetail) return <>로딩중</>;
   return (
     <NavLayout>
       <PopConfirm
         icon={<AiFillFire />}
         visible={visibleChallange}
-        onConfirm={() => {
-          console.log('네');
-          closeChallange();
-          openChatConfirm();
-        }}
+        onConfirm={onConfirmChallenge}
         onCancel={() => {
-          console.log('아니오');
           closeChallange();
           openChatConfirm();
         }}
@@ -66,8 +101,13 @@ export const CommunityDetailPage = () => {
           <PostCard.PostHeader
             userImg={''} // TODO : userImage
             userName={postDetail.authorEmail}
-            date={postDetail.boardCreatedDate.toISOString().split('T')[0]}
+            date={postDetail.boardCreatedDate.split('T')[0]}
             boardId={postDetail.boardId}
+            dropDownProps={{
+              onShare,
+              onEdit: onEditBoard,
+              onDelete: onDeleteBoard,
+            }}
           />
           {postDetail.imageUrl && (
             <Wrapper>
@@ -76,9 +116,13 @@ export const CommunityDetailPage = () => {
           )}
           <PostCard.PostTitle category={postDetail.category}>{postDetail.title}</PostCard.PostTitle>
           <PostCard.Content>{postDetail.boardContent}</PostCard.Content>
-          <PostCard.Gather>{postDetail.participating}</PostCard.Gather>
+          <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>
           <Wrapper>
-            <Button margin="1rem" buttonType={postDetail.participating ? 'primary' : 'disable'} onClick={openChallange}>
+            <Button
+              margin="1rem"
+              buttonType={postDetail.participating ? 'primary' : 'disable'}
+              onClick={postDetail.participating ? openChallange : undefined}
+            >
               {postDetail.participating ? '챌린져스 참여하기' : '마감된 챌린져스입니다'}
             </Button>
           </Wrapper>

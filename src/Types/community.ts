@@ -14,7 +14,7 @@ export interface CommunitySearchControl {
 export interface Board {
   authorEmail: string;
   boardContent: string;
-  boardCreatedDate: Date;
+  boardCreatedDate: string;
   boardId: number;
   category: PostType;
   imageUrl?: string;
