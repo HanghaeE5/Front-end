@@ -71,7 +71,7 @@ interface TodoModalProps {
 export const TodoModal = ({ todoData, modalTitle, setTodoDataFromModal, closeModal }: TodoModalProps) => {
   const { value: title, onChangeValue: onChangeTitle } = useInput(todoData?.content);
   const [isRequired, setIsRequired] = useState(false);
-  const [category, setCategory] = useState<Category>(todoData?.category || 'study');
+  const [category, setCategory] = useState<Category>(todoData?.category || 'STUDY');
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date[] | undefined>(
     todoData ? [new Date(todoData.todoDate)] : [new Date()],
@@ -96,14 +96,9 @@ export const TodoModal = ({ todoData, modalTitle, setTodoDataFromModal, closeMod
       return;
     }
 
-    const date: { [key in string]: null } = {};
+    const date = selectedDay?.map((selectedDay) => selectedDay.toISOString().split('T')[0]) || [];
 
-    selectedDay?.forEach((selectedDay) => {
-      const dateKey = selectedDay.toISOString().split('T')[0];
-      date[dateKey] = null;
-    });
-
-    setTodoDataFromModal({ content: title, category, todoDate: Object.keys(date)[0], todoDateList: date });
+    setTodoDataFromModal({ content: title, category, todoDate: date[0] || '', todoDateList: date });
     closeModal();
   };
 
@@ -129,8 +124,8 @@ export const TodoModal = ({ todoData, modalTitle, setTodoDataFromModal, closeMod
           <span>카테고리</span>
           <div>
             <CategoryItem
-              isSelect={category === 'study'}
-              onClick={() => onClickCategoryButton('study')}
+              isSelect={category === 'STUDY'}
+              onClick={() => onClickCategoryButton('STUDY')}
               icon={<BsFillHandbagFill />}
             >
               스터디

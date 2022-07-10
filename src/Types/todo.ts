@@ -1,4 +1,4 @@
-export type Category = 'study' | 'excercise' | 'shopping' | 'promise' | 'etc';
+export type Category = 'STUDY' | 'excercise' | 'shopping' | 'promise' | 'etc';
 
 export type Access = 'public' | 'freind' | 'private';
 
@@ -20,7 +20,7 @@ export interface TodoData {
   content: string;
   category: Category;
   todoDate: string;
-  todoDateList: { [key in string]: null };
+  todoDateList: string[];
   todoId?: number;
 }
 
@@ -31,4 +31,33 @@ export interface ITodoItem {
   todoContent: string;
   todoDate: string;
   todoId: number;
+}
+
+export interface FetchTodoResponse {
+  content: ITodoItem[];
+  empty: boolean;
+  first: boolean;
+  last: boolean;
+  number: number;
+  numberOfElements: number;
+  pageable: {
+    offset: number;
+    pageNumber: number;
+    pageSize: number;
+    paged: boolean;
+    sort: {
+      empty: boolean;
+      sorted: boolean;
+      unsorted: boolean;
+    };
+    unpaged: boolean;
+  };
+  size: number;
+  sort: {
+    empty: boolean;
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  totalElements: number;
+  totalPages: number;
 }

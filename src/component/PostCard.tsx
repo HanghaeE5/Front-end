@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
-import { Post, PostDetail } from '../Types/community';
+import { Board } from '../Types/community';
 import { Badge, DropdownMenu, Img, Wrapper } from './element';
 
 interface PostCardProps {
@@ -59,9 +59,14 @@ const StyledGather = styled.span`
 const PostHeader = ({
   userImg,
   userName,
-  postNumber,
   date,
-}: Pick<Post, 'userImg' | 'userName'> & Partial<PostDetail>) => {
+  boardId,
+}: {
+  userImg?: string;
+  userName: string;
+  date?: string;
+  boardId?: number;
+}) => {
   return (
     <Wrapper margin="0.5rem 0" padding="0.5rem 1rem">
       <Wrapper width="2rem">
@@ -70,18 +75,18 @@ const PostHeader = ({
 
       <Wrapper isColumn alignItems="start" margin="0 0 0 0.5rem">
         <UserName>{userName}</UserName>
-        {(postNumber || date) && <PostInfo>{`${date} | ${postNumber}`}</PostInfo>}
+        {(boardId || date) && <PostInfo>{`${date} | ${boardId}`}</PostInfo>}
       </Wrapper>
-      {postNumber && <DropdownMenu />}
+      {boardId && <DropdownMenu />}
     </Wrapper>
   );
 };
 
-const PostTitle = ({ children, type }: PropsWithChildren<Pick<Post, 'type'>>) => {
+const PostTitle = ({ children, category }: PropsWithChildren<Pick<Board, 'category'>>) => {
   return (
     <Wrapper justifyContent="space-between" padding="0 1rem">
       <Title>{children}</Title>
-      <Badge>{type === 'challange' ? '챌린저스' : '일상'}</Badge>
+      <Badge>{category === 'CHALLENGE' ? '챌린저스' : '일상'}</Badge>
     </Wrapper>
   );
 };

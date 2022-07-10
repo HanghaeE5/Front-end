@@ -26,7 +26,7 @@ const SearchButton = styled(BiSearch)`
   cursor: pointer;
 `;
 
-const TextAreaElement = styled.textarea`
+const TextAreaElement = styled.textarea<{ isValidError?: boolean }>`
   height: 11.25rem;
   border-radius: ${(props) => props.theme.radius};
   background-color: ${(props) => props.theme.color.grayLight};
@@ -40,6 +40,7 @@ const TextAreaElement = styled.textarea`
   font-family: 'NotoRegu';
   font-weight: 400;
   resize: none;
+  border: ${({ isValidError }) => isValidError && `1px solid red`};
 `;
 
 interface TextInputProps {
@@ -85,6 +86,7 @@ export const TextInput = ({
       onChange={(e) => {
         onChange(e.target.value);
       }}
+      isValidError={isValidError}
     />
   );
 };

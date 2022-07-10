@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { createTodo, fetchTodoList, todoQueryKey } from '../api/todoApi';
+import { createTodo, fetchTodoList, todoQueryKey, updateTodoScope } from '../api/todoApi';
 import { Button, ButtonFloating, Wrapper } from '../component/element';
 import { Tab } from '../component/element/Tab';
 import { Typography } from '../component/element/Typography';
@@ -13,51 +13,8 @@ import { Access, Category, ITodoItem, Sort, TodoData, TodoParams, TodoStatus, To
 
 const AccessTabList: { label: string; value: TodoStatus | 'all' }[] = [
   { label: '전체', value: 'all' },
-  { label: '진행', value: 'done-list' },
-  { label: '완료', value: 'doing-list' },
-];
-
-const TodoList: ITodoItem[] = [
-  {
-    category: 'study',
-    createdDate: '2022-07-09',
-    state: false,
-    todoContent: '초코 산책 시키고 발 닦아주기',
-    todoDate: '2022-07-09',
-    todoId: 1,
-  },
-  {
-    category: 'excercise',
-    createdDate: '2022-07-09',
-    state: false,
-    todoContent: '초코 산책 시키고 발 닦아주기',
-    todoDate: '2022-07-09',
-    todoId: 2,
-  },
-  {
-    category: 'shopping',
-    createdDate: '2022-07-09',
-    state: true,
-    todoContent: '초코 산책 시키고 발 닦아주기',
-    todoDate: '2022-07-09',
-    todoId: 3,
-  },
-  {
-    category: 'shopping',
-    createdDate: '2022-07-09',
-    state: true,
-    todoContent: '초코 산책 시키고 발 닦아주기',
-    todoDate: '2022-07-09',
-    todoId: 5,
-  },
-  {
-    category: 'shopping',
-    createdDate: '2022-07-09',
-    state: true,
-    todoContent: '초코 산책 시키고 발 닦아주기',
-    todoDate: '2022-07-09',
-    todoId: 4,
-  },
+  { label: '진행', value: 'doing-list' },
+  { label: '완료', value: 'done-list' },
 ];
 
 export const ToDoPage = () => {
@@ -77,16 +34,22 @@ export const ToDoPage = () => {
 
   const [todoData, setTodoData] = useState<TodoData>();
 
-  const { data: todoList, isLoading: loadingTodoList } = useQuery(
+  const { data: todoList, isLoading: loadingTodoList } = useQuery<ITodoItem[]>(
     [todoQueryKey.fetchTodo, todoFilter],
     () => fetchTodoList(todoFilter),
-    {},
+    { onSuccess: (data) => console.log(data) },
   );
 
   const { mutate: addTodoItem } = useMutation(createTodo, {
     onSuccess: (data) => {
       console.log('addTodo', data);
       queryClient.invalidateQueries(todoQueryKey.fetchTodo);
+    },
+  });
+
+  const { mutate: updateTodoPublicScope } = useMutation(updateTodoScope, {
+    onSuccess: (data) => {
+      console.log('scope', data);
     },
   });
 
@@ -102,6 +65,7 @@ export const ToDoPage = () => {
 
   const onClickAccessButton = (accessType: Access) => {
     setAccess(accessType);
+    updateTodoPublicScope('ALL');
   };
 
   const onEditButton = ({ category, todoContent, todoId, todoDate }: ITodoItem) => {
@@ -109,7 +73,7 @@ export const ToDoPage = () => {
       content: todoContent,
       category: category as Category,
       todoDate: todoDate,
-      todoDateList: { todoDate: null },
+      todoDateList: [],
       todoId,
     });
     setTodoModalState({ modalType: 'edit', modalVisible: true });
@@ -179,7 +143,7 @@ export const ToDoPage = () => {
                   </Typography>
                 </Wrapper>
                 <TodoListWrapper isColumn margin="1rem 0">
-                  {TodoList.map((todo) => (
+                  {todoList?.map((todo) => (
                     <TodoItem key={todo.todoId} onClickEditButton={() => onEditButton(todo)} {...todo} />
                   ))}
                 </TodoListWrapper>
