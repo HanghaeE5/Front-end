@@ -13,6 +13,7 @@ export const ContentWrapper = styled.div`
 
   section:nth-of-type(2) {
     height: calc(100% - 6.5rem);
+
     overflow-y: scroll;
     background-color: ${({ theme }) => theme.color.grayLight};
   }

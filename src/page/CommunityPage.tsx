@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useEffect, useState } from 'react';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { communityQueryKey, fetchBoardFn } from '../api/communityApi';
 import { ButtonFloating, Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';
@@ -9,6 +9,7 @@ import { PostCard } from '../component/PostCard';
 import { ContentWrapper } from '../component/styledComponent/CommunityElements';
 import { PATH } from '../route/routeList';
 import { CommunitySearchControl, FilterType, KeywordFilter, Board } from '../Types/community';
+import { useInView } from 'react-intersection-observer';
 
 // sub
 const serachOptions: SelectOption[] = [
@@ -27,17 +28,30 @@ const postFilterOptions: SelectOption[] = [
 
 export const CommunityPage = () => {
   const nav = useNavigate();
+  const [bottomRef, isBottom] = useInView();
   const [control, setControl] = useState<CommunitySearchControl>({
     filter: undefined,
     keyword: undefined,
     page: 0,
-    size: 5,
+    size: 2,
     sub: undefined,
   });
+  const [list, setList] = useState<Board[]>([]);
 
-  const { data: boardList } = useQuery([communityQueryKey.fetchBoard, control], () => fetchBoardFn(control), {
-    onSuccess: (data) => console.log(data),
-  });
+  const { data: fetchBoardData, isLoading } = useQuery(
+    [communityQueryKey.fetchBoard, control],
+    () => fetchBoardFn(control),
+    {
+      onSuccess: (data) => {
+        if (control.page === 0) {
+          setList([...data.content]);
+          return;
+        }
+
+        setList((prev) => [...prev, ...data.content]);
+      },
+    },
+  );
 
   const onClickPost = (id: string) => {
     nav(`/community/${id}`);
@@ -47,6 +61,15 @@ export const CommunityPage = () => {
     nav(PATH.communityPosting);
   };
 
+  useEffect(() => {
+    if (!isBottom) return;
+
+    if (fetchBoardData?.last) {
+      return;
+    }
+
+    setControl((prev) => ({ ...prev, page: prev.page + 1 }));
+  }, [isBottom]);
   return (
     <NavLayout>
       <PageLayout title="커뮤니티">
@@ -83,7 +106,7 @@ export const CommunityPage = () => {
             />
           </section>
           <section>
-            {boardList?.content.map((post: Board) => (
+            {list.map((post: Board) => (
               <PostCard key={post.boardId} onClick={onClickPost}>
                 <PostCard.PostHeader userImg="" userName={post.authorEmail} />
                 {post.imageUrl && (
@@ -96,6 +119,7 @@ export const CommunityPage = () => {
                 <PostCard.Gather>{post.participatingCount}</PostCard.Gather>
               </PostCard>
             ))}
+            {list.length && <div ref={bottomRef}>spinner</div>}
           </section>
         </ContentWrapper>
         <ButtonFloating onClick={onClickWriteButton} />
