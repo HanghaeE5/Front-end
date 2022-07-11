@@ -1,6 +1,6 @@
-export type Category = 'STUDY' | 'excercise' | 'shopping' | 'promise' | 'etc';
+export type Category = 'STUDY' | 'EXERCISE' | 'SHOPPING' | 'PROMISE' | 'ETC';
 
-export type Access = 'public' | 'freind' | 'private';
+export type Access = 'ALL' | 'FRIEND' | 'NONE';
 
 export type TodoStatus = 'done-list' | 'doing-list';
 
@@ -19,14 +19,14 @@ export interface TodoParams {
 export interface TodoData {
   content: string;
   category: Category;
-  todoDate: string;
+  todoDate?: string;
   todoDateList: string[];
   todoId?: number;
 }
 
 export interface ITodoItem {
   category: string;
-  createdDate: string;
+  createdDate?: string;
   state: boolean;
   todoContent: string;
   todoDate: string;

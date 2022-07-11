@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { createTodo, fetchTodoList, todoQueryKey, updateTodoScope } from '../api/todoApi';
+import { createTodo, fetchTodoList, todoQueryKey, updateTodoFn, updateTodoScope } from '../api/todoApi';
 import { Button, ButtonFloating, Wrapper } from '../component/element';
 import { Tab } from '../component/element/Tab';
 import { Typography } from '../component/element/Typography';
@@ -24,37 +24,49 @@ export const ToDoPage = () => {
     modalVisible: false,
     modalType: 'add',
   });
-  const [access, setAccess] = useState<Access>('public');
+  const [access, setAccess] = useState<Access>('ALL');
   const [todoFilter, setTodoFilter] = useState<TodoParams>({
     filter: 'all',
     sort: 'desc',
-    page: 1,
+    page: 0,
     size: 10,
   });
 
-  const [todoData, setTodoData] = useState<TodoData>();
+  const [todoData, setTodoData] = useState<ITodoItem>();
 
   const { data: todoList, isLoading: loadingTodoList } = useQuery<ITodoItem[]>(
-    [todoQueryKey.fetchTodo, todoFilter],
+    [todoQueryKey.fetchTodo],
     () => fetchTodoList(todoFilter),
     { onSuccess: (data) => console.log(data) },
   );
 
   const { mutate: addTodoItem } = useMutation(createTodo, {
-    onSuccess: (data) => {
-      console.log('addTodo', data);
+    onSuccess: () => {
+      queryClient.invalidateQueries(todoQueryKey.fetchTodo);
+    },
+  });
+
+  const { mutate: updateTodoItem } = useMutation(updateTodoFn, {
+    onSuccess: () => {
       queryClient.invalidateQueries(todoQueryKey.fetchTodo);
     },
   });
 
   const { mutate: updateTodoPublicScope } = useMutation(updateTodoScope, {
-    onSuccess: (data) => {
-      console.log('scope', data);
-    },
+    onSuccess: () => alert('변경 완료되었습니다'),
   });
 
-  const setTodoDataFromModal = (todo: TodoData) => {
-    addTodoItem(todo);
+  const getTodoDataFromModal = (todo: TodoData) => {
+    if (todoModalState.modalType === 'add') {
+      addTodoItem(todo as TodoData);
+    } else {
+      if (!todo.todoId) return;
+
+      updateTodoItem({
+        todoId: todo.todoId,
+        params: { ...todo, todoDate: todo.todoDateList[0] },
+      });
+    }
   };
 
   const toggleModal = () => setTodoModalState((prev) => ({ ...prev, modalVisible: !prev.modalVisible }));
@@ -68,14 +80,8 @@ export const ToDoPage = () => {
     updateTodoPublicScope('ALL');
   };
 
-  const onEditButton = ({ category, todoContent, todoId, todoDate }: ITodoItem) => {
-    setTodoData({
-      content: todoContent,
-      category: category as Category,
-      todoDate: todoDate,
-      todoDateList: [],
-      todoId,
-    });
+  const onEditButton = (todo: ITodoItem) => {
+    setTodoData(todo);
     setTodoModalState({ modalType: 'edit', modalVisible: true });
   };
 
@@ -94,22 +100,22 @@ export const ToDoPage = () => {
               <Wrapper justifyContent="space-between" padding="1rem 0">
                 <Button
                   width="32%"
-                  buttonType={access === 'public' ? 'primary' : 'default'}
-                  onClick={() => onClickAccessButton('public')}
+                  buttonType={access === 'ALL' ? 'primary' : 'default'}
+                  onClick={() => onClickAccessButton('ALL')}
                 >
                   전체 공개
                 </Button>
                 <Button
                   width="32%"
-                  buttonType={access === 'freind' ? 'primary' : 'default'}
-                  onClick={() => onClickAccessButton('freind')}
+                  buttonType={access === 'FRIEND' ? 'primary' : 'default'}
+                  onClick={() => onClickAccessButton('FRIEND')}
                 >
                   친구공개
                 </Button>
                 <Button
                   width="32%"
-                  buttonType={access === 'private' ? 'primary' : 'default'}
-                  onClick={() => onClickAccessButton('private')}
+                  buttonType={access === 'NONE' ? 'primary' : 'default'}
+                  onClick={() => onClickAccessButton('NONE')}
                 >
                   비공개
                 </Button>
@@ -152,9 +158,10 @@ export const ToDoPage = () => {
           </Wrapper>
           {todoModalState.modalVisible && (
             <TodoModal
+              modalType={todoModalState.modalType}
               modalTitle={todoModalState.modalType === 'add' ? '투 두 추가하기' : '투 두 수정하기'}
               closeModal={toggleModal}
-              setTodoDataFromModal={setTodoDataFromModal}
+              getTodoDataFromModal={getTodoDataFromModal}
               todoData={todoModalState.modalType === 'edit' ? todoData : undefined}
             />
           )}

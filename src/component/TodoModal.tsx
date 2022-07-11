@@ -7,7 +7,7 @@ import { DayPicker, Row, RowProps } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { ko } from 'date-fns/locale';
 import { differenceInCalendarDays } from 'date-fns';
-import { Category, TodoData } from '../Types/todo';
+import { Category, ITodoItem, TodoData } from '../Types/todo';
 import {
   Background,
   CalendarWrapper,
@@ -68,10 +68,6 @@ const CalendarFooter = ({
   );
 };
 
-const isPastDate = (date: Date) => {
-  return differenceInCalendarDays(date, new Date()) < 0;
-};
-
 const getSelectDate = (selectedDay: Date[] | undefined) => {
   if (!selectedDay) return;
 
@@ -81,15 +77,16 @@ const getSelectDate = (selectedDay: Date[] | undefined) => {
 };
 
 interface TodoModalProps {
+  modalType: 'edit' | 'add';
   modalTitle: string;
-  setTodoDataFromModal: (todo: TodoData) => void;
+  getTodoDataFromModal: (todo: TodoData) => void;
   closeModal: () => void;
-  todoData?: TodoData;
+  todoData?: ITodoItem;
 }
-export const TodoModal = ({ todoData, modalTitle, setTodoDataFromModal, closeModal }: TodoModalProps) => {
-  const { value: title, onChangeValue: onChangeTitle } = useInput(todoData?.content);
-  const [isRequired, setIsRequired] = useState(false);
-  const [category, setCategory] = useState<Category>(todoData?.category || 'STUDY');
+export const TodoModal = ({ modalType, todoData, modalTitle, getTodoDataFromModal, closeModal }: TodoModalProps) => {
+  const { value: title, onChangeValue: onChangeTitle } = useInput(todoData?.todoContent);
+  const [isTitleRequired, setIsTitleRequired] = useState(false);
+  const [category, setCategory] = useState<Category>((todoData?.category as Category) || 'STUDY');
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date[] | undefined>(
     todoData ? [new Date(todoData.todoDate)] : [new Date()],
@@ -102,24 +99,35 @@ export const TodoModal = ({ todoData, modalTitle, setTodoDataFromModal, closeMod
   };
 
   const onChangeTitleInput = (value: string) => {
-    if (value) setIsRequired(false);
+    if (value) setIsTitleRequired(false);
     onChangeTitle(value);
   };
 
   const onClickAddButton = () => {
-    setIsRequired(false);
+    setIsTitleRequired(false);
 
     if (!title) {
-      setIsRequired(true);
+      setIsTitleRequired(true);
       return;
     }
 
     const date = selectedDay?.map((selectedDay) => selectedDay.toISOString().split('T')[0]) || [];
 
-    setTodoDataFromModal({ content: title, category, todoDate: date[0] || '', todoDateList: date });
+    getTodoDataFromModal({ content: title, category, todoDateList: date, todoId: todoData?.todoId });
+
     closeModal();
   };
 
+  const onDatePick = (dateList: Date[] | undefined) => {
+    if (!dateList) return;
+
+    if (modalType === 'edit') {
+      const lastPick = dateList[dateList.length - 1];
+      setSelectedDay([lastPick]);
+    } else {
+      setSelectedDay(dateList);
+    }
+  };
   return (
     <ModalContainer>
       <Background onClick={() => closeModal()} />
@@ -134,7 +142,7 @@ export const TodoModal = ({ todoData, modalTitle, setTodoDataFromModal, closeMod
             value={title}
             onChange={onChangeTitleInput}
             placeholder="투 두 제목을 입력해주세요"
-            isValidError={isRequired}
+            isValidError={isTitleRequired}
           />
           <WarningText>투 두 제목은 필수사항입니다!</WarningText>
         </Wrapper>
@@ -149,29 +157,29 @@ export const TodoModal = ({ todoData, modalTitle, setTodoDataFromModal, closeMod
               스터디
             </CategoryItem>
             <CategoryItem
-              isSelect={category === 'excercise'}
-              onClick={() => onClickCategoryButton('excercise')}
+              isSelect={category === 'EXERCISE'}
+              onClick={() => onClickCategoryButton('EXERCISE')}
               icon={<BsFillHandbagFill />}
             >
               운동
             </CategoryItem>
             <CategoryItem
-              isSelect={category === 'shopping'}
-              onClick={() => onClickCategoryButton('shopping')}
+              isSelect={category === 'SHOPPING'}
+              onClick={() => onClickCategoryButton('SHOPPING')}
               icon={<BsFillHandbagFill />}
             >
               쇼핑
             </CategoryItem>
             <CategoryItem
-              isSelect={category === 'promise'}
-              onClick={() => onClickCategoryButton('promise')}
+              isSelect={category === 'PROMISE'}
+              onClick={() => onClickCategoryButton('PROMISE')}
               icon={<BsFillHandbagFill />}
             >
               약속
             </CategoryItem>
             <CategoryItem
-              isSelect={category === 'etc'}
-              onClick={() => onClickCategoryButton('etc')}
+              isSelect={category === 'ETC'}
+              onClick={() => onClickCategoryButton('ETC')}
               icon={<BsFillHandbagFill />}
             >
               기타
@@ -195,7 +203,7 @@ export const TodoModal = ({ todoData, modalTitle, setTodoDataFromModal, closeMod
                   styles={{}}
                   min={1}
                   selected={selectedDay}
-                  onSelect={setSelectedDay}
+                  onSelect={onDatePick}
                   fromDate={new Date()}
                   footer={
                     <CalendarFooter

@@ -22,17 +22,11 @@ export const TodoItem = ({
   };
 
   const { mutate: doneTodo } = useMutation(updateDoneTodo, {
-    onSuccess: (data) => {
-      console.log(data);
-      refectchTodoList();
-    },
+    onSuccess: () => refectchTodoList(),
   });
 
   const { mutate: deleteTodoItem } = useMutation(deleteTodo, {
-    onSuccess: (data) => {
-      console.log(data);
-      refectchTodoList();
-    },
+    onSuccess: (data) => refectchTodoList(),
   });
 
   const onClickDone = () => {

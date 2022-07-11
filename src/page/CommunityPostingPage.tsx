@@ -5,7 +5,7 @@ import { PageLayout } from '../component/layout/PageLayout';
 import { useInput } from '../hooks/useInput';
 import { BiCamera } from 'react-icons/bi';
 import { TodoModal } from '../component/TodoModal';
-import { Category, TodoData } from '../Types/todo';
+import { Category, ITodoItem, TodoData } from '../Types/todo';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import {
   communityQueryKey,
@@ -93,8 +93,8 @@ export const CommunitiPostingPage = () => {
     setModalVisible(true);
   };
 
-  const setTodoDataFromModal = (todo: TodoData) => {
-    setTodoData(todo);
+  const setTodoDataFromModal = (todo: TodoData | ITodoItem) => {
+    setTodoData(todo as TodoData);
   };
 
   const onClickAddPostButton = () => {
@@ -242,9 +242,10 @@ export const CommunitiPostingPage = () => {
       </PageLayout>
       {modalVisible && (
         <TodoModal
+          modalType="add"
           modalTitle="챌린저스 추가하기"
           closeModal={() => setModalVisible(false)}
-          setTodoDataFromModal={setTodoDataFromModal}
+          getTodoDataFromModal={setTodoDataFromModal}
         />
       )}
     </NavLayout>
