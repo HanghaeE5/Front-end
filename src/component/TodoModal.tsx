@@ -18,6 +18,7 @@ import {
   StickyButton,
   TodoContents,
 } from './styledComponent/TodoModalElements';
+import styled from 'styled-components';
 
 interface CategoryItemProps {
   icon: ReactNode;
@@ -34,24 +35,41 @@ const CategoryItem = ({ icon, isSelect, onClick, children }: PropsWithChildren<C
   );
 };
 
-const CalendarFooter = ({ onClick }: { onClick: () => void }) => {
+const OverButton = styled(Button)`
+  left: 0rem;
+  bottom: -1rem;
+  position: relative;
+  border-radius: 0 0 6px 6px;
+`;
+
+const CalendarFooter = ({
+  onClick,
+  onClickEveryDay,
+  reset,
+}: {
+  onClick: () => void;
+  onClickEveryDay: () => void;
+  reset: () => void;
+}) => {
   return (
-    <Wrapper>
-      <Button buttonType="default" onClick={onClick}>
+    <Wrapper isColumn>
+      <Wrapper justifyContent="space-between" margin="0.25rem 0">
+        <Button buttonType="default" onClick={onClick} width="calc(100% - 3.25rem)">
+          매일 선택
+        </Button>
+        <Button buttonType="default" onClick={reset} width="3rem">
+          초기화
+        </Button>
+      </Wrapper>
+      <OverButton isSquare width="112%">
         선택
-      </Button>
+      </OverButton>
     </Wrapper>
   );
 };
 
 const isPastDate = (date: Date) => {
   return differenceInCalendarDays(date, new Date()) < 0;
-};
-
-const OnlyFutureRow = (props: RowProps) => {
-  const isPastRow = props.dates.every(isPastDate);
-  if (isPastRow) return <></>;
-  return <Row {...props} />;
 };
 
 const getSelectDate = (selectedDay: Date[] | undefined) => {
@@ -179,8 +197,13 @@ export const TodoModal = ({ todoData, modalTitle, setTodoDataFromModal, closeMod
                   selected={selectedDay}
                   onSelect={setSelectedDay}
                   fromDate={new Date()}
-                  components={{ Row: OnlyFutureRow }}
-                  footer={<CalendarFooter onClick={onCloseCalendar} />}
+                  footer={
+                    <CalendarFooter
+                      onClick={onCloseCalendar}
+                      onClickEveryDay={() => console.log('매일')}
+                      reset={() => setSelectedDay([new Date()])}
+                    />
+                  }
                 />
               </CalendarWrapper>
             )}
