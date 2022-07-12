@@ -50,7 +50,6 @@ export const TodoLabel = styled.span<{ done: boolean }>`
   position: absolute;
   right: ${({ done }) => (done ? '-0.3rem' : ' -0.35rem')};
   top: ${({ done }) => (done ? '0rem' : ' -0.25rem')};
-  z-index: 3;
 
   background-color: ${({ done, theme }) => (done ? theme.color.grayMedium : theme.mainColor)};
   color: ${({ done }) => (done ? 'white' : 'black')};

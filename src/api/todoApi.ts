@@ -10,7 +10,7 @@ export const fetchTodoList = async (params: TodoParams) => {
   const { data } = await callApi.get<FetchTodoResponse>('/todo', {
     params,
   });
-  return data.content;
+  return data;
 };
 
 export const createTodo = async (params: TodoData) => {

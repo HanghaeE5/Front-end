@@ -1,4 +1,5 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
 import { createTodo, deleteTodoFn, fetchTodoList, todoQueryKey, updateTodoFn, updateTodoScope } from '../api/todoApi';
@@ -30,7 +31,13 @@ const confirmContent: { [key in 'edit' | 'delete']: string } = {
   edit: '',
 };
 
+const removeDuplicate = <T,>(list: T[], key: keyof T): T[] => {
+  return list.reduce((acc: T[], cur) => (acc.find((data: T) => data[key] === cur[key]) ? [...acc] : [...acc, cur]), []);
+};
+
 export const ToDoPage = () => {
+  const [bottomRef, isBottom] = useInView();
+
   const queryClient = useQueryClient();
   const nav = useNavigate();
 
@@ -38,6 +45,7 @@ export const ToDoPage = () => {
     queryClient.invalidateQueries(todoQueryKey.fetchTodo);
   };
 
+  const [list, setList] = useState<ITodoItem[]>([]);
   const [todoModalState, setTodoModalState] = useState<{ modalVisible: boolean; modalType: 'edit' | 'add' }>({
     modalVisible: false,
     modalType: 'add',
@@ -56,9 +64,19 @@ export const ToDoPage = () => {
     confirmType: 'edit',
   });
 
-  const { data: todoList, isLoading: loadingTodoList } = useQuery<ITodoItem[]>(
+  const { data: todoList, isLoading: loadingTodoList } = useQuery(
     [todoQueryKey.fetchTodo, todoFilter],
     () => fetchTodoList(todoFilter),
+    {
+      onSuccess: (data) => {
+        if (todoFilter.page === 0) {
+          setList([...removeDuplicate<ITodoItem>(data.content, 'todoId')]);
+          return;
+        }
+
+        setList((prev) => removeDuplicate<ITodoItem>([...prev, ...data.content], 'todoId'));
+      },
+    },
   );
 
   const { mutate: addTodoItem } = useMutation(createTodo, {
@@ -133,6 +151,16 @@ export const ToDoPage = () => {
     toggleConfirm();
     nav(`${PATH.COMMUNITY_POST}/${todoData?.boardId}`);
   };
+
+  useEffect(() => {
+    if (!isBottom) return;
+
+    if (todoList?.last) {
+      return;
+    }
+
+    setTodoFilter((prev) => ({ ...prev, page: prev.page + 1 }));
+  }, [isBottom]);
 
   return (
     <NavLayout>
@@ -211,7 +239,7 @@ export const ToDoPage = () => {
                   </Typography>
                 </Wrapper>
                 <TodoListWrapper isColumn margin="1rem 0">
-                  {todoList?.map((todo) => (
+                  {list.map((todo) => (
                     <TodoItem
                       key={todo.todoId}
                       todoData={todo}
@@ -219,6 +247,7 @@ export const ToDoPage = () => {
                       onClickDeleteButton={deleteTodoItem}
                     />
                   ))}
+                  <div ref={bottomRef} />
                 </TodoListWrapper>
               </Wrapper>
             </Wrapper>
@@ -232,6 +261,7 @@ export const ToDoPage = () => {
               todoData={todoModalState.modalType === 'edit' ? todoData : undefined}
             />
           )}
+
           {!todoModalState.modalVisible && <ButtonFloating onClick={onClickAddButton} />}
         </ContentWrapper>
       </PageLayout>
