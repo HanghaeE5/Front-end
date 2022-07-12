@@ -1,3 +1,4 @@
+import { CommunitiPostingPage } from './../page/CommunityPostingPage';
 import { ReactElement } from 'react';
 
 import {
@@ -11,6 +12,7 @@ import {
   FriendList,
   Chatting,
   ChattingRoom,
+  EditPassword,
 } from './../page';
 
 export interface IRoute {
@@ -19,6 +21,11 @@ export interface IRoute {
   page: () => ReactElement;
   children?: IRoute[];
 }
+
+export const PATH = {
+  COMMUNITY: '/community',
+  communityPosting: '/community/post',
+};
 
 export const routeList: IRoute[] = [
   {
@@ -42,8 +49,13 @@ export const routeList: IRoute[] = [
     page: Login,
   },
   {
+    id: 'editPassword',
+    path: '/editpassword',
+    page: EditPassword,
+  },
+  {
     id: 'community',
-    path: '/community',
+    path: PATH.COMMUNITY,
     page: CommunityPage,
   },
   {
@@ -51,6 +63,16 @@ export const routeList: IRoute[] = [
     id: 'communityDetail',
     path: '/community/:id',
     page: CommunityDetailPage,
+  },
+  {
+    id: 'community',
+    path: `${PATH.communityPosting}/:boardId`,
+    page: CommunitiPostingPage,
+  },
+  {
+    id: 'community',
+    path: PATH.communityPosting,
+    page: CommunitiPostingPage,
   },
   {
     id: 'todo',
@@ -69,7 +91,7 @@ export const routeList: IRoute[] = [
   },
   {
     id: 'chattingroom',
-    path: '/chattingroom',
+    path: '/chat/room/:roomId',
     page: ChattingRoom, //뒤에 방번호 넣기
   },
 ];

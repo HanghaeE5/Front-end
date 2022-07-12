@@ -1,8 +1,15 @@
+import { AxiosError } from 'axios';
 import React, { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import { chattingApi, friendApi } from '../api/callApi';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
+import { chattingListState, friendListState, userNicknameState } from '../recoil/store';
+import Stomp from 'stompjs';
+import SockJS from 'sockjs-client';
 
 const ContentWrapper = styled.div`
   height: 100%;
@@ -45,16 +52,18 @@ const ChattingRoomPhotoBox = styled.div`
   background-position: center;
   background-size: cover;
   border-radius: 50%;
+  cursor: pointer;
 `;
 
 const ChattingRoomTextBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 80%;
-  height: 1.5rem;
+  width: 75%;
+  height: 3rem;
   margin: auto auto auto 0.75rem;
-  /* background-color: #6922bb; */
+  background-color: #6922bb;
+  cursor: pointer;
 `;
 
 const RowBox = styled.div`
@@ -65,7 +74,9 @@ const RowBox = styled.div`
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
-  /* background-color: #683b3b; */
+  background-color: #683b3b;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 const RowChattingBox = styled.div`
@@ -76,8 +87,7 @@ const RowChattingBox = styled.div`
   width: 89%;
   height: 5rem;
   margin: 0 auto 0 auto;
-  /* background-color: #ffa6a6; */
-  cursor: pointer;
+  background-color: #ffa6a6;
 `;
 
 type font = {
@@ -113,7 +123,7 @@ const BtnBox = styled.button`
   border-style: solid;
   border-color: #5f5f5f;
   border-width: ${(props: btnbox) => (props.isSelect ? '1px 1px 0px 1px' : '0px 0px 1px 0px')};
-  background-color: ${(props: btnbox) => (props.isSelect ? '#ecee73' : 'white')};
+  background-color: ${(props: btnbox) => (props.isSelect ? '#89ee73' : 'white')};
   border-radius: 6px 6px 0px 0px;
   width: 45%;
   height: 2.6875rem;
@@ -128,9 +138,82 @@ const BtnBox = styled.button`
 `;
 
 export const Chatting = () => {
-  const [chattingList, setChattingList] = useState<boolean>(true);
-  const [friendList, setFriendList] = useState<boolean>(false);
+  const [chattingListbtn, setChattingListbtn] = useState<boolean>(true);
+  const [friendListbtn, setFriendListbtn] = useState<boolean>(false);
+  const [friendList, setFriendList] = useRecoilState(friendListState);
+  const userNickname = useRecoilValue(userNicknameState);
+  const [chattingList, setChattingList] = useRecoilState(chattingListState);
+  const [makeChattingRoomName, setMakeChattingRoomName] = useState<string>('');
+  const [makeChattingRoomNickname, setMakeChattingRoomNickname] = useState<string>('');
   const nav = useNavigate();
+  const queryClient = useQueryClient();
+
+  //채팅 목록 API
+  const getChattingQuery = useQuery('chattingLists', chattingApi.chattingListApi, {
+    //여기서 리코일에 저장
+    onSuccess: (data) => {
+      setChattingList(data.data);
+    },
+  });
+  console.log(getChattingQuery);
+
+  //친구 목록 API
+  const getFriendQuery = useQuery('friendLists', friendApi.friendListApi, {
+    //여기서 리코일에 저장
+    onSuccess: (data) => {
+      setFriendList(data.data);
+    },
+  });
+  console.log(getFriendQuery);
+
+  //채팅방 생성 API
+  const makePrivateChattingRoomData = useMutation(
+    (data: { name: string; nick: string }) => chattingApi.makePrivateChattingRoomApi(data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('chattingLists');
+      },
+      onError: (error: AxiosError<{ msg: string }>) => {
+        if (error.message === 'Request failed with status code 401') {
+          setTimeout(
+            () => makePrivateChattingRoom({ name: makeChattingRoomName, nick: makeChattingRoomNickname }),
+            200,
+          );
+        } else {
+          alert(error.response?.data.msg);
+        }
+      },
+    },
+  );
+
+  const makePrivateChattingRoom = (data: { name: string; nick: string }) => {
+    makePrivateChattingRoomData.mutate(data);
+  };
+
+  const localToken = localStorage.getItem('recoil-persist');
+
+  const sock = new SockJS('https://todowith.shop/ws');
+  const ws = Stomp.over(sock);
+
+  // 연결해제, 구독해제
+  function wsDisConnectUnsubscribe() {
+    try {
+      if (localToken) {
+        const toto = JSON.parse(localToken);
+
+        if (toto) {
+          ws.disconnect(
+            () => {
+              ws.unsubscribe('sub-0');
+            },
+            { Authorization: toto.accessTokenState },
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <NavLayout>
@@ -139,10 +222,10 @@ export const Chatting = () => {
           <RowBox margin={'1.875rem 0 1.875rem 0'}>
             <BtnBox
               onClick={() => {
-                setChattingList(true);
-                setFriendList(false);
+                setChattingListbtn(true);
+                setFriendListbtn(false);
               }}
-              isSelect={chattingList}
+              isSelect={chattingListbtn}
             >
               <KoreanFont size={0.875} color="#5F5F5F">
                 채팅목록
@@ -150,87 +233,75 @@ export const Chatting = () => {
             </BtnBox>
             <BtnBox
               onClick={() => {
-                setChattingList(false);
-                setFriendList(true);
+                setChattingListbtn(false);
+                setFriendListbtn(true);
               }}
-              isSelect={friendList}
+              isSelect={friendListbtn}
             >
               <KoreanFont size={0.875} color="#5F5F5F">
                 친구목록
               </KoreanFont>
             </BtnBox>
           </RowBox>
-          {chattingList ? (
-            <>
-              <RowChattingBox
-                onClick={() => {
-                  nav('/chattingroom/'); //뒤에 방번호 넣기
-                }}
-              >
-                <ChattingRoomPhotoBox
-                  style={{
-                    backgroundImage: 'url(/assets/토끼.png)',
-                  }}
-                ></ChattingRoomPhotoBox>
-                <ChattingRoomTextBox>
-                  <KoreanFont size={1}>한강 3KM 달리기!</KoreanFont>
-                </ChattingRoomTextBox>
-              </RowChattingBox>
-              <RowChattingBox>
-                <ChattingRoomPhotoBox
-                  style={{
-                    backgroundImage: 'url(/assets/토끼.png)',
-                  }}
-                ></ChattingRoomPhotoBox>
-                <ChattingRoomTextBox>
-                  <KoreanFont size={1}>모의고사 문제풀이 필요한 사람 모여</KoreanFont>
-                </ChattingRoomTextBox>
-              </RowChattingBox>
-              <RowChattingBox>
-                <ChattingRoomPhotoBox
-                  style={{
-                    backgroundImage: 'url(/assets/토끼.png)',
-                  }}
-                ></ChattingRoomPhotoBox>
-                <ChattingRoomTextBox>
-                  <KoreanFont size={1}>물마시기 챌린지</KoreanFont>
-                </ChattingRoomTextBox>
-              </RowChattingBox>
-            </>
-          ) : (
-            <>
-              <RowChattingBox>
-                <ChattingRoomPhotoBox
-                  style={{
-                    backgroundImage: 'url(/assets/토끼.png)',
-                  }}
-                ></ChattingRoomPhotoBox>
-                <ChattingRoomTextBox>
-                  <KoreanFont size={1}>로제떡볶이</KoreanFont>
-                </ChattingRoomTextBox>
-              </RowChattingBox>
-              <RowChattingBox>
-                <ChattingRoomPhotoBox
-                  style={{
-                    backgroundImage: 'url(/assets/토끼.png)',
-                  }}
-                ></ChattingRoomPhotoBox>
-                <ChattingRoomTextBox>
-                  <KoreanFont size={1}>초코우유</KoreanFont>
-                </ChattingRoomTextBox>
-              </RowChattingBox>
-              <RowChattingBox>
-                <ChattingRoomPhotoBox
-                  style={{
-                    backgroundImage: 'url(/assets/토끼.png)',
-                  }}
-                ></ChattingRoomPhotoBox>
-                <ChattingRoomTextBox>
-                  <KoreanFont size={1}>호랑이</KoreanFont>
-                </ChattingRoomTextBox>
-              </RowChattingBox>
-            </>
-          )}
+          {chattingListbtn
+            ? chattingList.map((chatting) => {
+                return (
+                  <RowChattingBox key={chatting.roomId}>
+                    <ChattingRoomPhotoBox
+                      style={{
+                        backgroundImage: 'url(/assets/토끼.png)',
+                      }}
+                      onClick={() => {
+                        nav(`/chat/room/${chatting.roomId}`); //뒤에 방번호 넣기
+                      }}
+                    ></ChattingRoomPhotoBox>
+                    <ChattingRoomTextBox
+                      onClick={() => {
+                        nav(`/chat/room/${chatting.roomId}`); //뒤에 방번호 넣기
+                      }}
+                    >
+                      <KoreanFont size={1}>{chatting.name}</KoreanFont>
+                    </ChattingRoomTextBox>
+                    <RowBox
+                      width={'2rem'}
+                      height={2}
+                      margin={'auto 0 auto auto'}
+                      style={{
+                        backgroundSize: '1.5rem',
+                        backgroundImage: 'url(/assets/exit.svg)',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => {
+                        wsDisConnectUnsubscribe();
+                      }}
+                    ></RowBox>
+                  </RowChattingBox>
+                );
+              })
+            : friendList.map((friend) => {
+                return (
+                  <RowChattingBox
+                    key={friend.id}
+                    onClick={() => {
+                      setMakeChattingRoomName(`${friend.nick}님과 ${userNickname}님의 대화`);
+                      setMakeChattingRoomNickname(friend.nick);
+                      makePrivateChattingRoom({
+                        name: `${friend.nick}님과 ${userNickname}님의 대화`,
+                        nick: friend.nick,
+                      });
+                    }}
+                  >
+                    <ChattingRoomPhotoBox
+                      style={{
+                        backgroundImage: `url(${friend.profileImageUrl})`,
+                      }}
+                    ></ChattingRoomPhotoBox>
+                    <ChattingRoomTextBox>
+                      <KoreanFont size={1}>{friend.nick}</KoreanFont>
+                    </ChattingRoomTextBox>
+                  </RowChattingBox>
+                );
+              })}
         </ContentWrapper>
       </PageLayout>
     </NavLayout>

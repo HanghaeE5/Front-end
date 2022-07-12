@@ -293,8 +293,8 @@ export const SignUpEmail = () => {
       alert(`${nickname}님 반가워요! 로그인해주세요`);
       nav('/login');
     },
-    onError: (error: AxiosError) => {
-      alert(error.response?.data);
+    onError: (error: AxiosError<{ msg: string }>) => {
+      alert(error.response?.data.msg);
     },
   });
 

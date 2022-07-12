@@ -10,7 +10,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
 
     // console.log(toto.tokenState);
     if (toto) {
-      console.log(config);
+      // console.log(config);
       config.headers = {
         Authorization: toto.accessTokenState || 0 || false,
         Refresh: toto.refreshTokenState || 0 || false,
@@ -23,7 +23,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
 };
 
 const onRequestError = (error: AxiosError): Promise<AxiosError> => {
-  console.error(`[request error] [${JSON.stringify(error)}]`);
+  // console.error(`[request error] [${JSON.stringify(error)}]`);
   if (error.message === 'Request failed with status code 401') {
     const localToken = localStorage.getItem('recoil-persist');
 
@@ -33,7 +33,7 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
       const refreshToken = toto.refreshTokenState;
 
       axios
-        .get('http://13.209.96.69/refresh', {
+        .get('https://todowith.shop/refresh', {
           headers: {
             Authorization: accessToken,
             Refresh: refreshToken,
@@ -41,7 +41,6 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
           },
         })
         .then((res) => {
-          console.log(res);
           localStorage.setItem(
             'recoil-persist',
             JSON.stringify({
@@ -49,7 +48,6 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
               refreshTokenState: res.headers.refresh,
             }),
           );
-          return null;
         });
     }
     return Promise.reject(error);
@@ -58,13 +56,13 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
 };
 
 const onResponse = (response: AxiosResponse): AxiosResponse => {
-  console.info(`[response] [${JSON.stringify(response)}]`);
+  // console.info(`[response] [${JSON.stringify(response)}]`);
   return response;
 };
 
 const onResponseError = (error: AxiosError): Promise<AxiosError> => {
   console.error(`[response error] [${JSON.stringify(error)}]`);
-  const originalRequest = error.config;
+
   if (error.message === 'Request failed with status code 401') {
     const localToken = localStorage.getItem('recoil-persist');
 
@@ -74,7 +72,7 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
       const refreshToken = toto.refreshTokenState;
 
       axios
-        .get('http://13.209.96.69/refresh', {
+        .get('https://todowith.shop/refresh', {
           headers: {
             Authorization: accessToken,
             Refresh: refreshToken,
@@ -90,7 +88,6 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
               refreshTokenState: res.headers.refresh,
             }),
           );
-          return axios(originalRequest);
         });
     }
     return Promise.reject(error);

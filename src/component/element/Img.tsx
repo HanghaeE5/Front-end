@@ -3,7 +3,7 @@ import styled from 'styled-components';
 type ImgType = 'profile' | 'round' | 'square';
 
 interface ImgProps {
-  type: ImgType;
+  type?: ImgType;
   url?: string;
   width?: string;
   height?: string;

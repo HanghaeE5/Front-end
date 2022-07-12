@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 import { editNicknameModalState, userNicknameState } from '../../recoil/store';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
-import { registerApi, UserApi } from '../../api/callApi';
+import { registerApi, userApi } from '../../api/callApi';
 import { AxiosError } from 'axios';
 
 const Slide = keyframes`
@@ -164,8 +164,6 @@ const EditNicknameModal = () => {
     return regExp.test(asValue);
   };
 
-  const goNicknameEdit = { nick: nickname };
-
   //닉네임 중복확인 API
   const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
     onSuccess: () => {
@@ -185,7 +183,7 @@ const EditNicknameModal = () => {
 
   //닉네임 변경 완료 API
 
-  const NicknameEditData = useMutation((nick: { nick: string }) => UserApi.nicknameEditApi(nick), {
+  const NicknameEditData = useMutation((nick: { nick: string }) => userApi.nicknameEditApi(nick), {
     onSuccess: () => {
       setModalEditNickname(false);
       setUserNickname(nickname);
@@ -199,6 +197,8 @@ const EditNicknameModal = () => {
       }
     },
   });
+
+  const goNicknameEdit = { nick: nickname };
 
   const NicknameEdit = () => {
     NicknameEditData.mutate(goNicknameEdit);
@@ -218,7 +218,7 @@ const EditNicknameModal = () => {
             <RowBox width="92%" height={1.875} margin={'2.5rem 1.25rem 0rem 1.25rem'}>
               <Box width={'3.5rem'} margin={'auto auto auto 0rem'}>
                 <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
-                  프로필 사진
+                  닉네임
                 </KoreanFont>
               </Box>
               <Box
@@ -262,7 +262,7 @@ const EditNicknameModal = () => {
               </RowBox>
               <BtnAble
                 isDisable={!CheckNickname(nickname)}
-                width={'21.1%'}
+                width={'19.4%'}
                 height={2.625}
                 margin={'0px 0rem 0px auto'}
                 onClick={
@@ -278,7 +278,7 @@ const EditNicknameModal = () => {
                       }
                 }
               >
-                <KoreanFont size={1}>닉네임 변경 완료</KoreanFont>
+                <KoreanFont size={1}>중복확인</KoreanFont>
               </BtnAble>
             </RowBox>
             <BoxSide width={'92%'} height={1.3125} margin={'0.375rem auto 0px auto'}>
@@ -296,7 +296,7 @@ const EditNicknameModal = () => {
             </BoxSide>
             <BtnAble
               isDisable={!CheckNickname(nickname)}
-              width={'89%'}
+              width={'92%'}
               height={4}
               margin={'7.375rem auto 10rem auto'}
               onClick={

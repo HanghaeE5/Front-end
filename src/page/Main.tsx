@@ -7,15 +7,15 @@ import {
   editPhotoModalState,
   refreshTokenState,
   userNicknameState,
+  userPhotoWaitState,
   userprofilephotoState,
 } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
-import EditPasswordModal from '../component/modallayout/EditPasswordModal';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
-import { useMutation } from 'react-query';
-import { UserApi } from '../api/callApi';
+import { useQuery } from 'react-query';
+import { userApi } from '../api/callApi';
 
 const MainContainer = styled.div`
   display: flex;
@@ -116,6 +116,7 @@ export const Main = () => {
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
+  const setUserPhotoWait = useSetRecoilState(userPhotoWaitState);
   const all = window.location.href;
 
   const first = all.split('&');
@@ -123,22 +124,19 @@ export const Main = () => {
   const nav = useNavigate();
 
   //유저정보 가져오기 API
-  const userInformData = useMutation(() => UserApi.userInformApi(), {
+  const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
-      // console.log(data);
       setUserNickname(data.data.nick);
       setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
+      setUserPhotoWait({ img_show: data.data.profileImageUrl, img_file: '' });
     },
     onError: () => {
       // nav('/login');
     },
   });
-  const userInform = () => {
-    userInformData.mutate();
-  };
+  console.log(userInformData);
 
   useEffect(() => {
-    userInform();
     if (accessToken != null) {
       // console.log();
       const refreshToken = first[1].split('=')[1];
@@ -335,7 +333,6 @@ export const Main = () => {
             </BoxSide>
           </RowBox>
         </ToDoBox>
-        <EditPasswordModal></EditPasswordModal>
       </MainContainer>
     </NavLayout>
   );
