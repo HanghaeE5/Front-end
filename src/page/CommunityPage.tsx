@@ -1,128 +1,89 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
-import styled from 'styled-components';
+import { communityQueryKey, fetchBoardFn } from '../api/communityApi';
 import { ButtonFloating, Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
+import { ContentWrapper } from '../component/styledComponent/CommunityElements';
 import { PATH } from '../route/routeList';
-import { CommunitySearchControl, Post } from '../Types/community';
+import { CommunitySearchControl, FilterType, KeywordFilter, Board } from '../Types/community';
+import { useInView } from 'react-intersection-observer';
 
-const ContentWrapper = styled.div`
-  height: calc(100% - 3.75rem);
-  section:nth-of-type(1) {
-    max-height: 10rem;
-    height: 10rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 1rem;
-  }
-
-  section:nth-of-type(2) {
-    height: calc(100% - 6.5rem);
-    overflow-y: scroll;
-    background-color: ${({ theme }) => theme.color.grayLight};
-  }
-`;
-
-const categoryOptions: SelectOption[] = [
-  { value: 'title', label: '가' },
-  { value: '11', label: '나' },
-  { value: '22', label: '다' },
-  { value: '232', label: '라' },
+// sub
+const serachOptions: SelectOption[] = [
+  { value: 'all', label: '전체' },
+  { value: 'title', label: '제목' },
+  { value: 'content', label: '내용' },
 ];
 
-const postList: Post[] = [
-  {
-    id: 1,
-    userId: 1,
-    userImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png',
-    userName: '강남스타일1234',
-    imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png',
-    title: '즐거운 토요일 일 ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ',
-    content:
-      '어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다! 어떤 운동이든 상관없이 딱 한시간 운동하기입니다!',
-    type: 'challange',
-    gather: 0,
-  },
-  {
-    id: 2,
-    userId: 2,
-    userImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png',
-    userName: 'gisele',
-    title: '즐거운 토요일',
-    content:
-      '오늘은 토요일 너무 덥다. 너무 더워. 산책언제가지. 이 날씨면 개도 사람도 더위먹지이이 시원해지면 가야겠다. 점심은 뭐먹으면 좋을까. 생각보다 진도가 안나가는군',
-    type: 'challange',
-    gather: 0,
-  },
-  {
-    id: 3,
-    userId: 3,
-    userName: 'henrry',
-    title: '즐거운 토요',
-    content:
-      '오늘은 토요일 너무 덥다. 너무 더워. 산책언제가지. 이 날씨면 개도 사람도 더위먹지이이 시원해지면 가야겠다. 점심은 뭐먹으면 좋을까. 생각보다 진도가 안나가는군',
-    type: 'daily',
-    gather: 2,
-  },
-  {
-    id: 4,
-    userId: 4,
-    userImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png',
-    userName: 'sean',
-    title: '즐거운 토요일',
-    content:
-      '오늘은 토요일 너무 덥다. 너무 더워. 산책언제가지. 이 날씨면 개도 사람도 더위먹지이이 시원해지면 가야겠다. 점심은 뭐먹으면 좋을까. 생각보다 진도가 안나가는군',
-    type: 'challange',
-    gather: 0,
-  },
-  {
-    id: 5,
-    userId: 5,
-    userImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png',
-    userName: 'sean',
-    imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png',
-    title: '즐거운 토요일',
-    content:
-      '오늘은 토요일 너무 덥다. 너무 더워. 산책언제가지. 이 날씨면 개도 사람도 더위먹지이이 시원해지면 가야겠다. 점심은 뭐먹으면 좋을까. 생각보다 진도가 안나가는군',
-    type: 'challange',
-    gather: 2,
-  },
+// filter
+const postFilterOptions: SelectOption[] = [
+  { value: 'all', label: '전체' },
+  { value: 'challenge', label: '챌린저스' },
+  { value: 'daily', label: '일상' },
+  { value: 'my', label: '내 글만' },
 ];
+
 export const CommunityPage = () => {
   const nav = useNavigate();
+  const [bottomRef, isBottom] = useInView();
   const [control, setControl] = useState<CommunitySearchControl>({
-    category: 'title',
-    keyword: '',
-    type: 'all',
+    filter: undefined,
+    keyword: undefined,
+    page: 0,
+    size: 2,
+    sub: undefined,
   });
+  const [list, setList] = useState<Board[]>([]);
 
-  const onClickPost = (id: string) => {
-    nav(`/community/${id}`);
-  };
+  const { data: fetchBoardData, isLoading } = useQuery(
+    [communityQueryKey.fetchBoard, control],
+    () => fetchBoardFn(control),
+    {
+      onSuccess: (data) => {
+        if (control.page === 0) {
+          setList([...data.content]);
+          return;
+        }
+
+        setList((prev) => [...prev, ...data.content]);
+      },
+    },
+  );
 
   const onClickWriteButton = () => {
     nav(PATH.communityPosting);
   };
 
+  useEffect(() => {
+    if (!isBottom) return;
+
+    if (fetchBoardData?.last) {
+      return;
+    }
+
+    setControl((prev) => ({ ...prev, page: prev.page + 1 }));
+  }, [isBottom]);
   return (
     <NavLayout>
       <PageLayout title="커뮤니티">
         <ContentWrapper>
           <section>
             <Wrapper margin="0 0 0.75rem 0">
-              <Wrapper width="30%" margin="0 8px 0 0">
+              <Wrapper width="40%" margin="0 8px 0 0">
                 <Select
-                  optionList={categoryOptions}
-                  value={control.category}
-                  onChange={(value) => setControl({ ...control, category: value })}
+                  optionList={serachOptions}
+                  value={control.sub || 'all'}
+                  onChange={(value) =>
+                    setControl({ ...control, page: 0, sub: value === 'all' ? undefined : (value as KeywordFilter) })
+                  }
                 />
               </Wrapper>
               <TextInput
                 placeholder="검색어를 입력해주세요"
-                value={control.keyword}
+                value={control.keyword || ''}
                 onChange={(value) => setControl({ ...control, keyword: value })}
                 showSearch={{
                   onSearch: () => {
@@ -133,25 +94,28 @@ export const CommunityPage = () => {
             </Wrapper>
             <Select
               type="default"
-              value={control.category}
-              optionList={categoryOptions}
-              onChange={(value) => setControl({ ...control, category: value })}
+              value={control.filter || 'all'}
+              optionList={postFilterOptions}
+              onChange={(value) =>
+                setControl({ ...control, page: 0, filter: value === 'all' ? undefined : (value as FilterType) })
+              }
             />
           </section>
           <section>
-            {postList.map((post) => (
-              <PostCard key={post.id} onClick={onClickPost}>
-                <PostCard.PostHeader userImg={post.userImg} userName={post.userName} />
-                {post.imgUrl && (
+            {list.map((post: Board) => (
+              <PostCard key={post.boardId} onClick={() => nav(`${PATH.COMMUNITY}/${post.boardId}`)}>
+                <PostCard.PostHeader userImg="" userName={post.authorEmail} />
+                {post.imageUrl && (
                   <Wrapper padding="0 1rem">
-                    <Img url={post.imgUrl} type="round" />
+                    <Img url={post.imageUrl} type="round" />
                   </Wrapper>
                 )}
-                <PostCard.PostTitle type={post.type}>{post.title}</PostCard.PostTitle>
-                <PostCard.Content isSummary>{post.content}</PostCard.Content>
-                <PostCard.Gather>{post.gather}</PostCard.Gather>
+                <PostCard.PostTitle category={post.category}>{post.title}</PostCard.PostTitle>
+                <PostCard.Content isSummary>{post.boardContent}</PostCard.Content>
+                <PostCard.Gather>{post.participatingCount}</PostCard.Gather>
               </PostCard>
             ))}
+            {list.length && <div ref={bottomRef}>spinner</div>}
           </section>
         </ContentWrapper>
         <ButtonFloating onClick={onClickWriteButton} />

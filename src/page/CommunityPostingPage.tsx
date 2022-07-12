@@ -1,74 +1,66 @@
-import { ChangeEvent, ChangeEventHandler, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import { ChangeEvent, useRef, useState } from 'react';
 import { Button, Img, TextInput, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { PostCard } from '../component/PostCard';
 import { useInput } from '../hooks/useInput';
-import { BiErrorCircle, BiCamera } from 'react-icons/bi';
+import { BiCamera } from 'react-icons/bi';
 import { TodoModal } from '../component/TodoModal';
-import { Category, TodoData } from '../Types/todo';
-
-const WarningText = styled.div`
-  color: ${({ theme }) => theme.color.grayDark};
-  width: 100%;
-  font-weight: 400;
-  font-family: 'NotoRegu';
-  display: flex;
-  align-items: center;
-  margin: 0.5rem 0;
-  font-size: 0.75rem;
-`;
-
-const ImgPreviewSection = styled(Wrapper)`
-  margin: 0.75rem 0rem;
-
-  & > div:nth-of-type(2) {
-    margin-left: 1rem;
-    width: 15rem;
-    font-family: 'NotoRegu';
-    font-weight: 400;
-    color: ${({ theme }) => theme.color.grayDark};
-    & div {
-      display: flex;
-      justify-content: space-between;
-      margin: 0.5rem 0;
-      width: 12rem;
-    }
-  }
-`;
-
-const ChallangersSection = styled.div`
-  background-color: ${({ theme }) => theme.color.grayDark};
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 5.875rem;
-  border-radius: ${({ theme }) => theme.radius};
-  margin: 0.5rem;
-  justify-content: center;
-  align-items: center;
-
-  & span:nth-of-type(1) {
-    color: white;
-    font-size: 1.25rem;
-    padding: 0.5rem;
-  }
-
-  & span:nth-of-type(2) {
-    color: #adadad;
-    font-size: 0.875rem;
-  }
-`;
+import { Category, ITodoItem, TodoData } from '../Types/todo';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  communityQueryKey,
+  fetchBoardDetailFn,
+  postCummunityFn,
+  updateBoardFn,
+  uploadImageFn,
+} from '../api/communityApi';
+import { PostType } from '../Types/community';
+import { ChallangersSection, ImgPreviewSection } from '../component/styledComponent/CommunityPostingElements';
+import { WarningText } from '../component/WarningText';
+import { useNavigate, useParams } from 'react-router';
+import { PATH } from '../route/routeList';
 
 export const CommunitiPostingPage = () => {
-  const [postType, setPostType] = useState<'post' | 'challanger'>('post');
+  const nav = useNavigate();
+  const { boardId } = useParams();
+  const queryClient = useQueryClient();
+
+  const refectchBoardList = () => {
+    queryClient.invalidateQueries(communityQueryKey.fetchBoard);
+    nav(PATH.COMMUNITY);
+  };
+
+  const [postType, setPostType] = useState<PostType>('DAILY');
   const [preview, setPreview] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [todoData, setTodoData] = useState<TodoData>();
+  const [requiredError, setRequiredError] = useState<{ title: boolean; content: boolean }>({
+    title: false,
+    content: false,
+  });
 
-  const { value: title, onChangeValue: onChangeTitle } = useInput();
-  const { value: content, onChangeValue: onChangeContent } = useInput();
+  const { value: title, onChangeValue: setTitleValue } = useInput();
+  const { value: content, onChangeValue: setContentValue } = useInput();
+
+  const { data } = useQuery([communityQueryKey.fetchBoardDetail], () => fetchBoardDetailFn(Number(boardId)), {
+    enabled: !!boardId,
+    onSuccess: (data) => {
+      setPostType(data.category);
+      setContentValue(data.boardContent);
+      setTitleValue(data.title);
+
+      if (data.imageUrl) {
+        setPreview(data.imageUrl);
+      }
+
+      // TODO : 챌린저스 일때 투두 셋팅해야함
+      // setTodoData(data.todos);
+    },
+  });
+
+  const { mutate: uploadImage } = useMutation(uploadImageFn);
+  const { mutate: postBoard } = useMutation(postCummunityFn);
+  const { mutate: updateBoard } = useMutation(updateBoardFn);
 
   const imageInput = useRef<HTMLInputElement>(null);
 
@@ -79,18 +71,13 @@ export const CommunitiPostingPage = () => {
   };
 
   const onChangeImg = (input: ChangeEvent<HTMLInputElement>) => {
-    console.log(input.target.files);
-    if (input.target.files && input.target.files[0]) {
-      const reader = new FileReader();
+    if (!input.target.files) return;
+    const formData = new FormData();
+    formData.append('file', input.target.files[0]);
 
-      const file = input.target.files[0];
-      if (!file) return;
-      reader.readAsDataURL(file);
-
-      reader.onload = () => {
-        setPreview(reader.result as string);
-      };
-    }
+    uploadImage(formData, {
+      onSuccess: (data) => setPreview(data),
+    });
   };
 
   const removeImg = () => {
@@ -102,62 +89,129 @@ export const CommunitiPostingPage = () => {
   };
 
   const onClickChallangersButton = () => {
-    setPostType('challanger');
+    setPostType('CHALLENGE');
     setModalVisible(true);
   };
 
-  const setTodoDataFromModal = (todo: TodoData) => {
-    setTodoData(todo);
+  const setTodoDataFromModal = (todo: TodoData | ITodoItem) => {
+    setTodoData(todo as TodoData);
   };
 
-  const getDateCount = () => {
-    if (!todoData) return;
+  const onClickAddPostButton = () => {
+    if (!title) {
+      setRequiredError((prev) => ({ ...prev, title: true }));
+      return;
+    }
 
-    const date = Object.keys(todoData.date);
+    if (!content) {
+      setRequiredError((prev) => ({ ...prev, content: true }));
+      return;
+    }
 
-    return `${date[0]} ${date.length > 1 ? `외 ${date.length - 1}` : ``}`;
+    const todo = postType === 'CHALLENGE' ? { todo: todoData } : undefined;
+
+    console.log(title, content);
+    if (boardId) {
+      // 수정
+      updateBoard(
+        {
+          boardId: Number(boardId),
+          params: {
+            board: {
+              category: postType,
+              content,
+              title,
+              imageUrl: preview,
+            },
+            ...todo,
+          },
+        },
+        {
+          onSuccess: () => refectchBoardList(),
+        },
+      );
+    } else {
+      //추가
+      postBoard(
+        {
+          board: {
+            category: postType,
+            content,
+            title,
+            imageUrl: preview,
+          },
+          ...todo,
+        },
+        {
+          onSuccess: () => refectchBoardList(),
+        },
+      );
+    }
   };
 
+  // TODO : 리팩토링
+  const onChangeTitle = (value: string) => {
+    if (requiredError.title) {
+      setRequiredError((prev) => ({ ...prev, title: false }));
+    }
+
+    setTitleValue(value);
+  };
+
+  const onChangeContent = (value: string) => {
+    if (requiredError.content) {
+      setRequiredError((prev) => ({ ...prev, content: false }));
+    }
+
+    setContentValue(value);
+  };
   return (
     <NavLayout>
       <PageLayout title="글쓰기">
         <Wrapper isColumn padding="1rem">
           <Wrapper justifyContent="space-between">
             <Button
-              buttonType={postType === 'post' ? 'primary' : 'default'}
+              buttonType={postType === 'DAILY' ? 'primary' : 'default'}
               width="49%"
-              onClick={() => setPostType('post')}
+              onClick={() => setPostType('DAILY')}
             >
               일상
             </Button>
             <Button
-              buttonType={postType === 'challanger' ? 'primary' : 'default'}
+              buttonType={postType === 'CHALLENGE' ? 'primary' : 'default'}
               width="49%"
               onClick={() => onClickChallangersButton()}
             >
               챌린저스
             </Button>
           </Wrapper>
-          {postType === 'challanger' && todoData && (
+          {postType === 'CHALLENGE' && todoData && (
             <ChallangersSection>
-              <span>{todoData.title}</span>
-              <span>{getDateCount()}</span>
+              <span>{todoData.content}</span>
+              <span>{`${todoData.todoDateList[0]} ${
+                todoData.todoDateList.length > 1 ? `외 ${todoData.todoDateList.length - 1}` : ``
+              }`}</span>
             </ChallangersSection>
           )}
 
           <Wrapper isColumn justifyContent="start" padding="0.5rem 0">
-            <TextInput value={title} onChange={onChangeTitle} placeholder="제목을 입력해주세요" />
-            <WarningText>
-              <BiErrorCircle />
-              필수사항입니다!
-            </WarningText>
+            <TextInput
+              value={title}
+              onChange={onChangeTitle}
+              placeholder="제목을 입력해주세요"
+              isValidError={requiredError.title}
+            />
+            <WarningText>필수사항입니다!</WarningText>
           </Wrapper>
           <Wrapper isColumn justifyContent="start">
-            <TextInput type="area" value={content} onChange={onChangeContent} placeholder="내용을 입력해주세요" />
-            <WarningText>
-              <BiErrorCircle />
-              필수사항입니다!
-            </WarningText>
+            <TextInput
+              type="area"
+              value={content}
+              onChange={onChangeContent}
+              placeholder="내용을 입력해주세요"
+              isValidError={requiredError.content}
+            />
+            <WarningText>필수사항입니다!</WarningText>
           </Wrapper>
         </Wrapper>
         <Wrapper isColumn padding="1rem">
@@ -183,11 +237,16 @@ export const CommunitiPostingPage = () => {
           <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImg} accept="image/*" />
         </Wrapper>
         <Wrapper padding="0 1rem" margin="0.5rem 0">
-          <Button>등록하기</Button>
+          <Button onClick={onClickAddPostButton}>{boardId ? '수정하기' : '등록하기'}</Button>
         </Wrapper>
       </PageLayout>
       {modalVisible && (
-        <TodoModal closeModal={() => setModalVisible(false)} setTodoDataFromModal={setTodoDataFromModal} />
+        <TodoModal
+          modalType="add"
+          modalTitle="챌린저스 추가하기"
+          closeModal={() => setModalVisible(false)}
+          getTodoDataFromModal={setTodoDataFromModal}
+        />
       )}
     </NavLayout>
   );

@@ -22,6 +22,7 @@ export interface IRoute {
 }
 
 export const PATH = {
+  COMMUNITY: '/community',
   communityPosting: '/community/post',
 };
 
@@ -48,7 +49,7 @@ export const routeList: IRoute[] = [
   },
   {
     id: 'community',
-    path: '/community',
+    path: PATH.COMMUNITY,
     page: CommunityPage,
   },
   {
@@ -56,6 +57,11 @@ export const routeList: IRoute[] = [
     id: 'communityDetail',
     path: '/community/:id',
     page: CommunityDetailPage,
+  },
+  {
+    id: 'community',
+    path: `${PATH.communityPosting}/:boardId`,
+    page: CommunitiPostingPage,
   },
   {
     id: 'community',

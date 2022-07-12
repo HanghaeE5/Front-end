@@ -9,7 +9,7 @@ const baseApi = axios.create({
   timeout: 1000,
 });
 
-const callApi = setupInterceptorsTo(baseApi);
+export const callApi = setupInterceptorsTo(baseApi);
 
 const joinApi = async (data: FieldValues) => {
   const ja = await callApi.post('/register', data);
