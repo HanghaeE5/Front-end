@@ -236,6 +236,7 @@ export const ChattingRoom = () => {
     //   }
     // },
   });
+  console.log(chattingMessageData);
 
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
@@ -246,6 +247,7 @@ export const ChattingRoom = () => {
       // nav('/login');
     },
   });
+  console.log(userInformData);
 
   //웹소켓 연결, 구독
   function wsConnectSubscribe() {
@@ -262,12 +264,12 @@ export const ChattingRoom = () => {
             () => {
               ws.subscribe(
                 `/sub/chat/room/${roomIdName}`,
-                (data) => {
+                () => {
                   queryClient.invalidateQueries('chattingData'); //chattingData 키값 query 실행
 
                   // console.log(data);
                 },
-                { Authorization: toto.accessTokenState },
+                { Authorization: toto.accessTokenState, id: roomIdName },
               );
             },
           );
@@ -294,7 +296,7 @@ export const ChattingRoom = () => {
           ws.disconnect(
             () => {
               ws.send('/pub/chat/message', { Authorization: toto.accessTokenState }, JSON.stringify(data));
-              ws.unsubscribe('sub-0');
+              ws.unsubscribe(`${roomIdName}`);
             },
             { Authorization: toto.accessTokenState },
           );
@@ -306,7 +308,7 @@ export const ChattingRoom = () => {
   }
 
   // 웹소켓이 연결될 때 까지 실행하는 함수
-  function waitForConnection(ws: any, callback: any) {
+  function waitForConnection(ws: Stomp.Client, callback: () => void) {
     setTimeout(
       function () {
         // 연결되었을 때 콜백함수 실행

@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { createTodo, fetchTodoList, todoQueryKey, updateTodoFn, updateTodoScope } from '../api/todoApi';
 import { Button, ButtonFloating, Wrapper } from '../component/element';
-import { Tab } from '../component/element/Tab';
-import { Typography } from '../component/element/Typography';
+import { Tab } from './../component/element/Tab';
+import { Typography } from './../component/element/Typography';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { ContentWrapper, TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
+import { ContentWrapper, TodoListWrapper } from './../component/styledComponent/TodoPageComponents';
 import { TodoItem } from '../component/TodoItem';
-import { TodoModal } from '../component/TodoModal';
-import { Access, Category, ITodoItem, Sort, TodoData, TodoParams, TodoStatus, TodoStatusFilter } from '../Types/todo';
+import { TodoModal } from './../component/TodoModal';
+import { Access, ITodoItem, Sort, TodoData, TodoParams, TodoStatus, TodoStatusFilter } from '../Types/todo';
 
 const AccessTabList: { label: string; value: TodoStatus | 'all' }[] = [
   { label: '전체', value: 'all' },

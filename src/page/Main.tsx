@@ -14,7 +14,7 @@ import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
-import { useMutation, useQueries, useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { userApi } from '../api/callApi';
 
 const MainContainer = styled.div`
@@ -116,7 +116,7 @@ export const Main = () => {
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
-  const [userPhotoWait, setUserPhotoWait] = useRecoilState(userPhotoWaitState);
+  const setUserPhotoWait = useSetRecoilState(userPhotoWaitState);
   const all = window.location.href;
 
   const first = all.split('&');
@@ -134,6 +134,7 @@ export const Main = () => {
       // nav('/login');
     },
   });
+  console.log(userInformData);
 
   useEffect(() => {
     if (accessToken != null) {

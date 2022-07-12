@@ -1,4 +1,4 @@
-import { atom, useRecoilState } from 'recoil';
+import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 const { persistAtom } = recoilPersist();
 
@@ -98,6 +98,7 @@ export const requestFriendListState = atom<friendList>({
 type chatting = {
   roomId: string;
   name: string;
+  participantList: [{ profileImgUrl: string }];
 };
 
 type chattingList = chatting[];

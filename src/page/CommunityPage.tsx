@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useInfiniteQuery, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { communityQueryKey, fetchBoardFn } from '../api/communityApi';
 import { ButtonFloating, Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';

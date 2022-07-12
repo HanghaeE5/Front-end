@@ -1,11 +1,10 @@
 import { AxiosError } from 'axios';
 import React, { useEffect, useState } from 'react';
-import { FieldValues } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-import { registerApi, userApi } from '../api/callApi';
+import { userApi } from '../api/callApi';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { ContentWrapper } from '../component/styledComponent/TodoPageComponents';
@@ -65,13 +64,6 @@ const KoreanFont = styled.p`
   margin: 0 0 0 0;
 `;
 
-const LogoFontSmall = styled.p`
-  font-size: 1.3125rem;
-  font-family: 'OpensansBold';
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
 const CheckFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
   font-family: 'NotoRegu';
@@ -90,21 +82,6 @@ const CheckFont2 = styled.p`
   text-align: left;
 `;
 
-const InputInfo = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  padding: 0 0 0 10px;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
 const InputInfoNoneBorder = styled.input`
   display: flex;
   flex-direction: column;
@@ -117,34 +94,6 @@ const InputInfoNoneBorder = styled.input`
   margin: ${(props: box) => props.margin};
   :focus {
     background-color: rgb(220, 237, 255);
-  }
-`;
-
-type btnbox = {
-  width: number | string;
-  height: number | string;
-  margin: string;
-  color: string;
-};
-
-const BtnBox = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #769cbc;
-  border-radius: 6px;
-  border: 1px solid #989898;
-
-  width: ${(props: btnbox) => props.width};
-  height: ${(props: btnbox) => props.height}rem;
-  margin: ${(props: btnbox) => props.margin};
-  background-color: ${(props: btnbox) => props.color};
-  cursor: pointer;
-
-  &:hover {
-    color: white;
-    background-color: #ecee73;
   }
 `;
 
@@ -182,10 +131,9 @@ export const EditPassword = () => {
   const [prePassword, setPrePassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [newPassword2, setNewPassword2] = useState<string>('');
-  const [newPasswordCheck, setNewPasswordCheck] = useState<boolean>(false);
-  const [send, setSend] = useState<boolean>(false);
+
   const [view, setView] = useState<boolean>(false);
-  const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
+  const userNickname = useRecoilValue(userNicknameState);
   const localToken = localStorage.getItem('recoil-persist');
 
   const nav = useNavigate();

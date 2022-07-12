@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { chattingApi, friendApi } from '../api/callApi';
 import { NavLayout } from '../component/layout/NavLayout';
@@ -10,7 +10,6 @@ import { PageLayout } from '../component/layout/PageLayout';
 import { chattingListState, friendListState, userNicknameState } from '../recoil/store';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
-import { Row } from 'react-day-picker';
 
 const ContentWrapper = styled.div`
   height: 100%;
@@ -142,7 +141,7 @@ export const Chatting = () => {
   const [chattingListbtn, setChattingListbtn] = useState<boolean>(true);
   const [friendListbtn, setFriendListbtn] = useState<boolean>(false);
   const [friendList, setFriendList] = useRecoilState(friendListState);
-  const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
+  const userNickname = useRecoilValue(userNicknameState);
   const [chattingList, setChattingList] = useRecoilState(chattingListState);
   const [makeChattingRoomName, setMakeChattingRoomName] = useState<string>('');
   const [makeChattingRoomNickname, setMakeChattingRoomNickname] = useState<string>('');
@@ -152,22 +151,20 @@ export const Chatting = () => {
   //채팅 목록 API
   const getChattingQuery = useQuery('chattingLists', chattingApi.chattingListApi, {
     //여기서 리코일에 저장
-    onSuccess: (data: any) => {
+    onSuccess: (data) => {
       setChattingList(data.data);
     },
   });
+  console.log(getChattingQuery);
 
   //친구 목록 API
   const getFriendQuery = useQuery('friendLists', friendApi.friendListApi, {
     //여기서 리코일에 저장
-    onSuccess: (data: any) => {
+    onSuccess: (data) => {
       setFriendList(data.data);
     },
   });
-
-  const onClickChatting = (roomId: string) => {
-    nav(`/chattingroom/${roomId}`);
-  };
+  console.log(getFriendQuery);
 
   //채팅방 생성 API
   const makePrivateChattingRoomData = useMutation(

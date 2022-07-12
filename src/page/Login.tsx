@@ -3,7 +3,7 @@ import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
-import { friendApi, registerApi } from '../api/callApi';
+import { registerApi } from '../api/callApi';
 import { FieldValues } from 'react-hook-form';
 import { accessTokenState, refreshTokenState } from '../recoil/store';
 
