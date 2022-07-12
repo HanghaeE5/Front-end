@@ -3,7 +3,7 @@ import './App.css';
 import styled, { ThemeProvider } from 'styled-components';
 
 import { RouterSwitch } from './route/RouterSwitch';
-import { theme } from './style/theme';
+import { theme } from './theme';
 
 const ResponseContainer = styled.div`
   display: flex;
