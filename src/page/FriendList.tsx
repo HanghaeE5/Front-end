@@ -9,7 +9,6 @@ import { Badge } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import FriendAddModal from '../component/modallayout/FriendAddModal';
-import { PostCard } from '../component/PostCard';
 import { friendAddModalState, friendListState, friendNicknameState, requestFriendListState } from '../recoil/store';
 
 const ContentWrapper = styled.div`
@@ -332,10 +331,11 @@ export const FriendList = () => {
             width={'2.81rem'}
             height={2.81}
             style={{
-              bottom: '5.875rem',
-              right: '1.25rem',
-              position: 'fixed',
+              bottom: '3rem',
+              right: '5%',
+              position: 'absolute',
               backgroundImage: 'url(/assets/Plusbtn.svg)',
+              zIndex: 50,
             }}
             onClick={() => {
               setModalFriendAdd(true);

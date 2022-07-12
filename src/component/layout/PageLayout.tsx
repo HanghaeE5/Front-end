@@ -34,6 +34,7 @@ const LayoutContainer = styled.div`
   width: 100%;
   max-width: 768px;
   height: 100%;
+  position: relative;
 `;
 
 type font = {

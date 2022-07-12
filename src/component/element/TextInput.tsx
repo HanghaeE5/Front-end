@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { BiSearch } from 'react-icons/bi';
 import { Wrapper } from './Wrapper';
-import { HTMLProps } from 'react';
 
 const TextElement = styled.input`
   height: 3rem;

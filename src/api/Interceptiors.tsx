@@ -10,7 +10,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
 
     // console.log(toto.tokenState);
     if (toto) {
-      console.log(config);
+      // console.log(config);
       config.headers = {
         Authorization: toto.accessTokenState || 0 || false,
         Refresh: toto.refreshTokenState || 0 || false,
@@ -41,7 +41,6 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
           },
         })
         .then((res) => {
-          console.log(res);
           localStorage.setItem(
             'recoil-persist',
             JSON.stringify({
@@ -49,7 +48,6 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
               refreshTokenState: res.headers.refresh,
             }),
           );
-          return null;
         });
     }
     return Promise.reject(error);
@@ -58,13 +56,13 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
 };
 
 const onResponse = (response: AxiosResponse): AxiosResponse => {
-  console.info(`[response] [${JSON.stringify(response)}]`);
+  // console.info(`[response] [${JSON.stringify(response)}]`);
   return response;
 };
 
 const onResponseError = (error: AxiosError): Promise<AxiosError> => {
   console.error(`[response error] [${JSON.stringify(error)}]`);
-  const originalRequest = error.config;
+
   if (error.message === 'Request failed with status code 401') {
     const localToken = localStorage.getItem('recoil-persist');
 
@@ -90,7 +88,6 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
               refreshTokenState: res.headers.refresh,
             }),
           );
-          return axios(originalRequest);
         });
     }
     return Promise.reject(error);

@@ -1,9 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { notiModalState, profileMenuModalState } from '../../recoil/store';
+import { notiModalState, profileMenuModalState, userJoinTypeState, userprofilephotoState } from '../../recoil/store';
 import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
+import { useMutation } from 'react-query';
+import { userApi } from '../../api/callApi';
+import { useEffect } from 'react';
 
 const TopNavWrapper = styled.nav`
   height: 3.75rem;
@@ -62,8 +65,28 @@ const RowBox = styled.div`
 export const TopNavLayout = () => {
   const [, setModalNoti] = useRecoilState(notiModalState);
   const [, setModalProfileMenu] = useRecoilState(profileMenuModalState);
+  const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
+  const [userJoinType, setUserJoinType] = useRecoilState(userJoinTypeState);
 
   const nav = useNavigate();
+
+  //회원가입 유형 파악 API
+  const joinTypeData = useMutation(() => userApi.joinTypeApi(), {
+    onSuccess: (data) => {
+      setUserJoinType(data.data.socialUser);
+    },
+    onError: () => {
+      // nav('/login');
+    },
+  });
+
+  const joinType = () => {
+    joinTypeData.mutate();
+  };
+
+  useEffect(() => {
+    joinType();
+  }, []);
 
   return (
     <TopNavWrapper>
@@ -104,7 +127,8 @@ export const TopNavLayout = () => {
           height={1.6}
           margin={'auto'}
           style={{
-            backgroundImage: 'url(/assets/nav/회원사진.PNG)',
+            backgroundImage: `url(${fileImage.img_show})`,
+            border: '0.3px solid',
             backgroundSize: 'cover',
             borderRadius: '50%',
           }}

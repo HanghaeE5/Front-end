@@ -12,6 +12,7 @@ import {
   FriendList,
   Chatting,
   ChattingRoom,
+  EditPassword,
 } from './../page';
 
 export interface IRoute {
@@ -47,6 +48,11 @@ export const routeList: IRoute[] = [
     page: Login,
   },
   {
+    id: 'editPassword',
+    path: '/editpassword',
+    page: EditPassword,
+  },
+  {
     id: 'community',
     path: '/community',
     page: CommunityPage,
@@ -79,7 +85,7 @@ export const routeList: IRoute[] = [
   },
   {
     id: 'chattingroom',
-    path: '/chattingroom',
+    path: '/chat/room/:roomId',
     page: ChattingRoom, //뒤에 방번호 넣기
   },
 ];

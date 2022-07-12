@@ -1,8 +1,8 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { editPhotoModalState, userprofilephotoState } from '../../recoil/store';
-import React from 'react';
-import { useMutation } from 'react-query';
+import { editPhotoModalState, userPhotoWaitState, userprofilephotoState } from '../../recoil/store';
+import React, { useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import { userApi } from '../../api/callApi';
 
 const Slide = keyframes`
@@ -137,17 +137,24 @@ const BtnAble = styled.button`
 
 const EditPhotoModal = () => {
   const [modalEditPhoto, setModalEditPhoto] = useRecoilState(editPhotoModalState);
+  type Img = {
+    img_show: string;
+    img_file: File | string | Blob;
+  };
 
   //파일 미리볼 url을 저장해줄 state
   const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
 
-  // 파일 저장
+  //파일 임시 미리봄
+  const [userPhotoWait, setUserPhotoWait] = useRecoilState(userPhotoWaitState);
+
+  // 파일 가져오기
   const saveFileImage = (event: React.ChangeEvent) => {
     const e = event.target as HTMLInputElement;
     const files: FileList | null = e.files;
 
     if (files) {
-      setFileImage({
+      setUserPhotoWait({
         img_show: URL.createObjectURL(files[0]),
         img_file: files[0],
       });
@@ -157,22 +164,25 @@ const EditPhotoModal = () => {
   // 파일 삭제
   const deleteFileImage = () => {
     URL.revokeObjectURL(fileImage.img_show);
-    setFileImage({
+    setUserPhotoWait({
       img_show: '',
       img_file: '',
     });
   };
-
+  //사진 바꾸고 get 실행
+  const queryClient = useQueryClient();
+  // 사진파일 저장 API
   const profilePhotoEditData = useMutation((forms: FormData) => userApi.profilePhotoEditApi(forms), {
     onSuccess: () => {
       setModalEditPhoto(false);
+      queryClient.invalidateQueries('userData'); //userData 키값 query 실행
     },
   });
 
-  const onSubmit = () => {
+  const profilePhotoEdit = () => {
     const formData = new FormData();
-    if (fileImage) {
-      formData.append('file', fileImage.img_file);
+    if (userPhotoWait) {
+      formData.append('file', userPhotoWait.img_file);
     }
     profilePhotoEditData.mutate(formData);
   };
@@ -188,10 +198,10 @@ const EditPhotoModal = () => {
               e.stopPropagation();
             }}
           >
-            <RowBox width="92%" height={1.875} margin={'2.5rem 1.25rem 0rem 1.25rem'}>
-              <Box width={'5rem'} margin={'auto auto auto 0rem'}>
-                <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
-                  프로필사진
+            <RowBox width="89.3%" height={1.625} margin={'2.5rem 1.25rem 0rem 1.25rem'}>
+              <Box width={'6.0625rem'} margin={'auto auto auto 0rem'}>
+                <KoreanFont size={1.25} color="#1A1A1A">
+                  프로필 편집
                 </KoreanFont>
               </Box>
               <Box
@@ -222,10 +232,10 @@ const EditPhotoModal = () => {
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
-                backgroundImage: `url(${fileImage.img_show})`,
+                backgroundImage: `url(${userPhotoWait.img_show})`,
               }}
             >
-              {!fileImage.img_show && <Box style={{ margin: 'auto' }}>📷사진 업로드를 클릭! </Box>}
+              {!userPhotoWait.img_show && <Box style={{ margin: 'auto' }}>📷사진 업로드를 클릭! </Box>}
             </Box>
 
             <RowBox width="92%" height={2} margin={'1rem 1.25rem auto 1.25rem'}>
@@ -246,7 +256,11 @@ const EditPhotoModal = () => {
                   height={3}
                   margin={'0 0 0 1.5rem'}
                   onClick={() => {
-                    deleteFileImage();
+                    console.log('얍');
+                    setUserPhotoWait({
+                      img_show: '/assets/defaultprofile.svg',
+                      img_file: '/assets/defaultprofile.svg',
+                    });
                   }}
                 >
                   <KoreanFont size={1}>기본이미지</KoreanFont>
@@ -255,14 +269,14 @@ const EditPhotoModal = () => {
                 ''
               )}
               <BtnAble
-                isDisable={!fileImage}
+                isDisable={!userPhotoWait}
                 width={'25%'}
                 height={3}
                 margin={'0 0 0 1.5rem'}
                 onClick={
-                  fileImage
+                  userPhotoWait
                     ? () => {
-                        onSubmit();
+                        profilePhotoEdit();
                       }
                     : () => {
                         null;
