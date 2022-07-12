@@ -12,12 +12,12 @@ import { ContentWrapper, TodoListWrapper } from '../component/styledComponent/To
 import { TodoItem } from '../component/TodoItem';
 import { TodoModal } from '../component/TodoModal';
 import { PATH } from '../route/routeList';
-import { Access, ITodoItem, Sort, TodoData, TodoParams, TodoStatus, TodoStatusFilter } from '../Types/todo';
+import { Access, ITodoItem, Sort, TodoData, TodoParams, TodoStatusFilter } from '../Types/todo';
 
-const AccessTabList: { label: string; value: TodoStatus | 'all' }[] = [
+const AccessTabList: { label: string; value: TodoStatusFilter | 'all' }[] = [
   { label: '전체', value: 'all' },
-  { label: '진행', value: 'doing-list' },
-  { label: '완료', value: 'done-list' },
+  { label: '진행', value: 'doingList' },
+  { label: '완료', value: 'doneList' },
 ];
 
 const confirmTitle: { [key in 'edit' | 'delete']: string } = {

@@ -3,7 +3,7 @@ import { VscDebugStackframeDot } from 'react-icons/vsc';
 import { GrTrash } from 'react-icons/gr';
 import { ITodoItem, TodoEvent } from '../Types/todo';
 import { Typography, Wrapper } from './element';
-import { TodoItemWrapper } from './styledComponent/TodoPageComponents';
+import { TodoItemWrapper, TodoLabel } from './styledComponent/TodoPageComponents';
 import { useMutation, useQueryClient } from 'react-query';
 import { todoQueryKey, updateDoneTodo } from '../api/todoApi';
 
@@ -31,19 +31,22 @@ export const TodoItem = ({
   };
 
   return (
-    <TodoItemWrapper done={todoData.state}>
-      <>{todoData.state ? <AiFillCheckCircle /> : <AiOutlineCheckCircle onClick={onClickDone} />}</>
-      <Wrapper isColumn alignItems="start" justifyContent="space-between" height="2.5rem">
-        <Typography weight={700}>{todoData.todoContent}</Typography>
-        <Wrapper>
-          <Typography size={0.75}>{todoData.todoDate}</Typography>
-          <VscDebugStackframeDot />
-          <Typography size={0.75} underline isPointer onClick={() => onClickEditButton(todoData)}>
-            수정
-          </Typography>
+    <>
+      <TodoItemWrapper done={todoData.state}>
+        <TodoLabel done={todoData.state}>{todoData.boardId ? 'With To Do' : 'My To Do'}</TodoLabel>
+        <>{todoData.state ? <AiFillCheckCircle /> : <AiOutlineCheckCircle onClick={onClickDone} />}</>
+        <Wrapper isColumn alignItems="start" justifyContent="space-between" height="2.5rem">
+          <Typography weight={700}>{todoData.todoContent}</Typography>
+          <Wrapper>
+            <Typography size={0.75}>{todoData.todoDate}</Typography>
+            <VscDebugStackframeDot />
+            <Typography size={0.75} underline isPointer onClick={() => onClickEditButton(todoData)}>
+              수정
+            </Typography>
+          </Wrapper>
         </Wrapper>
-      </Wrapper>
-      <GrTrash onClick={() => onClickDeleteButton(todoData)} />
-    </TodoItemWrapper>
+        <GrTrash onClick={() => onClickDeleteButton(todoData)} />
+      </TodoItemWrapper>
+    </>
   );
 };
