@@ -1,15 +1,7 @@
 import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
-import { Post, PostDetail } from '../Types/community';
+import { Board } from '../Types/community';
 import { Badge, DropdownMenu, Img, Wrapper } from './element';
-
-interface PostCardProps {
-  onClick?: (id: string) => void;
-}
-
-const CardWrapper = styled(Wrapper)<PostCardProps>`
-  background-color: white;
-`;
 
 const UserName = styled.span`
   font-size: 0.875rem;
@@ -59,9 +51,20 @@ const StyledGather = styled.span`
 const PostHeader = ({
   userImg,
   userName,
-  postNumber,
   date,
-}: Pick<Post, 'userImg' | 'userName'> & Partial<PostDetail>) => {
+  boardId,
+  dropDownProps,
+}: {
+  userImg?: string;
+  userName: string;
+  date?: string;
+  boardId?: number;
+  dropDownProps?: {
+    onShare: () => void;
+    onEdit: () => void;
+    onDelete: () => void;
+  };
+}) => {
   return (
     <Wrapper margin="0.5rem 0" padding="0.5rem 1rem">
       <Wrapper width="2rem">
@@ -70,18 +73,18 @@ const PostHeader = ({
 
       <Wrapper isColumn alignItems="start" margin="0 0 0 0.5rem">
         <UserName>{userName}</UserName>
-        {(postNumber || date) && <PostInfo>{`${date} | ${postNumber}`}</PostInfo>}
+        {(boardId || date) && <PostInfo>{`${date} | ${boardId}`}</PostInfo>}
       </Wrapper>
-      {postNumber && <DropdownMenu />}
+      {boardId && dropDownProps && <DropdownMenu {...dropDownProps} />}
     </Wrapper>
   );
 };
 
-const PostTitle = ({ children, type }: PropsWithChildren<Pick<Post, 'type'>>) => {
+const PostTitle = ({ children, category }: PropsWithChildren<Pick<Board, 'category'>>) => {
   return (
     <Wrapper justifyContent="space-between" padding="0 1rem">
       <Title>{children}</Title>
-      <Badge>{type === 'challange' ? '챌린저스' : '일상'}</Badge>
+      <Badge>{category === 'CHALLENGE' ? '챌린저스' : '일상'}</Badge>
     </Wrapper>
   );
 };
@@ -94,11 +97,18 @@ const Gather = ({ children }: PropsWithChildren) => {
   return <StyledGather>{children}명 참여중!</StyledGather>;
 };
 
-export const PostCard = ({ children, onClick }: PropsWithChildren<PostCardProps>) => {
+export const PostCard = ({ children, onClick }: PropsWithChildren<{ onClick: () => void }>) => {
   return (
-    <CardWrapper isColumn alignItems="start" padding="1rem 0" margin="0.5rem 0 0 0" onClick={onClick}>
+    <Wrapper
+      isColumn
+      alignItems="start"
+      padding="1rem 0"
+      margin="0.5rem 0 0 0"
+      onClick={() => onClick()}
+      backgroundColor="white"
+    >
       {children}
-    </CardWrapper>
+    </Wrapper>
   );
 };
 

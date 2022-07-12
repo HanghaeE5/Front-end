@@ -1,113 +1,24 @@
-import styled, { keyframes } from 'styled-components';
 import { useInput } from '../hooks/useInput';
 import { Button, TextInput, Wrapper } from './element';
 import { WarningText } from './WarningText';
 import { BsFillHandbagFill, BsX } from 'react-icons/bs';
-import { PropsWithChildren, ReactNode, useEffect, useRef, useState } from 'react';
-import { DateRange, DayPicker, Row, RowProps } from 'react-day-picker';
+import { PropsWithChildren, ReactNode, useState } from 'react';
+import { DayPicker, Row, RowProps } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
-// import '../style/day-picker.css';
 import { ko } from 'date-fns/locale';
 import { differenceInCalendarDays } from 'date-fns';
-import { Category, TodoData } from '../Types/todo';
-
-const ModalContainer = styled.div`
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-`;
-
-const Background = styled.div`
-  background-color: black;
-  opacity: 0.65;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-`;
-
-// TODO : Modal 중복많아서 하나도 빼보기
-const Slide = keyframes`
-    0% {
-        transform: translateY(20%);
-    }
-
-    100% {
-        transform: translateY(0);
-    }
-`;
-
-const TodoContents = styled.div`
-  height: 35.75rem;
-  bottom: 0;
-  width: 100%;
-  position: absolute;
-  background-color: white;
-  border-radius: 20px 20px 0 0;
-  animation: ${Slide} 0.6s ease;
-`;
-
-const HeaderTitle = styled(Wrapper)`
-  font-size: 1.25rem;
-  font-weight: 700;
-
-  & > svg {
-    font-size: 1.5rem;
-  }
-`;
-const CategoryWrapper = styled.div<{ isSelect: boolean }>`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  cursor: pointer;
-
-  & > div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid ${({ theme, isSelect }) => (isSelect ? 'black' : theme.color.grayMedium)};
-    border-radius: ${({ theme }) => theme.radius};
-    padding: 1rem;
-    width: 4.375rem;
-    height: 4.375rem;
-    margin-left: 1rem;
-  }
-
-  & > span {
-    margin: 0.25rem;
-    text-align: center;
-    padding-left: 1rem;
-  }
-`;
-
-const CategorySection = styled(Wrapper)`
-  border-top: 0.5rem solid ${({ theme }) => theme.color.grayLight};
-  border-bottom: 0.5rem solid ${({ theme }) => theme.color.grayLight};
-  padding: 1rem 0;
-
-  & > span {
-    margin: 0 0 1rem 1rem;
-  }
-
-  & > div {
-    width: 100%;
-    overflow-x: scroll;
-    display: flex;
-  }
-`;
-const CalendarWrapper = styled.div`
-  background-color: white;
-  border-radius: 6px;
-  position: fixed;
-  bottom: 8rem;
-  left: 2rem;
-  box-shadow: 0px 3px 10px -4px rgba(0, 0, 0, 0.77);
-`;
-const StickyButton = styled(Button)`
-  position: absolute;
-  bottom: 3.75rem;
-`;
+import { Category, ITodoItem, TodoData } from '../Types/todo';
+import {
+  Background,
+  CalendarWrapper,
+  CategorySection,
+  CategoryWrapper,
+  HeaderTitle,
+  ModalContainer,
+  StickyButton,
+  TodoContents,
+} from './styledComponent/TodoModalElements';
+import styled from 'styled-components';
 
 interface CategoryItemProps {
   icon: ReactNode;
@@ -124,25 +35,38 @@ const CategoryItem = ({ icon, isSelect, onClick, children }: PropsWithChildren<C
   );
 };
 
-const CalendarFooter = ({ onClick }: { onClick: () => void }) => {
+const OverButton = styled(Button)`
+  left: 0rem;
+  bottom: -1rem;
+  position: relative;
+  border-radius: 0 0 6px 6px;
+`;
+
+const CalendarFooter = ({
+  onClick,
+  onClickEveryDay,
+  reset,
+}: {
+  onClick: () => void;
+  onClickEveryDay: () => void;
+  reset: () => void;
+}) => {
   return (
-    <Wrapper>
-      <Button buttonType="default" onClick={onClick}>
+    <Wrapper isColumn>
+      <Wrapper justifyContent="space-between" margin="0.25rem 0">
+        <Button buttonType="default" onClick={onClick} width="calc(100% - 3.25rem)">
+          매일 선택
+        </Button>
+        <Button buttonType="default" onClick={reset} width="3rem">
+          초기화
+        </Button>
+      </Wrapper>
+      <OverButton isSquare width="112%">
         선택
-      </Button>
+      </OverButton>
     </Wrapper>
   );
 };
-
-function isPastDate(date: Date) {
-  return differenceInCalendarDays(date, new Date()) < 0;
-}
-
-function OnlyFutureRow(props: RowProps) {
-  const isPastRow = props.dates.every(isPastDate);
-  if (isPastRow) return <></>;
-  return <Row {...props} />;
-}
 
 const getSelectDate = (selectedDay: Date[] | undefined) => {
   if (!selectedDay) return;
@@ -153,14 +77,20 @@ const getSelectDate = (selectedDay: Date[] | undefined) => {
 };
 
 interface TodoModalProps {
-  setTodoDataFromModal: (todo: TodoData) => void;
+  modalType: 'edit' | 'add';
+  modalTitle: string;
+  getTodoDataFromModal: (todo: TodoData) => void;
   closeModal: () => void;
+  todoData?: ITodoItem;
 }
-export const TodoModal = ({ setTodoDataFromModal, closeModal }: TodoModalProps) => {
-  const { value: title, onChangeValue: onChangeTitle } = useInput();
-  const [category, setCategory] = useState<Category>('study');
+export const TodoModal = ({ modalType, todoData, modalTitle, getTodoDataFromModal, closeModal }: TodoModalProps) => {
+  const { value: title, onChangeValue: onChangeTitle } = useInput(todoData?.todoContent);
+  const [isTitleRequired, setIsTitleRequired] = useState(false);
+  const [category, setCategory] = useState<Category>((todoData?.category as Category) || 'STUDY');
   const [showCalendar, setShowCalendar] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<Date[] | undefined>([]);
+  const [selectedDay, setSelectedDay] = useState<Date[] | undefined>(
+    todoData ? [new Date(todoData.todoDate)] : [new Date()],
+  );
 
   const onCloseCalendar = () => setShowCalendar(false);
 
@@ -168,67 +98,88 @@ export const TodoModal = ({ setTodoDataFromModal, closeModal }: TodoModalProps) 
     setCategory(category);
   };
 
+  const onChangeTitleInput = (value: string) => {
+    if (value) setIsTitleRequired(false);
+    onChangeTitle(value);
+  };
+
   const onClickAddButton = () => {
-    if (!title || !selectedDay?.length) return;
+    setIsTitleRequired(false);
 
-    const date: { [key in string]: null } = {};
+    if (!title) {
+      setIsTitleRequired(true);
+      return;
+    }
 
-    selectedDay?.forEach((selectedDay) => {
-      const dateKey = selectedDay.toISOString().split('T')[0];
-      date[dateKey] = null;
-    });
+    const date = selectedDay?.map((selectedDay) => selectedDay.toISOString().split('T')[0]) || [];
 
-    setTodoDataFromModal({ title, category, date });
+    getTodoDataFromModal({ content: title, category, todoDateList: date, todoId: todoData?.todoId });
+
     closeModal();
   };
 
+  const onDatePick = (dateList: Date[] | undefined) => {
+    if (!dateList) return;
+
+    if (modalType === 'edit') {
+      const lastPick = dateList[dateList.length - 1];
+      setSelectedDay([lastPick]);
+    } else {
+      setSelectedDay(dateList);
+    }
+  };
   return (
     <ModalContainer>
       <Background onClick={() => closeModal()} />
       <TodoContents>
         <HeaderTitle justifyContent="space-between" padding="1.25rem 1.25rem 0 1.25rem">
-          <span>챌린저스 추가하기</span>
+          <span>{modalTitle}</span>
           <BsX onClick={() => closeModal()} />
         </HeaderTitle>
 
         <Wrapper isColumn padding="1rem">
-          <TextInput value={title} onChange={onChangeTitle} placeholder="투 두 제목을 입력해주세요" />
+          <TextInput
+            value={title}
+            onChange={onChangeTitleInput}
+            placeholder="투 두 제목을 입력해주세요"
+            isValidError={isTitleRequired}
+          />
           <WarningText>투 두 제목은 필수사항입니다!</WarningText>
         </Wrapper>
         <CategorySection isColumn alignItems="start">
           <span>카테고리</span>
           <div>
             <CategoryItem
-              isSelect={category === 'study'}
-              onClick={() => onClickCategoryButton('study')}
+              isSelect={category === 'STUDY'}
+              onClick={() => onClickCategoryButton('STUDY')}
               icon={<BsFillHandbagFill />}
             >
               스터디
             </CategoryItem>
             <CategoryItem
-              isSelect={category === 'excercise'}
-              onClick={() => onClickCategoryButton('excercise')}
+              isSelect={category === 'EXERCISE'}
+              onClick={() => onClickCategoryButton('EXERCISE')}
               icon={<BsFillHandbagFill />}
             >
               운동
             </CategoryItem>
             <CategoryItem
-              isSelect={category === 'shopping'}
-              onClick={() => onClickCategoryButton('shopping')}
+              isSelect={category === 'SHOPPING'}
+              onClick={() => onClickCategoryButton('SHOPPING')}
               icon={<BsFillHandbagFill />}
             >
               쇼핑
             </CategoryItem>
             <CategoryItem
-              isSelect={category === 'promise'}
-              onClick={() => onClickCategoryButton('promise')}
+              isSelect={category === 'PROMISE'}
+              onClick={() => onClickCategoryButton('PROMISE')}
               icon={<BsFillHandbagFill />}
             >
               약속
             </CategoryItem>
             <CategoryItem
-              isSelect={category === 'etc'}
-              onClick={() => onClickCategoryButton('etc')}
+              isSelect={category === 'ETC'}
+              onClick={() => onClickCategoryButton('ETC')}
               icon={<BsFillHandbagFill />}
             >
               기타
@@ -252,10 +203,15 @@ export const TodoModal = ({ setTodoDataFromModal, closeModal }: TodoModalProps) 
                   styles={{}}
                   min={1}
                   selected={selectedDay}
-                  onSelect={setSelectedDay}
+                  onSelect={onDatePick}
                   fromDate={new Date()}
-                  components={{ Row: OnlyFutureRow }}
-                  footer={<CalendarFooter onClick={onCloseCalendar} />}
+                  footer={
+                    <CalendarFooter
+                      onClick={onCloseCalendar}
+                      onClickEveryDay={() => console.log('매일')}
+                      reset={() => setSelectedDay([new Date()])}
+                    />
+                  }
                 />
               </CalendarWrapper>
             )}

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { BiSearch } from 'react-icons/bi';
 import { Wrapper } from './Wrapper';
 
-const TextElement = styled.input`
+const TextElement = styled.input<{ isValidError?: boolean }>`
   height: 3rem;
   border-radius: ${(props) => props.theme.radius};
   background-color: ${(props) => props.theme.color.grayLight};
@@ -12,6 +12,7 @@ const TextElement = styled.input`
     color: ${(props) => props.theme.color.grayMedium};
   }
   width: 100%;
+  border: ${({ isValidError }) => isValidError && `1px solid red`};
 `;
 
 const SearchButton = styled(BiSearch)`
@@ -25,7 +26,7 @@ const SearchButton = styled(BiSearch)`
   cursor: pointer;
 `;
 
-const TextAreaElement = styled.textarea`
+const TextAreaElement = styled.textarea<{ isValidError?: boolean }>`
   height: 11.25rem;
   border-radius: ${(props) => props.theme.radius};
   background-color: ${(props) => props.theme.color.grayLight};
@@ -39,6 +40,7 @@ const TextAreaElement = styled.textarea`
   font-family: 'NotoRegu';
   font-weight: 400;
   resize: none;
+  border: ${({ isValidError }) => isValidError && `1px solid red`};
 `;
 
 interface TextInputProps {
@@ -50,9 +52,17 @@ interface TextInputProps {
   showSearch?: {
     onSearch: () => void;
   };
+  isValidError?: boolean;
 }
 
-export const TextInput = ({ type = 'text', placeholder, showSearch, value, onChange }: TextInputProps) => {
+export const TextInput = ({
+  type = 'text',
+  placeholder,
+  showSearch,
+  value,
+  onChange,
+  isValidError,
+}: TextInputProps) => {
   if (type === 'text') {
     return (
       <Wrapper>
@@ -62,6 +72,7 @@ export const TextInput = ({ type = 'text', placeholder, showSearch, value, onCha
           onChange={(e) => {
             onChange(e.target.value);
           }}
+          isValidError={isValidError}
         />
         {showSearch && <SearchButton onClick={() => showSearch.onSearch()} />}
       </Wrapper>
@@ -75,6 +86,7 @@ export const TextInput = ({ type = 'text', placeholder, showSearch, value, onCha
       onChange={(e) => {
         onChange(e.target.value);
       }}
+      isValidError={isValidError}
     />
   );
 };

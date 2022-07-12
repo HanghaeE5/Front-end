@@ -23,7 +23,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
 };
 
 const onRequestError = (error: AxiosError): Promise<AxiosError> => {
-  console.error(`[request error] [${JSON.stringify(error)}]`);
+  // console.error(`[request error] [${JSON.stringify(error)}]`);
   if (error.message === 'Request failed with status code 401') {
     const localToken = localStorage.getItem('recoil-persist');
 
