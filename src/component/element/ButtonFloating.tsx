@@ -6,7 +6,7 @@ const FloatingButton = styled(BsFillPlusCircleFill)`
   height: 2.813rem;
   border-radius: 50%;
   background-color: black;
-  border-color: ${({ theme }) => theme.mainColor};
+  border: 2px ${({ theme }) => theme.mainColor};
   color: ${({ theme }) => theme.mainColor};
   position: fixed;
   bottom: 4.5rem;

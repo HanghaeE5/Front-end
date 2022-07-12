@@ -28,7 +28,7 @@ export const updateDoneTodo = async (todoId: number) => {
   return data;
 };
 
-export const deleteTodo = async (todoId: number) => {
+export const deleteTodoFn = async (todoId: number) => {
   const { data } = await callApi.delete(`/todo/${todoId}`);
   return data;
 };

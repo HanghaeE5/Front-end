@@ -1,20 +1,21 @@
 import { AiFillCheckCircle, AiOutlineCheckCircle } from 'react-icons/ai';
 import { VscDebugStackframeDot } from 'react-icons/vsc';
 import { GrTrash } from 'react-icons/gr';
-import { ITodoItem } from '../Types/todo';
+import { ITodoItem, TodoEvent } from '../Types/todo';
 import { Typography, Wrapper } from './element';
 import { TodoItemWrapper } from './styledComponent/TodoPageComponents';
 import { useMutation, useQueryClient } from 'react-query';
-import { deleteTodo, todoQueryKey, updateDoneTodo } from '../api/todoApi';
+import { todoQueryKey, updateDoneTodo } from '../api/todoApi';
 
 export const TodoItem = ({
-  category,
-  state,
-  todoContent,
-  todoDate,
-  todoId,
+  todoData,
   onClickEditButton,
-}: ITodoItem & { onClickEditButton: () => void }) => {
+  onClickDeleteButton,
+}: {
+  todoData: ITodoItem;
+  onClickEditButton: TodoEvent;
+  onClickDeleteButton: TodoEvent;
+}) => {
   const queryClient = useQueryClient();
 
   const refectchTodoList = () => {
@@ -25,32 +26,24 @@ export const TodoItem = ({
     onSuccess: () => refectchTodoList(),
   });
 
-  const { mutate: deleteTodoItem } = useMutation(deleteTodo, {
-    onSuccess: (data) => refectchTodoList(),
-  });
-
   const onClickDone = () => {
-    doneTodo(todoId);
-  };
-
-  const removeItem = () => {
-    deleteTodoItem(todoId);
+    doneTodo(todoData.todoId);
   };
 
   return (
-    <TodoItemWrapper done={state}>
-      <>{state ? <AiFillCheckCircle /> : <AiOutlineCheckCircle onClick={onClickDone} />}</>
+    <TodoItemWrapper done={todoData.state}>
+      <>{todoData.state ? <AiFillCheckCircle /> : <AiOutlineCheckCircle onClick={onClickDone} />}</>
       <Wrapper isColumn alignItems="start" justifyContent="space-between" height="2.5rem">
-        <Typography weight={700}>{todoContent}</Typography>
+        <Typography weight={700}>{todoData.todoContent}</Typography>
         <Wrapper>
-          <Typography size={0.75}>{todoDate}</Typography>
+          <Typography size={0.75}>{todoData.todoDate}</Typography>
           <VscDebugStackframeDot />
-          <Typography size={0.75} underline isPointer onClick={onClickEditButton}>
+          <Typography size={0.75} underline isPointer onClick={() => onClickEditButton(todoData)}>
             수정
           </Typography>
         </Wrapper>
       </Wrapper>
-      <GrTrash onClick={removeItem} />
+      <GrTrash onClick={() => onClickDeleteButton(todoData)} />
     </TodoItemWrapper>
   );
 };

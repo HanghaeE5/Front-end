@@ -54,7 +54,7 @@ export const CommunityPage = () => {
   );
 
   const onClickWriteButton = () => {
-    nav(PATH.communityPosting);
+    nav(PATH.COMMUNITY_POST);
   };
 
   useEffect(() => {
@@ -103,7 +103,7 @@ export const CommunityPage = () => {
           </section>
           <section>
             {list.map((post: Board) => (
-              <PostCard key={post.boardId} onClick={() => nav(`${PATH.COMMUNITY}/${post.boardId}`)}>
+              <PostCard key={post.boardId} onClick={() => nav(`${PATH.COMMUNITY_POST}/${post.boardId}`)}>
                 <PostCard.PostHeader userImg="" userName={post.authorEmail} />
                 {post.imageUrl && (
                   <Wrapper padding="0 1rem">

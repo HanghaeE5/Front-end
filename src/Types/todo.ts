@@ -31,6 +31,7 @@ export interface ITodoItem {
   todoContent: string;
   todoDate: string;
   todoId: number;
+  boardId?: number;
 }
 
 export interface FetchTodoResponse {
@@ -61,3 +62,5 @@ export interface FetchTodoResponse {
   totalElements: number;
   totalPages: number;
 }
+
+export type TodoEvent = (todoData: ITodoItem) => void;
