@@ -35,7 +35,7 @@ export const ToDoPage = () => {
   const [todoData, setTodoData] = useState<ITodoItem>();
 
   const { data: todoList, isLoading: loadingTodoList } = useQuery<ITodoItem[]>(
-    [todoQueryKey.fetchTodo],
+    [todoQueryKey.fetchTodo, todoFilter],
     () => fetchTodoList(todoFilter),
     { onSuccess: (data) => console.log(data) },
   );
