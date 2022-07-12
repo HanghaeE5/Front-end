@@ -52,6 +52,7 @@ export const CommunityPage = () => {
       },
     },
   );
+  console.log(isLoading);
 
   const onClickWriteButton = () => {
     nav(PATH.communityPosting);

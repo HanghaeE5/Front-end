@@ -1,11 +1,10 @@
 import styled, { keyframes } from 'styled-components';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   editPasswordModalState,
   profileMenuModalState,
   userJoinTypeState,
   userNicknameState,
-  userprofilephotoState,
 } from '../../recoil/store';
 import { useNavigate } from 'react-router';
 
@@ -64,9 +63,8 @@ const Box = styled.div`
 
 const ProfileMenuModal = () => {
   const [modalProfileMenu, setModalProfileMenu] = useRecoilState(profileMenuModalState);
-  const [, setModalEditPassword] = useRecoilState(editPasswordModalState);
-  const [userJoinType, setUserJoinType] = useRecoilState(userJoinTypeState);
-  const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
+  const userJoinType = useRecoilValue(userJoinTypeState);
+  const userNickname = useRecoilValue(userNicknameState);
   const nav = useNavigate();
   return (
     <>

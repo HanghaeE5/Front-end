@@ -57,6 +57,7 @@ export const CommunitiPostingPage = () => {
       // setTodoData(data.todos);
     },
   });
+  console.log(data);
 
   const { mutate: uploadImage } = useMutation(uploadImageFn);
   const { mutate: postBoard } = useMutation(postCummunityFn);
