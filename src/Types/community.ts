@@ -13,6 +13,8 @@ export interface CommunitySearchControl {
 
 export interface Board {
   authorEmail: string;
+  authorNick: string;
+  authorProfileImageUrl: string;
   boardContent: string;
   boardCreatedDate: string;
   boardId: number;

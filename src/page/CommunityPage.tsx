@@ -125,7 +125,7 @@ export const CommunityPage = () => {
           <section>
             {list.map((post: Board) => (
               <PostCard key={post.boardId} onClick={() => nav(`${PATH.COMMUNITY_POST}/${post.boardId}`)}>
-                <PostCard.PostHeader userImg="" userName={post.authorEmail} />
+                <PostCard.PostHeader userImg={post.authorProfileImageUrl} userName={post.authorNick} />
                 {post.imageUrl && (
                   <Wrapper padding="0 1rem">
                     <Img url={post.imageUrl} type="round" />
