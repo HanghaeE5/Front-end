@@ -1,7 +1,7 @@
 export type PostType = 'DAILY' | 'CHALLENGE';
 
 export type FilterType = 'daily' | 'challenge' | 'my';
-export type KeywordFilter = 'title' | 'content';
+export type KeywordFilter = 'title' | 'content' | 'all';
 
 export interface CommunitySearchControl {
   filter: FilterType | undefined;

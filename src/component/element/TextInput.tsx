@@ -5,25 +5,22 @@ import { Wrapper } from './Wrapper';
 const TextElement = styled.input<StyleProps>`
   height: ${({ inputSize }) => (inputSize === 'small' ? '3rem' : '3.73rem')};
   border-radius: ${(props) => props.theme.radius};
-  background-color: ${({ theme, inputType }) => 'white'};
+  background-color: ${({ theme, inputType }) => (inputType === 'default' ? 'white' : theme.color.grayLight)};
   border: ${({ theme, inputType }) => (inputType === 'primary' ? `none` : `1px solid ${theme.color.grayMedium}`)};
   padding: ${(props) => props.theme.inputPadding};
   ::placeholder {
     color: ${(props) => props.theme.color.grayMedium};
-    font-size: 1.063rem;
+    font-size: ${({ inputSize }) => (inputSize === 'small' ? '0.938rem' : '1.063rem')};
+    font-family: 'NotoLight';
   }
   width: 100%;
   border: ${({ isValidError }) => isValidError && `1px solid red`};
 `;
 
 const SearchButton = styled(BiSearch)`
-  background-color: ${(props) => props.theme.color.grayDark};
-  width: 3rem;
-  height: 3rem;
-  color: white;
-  padding: 0.75rem;
-  border-radius: ${(props) => props.theme.radius};
-  margin-left: 5px;
+  position: absolute;
+  right: 1.5rem;
+  font-size: 1.25rem;
   cursor: pointer;
 `;
 
@@ -53,12 +50,10 @@ interface StyleProps {
 interface TextInputProps {
   type?: 'text' | 'area';
   onChange: (value: string) => void;
-  onSearch?: (value: string) => void;
+  onSearch?: () => void;
+  onEnter?: () => void;
   placeholder?: string;
   value: string;
-  showSearch?: {
-    onSearch: () => void;
-  };
 }
 
 export const TextInput = ({
@@ -66,11 +61,17 @@ export const TextInput = ({
   inputSize = 'large',
   inputType = 'default',
   placeholder,
-  showSearch,
   value,
   onChange,
+  onSearch,
   isValidError = false,
 }: TextInputProps & StyleProps) => {
+  const onKeyDown = (key: string) => {
+    if (key !== 'Enter' || !onSearch) return;
+
+    onSearch();
+  };
+
   if (type === 'text') {
     return (
       <Wrapper>
@@ -80,11 +81,12 @@ export const TextInput = ({
           onChange={(e) => {
             onChange(e.target.value);
           }}
+          onKeyDown={(e) => onKeyDown(e.key)}
           isValidError={isValidError}
           inputSize={inputSize}
           inputType={inputType}
         />
-        {showSearch && <SearchButton onClick={() => showSearch.onSearch()} />}
+        {!!onSearch && <SearchButton onClick={() => onSearch()} />}
       </Wrapper>
     );
   }
