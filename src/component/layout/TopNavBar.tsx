@@ -1,12 +1,12 @@
+import { useEffect } from 'react';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
+import styled from 'styled-components';
+import { userApi } from '../../api/callApi';
 import { notiModalState, profileMenuModalState, userJoinTypeState, userprofilephotoState } from '../../recoil/store';
 import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
-import { useMutation } from 'react-query';
-import { userApi } from '../../api/callApi';
-import { useEffect } from 'react';
 
 const TopNavWrapper = styled.nav`
   height: 3.75rem;
