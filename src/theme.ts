@@ -17,16 +17,16 @@ export const theme = {
       large: '4rem',
     },
     font: {
-      small: 'NotoRegu 400 0.813rem',
-      medium: '20 0.875rem',
-      large: '500 1rem',
+      small: '0.813rem',
+      medium: '0.875rem',
+      large: '1.063rem',
     },
     color: {
       primary: 'black',
       default: 'black',
       disable: 'white',
       dashed: '#5F5F5F',
-      ghost: '#888888',
+      ghost: 'black',
     },
     borderColor: {
       primary: '#FFD600',

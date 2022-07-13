@@ -37,13 +37,8 @@ const removeDuplicate = <T,>(list: T[], key: keyof T): T[] => {
 
 export const ToDoPage = () => {
   const [bottomRef, isBottom] = useInView();
-
-  const queryClient = useQueryClient();
   const nav = useNavigate();
-
-  const refectchTodoList = () => {
-    queryClient.invalidateQueries(todoQueryKey.fetchTodo);
-  };
+  const queryClient = useQueryClient();
 
   const [list, setList] = useState<ITodoItem[]>([]);
   const [todoModalState, setTodoModalState] = useState<{ modalVisible: boolean; modalType: 'edit' | 'add' }>({
@@ -64,31 +59,39 @@ export const ToDoPage = () => {
     confirmType: 'edit',
   });
 
-  const { data: todoList, isLoading: loadingTodoList } = useQuery(
-    [todoQueryKey.fetchTodo, todoFilter],
-    () => fetchTodoList(todoFilter),
-    {
-      onSuccess: (data) => {
-        if (todoFilter.page === 0) {
-          setList([...removeDuplicate<ITodoItem>(data.content, 'todoId')]);
-          return;
-        }
+  const {
+    data: todoList,
+    isLoading: loadingTodoList,
+    refetch,
+  } = useQuery([todoQueryKey.fetchTodo, todoFilter], () => fetchTodoList(todoFilter), {
+    onSuccess: (data) => {
+      console.log(todoFilter.page);
+      console.log(data.content);
+      if (todoFilter.page === 0) {
+        setList([...removeDuplicate<ITodoItem>(data.content, 'todoId')]);
+        return;
+      }
 
-        setList((prev) => removeDuplicate<ITodoItem>([...prev, ...data.content], 'todoId'));
-      },
+      setList((prev) => removeDuplicate<ITodoItem>([...prev, ...data.content], 'todoId'));
     },
-  );
+  });
+
+  const refetchTodoList = () => {
+    // setTodoFilter((prev) => ({ ...prev, page: 0 }));
+    queryClient.invalidateQueries(todoQueryKey.fetchTodo);
+  };
 
   const { mutate: addTodoItem } = useMutation(createTodo, {
-    onSuccess: () => refectchTodoList(),
+    onSuccess: () => refetchTodoList(),
   });
 
   const { mutate: updateTodo } = useMutation(updateTodoFn, {
-    onSuccess: () => refectchTodoList(),
+    onSuccess: () => refetchTodoList(),
   });
 
+  // TODO : refetch 에러
   const { mutate: deleteTodo } = useMutation(deleteTodoFn, {
-    onSuccess: () => refectchTodoList(),
+    onSuccess: () => refetchTodoList(),
   });
 
   const { mutate: updateTodoPublicScope } = useMutation(updateTodoScope, {
@@ -112,9 +115,10 @@ export const ToDoPage = () => {
 
   const toggleConfirm = () => setConfirmState((prev) => ({ ...prev, confirmVisible: !prev.confirmVisible }));
 
-  const onChangeTab = (todoStatus: TodoStatusFilter) => setTodoFilter((prev) => ({ ...prev, filter: todoStatus }));
+  const onChangeTab = (todoStatus: TodoStatusFilter) =>
+    setTodoFilter((prev) => ({ ...prev, filter: todoStatus, page: 0 }));
 
-  const onClickOrderFilter = (sort: Sort) => setTodoFilter((prev) => ({ ...prev, sort }));
+  const onClickOrderFilter = (sort: Sort) => setTodoFilter((prev) => ({ ...prev, sort, page: 0 }));
 
   const onChangeScope = (accessType: Access) => {
     setAccess(accessType);
@@ -152,7 +156,9 @@ export const ToDoPage = () => {
     nav(`${PATH.COMMUNITY_POST}/${todoData?.boardId}`);
   };
 
+  // TODO : 무한스크롤 에러
   useEffect(() => {
+    console.log(todoFilter.page);
     if (!isBottom) return;
 
     if (todoList?.last) {
@@ -255,7 +261,7 @@ export const ToDoPage = () => {
           {todoModalState.modalVisible && (
             <TodoModal
               modalType={todoModalState.modalType}
-              modalTitle={todoModalState.modalType === 'add' ? '투 두 추가하기' : '투 두 수정하기'}
+              modalTitle={todoModalState.modalType === 'add' ? '마이 투 두 추가하기' : '마이 투 두 수정하기'}
               closeModal={toggleModal}
               getTodoDataFromModal={getTodoDataFromModal}
               todoData={todoModalState.modalType === 'edit' ? todoData : undefined}
