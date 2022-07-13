@@ -46,6 +46,16 @@ const userInformApi = async () => {
   return loa;
 };
 
+const joinTypeApi = async () => {
+  const jta = await callApi.get('/user/social');
+  return jta;
+};
+
+const editPasswordApi = async (data: { newPassword: string; oldPassword: string }) => {
+  const epa = await callApi.put('/user/password', data);
+  return epa;
+};
+
 const nicknameEditApi = async (nick: { nick: string }) => {
   const nea = await callApi.put('/user/nick', nick);
   return nea;
@@ -86,6 +96,26 @@ const rejectFriendApi = async (nick: { nick: string }) => {
   return rfa;
 };
 
+const chattingListApi = async () => {
+  const cla = await callApi.get('/chat/rooms');
+  return cla;
+};
+
+const makePrivateChattingRoomApi = async (data: { name: string; nick: string }) => {
+  const mpcra = await callApi.post('/chat/room/private', data);
+  return mpcra;
+};
+
+const makePublicChattingRoomApi = async (name: { name: string }) => {
+  const mpbcra = await callApi.post('/chat/room/public', name);
+  return mpbcra;
+};
+
+const chattingRoomDetailApi = async (id: { id: string }) => {
+  const cla = await callApi.get('/chat/rooms', { data: id });
+  return cla;
+};
+
 export const registerApi = {
   joinApi: (data: FieldValues) => joinApi(data),
   emilCertificationApi: (email: { email: string }) => emilCertificationApi(email),
@@ -99,6 +129,8 @@ export const userApi = {
   userInformApi: () => userInformApi(),
   nicknameEditApi: (nick: { nick: string }) => nicknameEditApi(nick),
   profilePhotoEditApi: (forms: FormData) => profilePhotoEditApi(forms),
+  joinTypeApi: () => joinTypeApi(),
+  editPasswordApi: (data: { newPassword: string; oldPassword: string }) => editPasswordApi(data),
 };
 
 export const friendApi = {
@@ -108,4 +140,11 @@ export const friendApi = {
   allowFriendApi: (nick: { nick: string }) => allowFriendApi(nick),
   deleteFriendApi: (nick: { nick: string }) => deleteFriendApi(nick),
   rejectFriendApi: (nick: { nick: string }) => rejectFriendApi(nick),
+};
+
+export const chattingApi = {
+  chattingListApi: () => chattingListApi(),
+  makePrivateChattingRoomApi: (data: { name: string; nick: string }) => makePrivateChattingRoomApi(data),
+  makePublicChattingRoomApi: (name: { name: string }) => makePublicChattingRoomApi(name),
+  chattingRoomDetailApi: (id: { id: string }) => chattingRoomDetailApi(id),
 };

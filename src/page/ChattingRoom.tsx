@@ -1,20 +1,31 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import styled from 'styled-components';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
+import Stomp from 'stompjs';
+import SockJS from 'sockjs-client';
+import { useQuery, useQueryClient } from 'react-query';
+import { useRecoilState } from 'recoil';
+import { chatListState, userNicknameState } from '../recoil/store';
+import { userApi } from '../api/callApi';
+import axios from 'axios';
+import setupInterceptorsTo from '../api/Interceptiors';
 
 const ContentWrapper = styled.div`
+  /* background-color: seagreen; */
   height: calc(100% - 4rem);
   overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;
+  padding-bottom: 10px;
   //스크롤바 없애기
   ::-webkit-scrollbar {
     display: none;
   }
   section:nth-of-type(1) {
     height: 10rem;
-    display: flex;
-    flex-direction: column;
+
     justify-content: center;
     padding: 1rem;
   }
@@ -171,65 +182,238 @@ const MessageSendBox = styled.div`
 
 export const ChattingRoom = () => {
   const nav = useNavigate();
+  const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
 
   const [myText, setmyText] = useState<string>('');
+  const [chatData, setchatData] = useRecoilState(chatListState);
+
   const onChangeMyText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setmyText(e.target.value);
   };
+  const localToken = localStorage.getItem('recoil-persist');
+
+  const sock = new SockJS('https://todowith.shop/ws');
+  const ws = Stomp.over(sock);
+  const roomIdName = useParams().roomId;
+  const keyUpEvent = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      sendMessage();
+      setmyText('');
+    }
+  };
+  // //채팅방 상세 API
+  // const getChattingQuery = useQuery('chattingLists', chattingApi.chattingListApi, {
+  //   //여기서 리코일에 저장
+  //   onSuccess: (data: any) => {
+  //     setChattingList(data.data);
+  //   },
+  // });
+
+  //채팅 get 실행
+  const queryClient = useQueryClient();
+  // 이전, 현재 채팅 받는 API
+  const baseApi = axios.create({
+    baseURL: 'https://todowith.shop',
+    timeout: 1000,
+  });
+
+  const callApi = setupInterceptorsTo(baseApi);
+
+  const chattingMessageApi = async () => {
+    const cma = await callApi.get(`/chat/message/before?roomId=${roomIdName}`);
+    return cma;
+  };
+
+  const chattingMessageData = useQuery('chattingData', chattingMessageApi, {
+    onSuccess: (data) => {
+      setchatData(data.data.content);
+    },
+    // onError: (error: AxiosError<{ msg: string }>) => {
+    //   if (error.message === 'Request failed with status code 401') {
+    //     setTimeout(() => chattingMessage((data: FieldValues)), 200);
+    //   } else {
+    //     alert(error.response?.data.msg);
+    //   }
+    // },
+  });
+  console.log(chattingMessageData);
+
+  const userInformData = useQuery('userData', userApi.userInformApi, {
+    onSuccess: (data) => {
+      // console.log(data);
+      setUserNickname(data.data.nick);
+    },
+    onError: () => {
+      // nav('/login');
+    },
+  });
+  console.log(userInformData);
+
+  //웹소켓 연결, 구독
+  function wsConnectSubscribe() {
+    try {
+      if (localToken) {
+        const toto = JSON.parse(localToken);
+
+        if (toto) {
+          ws.connect(
+            {
+              Authorization: toto.accessTokenState,
+            },
+
+            () => {
+              ws.subscribe(
+                `/sub/chat/room/${roomIdName}`,
+                () => {
+                  queryClient.invalidateQueries('chattingData'); //chattingData 키값 query 실행
+
+                  // console.log(data);
+                },
+                { Authorization: toto.accessTokenState, id: roomIdName },
+              );
+            },
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // 연결해제, 구독해제
+  function wsDisConnectUnsubscribe() {
+    try {
+      if (localToken) {
+        const toto = JSON.parse(localToken);
+
+        if (toto) {
+          const data = {
+            type: 'QUIT',
+            roomId: roomIdName,
+            sender: userNickname,
+            message: myText,
+          };
+          ws.disconnect(
+            () => {
+              ws.send('/pub/chat/message', { Authorization: toto.accessTokenState }, JSON.stringify(data));
+              ws.unsubscribe(`${roomIdName}`);
+            },
+            { Authorization: toto.accessTokenState },
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // 웹소켓이 연결될 때 까지 실행하는 함수
+  function waitForConnection(ws: Stomp.Client, callback: () => void) {
+    setTimeout(
+      function () {
+        // 연결되었을 때 콜백함수 실행
+        if (ws.ws.readyState === 1) {
+          callback();
+          // 연결이 안 되었으면 재호출
+        } else {
+          waitForConnection(ws, callback);
+        }
+      },
+      1, // 밀리초 간격으로 실행
+    );
+  }
+
+  function sendMessage() {
+    try {
+      // token이 없으면 로그인 페이지로 이동
+      if (!localToken) {
+        alert('로그인 정보가 없습니다. 다시 로그인 해주세요.');
+        nav('/login');
+      }
+      // send할 데이터
+      const data = {
+        type: 'TALK',
+        roomId: roomIdName,
+        sender: userNickname,
+        message: myText,
+      };
+      // 빈문자열이면 리턴
+      // if (messageText === '') {
+      //   return;
+      // }
+      // 로딩 중
+      if (localToken) {
+        const toto = JSON.parse(localToken);
+
+        if (toto) {
+          waitForConnection(ws, function () {
+            ws.send('/pub/chat/message', { Authorization: toto.accessTokenState }, JSON.stringify(data));
+            // console.log(ws.ws.readyState);
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      console.log(ws.ws.readyState);
+    }
+  }
+
+  useEffect(() => {
+    wsConnectSubscribe();
+  }, []);
 
   return (
     <NavLayout>
       <PageLayout title="채팅">
         <ContentWrapper>
-          <YourChatBox>
-            <RowChattingBox
-              onClick={() => {
-                nav('/chattingroom/'); //뒤에 방번호 넣기
-              }}
-            >
-              <ChattingRoomPhotoBox
-                style={{
-                  backgroundImage: 'url(/assets/토끼.png)',
-                }}
-              ></ChattingRoomPhotoBox>
-              <ChattingRoomTextBox>
-                <KoreanFont size={0.75}>강북멋쟁이5678</KoreanFont>
-              </ChattingRoomTextBox>
-            </RowChattingBox>
-            <YourTextBox>
-              <KoreanFont size={1}>안녕하세요, 여러분!</KoreanFont>
-            </YourTextBox>
-          </YourChatBox>
-          <YourChatBox>
-            <RowChattingBox
-              onClick={() => {
-                nav('/chattingroom/'); //뒤에 방번호 넣기
-              }}
-            >
-              <ChattingRoomPhotoBox
-                style={{
-                  backgroundImage: 'url(/assets/토끼.png)',
-                }}
-              ></ChattingRoomPhotoBox>
-              <ChattingRoomTextBox>
-                <KoreanFont size={0.75}>강북멋쟁이5678</KoreanFont>
-              </ChattingRoomTextBox>
-            </RowChattingBox>
-            <YourTextBox>
-              <KoreanFont size={1}>
-                장마철이라서 운동하기 너무 힘드네요 ㅠㅠ 같이 얘기하면서 서로 응원해주는 거 어떨까요??
-              </KoreanFont>
-            </YourTextBox>
-          </YourChatBox>
-
-          <MyChatBox>
-            <MyTextBox>
-              <KoreanFont size={1}>
-                맞아요ㅠㅠ 우리 다같이 서로 응원해요! 저는 요즘 한강에 가는 것을 좋아해요!
-              </KoreanFont>
-            </MyTextBox>
-          </MyChatBox>
+          <RowBox
+            width={'2rem'}
+            height={2}
+            margin={'auto auto 0 auto'}
+            style={{
+              backgroundSize: 'cover',
+              backgroundImage: 'url(/assets/exit.svg)',
+              cursor: 'pointer',
+            }}
+            onClick={() => {
+              wsDisConnectUnsubscribe();
+            }}
+          ></RowBox>
+          {chatData.map((chat, chatindex) => {
+            if (chat.sender !== userNickname) {
+              return (
+                <YourChatBox key={chatindex}>
+                  <RowChattingBox
+                    onClick={() => {
+                      nav('/chattingroom/'); //아영:그사람 메인페이지로 보내기
+                    }}
+                  >
+                    <ChattingRoomPhotoBox
+                      style={{
+                        backgroundImage: 'url(/assets/토끼.png)',
+                      }}
+                    ></ChattingRoomPhotoBox>
+                    <ChattingRoomTextBox>
+                      <KoreanFont size={0.75}>{chat.sender}</KoreanFont>
+                    </ChattingRoomTextBox>
+                  </RowChattingBox>
+                  <YourTextBox>
+                    <KoreanFont size={1}>{chat.message}</KoreanFont>
+                  </YourTextBox>
+                </YourChatBox>
+              );
+            } else {
+              return (
+                <MyChatBox>
+                  <MyTextBox>
+                    <KoreanFont size={1}>{chat.message}</KoreanFont>
+                  </MyTextBox>
+                </MyChatBox>
+              );
+            }
+          })}
         </ContentWrapper>
+
         <MessageSendBox>
           <RowBox width={'89%'} height={2.75} margin={'auto'}>
             <InputInfo
@@ -246,6 +430,7 @@ export const ChattingRoom = () => {
                 borderTopLeftRadius: '6px',
                 borderBottomLeftRadius: '6px',
               }}
+              onKeyUp={keyUpEvent}
             ></InputInfo>
             <Box
               width={'10%'}
@@ -261,14 +446,10 @@ export const ChattingRoom = () => {
                 backgroundImage: 'url(/assets/send.svg)',
                 cursor: 'pointer',
               }}
-              // onClick={() => {
-              //   const goJoin = {
-              //     email: email,
-              //     nick: nickname,
-              //     password: password,
-              //   };
-              //   Join(goJoin);
-              // }}
+              onClick={() => {
+                sendMessage();
+                setmyText('');
+              }}
             ></Box>
           </RowBox>
         </MessageSendBox>

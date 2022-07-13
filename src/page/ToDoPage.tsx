@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
@@ -9,7 +9,7 @@ import { Tab } from '../component/element/Tab';
 import { Typography } from '../component/element/Typography';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { ContentWrapper, TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
+import { ContentWrapper, TodoListWrapper } from './../component/styledComponent/TodoPageComponents';
 import { TodoItem } from '../component/TodoItem';
 import { TodoModal } from '../component/TodoModal';
 import { PATH } from '../route/routeList';

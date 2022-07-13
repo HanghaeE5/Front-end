@@ -1,6 +1,11 @@
 import styled, { keyframes } from 'styled-components';
-import { useRecoilState } from 'recoil';
-import { editPasswordModalState, profileMenuModalState } from '../../recoil/store';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  editPasswordModalState,
+  profileMenuModalState,
+  userJoinTypeState,
+  userNicknameState,
+} from '../../recoil/store';
 import { useNavigate } from 'react-router';
 
 const Slide = keyframes`
@@ -58,7 +63,8 @@ const Box = styled.div`
 
 const ProfileMenuModal = () => {
   const [modalProfileMenu, setModalProfileMenu] = useRecoilState(profileMenuModalState);
-  const [, setModalEditPassword] = useRecoilState(editPasswordModalState);
+  const userJoinType = useRecoilValue(userJoinTypeState);
+  const userNickname = useRecoilValue(userNicknameState);
   const nav = useNavigate();
   return (
     <>
@@ -72,29 +78,38 @@ const ProfileMenuModal = () => {
               e.stopPropagation();
             }}
           >
-            <Box
-              onClick={() => {
-                setModalEditPassword(true);
-              }}
-            >
-              비밀번호 변경
-            </Box>
-            <Box
-              onClick={() => {
-                nav('/login');
-              }}
-            >
-              Log(삭제예정)
-            </Box>
-            <Box
-              onClick={() => {
-                localStorage.clear();
-                alert('로그아웃되었습니다');
-                nav('/login');
-              }}
-            >
-              로그아웃
-            </Box>
+            {!userJoinType && (
+              <Box
+                onClick={() => {
+                  setModalProfileMenu(false);
+                  nav('/editpassword');
+                }}
+              >
+                비밀번호 변경
+              </Box>
+            )}
+            {!userNickname && (
+              <Box
+                onClick={() => {
+                  setModalProfileMenu(false);
+                  nav('/login');
+                }}
+              >
+                Log(삭제예정)
+              </Box>
+            )}
+            {userNickname && (
+              <Box
+                onClick={() => {
+                  localStorage.clear();
+                  alert('로그아웃되었습니다');
+                  setModalProfileMenu(false);
+                  nav('/login');
+                }}
+              >
+                로그아웃
+              </Box>
+            )}
           </BoxWrap>
         </ModalBackground>
       )}

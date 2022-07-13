@@ -3,7 +3,7 @@ import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
-import { friendApi, registerApi } from '../api/callApi';
+import { registerApi } from '../api/callApi';
 import { FieldValues } from 'react-hook-form';
 import { accessTokenState, refreshTokenState } from '../recoil/store';
 
@@ -262,7 +262,13 @@ export const Login = () => {
             backgroundSize: 'cover',
             backgroundImage: 'url(/assets/navericon.png)',
           }}
+          onClick={() => {
+            window.location.replace(
+              'https://todowith.shop/oauth2/authorization/naver?redirect_uri=https://www.todowith.co.kr',
+            );
+          }}
         ></Box>
+
         <Box
           width={'3.75rem'}
           height={3.75}
@@ -276,7 +282,7 @@ export const Login = () => {
           }}
           onClick={() => {
             window.location.replace(
-              'http://todowith.shop/oauth2/authorization/kakao?redirect_uri=http://localhost:3000',
+              'https://todowith.shop/oauth2/authorization/kakao?redirect_uri=http://localhost:3000',
             );
           }}
         ></Box>

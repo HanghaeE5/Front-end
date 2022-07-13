@@ -40,7 +40,7 @@ export const CommunityDetailPage = () => {
         closeChallange();
         openChatConfirm();
       },
-      onError: (error) => {
+      onError: () => {
         alert('처리에 실패했습니다');
         closeChallange();
       },

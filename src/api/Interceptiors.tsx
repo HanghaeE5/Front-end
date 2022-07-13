@@ -41,7 +41,6 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
           },
         })
         .then((res) => {
-          console.log(res);
           localStorage.setItem(
             'recoil-persist',
             JSON.stringify({
@@ -49,7 +48,6 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
               refreshTokenState: res.headers.refresh,
             }),
           );
-          return null;
         });
     }
     return Promise.reject(error);
@@ -63,8 +61,8 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 };
 
 const onResponseError = (error: AxiosError): Promise<AxiosError> => {
-  // console.error(`[response error] [${JSON.stringify(error)}]`);
-  const originalRequest = error.config;
+  console.error(`[response error] [${JSON.stringify(error)}]`);
+
   if (error.message === 'Request failed with status code 401') {
     const localToken = localStorage.getItem('recoil-persist');
 
@@ -90,7 +88,6 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
               refreshTokenState: res.headers.refresh,
             }),
           );
-          return axios(originalRequest);
         });
     }
     return Promise.reject(error);

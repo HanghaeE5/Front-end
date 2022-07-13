@@ -11,12 +11,12 @@ module.exports = {
     // 'simple-import-sort/exports': 'error',
   },
   parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-  },
-  plugins: ['react', '@typescript-eslint', 'simple-import-sort'],
+  //   parserOptions: {
+  //     ecmaFeatures: {
+  //       jsx: true,
+  //     },
+  //     ecmaVersion: 'latest',
+  //     sourceType: 'module',
+  //   },
+  //   plugins: ['react', '@typescript-eslint', 'simple-import-sort'],
 };

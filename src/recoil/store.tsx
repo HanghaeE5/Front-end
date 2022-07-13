@@ -67,6 +67,14 @@ export const userprofilephotoState = atom<Img>({
   },
 });
 
+export const userPhotoWaitState = atom<Img>({
+  key: 'userPhotoWaitState',
+  default: {
+    img_show: '',
+    img_file: '',
+  },
+});
+
 type friend = {
   id: number;
   userId: string;
@@ -84,5 +92,38 @@ export const friendListState = atom<friendList>({
 
 export const requestFriendListState = atom<friendList>({
   key: 'requestFriendListState',
+  default: [],
+});
+
+type chatting = {
+  roomId: string;
+  name: string;
+  participantList: [{ profileImgUrl: string }];
+};
+
+type chattingList = chatting[];
+
+export const chattingListState = atom<chattingList>({
+  key: 'chattingListState',
+  default: [],
+});
+
+export const userJoinTypeState = atom({
+  key: 'userJoinTypeState',
+  default: false,
+});
+
+type chat = {
+  createdDate: string;
+  message: string;
+  roomId: string;
+  sender: string;
+  type: string;
+};
+
+type chatList = chat[];
+
+export const chatListState = atom<chatList>({
+  key: 'chatListState',
   default: [],
 });

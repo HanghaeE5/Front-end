@@ -1,11 +1,11 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 import { Button, Img, TextInput, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { useInput } from '../hooks/useInput';
 import { BiCamera } from 'react-icons/bi';
 import { TodoModal } from '../component/TodoModal';
-import { Category, ITodoItem, TodoData } from '../Types/todo';
+import { ITodoItem, TodoData } from '../Types/todo';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import {
   communityQueryKey,
@@ -57,6 +57,7 @@ export const CommunitiPostingPage = () => {
       // setTodoData(data.todos);
     },
   });
+  console.log(data);
 
   const { mutate: uploadImage } = useMutation(uploadImageFn);
   const { mutate: postBoard } = useMutation(postCummunityFn);

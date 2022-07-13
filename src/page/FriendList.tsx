@@ -1,16 +1,15 @@
 import { AxiosError } from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { friendApi } from '../api/callApi';
 import { Badge } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import FriendAddModal from '../component/modallayout/FriendAddModal';
-import { PostCard } from '../component/PostCard';
-import { friendAddModalState, friendListState, friendNicknameState, requestFriendListState } from '../recoil/store';
+import { friendAddModalState, friendListState, requestFriendListState } from '../recoil/store';
 
 const ContentWrapper = styled.div`
   height: 100%;
@@ -135,8 +134,7 @@ const IconBox = styled.button`
 `;
 
 export const FriendList = () => {
-  const [modalFriendAdd, setModalFriendAdd] = useRecoilState(friendAddModalState);
-  const [friendNickname, setFriendNickname] = useRecoilState(friendNicknameState);
+  const setModalFriendAdd = useSetRecoilState(friendAddModalState);
   const [friendList, setFriendList] = useRecoilState(friendListState);
   const [requestFriendList, setRequestFriendList] = useRecoilState(requestFriendListState);
   const [allowFriendName, setAllowFriendName] = useState<string>('');
@@ -148,18 +146,20 @@ export const FriendList = () => {
   //친구요청 목록 API
   const getRequestFriendQuery = useQuery('requestFriendLists', friendApi.requestFriendListApi, {
     //여기서 리코일에 저장
-    onSuccess: (data: any) => {
+    onSuccess: (data) => {
       setRequestFriendList(data.data);
     },
   });
+  console.log(getRequestFriendQuery);
 
   //친구 목록 API
   const getFriendQuery = useQuery('friendLists', friendApi.friendListApi, {
     //여기서 리코일에 저장
-    onSuccess: (data: any) => {
+    onSuccess: (data) => {
       setFriendList(data.data);
     },
   });
+  console.log(getFriendQuery);
 
   //친구요청 허락 API
   const allowFriendData = useMutation((nick: { nick: string }) => friendApi.allowFriendApi(nick), {
@@ -228,9 +228,9 @@ export const FriendList = () => {
             </KoreanFont>
           </Box>
           <Box width="89%" margin="0.9375rem auto 0 auto" style={{ gap: '1.25rem' }}>
-            {requestFriendList.map((v, i) => {
+            {requestFriendList.map((requestfriend) => {
               return (
-                <RowFriendBox key={v.id}>
+                <RowFriendBox key={requestfriend.id}>
                   <RowBox
                     isCursor={true}
                     onClick={() => {
@@ -239,11 +239,11 @@ export const FriendList = () => {
                   >
                     <FriendPhotoBox
                       style={{
-                        backgroundImage: `url(${v.profileImageUrl})`,
+                        backgroundImage: `url(${requestfriend.profileImageUrl})`,
                       }}
                     ></FriendPhotoBox>
                     <FriendNameTextBox>
-                      <KoreanFont size={1}>{v.nick}</KoreanFont>
+                      <KoreanFont size={1}>{requestfriend.nick}</KoreanFont>
                     </FriendNameTextBox>
                     <Badge>Lv.8</Badge>
                   </RowBox>
@@ -253,8 +253,8 @@ export const FriendList = () => {
                       width={'1.5rem'}
                       height={2.5}
                       onClick={() => {
-                        setAllowFriendName(v.nick);
-                        allowFriend({ nick: v.nick });
+                        setAllowFriendName(requestfriend.nick);
+                        allowFriend({ nick: requestfriend.nick });
                       }}
                     >
                       <KoreanFont size={0.81}>수락</KoreanFont>
@@ -272,8 +272,8 @@ export const FriendList = () => {
                       width={'1.5rem'}
                       height={2.5}
                       onClick={() => {
-                        setrejectRequestFriendName(v.nick);
-                        rejectFriend({ nick: v.nick });
+                        setrejectRequestFriendName(requestfriend.nick);
+                        rejectFriend({ nick: requestfriend.nick });
                       }}
                     >
                       <KoreanFont size={0.81}>거절</KoreanFont>
@@ -291,9 +291,9 @@ export const FriendList = () => {
             </KoreanFont>
           </Box>
           <Box width="89%" margin="0.9375rem auto 0 auto" style={{ gap: '1.25rem' }}>
-            {friendList.map((v2, i2) => {
+            {friendList.map((myfriend) => {
               return (
-                <RowFriendBox key={v2.id}>
+                <RowFriendBox key={myfriend.id}>
                   <RowBox
                     isCursor={true}
                     onClick={() => {
@@ -302,11 +302,11 @@ export const FriendList = () => {
                   >
                     <FriendPhotoBox
                       style={{
-                        backgroundImage: `url(${v2.profileImageUrl})`,
+                        backgroundImage: `url(${myfriend.profileImageUrl})`,
                       }}
                     ></FriendPhotoBox>
                     <FriendNameTextBox>
-                      <KoreanFont size={1}>{v2.nick}</KoreanFont>
+                      <KoreanFont size={1}>{myfriend.nick}</KoreanFont>
                     </FriendNameTextBox>
                     <Badge>Lv.21</Badge>
                   </RowBox>
@@ -316,8 +316,8 @@ export const FriendList = () => {
                     height={2.5}
                     margin="auto 0 auto auto"
                     onClick={() => {
-                      setDeleteFriendName(v2.nick);
-                      deleteFriend({ nick: v2.nick });
+                      setDeleteFriendName(myfriend.nick);
+                      deleteFriend({ nick: myfriend.nick });
                     }}
                   >
                     <KoreanFont size={0.81}>삭제</KoreanFont>
@@ -332,10 +332,11 @@ export const FriendList = () => {
             width={'2.81rem'}
             height={2.81}
             style={{
-              bottom: '5.875rem',
-              right: '1.25rem',
-              position: 'fixed',
+              bottom: '3rem',
+              right: '5%',
+              position: 'absolute',
               backgroundImage: 'url(/assets/Plusbtn.svg)',
+              zIndex: 50,
             }}
             onClick={() => {
               setModalFriendAdd(true);
