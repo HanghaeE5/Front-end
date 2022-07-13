@@ -1,7 +1,9 @@
+import { Category } from './todo';
+
 export type PostType = 'DAILY' | 'CHALLENGE';
 
 export type FilterType = 'daily' | 'challenge' | 'my';
-export type KeywordFilter = 'title' | 'content';
+export type KeywordFilter = 'title' | 'content' | 'all';
 
 export interface CommunitySearchControl {
   filter: FilterType | undefined;
@@ -13,6 +15,8 @@ export interface CommunitySearchControl {
 
 export interface Board {
   authorEmail: string;
+  authorNick: string;
+  authorProfileImageUrl: string;
   boardContent: string;
   boardCreatedDate: string;
   boardId: number;
@@ -40,7 +44,7 @@ export interface AddBoardData {
     title: string;
   };
   todo?: {
-    category: string;
+    category: Category;
     content: string;
     todoDateList: string[];
   };

@@ -12,9 +12,9 @@ export const theme = {
   inputPadding: '0.75rem 1.25rem',
   button: {
     height: {
-      small: '1.625rem',
-      medium: '3rem',
-      large: '4rem',
+      small: '1.125rem',
+      medium: '3.125rem',
+      large: '3.75rem',
     },
     font: {
       small: '0.813rem',

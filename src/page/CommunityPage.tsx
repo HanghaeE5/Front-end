@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
+
+import { useInView } from 'react-intersection-observer';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
+import { userApi } from '../api/callApi';
 import { communityQueryKey, fetchBoardFn } from '../api/communityApi';
 import { ButtonFloating, Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
@@ -8,8 +11,8 @@ import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
 import { ContentWrapper } from '../component/styledComponent/CommunityElements';
 import { PATH } from '../route/routeList';
-import { CommunitySearchControl, FilterType, KeywordFilter, Board } from '../Types/community';
-import { useInView } from 'react-intersection-observer';
+import { Board, CommunitySearchControl, FilterType, KeywordFilter } from '../Types/community';
+import { removeListDuplicate } from '../utils/removeListDuplicate';
 
 // sub
 const serachOptions: SelectOption[] = [
@@ -21,7 +24,7 @@ const serachOptions: SelectOption[] = [
 // filter
 const postFilterOptions: SelectOption[] = [
   { value: 'all', label: '전체' },
-  { value: 'challenge', label: '챌린저스' },
+  { value: 'challenge', label: '위드 투 두' },
   { value: 'daily', label: '일상' },
   { value: 'my', label: '내 글만' },
 ];
@@ -29,11 +32,16 @@ const postFilterOptions: SelectOption[] = [
 export const CommunityPage = () => {
   const nav = useNavigate();
   const [bottomRef, isBottom] = useInView();
+
+  const [keywordValue, setKeywordValue] = useState<{ sub: KeywordFilter | 'all'; keyword: string }>({
+    sub: 'all',
+    keyword: '',
+  });
   const [control, setControl] = useState<CommunitySearchControl>({
     filter: undefined,
     keyword: undefined,
     page: 0,
-    size: 2,
+    size: 10,
     sub: undefined,
   });
   const [list, setList] = useState<Board[]>([]);
@@ -43,16 +51,16 @@ export const CommunityPage = () => {
     () => fetchBoardFn(control),
     {
       onSuccess: (data) => {
+        console.log(control.page, data.content);
         if (control.page === 0) {
-          setList([...data.content]);
+          setList([...removeListDuplicate<Board>(data.content, 'boardId')]);
           return;
         }
 
-        setList((prev) => [...prev, ...data.content]);
+        setList((prev) => removeListDuplicate<Board>([...prev, ...data.content], 'boardId'));
       },
     },
   );
-  console.log(isLoading);
 
   const onClickWriteButton = () => {
     nav(PATH.COMMUNITY_POST);
@@ -67,6 +75,7 @@ export const CommunityPage = () => {
 
     setControl((prev) => ({ ...prev, page: prev.page + 1 }));
   }, [isBottom]);
+
   return (
     <NavLayout>
       <PageLayout title="커뮤니티">
@@ -76,21 +85,24 @@ export const CommunityPage = () => {
               <Wrapper width="40%" margin="0 8px 0 0">
                 <Select
                   optionList={serachOptions}
-                  value={control.sub || 'all'}
-                  onChange={(value) =>
-                    setControl({ ...control, page: 0, sub: value === 'all' ? undefined : (value as KeywordFilter) })
-                  }
+                  value={keywordValue.sub}
+                  onChange={(value) => setKeywordValue((prev) => ({ ...prev, sub: value as KeywordFilter }))}
                 />
               </Wrapper>
               <TextInput
+                inputType="primary"
+                inputSize="small"
                 placeholder="검색어를 입력해주세요"
-                value={control.keyword || ''}
-                onChange={(value) => setControl({ ...control, keyword: value })}
-                showSearch={{
-                  onSearch: () => {
-                    console.log(control.keyword);
-                  },
-                }}
+                value={keywordValue.keyword || ''}
+                onChange={(value) => setKeywordValue((prev) => ({ ...prev, keyword: value }))}
+                onSearch={() =>
+                  setControl((prev) => ({
+                    ...prev,
+                    keyword: keywordValue.keyword,
+                    sub: keywordValue.sub === 'all' ? undefined : keywordValue.sub,
+                    page: 0,
+                  }))
+                }
               />
             </Wrapper>
             <Select
@@ -104,8 +116,8 @@ export const CommunityPage = () => {
           </section>
           <section>
             {list.map((post: Board) => (
-              <PostCard key={post.boardId} onClick={() => nav(`${PATH.COMMUNITY_POST}/${post.boardId}`)}>
-                <PostCard.PostHeader userImg="" userName={post.authorEmail} />
+              <PostCard key={post.boardId} onClick={() => nav(`${PATH.COMMUNITY}/${post.boardId}`)}>
+                <PostCard.PostHeader userImg={post.authorProfileImageUrl} userName={post.authorNick} />
                 {post.imageUrl && (
                   <Wrapper padding="0 1rem">
                     <Img url={post.imageUrl} type="round" />
@@ -116,7 +128,7 @@ export const CommunityPage = () => {
                 <PostCard.Gather>{post.participatingCount}</PostCard.Gather>
               </PostCard>
             ))}
-            {list.length && <div ref={bottomRef}>spinner</div>}
+            <div ref={bottomRef} />
           </section>
         </ContentWrapper>
         <ButtonFloating onClick={onClickWriteButton} />
