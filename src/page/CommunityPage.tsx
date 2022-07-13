@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userApi } from '../api/callApi';
 import { communityQueryKey, fetchBoardFn } from '../api/communityApi';
 import { ButtonFloating, Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
@@ -10,6 +12,7 @@ import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
 import { ContentWrapper } from '../component/styledComponent/CommunityElements';
 import { useInput } from '../hooks/useInput';
+import { atomKey, userInfoState } from '../recoil/store';
 import { PATH } from '../route/routeList';
 import { Board, CommunitySearchControl, FilterType, KeywordFilter } from '../Types/community';
 import { removeListDuplicate } from '../utils/removeListDuplicate';
@@ -24,7 +27,7 @@ const serachOptions: SelectOption[] = [
 // filter
 const postFilterOptions: SelectOption[] = [
   { value: 'all', label: '전체' },
-  { value: 'challenge', label: '챌린저스' },
+  { value: 'challenge', label: '위드 투 두' },
   { value: 'daily', label: '일상' },
   { value: 'my', label: '내 글만' },
 ];
@@ -32,6 +35,9 @@ const postFilterOptions: SelectOption[] = [
 export const CommunityPage = () => {
   const nav = useNavigate();
   const [bottomRef, isBottom] = useInView();
+
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+
   const [keywordValue, setKeywordValue] = useState<{ sub: KeywordFilter | 'all'; keyword: string }>({
     sub: 'all',
     keyword: '',
@@ -40,7 +46,7 @@ export const CommunityPage = () => {
     filter: undefined,
     keyword: undefined,
     page: 0,
-    size: 2,
+    size: 10,
     sub: undefined,
   });
   const [list, setList] = useState<Board[]>([]);
@@ -59,6 +65,10 @@ export const CommunityPage = () => {
       },
     },
   );
+
+  useQuery('fetchUserInfo', userApi.userInformApi, {
+    onSuccess: (data) => setUserInfo(data.data),
+  });
 
   const onClickWriteButton = () => {
     nav(PATH.COMMUNITY_POST);
