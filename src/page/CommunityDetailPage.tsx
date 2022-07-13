@@ -9,10 +9,13 @@ import { useNavigate, useParams } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { communityQueryKey, deleteBoardFn, fetchBoardDetailFn, joinChallengeFn } from '../api/communityApi';
 import { PATH } from '../route/routeList';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../recoil/store';
 
 export const CommunityDetailPage = () => {
   const nav = useNavigate();
   const { id } = useParams();
+  const userInfo = useRecoilValue(userInfoState);
 
   // TODO : 얘도 훅으로 빼기
   const queryClient = useQueryClient();
@@ -99,10 +102,11 @@ export const CommunityDetailPage = () => {
       <PageLayout title="커뮤니티">
         <Wrapper isColumn alignItems="start" height="100%">
           <PostCard.PostHeader
-            userImg={''} // TODO : userImage
-            userName={postDetail.authorEmail}
-            date={postDetail.boardCreatedDate.split('T')[0]}
+            userImg={postDetail.authorProfileImageUrl}
+            userName={postDetail.authorNick}
+            date={postDetail.boardCreatedDate.replaceAll('T', ' ')}
             boardId={postDetail.boardId}
+            isMine={userInfo?.email === postDetail.authorEmail}
             dropDownProps={{
               onShare,
               onEdit: onEditBoard,
@@ -123,7 +127,7 @@ export const CommunityDetailPage = () => {
               buttonType={postDetail.participating ? 'primary' : 'disable'}
               onClick={postDetail.participating ? openChallange : undefined}
             >
-              {postDetail.participating ? '챌린져스 참여하기' : '마감된 챌린져스입니다'}
+              {postDetail.participating ? '위드 투 두 참여하기' : '마감되었습니다'}
             </Button>
           </Wrapper>
         </Wrapper>
