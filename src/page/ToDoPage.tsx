@@ -50,7 +50,7 @@ export const ToDoPage = () => {
     filter: 'all',
     sort: 'desc',
     page: 0,
-    size: 10,
+    size: 4,
   });
 
   const [todoData, setTodoData] = useState<ITodoItem>();
@@ -65,8 +65,6 @@ export const ToDoPage = () => {
     refetch,
   } = useQuery([todoQueryKey.fetchTodo, todoFilter], () => fetchTodoList(todoFilter), {
     onSuccess: (data) => {
-      console.log(todoFilter.page);
-      console.log(data.content);
       if (todoFilter.page === 0) {
         setList([...removeDuplicate<ITodoItem>(data.content, 'todoId')]);
         return;
@@ -77,7 +75,7 @@ export const ToDoPage = () => {
   });
 
   const refetchTodoList = () => {
-    // setTodoFilter((prev) => ({ ...prev, page: 0 }));
+    setTodoFilter((prev) => ({ ...prev, page: 0 }));
     queryClient.invalidateQueries(todoQueryKey.fetchTodo);
   };
 
@@ -89,7 +87,6 @@ export const ToDoPage = () => {
     onSuccess: () => refetchTodoList(),
   });
 
-  // TODO : refetch 에러
   const { mutate: deleteTodo } = useMutation(deleteTodoFn, {
     onSuccess: () => refetchTodoList(),
   });
@@ -137,6 +134,7 @@ export const ToDoPage = () => {
 
   const deleteTodoItem = (todo: ITodoItem) => {
     if (todo.boardId) {
+      ``;
       setConfirmState({ confirmVisible: true, confirmType: 'delete' });
       return;
     }
@@ -158,7 +156,6 @@ export const ToDoPage = () => {
 
   // TODO : 무한스크롤 에러
   useEffect(() => {
-    console.log(todoFilter.page);
     if (!isBottom) return;
 
     if (todoList?.last) {

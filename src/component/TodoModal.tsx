@@ -46,12 +46,12 @@ const CategoryItem = ({ icon, isSelect, onClick, children }: PropsWithChildren<C
   );
 };
 
-const OverButton = styled(Button)`
-  left: 0rem;
-  bottom: -1rem;
-  position: relative;
-  border-radius: 0 0 6px 6px;
-`;
+const getYyyyMmDd = (date: Date) => {
+  const offset = date.getTimezoneOffset() * 60000;
+  const dateOffset = new Date(date.getTime() - offset);
+
+  return dateOffset.toISOString().split('T')[0];
+};
 
 const CalendarFooter = ({
   onClick,
@@ -82,7 +82,7 @@ const CalendarFooter = ({
 const getSelectDate = (selectedDay: Date[] | undefined) => {
   if (!selectedDay) return;
 
-  const firstDate = selectedDay[0]?.toISOString().split('T')[0].replaceAll('-', '.');
+  const firstDate = getYyyyMmDd(selectedDay[0]).replaceAll('-', '.');
 
   return `${firstDate ? firstDate : ''} ${selectedDay.length > 1 ? `외 ${selectedDay.length - 1}일` : ''}`;
 };
@@ -122,7 +122,7 @@ export const TodoModal = ({ modalType, todoData, modalTitle, getTodoDataFromModa
       return;
     }
 
-    const date = selectedDay?.map((selectedDay) => selectedDay.toISOString().split('T')[0]) || [];
+    const date = selectedDay?.map((date) => getYyyyMmDd(date)) || [];
 
     getTodoDataFromModal({ content: title, category, todoDateList: date, todoId: todoData?.todoId });
 
