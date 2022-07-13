@@ -8,20 +8,32 @@ import { FieldValues } from 'react-hook-form';
 import { accessTokenState, refreshTokenState } from '../recoil/store';
 
 const RegisterContainer = styled.div`
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
+  width: 100%;
+  max-width: 768px;
+  height: 100%;
+  background-color: #8e3939;
+  overflow-y: auto;
+  position: relative;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const ContentContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  max-width: 768px;
-  height: 42.375rem;
-  background-color: #ffffff;
-  margin: 60px auto 74px auto;
 `;
 
 type box = {
   width?: number | string;
   height?: number;
   margin?: string;
+  url?: string;
 };
 
 const Box = styled.div`
@@ -32,6 +44,10 @@ const Box = styled.div`
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
+  background-image: ${(props: box) => props.url};
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: green;
 `;
 
 const RowBox = styled.div`
@@ -152,158 +168,158 @@ export const Login = () => {
   }, []);
   return (
     <RegisterContainer>
-      <Box width={10.5} height={1.5} margin={'52px auto 30px auto'}>
-        <LogoFontBig>TODOWITH</LogoFontBig>
-      </Box>
-      <Box width={2.8125} height={1.5} margin={'0px auto 10px 5.7%'}>
-        {email && (
-          <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
-            이메일
-          </KoreanFont>
-        )}
-      </Box>
-      <InputInfo
-        width={'89%'}
-        height={2.5}
-        margin={'0px 1.25rem 0px 1.25rem'}
-        type="text"
-        placeholder="이메일을 입력하세요.    ex) todowith@naver.com"
-        name="email"
-        value={email}
-        onChange={onChange1}
-      ></InputInfo>
-      <Box width={3.6875} height={1.5} margin={'13px auto 10px 5.7%'}>
-        {password && (
-          <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
-            비밀번호
-          </KoreanFont>
-        )}
-      </Box>
-      <InputInfo
-        width="89%"
-        height={2.5}
-        margin={'0px 1.25rem 0px 1.25rem'}
-        placeholder="비밀번호를 입력하세요."
-        type="password"
-        value={password}
-        onChange={onChange2}
-      ></InputInfo>
-
-      <RowBox width="100%" margin={'1.5rem 0 1rem 0'}>
-        <Box
-          width={'1.25rem'}
-          height={1.25}
-          margin={'0 0.5625rem 0 5.7%'}
-          style={{
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundImage: autoLogin ? 'url(/assets/checkempty.svg)' : 'url(/assets/checkfull.png)',
-          }}
-          onClick={() => {
-            setAutoLogin(!autoLogin);
-          }}
-        ></Box>
-        <Box width={4.25} height={1.3125} margin={'0px auto 0px 0px'}>
-          <KoreanFont size={0.874} color="rgba(147, 147, 147, 1)">
-            자동 로그인
-          </KoreanFont>
+      <ContentContainer>
+        <Box width={'10.5rem'} height={1.5} margin={'3.75rem auto 1.875rem auto'} url="url(/assets/TODOWITH.svg)"></Box>
+        <Box width={'2.8125rem'} height={1.5} margin={'0px auto 10px 5.7%'}>
+          {email && (
+            <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
+              이메일
+            </KoreanFont>
+          )}
         </Box>
-      </RowBox>
-      <BtnAble
-        isDisable={!email || !password}
-        width={'89%'}
-        height={4}
-        margin={'0rem 1.25rem 2rem 1.25rem'}
-        onClick={() => {
-          const goLogin = {
-            email: email,
-            password: password,
-          };
-          Login(goLogin);
-        }}
-      >
-        <KoreanFont size={1.0625} color="white">
-          로그인
-        </KoreanFont>
-      </BtnAble>
-
-      <BtnAble
-        width={'89%'}
-        height={4}
-        margin={'0rem 1.25rem 2.375rem 1.25rem'}
-        onClick={() => {
-          nav('/signupemail');
-        }}
-      >
-        <KoreanFont size={1.0625} color="white">
-          회원가입
-        </KoreanFont>
-      </BtnAble>
-
-      <RowBox margin={'0px 0px 1.625rem 0px'} width={'100%'}>
-        <hr style={{ width: '41.2%', marginLeft: '1.25rem' }} />
-        <Box width={1.875} height={1.3125} margin={'0px 0.625rem 0px 0.625rem'}>
-          <KoreanFont size={0.75} color="rgba(147, 147, 147, 1)">
-            또는
-          </KoreanFont>
+        <InputInfo
+          width={'89%'}
+          height={2.5}
+          margin={'0px 1.25rem 0px 1.25rem'}
+          type="text"
+          placeholder="이메일을 입력하세요.    ex) todowith@naver.com"
+          name="email"
+          value={email}
+          onChange={onChange1}
+        ></InputInfo>
+        <Box width={3.6875} height={1.5} margin={'13px auto 10px 5.7%'}>
+          {password && (
+            <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
+              비밀번호
+            </KoreanFont>
+          )}
         </Box>
-        <hr style={{ width: '41.2%', marginRight: '1.25rem' }} />
-      </RowBox>
-      <RowBox margin={'0'} width={'100%'}>
-        <Box
-          width={'3.75rem'}
-          height={3.75}
-          margin={'0px 3rem 0px 3.0625rem'}
-          style={{
-            border: 'none',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundImage: 'url(/assets/navericon.png)',
-          }}
-          onClick={() => {
-            window.location.replace(
-              'https://todowith.shop/oauth2/authorization/naver?redirect_uri=https://www.todowith.co.kr',
-            );
-          }}
-        ></Box>
+        <InputInfo
+          width="89%"
+          height={2.5}
+          margin={'0px 1.25rem 0px 1.25rem'}
+          placeholder="비밀번호를 입력하세요."
+          type="password"
+          value={password}
+          onChange={onChange2}
+        ></InputInfo>
 
-        <Box
-          width={'3.75rem'}
-          height={3.75}
-          margin={'0px 48px 0px 0px'}
-          style={{
-            border: 'none',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundImage: 'url(/assets/kakaoicon.png)',
-          }}
+        <RowBox width="100%" margin={'1.5rem 0 1rem 0'}>
+          <Box
+            width={'1.25rem'}
+            height={1.25}
+            margin={'0 0.5625rem 0 5.7%'}
+            style={{
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              backgroundImage: autoLogin ? 'url(/assets/checkempty.svg)' : 'url(/assets/checkfull.png)',
+            }}
+            onClick={() => {
+              setAutoLogin(!autoLogin);
+            }}
+          ></Box>
+          <Box width={4.25} height={1.3125} margin={'0px auto 0px 0px'}>
+            <KoreanFont size={0.874} color="rgba(147, 147, 147, 1)">
+              자동 로그인
+            </KoreanFont>
+          </Box>
+        </RowBox>
+        <BtnAble
+          isDisable={!email || !password}
+          width={'89%'}
+          height={4}
+          margin={'0rem 1.25rem 2rem 1.25rem'}
           onClick={() => {
-            window.location.replace(
-              'https://todowith.shop/oauth2/authorization/kakao?redirect_uri=http://localhost:3000',
-            );
+            const goLogin = {
+              email: email,
+              password: password,
+            };
+            Login(goLogin);
           }}
-        ></Box>
-        <Box
-          width={'3.75rem'}
-          height={3.75}
-          margin={'0px 3.125rem 0px 0px'}
-          style={{
-            border: 'none',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundImage: 'url(/assets/googleicon.png)',
-          }}
+        >
+          <KoreanFont size={1.0625} color="white">
+            로그인
+          </KoreanFont>
+        </BtnAble>
+
+        <BtnAble
+          width={'89%'}
+          height={4}
+          margin={'0rem 1.25rem 2.375rem 1.25rem'}
           onClick={() => {
-            window.location.replace(
-              'https://todowith.shop/oauth2/authorization/google?redirect_uri=https://www.todowith.co.kr',
-            );
+            nav('/signupemail');
           }}
-        ></Box>
-      </RowBox>
+        >
+          <KoreanFont size={1.0625} color="white">
+            회원가입
+          </KoreanFont>
+        </BtnAble>
+
+        <RowBox margin={'0px 0px 1.625rem 0px'} width={'100%'}>
+          <hr style={{ width: '41.2%', marginLeft: '1.25rem' }} />
+          <Box width={1.875} height={1.3125} margin={'0px 0.625rem 0px 0.625rem'}>
+            <KoreanFont size={0.75} color="rgba(147, 147, 147, 1)">
+              또는
+            </KoreanFont>
+          </Box>
+          <hr style={{ width: '41.2%', marginRight: '1.25rem' }} />
+        </RowBox>
+        <RowBox margin={'0'} width={'100%'}>
+          <Box
+            width={'3.75rem'}
+            height={3.75}
+            margin={'0px 3rem 0px 3.0625rem'}
+            style={{
+              border: 'none',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              backgroundImage: 'url(/assets/navericon.png)',
+            }}
+            onClick={() => {
+              window.location.replace(
+                'https://todowith.shop/oauth2/authorization/naver?redirect_uri=https://www.todowith.co.kr',
+              );
+            }}
+          ></Box>
+
+          <Box
+            width={'3.75rem'}
+            height={3.75}
+            margin={'0px 48px 0px 0px'}
+            style={{
+              border: 'none',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              backgroundImage: 'url(/assets/kakaoicon.png)',
+            }}
+            onClick={() => {
+              window.location.replace(
+                'https://todowith.shop/oauth2/authorization/kakao?redirect_uri=http://localhost:3000',
+              );
+            }}
+          ></Box>
+          <Box
+            width={'3.75rem'}
+            height={3.75}
+            margin={'0px 3.125rem 0px 0px'}
+            style={{
+              border: 'none',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              backgroundImage: 'url(/assets/googleicon.png)',
+            }}
+            onClick={() => {
+              window.location.replace(
+                'https://todowith.shop/oauth2/authorization/google?redirect_uri=https://www.todowith.co.kr',
+              );
+            }}
+          ></Box>
+        </RowBox>
+      </ContentContainer>
     </RegisterContainer>
   );
 };

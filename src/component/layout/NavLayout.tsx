@@ -19,8 +19,10 @@ const BodyWrapper = styled.div`
   top: 3.5rem;
   width: 100%;
   height: 100%;
-  overflow: hidden;
   box-sizing: border-box;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const NavLayout = ({ children }: PropsWithChildren) => {

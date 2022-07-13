@@ -1,10 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
-import { notiModalState, profileMenuModalState, userJoinTypeState, userprofilephotoState } from '../../recoil/store';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import {
+  notiModalState,
+  profileMenuModalState,
+  userJoinTypeState,
+  userNicknameState,
+  userPhotoWaitState,
+  userprofilephotoState,
+} from '../../recoil/store';
 import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { userApi } from '../../api/callApi';
 import { useEffect } from 'react';
 
@@ -67,8 +74,20 @@ export const TopNavLayout = () => {
   const [, setModalProfileMenu] = useRecoilState(profileMenuModalState);
   const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
   const [userJoinType, setUserJoinType] = useRecoilState(userJoinTypeState);
+  const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
 
   const nav = useNavigate();
+
+  //유저정보 가져오기 API
+  const userInformData = useQuery('userData', userApi.userInformApi, {
+    onSuccess: (data) => {
+      setUserNickname(data.data.nick);
+      setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
+    },
+    onError: () => {
+      // nav('/login');
+    },
+  });
 
   //회원가입 유형 파악 API
   const joinTypeData = useMutation(() => userApi.joinTypeApi(), {

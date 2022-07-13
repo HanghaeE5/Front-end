@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -145,17 +145,20 @@ export const Chatting = () => {
   const [chattingList, setChattingList] = useRecoilState(chattingListState);
   const [makeChattingRoomName, setMakeChattingRoomName] = useState<string>('');
   const [makeChattingRoomNickname, setMakeChattingRoomNickname] = useState<string>('');
+  const [deleteChattingroom, setDeleteChattingroom] = useState<string>('');
   const nav = useNavigate();
   const queryClient = useQueryClient();
 
   //채팅 목록 API
   const getChattingQuery = useQuery('chattingLists', chattingApi.chattingListApi, {
     //여기서 리코일에 저장
+
     onSuccess: (data) => {
+      // console.log(data);
       setChattingList(data.data);
+      console.log(data);
     },
   });
-  console.log(getChattingQuery);
 
   //친구 목록 API
   const getFriendQuery = useQuery('friendLists', friendApi.friendListApi, {
@@ -164,7 +167,7 @@ export const Chatting = () => {
       setFriendList(data.data);
     },
   });
-  console.log(getFriendQuery);
+  // console.log(getFriendQuery);
 
   //채팅방 생성 API
   const makePrivateChattingRoomData = useMutation(
@@ -186,6 +189,43 @@ export const Chatting = () => {
     },
   );
 
+  //채팅방 삭제 API
+  const chattingRoomDeleteData = useMutation(
+    (roomId: { roomId: string }) => chattingApi.chattingRoomDeleteAPi(roomId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('chattingLists');
+      },
+      onError: (error: AxiosError<{ msg: string }>) => {
+        if (error.message === 'Request failed with status code 401') {
+          setTimeout(() => chattingRoomDelete({ roomId: deleteChattingroom }), 200);
+        } else {
+          alert(error.response?.data.msg);
+        }
+      },
+    },
+  );
+
+  // 웹소켓이 연결될 때 까지 실행하는 함수
+  function waitForConnection(ws: Stomp.Client, callback: () => void) {
+    setTimeout(
+      function () {
+        // 연결되었을 때 콜백함수 실행
+        if (ws.ws.readyState === 1) {
+          callback();
+          // 연결이 안 되었으면 재호출
+        } else {
+          waitForConnection(ws, callback);
+        }
+      },
+      1, // 밀리초 간격으로 실행
+    );
+  }
+
+  const chattingRoomDelete = (roomId: { roomId: string }) => {
+    chattingRoomDeleteData.mutate(roomId);
+  };
+
   const makePrivateChattingRoom = (data: { name: string; nick: string }) => {
     makePrivateChattingRoomData.mutate(data);
   };
@@ -196,12 +236,20 @@ export const Chatting = () => {
   const ws = Stomp.over(sock);
 
   // 연결해제, 구독해제
-  function wsDisConnectUnsubscribe() {
+  function wsDisConnectUnsubscribe(roomIdName: string) {
     try {
       if (localToken) {
         const toto = JSON.parse(localToken);
 
         if (toto) {
+          const data = {
+            type: 'QUIT',
+            roomId: roomIdName,
+            sender: userNickname,
+            message: '',
+          };
+          ws.send('/pub/chat/message', { Authorization: toto.accessTokenState }, JSON.stringify(data));
+          ws.unsubscribe('sub-0');
           ws.disconnect(
             () => {
               ws.unsubscribe('sub-0');
@@ -214,6 +262,12 @@ export const Chatting = () => {
       console.log(error);
     }
   }
+
+  useEffect(() => {
+    if (chattingList) {
+      getChattingQuery;
+    }
+  }, [chattingList]);
 
   return (
     <NavLayout>
@@ -249,15 +303,15 @@ export const Chatting = () => {
                   <RowChattingBox key={chatting.roomId}>
                     <ChattingRoomPhotoBox
                       style={{
-                        backgroundImage: 'url(/assets/토끼.png)',
+                        backgroundImage: `url(${chatting.participantList[0].user.profileImageUrl})`,
                       }}
                       onClick={() => {
-                        nav(`/chat/room/${chatting.roomId}`); //뒤에 방번호 넣기
+                        nav(`/chat/room/${chatting.roomId}`);
                       }}
                     ></ChattingRoomPhotoBox>
                     <ChattingRoomTextBox
                       onClick={() => {
-                        nav(`/chat/room/${chatting.roomId}`); //뒤에 방번호 넣기
+                        nav(`/chat/room/${chatting.roomId}`);
                       }}
                     >
                       <KoreanFont size={1}>{chatting.name}</KoreanFont>
@@ -272,7 +326,10 @@ export const Chatting = () => {
                         cursor: 'pointer',
                       }}
                       onClick={() => {
-                        wsDisConnectUnsubscribe();
+                        wsDisConnectUnsubscribe(chatting.roomId);
+                        chattingRoomDelete({ roomId: chatting.roomId });
+                        setDeleteChattingroom(chatting.roomId);
+                        console.log(chatting.roomId);
                       }}
                     ></RowBox>
                   </RowChattingBox>

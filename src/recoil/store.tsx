@@ -98,7 +98,7 @@ export const requestFriendListState = atom<friendList>({
 type chatting = {
   roomId: string;
   name: string;
-  participantList: [{ profileImgUrl: string }];
+  participantList: [{ user: { profileImageUrl: string } }];
 };
 
 type chattingList = chatting[];
@@ -116,6 +116,7 @@ export const userJoinTypeState = atom({
 type chat = {
   createdDate: string;
   message: string;
+  profileImageUrl: string;
   roomId: string;
   sender: string;
   type: string;

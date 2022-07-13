@@ -8,13 +8,18 @@ import { AxiosError } from 'axios';
 import { accessTokenState, refreshTokenState } from '../recoil/store';
 
 const RegisterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
   width: 100%;
-  height: 42.375rem;
-  background-color: #ffffff;
-  margin: 0px auto 4.625rem auto;
+  height: 100%;
+  max-width: 768px;
+  background-color: #8e3939;
+  overflow-y: auto;
+  position: relative;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const HeaderContainer = styled.div`
@@ -25,6 +30,13 @@ const HeaderContainer = styled.div`
   height: 3.75rem;
   background-color: #ffffff;
   margin: 0px auto 0px auto;
+`;
+
+const ContentContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 type box = {
@@ -150,7 +162,7 @@ export const SignUpSNS = () => {
 
   const nav = useNavigate();
 
-  const CheckNickname = (asValue: string) => {
+  const checkNickname = (asValue: string) => {
     const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
     return regExp.test(asValue);
   };
@@ -169,8 +181,12 @@ export const SignUpSNS = () => {
       alert(`${nickname}님 반가워요!`);
       nav('/');
     },
-    onError: (error: AxiosError) => {
-      alert(error.response?.data);
+    onError: (error: AxiosError<{ msg: string }>) => {
+      if (error.message === 'Request failed with status code 401') {
+        setTimeout(() => joinSocial({ nick: nickname }), 200);
+      } else {
+        alert(error.response?.data.msg);
+      }
     },
   });
 
@@ -179,7 +195,7 @@ export const SignUpSNS = () => {
   };
 
   //닉네임 중복확인 API
-  const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
+  const nickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
     onSuccess: () => {
       alert(`${nickname}으로 닉네임이 설정되었습니다.`);
     },
@@ -188,8 +204,8 @@ export const SignUpSNS = () => {
     },
   });
 
-  const NickCertification = (nick: { nick: string }) => {
-    NickCertificationData.mutate(nick);
+  const nickCertification = (nick: { nick: string }) => {
+    nickCertificationData.mutate(nick);
   };
 
   useEffect(() => {
@@ -201,7 +217,7 @@ export const SignUpSNS = () => {
   }, []);
 
   return (
-    <>
+    <RegisterContainer>
       <HeaderContainer style={{ borderBottom: '1px solid #989898 ' }}>
         <RowBox margin={'1rem 0px 1rem   0px'}>
           <Box width={6.85} height={1.6875} margin={'0px 8.25rem 0px 8.3125rem'}>
@@ -211,7 +227,7 @@ export const SignUpSNS = () => {
           </Box>
         </RowBox>
       </HeaderContainer>
-      <RegisterContainer>
+      <ContentContainer>
         <Box width={10.5} height={1.5} margin={'3.25rem auto 0px auto'}>
           <LogoFontBig>TODOWITH</LogoFontBig>
         </Box>
@@ -236,7 +252,7 @@ export const SignUpSNS = () => {
           ></InputInfo>
 
           <BtnAble
-            isDisable={!CheckNickname(nickname)}
+            isDisable={!checkNickname(nickname)}
             width={'19.4%'}
             height={2.625}
             margin={'0px 1.25rem 0px 0px'}
@@ -244,7 +260,7 @@ export const SignUpSNS = () => {
               const goNickCertification = {
                 nick: nickname,
               };
-              NickCertification(goNickCertification);
+              nickCertification(goNickCertification);
             }}
           >
             중복확인
@@ -252,8 +268,8 @@ export const SignUpSNS = () => {
         </RowBox>
         <BoxSide width={20} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
           {nickname ? (
-            <CheckFont size={0.75} color={'blue'} isCorrect={CheckNickname(nickname)}>
-              {CheckNickname(nickname)
+            <CheckFont size={0.75} color={'blue'} isCorrect={checkNickname(nickname)}>
+              {checkNickname(nickname)
                 ? '사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.'
                 : '닉네임 형식을 확인해 주세요.'}
             </CheckFont>
@@ -280,7 +296,7 @@ export const SignUpSNS = () => {
             회원가입 완료
           </KoreanFont>
         </BtnAble>
-      </RegisterContainer>
-    </>
+      </ContentContainer>
+    </RegisterContainer>
   );
 };

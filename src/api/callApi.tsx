@@ -116,6 +116,11 @@ const chattingRoomDetailApi = async (id: { id: string }) => {
   return cla;
 };
 
+const chattingRoomDeleteAPi = async (roomId: { roomId: string }) => {
+  const dfa = await callApi.delete(`/chat/room`, { data: roomId });
+  return dfa;
+};
+
 export const registerApi = {
   joinApi: (data: FieldValues) => joinApi(data),
   emilCertificationApi: (email: { email: string }) => emilCertificationApi(email),
@@ -147,4 +152,5 @@ export const chattingApi = {
   makePrivateChattingRoomApi: (data: { name: string; nick: string }) => makePrivateChattingRoomApi(data),
   makePublicChattingRoomApi: (name: { name: string }) => makePublicChattingRoomApi(name),
   chattingRoomDetailApi: (id: { id: string }) => chattingRoomDetailApi(id),
+  chattingRoomDeleteAPi: (roomId: { roomId: string }) => chattingRoomDeleteAPi(roomId),
 };

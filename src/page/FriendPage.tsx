@@ -12,7 +12,7 @@ import {
 } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 import { useQuery } from 'react-query';
 import { userApi } from '../api/callApi';
@@ -24,7 +24,7 @@ const MainContainer = styled.div`
   /* flex-direction: column;
   align-items: center; */
   height: 100%;
-  /* background-color: #f5d7e5; */
+  background-color: #f5d7e5;
   position: relative;
   overflow-y: auto;
   ::-webkit-scrollbar {
@@ -133,7 +133,7 @@ const EnglishFont = styled.p`
 
 console.log(window.location.href);
 
-export const Main = () => {
+export const FriendPage = () => {
   const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
   const [, setModalEditPhoto] = useRecoilState(editPhotoModalState);
   const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
@@ -143,22 +143,25 @@ export const Main = () => {
   const setUserPhotoWait = useSetRecoilState(userPhotoWaitState);
   const all = window.location.href;
 
+  const friendNick = useParams().Nick;
+  console.log(friendNick);
+
   const first = all.split('&');
   const accessToken = first[0].split('=')[1];
   const nav = useNavigate();
 
-  //유저정보 가져오기 API
-  const userInformData = useQuery('userData', userApi.userInformApi, {
-    onSuccess: (data) => {
-      setUserNickname(data.data.nick);
-      setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
-      setUserPhotoWait({ img_show: data.data.profileImageUrl, img_file: '' });
-    },
-    onError: () => {
-      // nav('/login');
-    },
-  });
-  console.log(userInformData);
+  // //유저정보 가져오기 API
+  // const userInformData = useQuery('userData', userApi.userInformApi, {
+  //   onSuccess: (data) => {
+  //     setUserNickname(data.data.nick);
+  //     setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
+  //     setUserPhotoWait({ img_show: data.data.profileImageUrl, img_file: '' });
+  //   },
+  //   onError: () => {
+  //     // nav('/login');
+  //   },
+  // });
+  // console.log(userInformData);
 
   useEffect(() => {
     if (accessToken != null) {
@@ -167,13 +170,13 @@ export const Main = () => {
       // console.log(refreshToken);
       const isNickname = first[2].split('=')[1];
       // console.log(isNickname);
-      accessLoginToken(accessToken);
-      refreshLoginToken(refreshToken);
 
       if (isNickname === 'N') {
         nav('/signupsns');
       } else {
-        window.location.replace('/');
+        accessLoginToken(accessToken);
+        refreshLoginToken(refreshToken);
+        // window.location.replace('/');
       }
     }
   }, [userNickname]);
@@ -195,25 +198,6 @@ export const Main = () => {
               backgroundImage: `url(${fileImage.img_show})`,
             }}
           />
-
-          <Box
-            width={'1.3294rem'}
-            height={1.2468}
-            margin={'-1.3rem 8.7731rem 0 13.3356rem'}
-            style={{
-              border: 'none',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-              backgroundImage: 'url(/assets/camera.svg)',
-              cursor: 'pointer',
-            }}
-            onClick={() => {
-              setModalEditPhoto(true);
-            }}
-          />
-
-          <EditPhotoModal></EditPhotoModal>
           <RowBox margin={'0.628rem 0px 0px 0px'}>
             <Box
               height={1.5}
@@ -224,23 +208,6 @@ export const Main = () => {
                 {userNickname}
               </KoreanFont>
             </Box>
-            <Box
-              width={'1rem'}
-              height={1}
-              margin={'-0.5rem 0 0 0.2rem '}
-              style={{
-                border: 'none',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                backgroundImage: 'url(/assets/pencil.svg)',
-                cursor: 'pointer',
-              }}
-              onClick={() => {
-                setmodalEditNickname(true);
-              }}
-            ></Box>
-            <EditNicknameModal></EditNicknameModal>
           </RowBox>
           <Box
             width={'11.8125rem'}
@@ -311,7 +278,7 @@ export const Main = () => {
           </RowBox>
           <Box width={10.0625} height={1.6875} margin={'1.6875rem auto 0 8%'}>
             <EnglishFont size={1.25} color="#000000">
-              Today_ to do list
+              친구의 Today_ to do list
             </EnglishFont>
           </Box>
 

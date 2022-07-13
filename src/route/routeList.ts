@@ -13,6 +13,7 @@ import {
   Chatting,
   ChattingRoom,
   EditPassword,
+  FriendPage,
 } from './../page';
 
 export interface IRoute {
@@ -83,6 +84,11 @@ export const routeList: IRoute[] = [
     id: 'friendlist',
     path: '/friendlist',
     page: FriendList,
+  },
+  {
+    id: 'friendpage',
+    path: '/friend/page/:nick',
+    page: FriendPage,
   },
   {
     id: 'chatting',
