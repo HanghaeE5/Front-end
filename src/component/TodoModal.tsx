@@ -1,13 +1,23 @@
-import '../style/day-picker.css';
-import { useInput } from '../hooks/useInput';
-import { Button, TextInput, Typography, Wrapper } from './element';
-import { WarningText } from './WarningText';
-import { BsX } from 'react-icons/bs';
+import { ko } from 'date-fns/locale';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
-import { ko } from 'date-fns/locale';
+import { BsX } from 'react-icons/bs';
+import { ReactComponent as Reset } from '../asset/icons/icon_reset.svg';
+import { ReactComponent as Etc } from '../asset/icons/todoIcon/icon_etc.svg';
+import { ReactComponent as EtcGray } from '../asset/icons/todoIcon/icon_etc_gray.svg';
+import { ReactComponent as Excercise } from '../asset/icons/todoIcon/icon_exercise.svg';
+import { ReactComponent as ExcerciseGray } from '../asset/icons/todoIcon/icon_exercise_gray.svg';
+import { ReactComponent as PromiseIcon } from '../asset/icons/todoIcon/icon_promise.svg';
+import { ReactComponent as PromiseGray } from '../asset/icons/todoIcon/icon_promise_gray.svg';
+import { ReactComponent as Shopping } from '../asset/icons/todoIcon/icon_shopping.svg';
+import { ReactComponent as ShoppingGray } from '../asset/icons/todoIcon/icon_shopping_gray.svg';
+import { ReactComponent as Study } from '../asset/icons/todoIcon/icon_study.svg';
+import { ReactComponent as StudyGray } from '../asset/icons/todoIcon/icon_study_gray.svg';
+import { useInput } from '../hooks/useInput';
+import '../style/day-picker.css';
 import { Category, ITodoItem, TodoData } from '../Types/todo';
+import { Button, TextInput, Typography, Wrapper } from './element';
 import {
   Background,
   CalendarWrapper,
@@ -18,18 +28,7 @@ import {
   StickyButton,
   TodoContents,
 } from './styledComponent/TodoModalElements';
-import styled from 'styled-components';
-import { ReactComponent as Study } from '../asset/icons/todoIcon/icon_study.svg';
-import { ReactComponent as StudyGray } from '../asset/icons/todoIcon/icon_study_gray.svg';
-import { ReactComponent as Excercise } from '../asset/icons/todoIcon/icon_exercise.svg';
-import { ReactComponent as ExcerciseGray } from '../asset/icons/todoIcon/icon_exercise_gray.svg';
-import { ReactComponent as Shopping } from '../asset/icons/todoIcon/icon_shopping.svg';
-import { ReactComponent as ShoppingGray } from '../asset/icons/todoIcon/icon_shopping_gray.svg';
-import { ReactComponent as PromiseIcon } from '../asset/icons/todoIcon/icon_promise.svg';
-import { ReactComponent as PromiseGray } from '../asset/icons/todoIcon/icon_promise_gray.svg';
-import { ReactComponent as Etc } from '../asset/icons/todoIcon/icon_etc.svg';
-import { ReactComponent as EtcGray } from '../asset/icons/todoIcon/icon_etc_gray.svg';
-import { ReactComponent as Reset } from '../asset/icons/icon_reset.svg';
+import { WarningText } from './WarningText';
 
 interface CategoryItemProps {
   icon: ReactNode;

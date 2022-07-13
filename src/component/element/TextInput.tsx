@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { BiSearch } from 'react-icons/bi';
+import styled from 'styled-components';
 import { Wrapper } from './Wrapper';
 
 const TextElement = styled.input<StyleProps>`

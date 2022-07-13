@@ -7,6 +7,7 @@ module.exports = {
   extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:@typescript-eslint/recommended'],
   rules: {
     'react/react-in-jsx-scope': 'off',
+    'no-unused-vars': 'warn',
     // 'simple-import-sort/imports': 'error',
     // 'simple-import-sort/exports': 'error',
   },
