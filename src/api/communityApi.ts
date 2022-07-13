@@ -1,6 +1,5 @@
-import { Board } from './../Types/community';
 import { AddBoardData, CommunitySearchControl, FetchBoardResponse } from '../Types/community';
-import { TodoData, TodoParams } from '../Types/todo';
+import { Board } from './../Types/community';
 import { callApi } from './callApi';
 
 const COMMUNITY_URL = '/board';
