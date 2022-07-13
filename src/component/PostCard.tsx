@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Board } from '../Types/community';
 import { Badge, DropdownMenu, Img, Typography, Wrapper } from './element';
 import { BsDot } from 'react-icons/bs';
+import { BiShareAlt } from 'react-icons/bi';
 
 const UserName = styled.span`
   font-size: 0.875rem;
@@ -88,7 +89,8 @@ const PostHeader = ({
           </PostInfo>
         )}
       </Wrapper>
-      {boardId && dropDownProps && <DropdownMenu isMine={isMine} {...dropDownProps} />}
+      {boardId && isMine && dropDownProps && <DropdownMenu isMine={isMine} {...dropDownProps} />}
+      {!isMine && dropDownProps && <BiShareAlt onClick={() => dropDownProps.onShare()} />}
     </Wrapper>
   );
 };
@@ -97,7 +99,7 @@ const PostTitle = ({ children, category }: PropsWithChildren<Pick<Board, 'catego
   return (
     <Wrapper justifyContent="space-between" padding="0 1rem">
       <Title>{children}</Title>
-      <Badge>{category === 'CHALLENGE' ? '챌린저스' : '일상'}</Badge>
+      <Badge>{category === 'CHALLENGE' ? '위드 투 두' : '일상'}</Badge>
     </Wrapper>
   );
 };

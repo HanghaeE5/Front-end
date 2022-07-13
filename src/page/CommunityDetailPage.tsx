@@ -1,4 +1,4 @@
-import { Button, Img, PopConfirm, Wrapper } from '../component/element';
+import { Button, Img, PopConfirm, PopConfirmNew, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
@@ -27,11 +27,12 @@ export const CommunityDetailPage = () => {
 
   const { visible: visibleChallange, openConfirm: openChallange, closeConfirm: closeChallange } = usePopConfirm();
   const { visible: visibleChat, openConfirm: openChatConfirm, closeConfirm: closeChatConfirm } = usePopConfirm();
+  const { visible: visibleError, openConfirm: openErrorConfirm, closeConfirm: closeErrorConfirm } = usePopConfirm();
 
   const { data: postDetail, isLoading } = useQuery<Board>([communityQueryKey.fetchBoardDetail], () =>
     fetchBoardDetailFn(Number(id)),
   );
-
+  const isMine = userInfo?.email === postDetail?.authorEmail;
   const { mutate: joinChallenge } = useMutation(joinChallengeFn);
   const { mutate: deleteBoard } = useMutation(deleteBoardFn);
 
@@ -54,7 +55,7 @@ export const CommunityDetailPage = () => {
     if (!postDetail) return;
 
     if (postDetail.category === 'CHALLENGE') {
-      alert('챌린지는 수정이 불가능합니다');
+      openErrorConfirm();
       return;
     }
     nav(`${PATH.COMMUNITY_POST}/${postDetail.boardId}`);
@@ -62,6 +63,11 @@ export const CommunityDetailPage = () => {
 
   const onDeleteBoard = () => {
     if (!postDetail) return;
+
+    if (postDetail.category === 'CHALLENGE') {
+      openErrorConfirm();
+      return;
+    }
     deleteBoard(postDetail.boardId, {
       onSuccess: () => refectchBoardList(),
     });
@@ -74,6 +80,13 @@ export const CommunityDetailPage = () => {
   if (isLoading || !postDetail) return <>로딩중</>;
   return (
     <NavLayout>
+      {visibleError && (
+        <PopConfirmNew
+          confirmType="warning"
+          title={`위드 투 두 게시물은 작성 이후  \n 수정, 삭제가 불가합니다`}
+          rightButton={{ text: '확인', onClick: closeErrorConfirm }}
+        />
+      )}
       <PopConfirm
         icon={<AiFillFire />}
         visible={visibleChallange}
@@ -106,7 +119,7 @@ export const CommunityDetailPage = () => {
             userName={postDetail.authorNick}
             date={postDetail.boardCreatedDate.replaceAll('T', ' ')}
             boardId={postDetail.boardId}
-            isMine={userInfo?.email === postDetail.authorEmail}
+            isMine={isMine}
             dropDownProps={{
               onShare,
               onEdit: onEditBoard,
@@ -120,16 +133,23 @@ export const CommunityDetailPage = () => {
           )}
           <PostCard.PostTitle category={postDetail.category}>{postDetail.title}</PostCard.PostTitle>
           <PostCard.Content>{postDetail.boardContent}</PostCard.Content>
-          <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>
-          <Wrapper>
-            <Button
-              margin="1rem"
-              buttonType={postDetail.participating ? 'primary' : 'disable'}
-              onClick={postDetail.participating ? openChallange : undefined}
-            >
-              {postDetail.participating ? '위드 투 두 참여하기' : '마감되었습니다'}
-            </Button>
-          </Wrapper>
+
+          {postDetail.category === 'CHALLENGE' && (
+            <>
+              <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>
+              {isMine && (
+                <Wrapper>
+                  <Button
+                    margin="1rem"
+                    buttonType={postDetail.participating ? 'primary' : 'disable'}
+                    onClick={postDetail.participating ? openChallange : undefined}
+                  >
+                    {postDetail.participating ? '위드 투 두 참여하기' : '마감되었습니다'}
+                  </Button>
+                </Wrapper>
+              )}
+            </>
+          )}
         </Wrapper>
       </PageLayout>
     </NavLayout>
