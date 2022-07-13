@@ -54,7 +54,7 @@ export const CommunityDetailPage = () => {
       alert('챌린지는 수정이 불가능합니다');
       return;
     }
-    nav(`${PATH.communityPosting}/${postDetail.boardId}`);
+    nav(`${PATH.COMMUNITY_POST}/${postDetail.boardId}`);
   };
 
   const onDeleteBoard = () => {

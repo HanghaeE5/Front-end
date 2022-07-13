@@ -2,14 +2,15 @@ import styled from 'styled-components';
 import { BiSearch } from 'react-icons/bi';
 import { Wrapper } from './Wrapper';
 
-const TextElement = styled.input<{ isValidError?: boolean }>`
-  height: 3rem;
+const TextElement = styled.input<StyleProps>`
+  height: ${({ inputSize }) => (inputSize === 'small' ? '3rem' : '3.73rem')};
   border-radius: ${(props) => props.theme.radius};
-  background-color: ${(props) => props.theme.color.grayLight};
-  border: none;
+  background-color: ${({ theme, inputType }) => 'white'};
+  border: ${({ theme, inputType }) => (inputType === 'primary' ? `none` : `1px solid ${theme.color.grayMedium}`)};
   padding: ${(props) => props.theme.inputPadding};
   ::placeholder {
     color: ${(props) => props.theme.color.grayMedium};
+    font-size: 1.063rem;
   }
   width: 100%;
   border: ${({ isValidError }) => isValidError && `1px solid red`};
@@ -43,6 +44,12 @@ const TextAreaElement = styled.textarea<{ isValidError?: boolean }>`
   border: ${({ isValidError }) => isValidError && `1px solid red`};
 `;
 
+interface StyleProps {
+  inputSize?: 'small' | 'large';
+  inputType?: 'default' | 'primary';
+  isValidError?: boolean;
+}
+
 interface TextInputProps {
   type?: 'text' | 'area';
   onChange: (value: string) => void;
@@ -52,17 +59,18 @@ interface TextInputProps {
   showSearch?: {
     onSearch: () => void;
   };
-  isValidError?: boolean;
 }
 
 export const TextInput = ({
   type = 'text',
+  inputSize = 'large',
+  inputType = 'default',
   placeholder,
   showSearch,
   value,
   onChange,
-  isValidError,
-}: TextInputProps) => {
+  isValidError = false,
+}: TextInputProps & StyleProps) => {
   if (type === 'text') {
     return (
       <Wrapper>
@@ -73,6 +81,8 @@ export const TextInput = ({
             onChange(e.target.value);
           }}
           isValidError={isValidError}
+          inputSize={inputSize}
+          inputType={inputType}
         />
         {showSearch && <SearchButton onClick={() => showSearch.onSearch()} />}
       </Wrapper>

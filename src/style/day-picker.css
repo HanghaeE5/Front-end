@@ -1,0 +1,22 @@
+:root {
+  --rdp-cell-size: 40px;
+  --rdp-accent-color: #ffd600;
+  --rdp-background-color: 'white';
+
+  /* Outline border for focused elements */
+  --rdp-outline: 2px solid var(--rdp-accent-color);
+  /* Outline border for focused and selected elements */
+  --rdp-outline-selected: 2px solid #ffd600;
+}
+
+.rdp-day_selected:not([aria-disabled='true']),
+.rdp-day_selected:focus:not([aria-disabled='true']),
+.rdp-day_selected:active:not([aria-disabled='true']),
+.rdp-day_selected:hover:not([aria-disabled='true']) {
+  color: black;
+}
+
+.rdp-caption_label {
+  font-size: 18px;
+  width: 500;
+}

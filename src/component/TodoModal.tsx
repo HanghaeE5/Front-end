@@ -1,12 +1,12 @@
+import '../style/day-picker.css';
 import { useInput } from '../hooks/useInput';
-import { Button, TextInput, Wrapper } from './element';
+import { Button, TextInput, Typography, Wrapper } from './element';
 import { WarningText } from './WarningText';
-import { BsFillHandbagFill, BsX } from 'react-icons/bs';
+import { BsX } from 'react-icons/bs';
 import { PropsWithChildren, ReactNode, useState } from 'react';
-import { DayPicker, Row, RowProps } from 'react-day-picker';
+import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { ko } from 'date-fns/locale';
-import { differenceInCalendarDays } from 'date-fns';
 import { Category, ITodoItem, TodoData } from '../Types/todo';
 import {
   Background,
@@ -19,6 +19,17 @@ import {
   TodoContents,
 } from './styledComponent/TodoModalElements';
 import styled from 'styled-components';
+import { ReactComponent as Study } from '../asset/icons/todoIcon/icon_study.svg';
+import { ReactComponent as StudyGray } from '../asset/icons/todoIcon/icon_study_gray.svg';
+import { ReactComponent as Excercise } from '../asset/icons/todoIcon/icon_exercise.svg';
+import { ReactComponent as ExcerciseGray } from '../asset/icons/todoIcon/icon_exercise_gray.svg';
+import { ReactComponent as Shopping } from '../asset/icons/todoIcon/icon_shopping.svg';
+import { ReactComponent as ShoppingGray } from '../asset/icons/todoIcon/icon_shopping_gray.svg';
+import { ReactComponent as PromiseIcon } from '../asset/icons/todoIcon/icon_promise.svg';
+import { ReactComponent as PromiseGray } from '../asset/icons/todoIcon/icon_promise_gray.svg';
+import { ReactComponent as Etc } from '../asset/icons/todoIcon/icon_etc.svg';
+import { ReactComponent as EtcGray } from '../asset/icons/todoIcon/icon_etc_gray.svg';
+import { ReactComponent as Reset } from '../asset/icons/icon_reset.svg';
 
 interface CategoryItemProps {
   icon: ReactNode;
@@ -35,12 +46,12 @@ const CategoryItem = ({ icon, isSelect, onClick, children }: PropsWithChildren<C
   );
 };
 
-const OverButton = styled(Button)`
-  left: 0rem;
-  bottom: -1rem;
-  position: relative;
-  border-radius: 0 0 6px 6px;
-`;
+const getYyyyMmDd = (date: Date) => {
+  const offset = date.getTimezoneOffset() * 60000;
+  const dateOffset = new Date(date.getTime() - offset);
+
+  return dateOffset.toISOString().split('T')[0];
+};
 
 const CalendarFooter = ({
   onClick,
@@ -53,17 +64,17 @@ const CalendarFooter = ({
 }) => {
   return (
     <Wrapper isColumn>
-      <Wrapper justifyContent="space-between" margin="0.25rem 0">
-        <Button buttonType="default" onClick={onClick} width="calc(100% - 3.25rem)">
+      <Wrapper justifyContent="space-between" margin="0.75rem 0">
+        <Button buttonType="ghost" onClick={onClickEveryDay} width="calc(100% - 3.25rem)">
           매일 선택
         </Button>
-        <Button buttonType="default" onClick={reset} width="3rem">
-          초기화
+        <Button buttonType="ghost" onClick={reset} width="3rem">
+          <Reset />
         </Button>
       </Wrapper>
-      <OverButton isSquare width="112%">
-        선택
-      </OverButton>
+      <Button buttonType="default" onClick={onClick}>
+        완료
+      </Button>
     </Wrapper>
   );
 };
@@ -71,9 +82,9 @@ const CalendarFooter = ({
 const getSelectDate = (selectedDay: Date[] | undefined) => {
   if (!selectedDay) return;
 
-  const firstDate = selectedDay[0]?.toISOString().split('T')[0];
+  const firstDate = getYyyyMmDd(selectedDay[0]).replaceAll('-', '.');
 
-  return `${firstDate ? firstDate : ''} ${selectedDay.length > 1 ? `외 ${selectedDay.length - 1}건` : ''}`;
+  return `${firstDate ? firstDate : ''} ${selectedDay.length > 1 ? `외 ${selectedDay.length - 1}일` : ''}`;
 };
 
 interface TodoModalProps {
@@ -111,7 +122,7 @@ export const TodoModal = ({ modalType, todoData, modalTitle, getTodoDataFromModa
       return;
     }
 
-    const date = selectedDay?.map((selectedDay) => selectedDay.toISOString().split('T')[0]) || [];
+    const date = selectedDay?.map((date) => getYyyyMmDd(date)) || [];
 
     getTodoDataFromModal({ content: title, category, todoDateList: date, todoId: todoData?.todoId });
 
@@ -128,6 +139,27 @@ export const TodoModal = ({ modalType, todoData, modalTitle, getTodoDataFromModa
       setSelectedDay(dateList);
     }
   };
+
+  const isSelectedCategory = (thisCategory: Category) => {
+    return thisCategory === category;
+  };
+
+  const onClickEveryDay = () => {
+    const [year, month, today] = new Intl.DateTimeFormat()
+      .format(new Date())
+      .split('.')
+      .map((d) => Number(d));
+
+    const lastDay = new Date(year, month, 0).getDate();
+
+    const allDate = [];
+
+    for (let i = today; i <= lastDay; i++) {
+      allDate.push(new Date(year, month - 1, i));
+    }
+
+    setSelectedDay([...allDate]);
+  };
   return (
     <ModalContainer>
       <Background onClick={() => closeModal()} />
@@ -139,6 +171,8 @@ export const TodoModal = ({ modalType, todoData, modalTitle, getTodoDataFromModa
 
         <Wrapper isColumn padding="1rem">
           <TextInput
+            inputSize="large"
+            inputType="default"
             value={title}
             onChange={onChangeTitleInput}
             placeholder="투 두 제목을 입력해주세요"
@@ -150,49 +184,51 @@ export const TodoModal = ({ modalType, todoData, modalTitle, getTodoDataFromModa
           <span>카테고리</span>
           <div>
             <CategoryItem
-              isSelect={category === 'STUDY'}
+              isSelect={isSelectedCategory('STUDY')}
               onClick={() => onClickCategoryButton('STUDY')}
-              icon={<BsFillHandbagFill />}
+              icon={isSelectedCategory('STUDY') ? <Study /> : <StudyGray />}
             >
               스터디
             </CategoryItem>
             <CategoryItem
-              isSelect={category === 'EXERCISE'}
+              isSelect={isSelectedCategory('EXERCISE')}
               onClick={() => onClickCategoryButton('EXERCISE')}
-              icon={<BsFillHandbagFill />}
+              icon={isSelectedCategory('EXERCISE') ? <Excercise /> : <ExcerciseGray />}
             >
               운동
             </CategoryItem>
             <CategoryItem
-              isSelect={category === 'SHOPPING'}
+              isSelect={isSelectedCategory('SHOPPING')}
               onClick={() => onClickCategoryButton('SHOPPING')}
-              icon={<BsFillHandbagFill />}
+              icon={isSelectedCategory('SHOPPING') ? <Shopping /> : <ShoppingGray />}
             >
               쇼핑
             </CategoryItem>
             <CategoryItem
-              isSelect={category === 'PROMISE'}
+              isSelect={isSelectedCategory('PROMISE')}
               onClick={() => onClickCategoryButton('PROMISE')}
-              icon={<BsFillHandbagFill />}
+              icon={isSelectedCategory('PROMISE') ? <PromiseIcon /> : <PromiseGray />}
             >
               약속
             </CategoryItem>
             <CategoryItem
-              isSelect={category === 'ETC'}
+              isSelect={isSelectedCategory('ETC')}
               onClick={() => onClickCategoryButton('ETC')}
-              icon={<BsFillHandbagFill />}
+              icon={isSelectedCategory('ETC') ? <Etc /> : <EtcGray />}
             >
               기타
             </CategoryItem>
           </div>
         </CategorySection>
-        <Wrapper isColumn padding="1rem">
+        <Wrapper isColumn padding="1rem 1rem 2rem 1rem">
           <Wrapper justifyContent="space-between">
             <span>날짜/기간</span>
-            <span>{getSelectDate(selectedDay)}</span>
+            <Typography weight={700} size={0.95}>
+              {getSelectDate(selectedDay)}
+            </Typography>
           </Wrapper>
           <Wrapper margin="1rem 0">
-            <Button buttonType="ghost" onClick={() => setShowCalendar(true)}>
+            <Button buttonType="default" size="large" onClick={() => setShowCalendar(true)}>
               날짜 변경하기
             </Button>
             {showCalendar && (
@@ -208,7 +244,7 @@ export const TodoModal = ({ modalType, todoData, modalTitle, getTodoDataFromModa
                   footer={
                     <CalendarFooter
                       onClick={onCloseCalendar}
-                      onClickEveryDay={() => console.log('매일')}
+                      onClickEveryDay={onClickEveryDay}
                       reset={() => setSelectedDay([new Date()])}
                     />
                   }
