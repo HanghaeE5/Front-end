@@ -1,7 +1,9 @@
 import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import { Board } from '../Types/community';
-import { Badge, DropdownMenu, Img, Wrapper } from './element';
+import { Badge, DropdownMenu, Img, Typography, Wrapper } from './element';
+import { BsDot } from 'react-icons/bs';
+import { BiShareAlt } from 'react-icons/bi';
 
 const UserName = styled.span`
   font-size: 0.875rem;
@@ -24,6 +26,10 @@ const Title = styled.div`
   text-overflow: ellipsis;
   font-size: 1.25rem;
   font-weight: 600;
+`;
+
+const StyledDot = styled(BsDot)`
+  padding-top: 0.25rem;
 `;
 
 interface ContentWrapperProps {
@@ -54,11 +60,13 @@ const PostHeader = ({
   date,
   boardId,
   dropDownProps,
+  isMine = false,
 }: {
   userImg?: string;
   userName: string;
   date?: string;
   boardId?: number;
+  isMine?: boolean;
   dropDownProps?: {
     onShare: () => void;
     onEdit: () => void;
@@ -73,9 +81,16 @@ const PostHeader = ({
 
       <Wrapper isColumn alignItems="start" margin="0 0 0 0.5rem">
         <UserName>{userName}</UserName>
-        {(boardId || date) && <PostInfo>{`${date} | ${boardId}`}</PostInfo>}
+        {(boardId || date) && (
+          <PostInfo>
+            {date?.replaceAll('-', '.')}
+            <StyledDot />
+            게시물번호 {boardId}
+          </PostInfo>
+        )}
       </Wrapper>
-      {boardId && dropDownProps && <DropdownMenu {...dropDownProps} />}
+      {boardId && isMine && dropDownProps && <DropdownMenu isMine={isMine} {...dropDownProps} />}
+      {!isMine && dropDownProps && <BiShareAlt onClick={() => dropDownProps.onShare()} />}
     </Wrapper>
   );
 };
@@ -84,7 +99,7 @@ const PostTitle = ({ children, category }: PropsWithChildren<Pick<Board, 'catego
   return (
     <Wrapper justifyContent="space-between" padding="0 1rem">
       <Title>{children}</Title>
-      <Badge>{category === 'CHALLENGE' ? '챌린저스' : '일상'}</Badge>
+      <Badge>{category === 'CHALLENGE' ? '위드 투 두' : '일상'}</Badge>
     </Wrapper>
   );
 };
@@ -94,7 +109,11 @@ const Content = ({ children, isSummary }: PropsWithChildren<ContentWrapperProps>
 };
 
 const Gather = ({ children }: PropsWithChildren) => {
-  return <StyledGather>{children}명 참여중!</StyledGather>;
+  return (
+    <StyledGather>
+      <Typography weight={700}>{children}</Typography>명 참여중!
+    </StyledGather>
+  );
 };
 
 export const PostCard = ({ children, onClick }: PropsWithChildren<{ onClick: () => void }>) => {

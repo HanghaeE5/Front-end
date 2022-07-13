@@ -1,19 +1,36 @@
+import { useEffect } from 'react';
+import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   notiModalState,
   profileMenuModalState,
+  userInfoState,
   userJoinTypeState,
   userNicknameState,
   userPhotoWaitState,
+=======
+import { useRecoilState } from 'recoil';
+import styled from 'styled-components';
+import { userApi } from '../../api/callApi';
+import {
+  notiModalState,
+  profileMenuModalState,
+  userInfoState,
+  userJoinTypeState,
+>>>>>>> d1493619622a2aad330b9209eae6df1daa8180d5
   userprofilephotoState,
 } from '../../recoil/store';
 import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
+<<<<<<< HEAD
 import { useMutation, useQuery } from 'react-query';
 import { userApi } from '../../api/callApi';
 import { useEffect } from 'react';
+=======
+>>>>>>> d1493619622a2aad330b9209eae6df1daa8180d5
 
 const TopNavWrapper = styled.nav`
   height: 3.75rem;
@@ -74,19 +91,13 @@ export const TopNavLayout = () => {
   const [, setModalProfileMenu] = useRecoilState(profileMenuModalState);
   const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
   const [userJoinType, setUserJoinType] = useRecoilState(userJoinTypeState);
-  const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const nav = useNavigate();
 
-  //유저정보 가져오기 API
-  const userInformData = useQuery('userData', userApi.userInformApi, {
-    onSuccess: (data) => {
-      setUserNickname(data.data.nick);
-      setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
-    },
-    onError: () => {
-      // nav('/login');
-    },
+  // 유저 정보
+  useQuery('fetchUserInfo', userApi.userInformApi, {
+    onSuccess: (data) => setUserInfo(data.data),
   });
 
   //회원가입 유형 파악 API

@@ -29,7 +29,7 @@ export const Slide = keyframes`
 `;
 
 export const TodoContents = styled.div`
-  height: 35.75rem;
+  height: 39rem;
   bottom: 0;
   width: 100%;
   position: absolute;
@@ -51,6 +51,7 @@ export const CategoryWrapper = styled.div<{ isSelect: boolean }>`
   justify-content: center;
   flex-direction: column;
   cursor: pointer;
+  margin: 0 0.5rem;
 
   & > div {
     display: flex;
@@ -58,7 +59,7 @@ export const CategoryWrapper = styled.div<{ isSelect: boolean }>`
     align-items: center;
     border: 1px solid ${({ theme, isSelect }) => (isSelect ? 'black' : theme.color.grayMedium)};
     border-radius: ${({ theme }) => theme.radius};
-    padding: 1rem;
+    padding: rem;
     width: 4.375rem;
     height: 4.375rem;
   }
@@ -66,6 +67,8 @@ export const CategoryWrapper = styled.div<{ isSelect: boolean }>`
   & > span {
     margin: 0.25rem;
     text-align: center;
+    font-family: 'Noto Sans CJK Light KR';
+    font-size: 0.813rem;
   }
 `;
 
@@ -82,6 +85,7 @@ export const CategorySection = styled(Wrapper)`
     width: 100%;
     overflow-x: scroll;
     display: flex;
+    padding: 0.5rem;
   }
 `;
 export const CalendarWrapper = styled.div`

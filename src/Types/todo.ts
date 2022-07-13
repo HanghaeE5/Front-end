@@ -2,9 +2,7 @@ export type Category = 'STUDY' | 'EXERCISE' | 'SHOPPING' | 'PROMISE' | 'ETC';
 
 export type Access = 'ALL' | 'FRIEND' | 'NONE';
 
-export type TodoStatus = 'done-list' | 'doing-list';
-
-export type TodoStatusFilter = TodoStatus | 'all';
+export type TodoStatusFilter = 'doingList' | 'doneList' | 'all';
 
 export type Sort = 'desc' | 'asc';
 
@@ -31,6 +29,7 @@ export interface ITodoItem {
   todoContent: string;
   todoDate: string;
   todoId: number;
+  boardId?: number;
 }
 
 export interface FetchTodoResponse {
@@ -61,3 +60,5 @@ export interface FetchTodoResponse {
   totalElements: number;
   totalPages: number;
 }
+
+export type TodoEvent = (todoData: ITodoItem) => void;

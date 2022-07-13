@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
+import { UserInfo } from '../Types/user';
 const { persistAtom } = recoilPersist();
 
 export const accessTokenState = atom({
@@ -127,4 +128,13 @@ type chatList = chat[];
 export const chatListState = atom<chatList>({
   key: 'chatListState',
   default: [],
+});
+
+export const atomKey = {
+  userInfo: 'userInfo',
+};
+
+export const userInfoState = atom<UserInfo | undefined>({
+  key: atomKey.userInfo,
+  default: undefined,
 });

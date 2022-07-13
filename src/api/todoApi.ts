@@ -10,7 +10,7 @@ export const fetchTodoList = async (params: TodoParams) => {
   const { data } = await callApi.get<FetchTodoResponse>('/todo', {
     params,
   });
-  return data.content;
+  return data;
 };
 
 export const createTodo = async (params: TodoData) => {
@@ -28,7 +28,7 @@ export const updateDoneTodo = async (todoId: number) => {
   return data;
 };
 
-export const deleteTodo = async (todoId: number) => {
+export const deleteTodoFn = async (todoId: number) => {
   const { data } = await callApi.delete(`/todo/${todoId}`);
   return data;
 };
