@@ -11,6 +11,8 @@ import { communityQueryKey, deleteBoardFn, fetchBoardDetailFn, joinChallengeFn }
 import { PATH } from '../route/routeList';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/store';
+import { ReactComponent as WithTodo } from '../asset/icons/icon_withtodo.svg';
+import { ReactComponent as Chat } from '../asset/icons/icon_chat.svg';
 
 export const CommunityDetailPage = () => {
   const nav = useNavigate();
@@ -87,31 +89,39 @@ export const CommunityDetailPage = () => {
           rightButton={{ text: '확인', onClick: closeErrorConfirm }}
         />
       )}
-      <PopConfirm
-        icon={<AiFillFire />}
-        visible={visibleChallange}
-        onConfirm={onConfirmChallenge}
-        onCancel={() => {
-          closeChallange();
-          openChatConfirm();
-        }}
-      >
-        챌린져스에 참여하시겠어요?
-      </PopConfirm>
-      <PopConfirm
-        icon={<AiFillFire />}
-        visible={visibleChat}
-        onConfirm={() => {
-          console.log('네');
-          closeChatConfirm();
-        }}
-        onCancel={() => {
-          console.log('아니오');
-          closeChatConfirm();
-        }}
-      >
-        채팅방에도 참여하시겠어요?
-      </PopConfirm>
+      {visibleChallange && (
+        <PopConfirmNew
+          confirmType="withTodo"
+          title="위드 투 두에 참여하시겠어요?"
+          content="모집 마감일 이후 취소가 불가합니다"
+          rightButton={{ text: '네', onClick: onConfirmChallenge }}
+          leftButton={{
+            text: ' 아니오',
+            onClick: () => {
+              closeChallange();
+              openChatConfirm();
+            },
+          }}
+        />
+      )}
+      {visibleChat && (
+        <PopConfirmNew
+          confirmType="chat"
+          title="채팅방에도 참여하시겠어요?"
+          rightButton={{
+            text: '네',
+            onClick: () => {
+              // TODO: 채팅방 참여하기 로직
+              closeChatConfirm();
+            },
+          }}
+          leftButton={{
+            text: ' 아니오',
+            onClick: closeChatConfirm,
+          }}
+        />
+      )}
+
       <PageLayout title="커뮤니티">
         <Wrapper isColumn alignItems="start" height="100%">
           <PostCard.PostHeader
@@ -137,7 +147,7 @@ export const CommunityDetailPage = () => {
           {postDetail.category === 'CHALLENGE' && (
             <>
               <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>
-              {isMine && (
+              {!isMine && (
                 <Wrapper>
                   <Button
                     margin="1rem"

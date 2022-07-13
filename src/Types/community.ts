@@ -1,3 +1,5 @@
+import { Category } from './todo';
+
 export type PostType = 'DAILY' | 'CHALLENGE';
 
 export type FilterType = 'daily' | 'challenge' | 'my';
@@ -42,7 +44,7 @@ export interface AddBoardData {
     title: string;
   };
   todo?: {
-    category: string;
+    category: Category;
     content: string;
     todoDateList: string[];
   };

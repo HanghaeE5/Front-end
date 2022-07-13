@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 import { Wrapper } from '../element';
 
+export const ScrollWraper = styled(Wrapper)`
+  overflow-y: scroll;
+  height: 42rem;
+`;
+
 export const WarningText = styled.div`
   color: ${({ theme }) => theme.color.grayDark};
   width: 100%;
@@ -31,24 +36,26 @@ export const ImgPreviewSection = styled(Wrapper)`
 `;
 
 export const ChallangersSection = styled.div`
-  background-color: ${({ theme }) => theme.color.grayDark};
+  background-color: 'white';
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 5.875rem;
+  border: 3px solid ${({ theme }) => theme.mainColor};
   border-radius: ${({ theme }) => theme.radius};
   margin: 0.5rem;
   justify-content: center;
   align-items: center;
 
   & span:nth-of-type(1) {
-    color: white;
+    color: black;
     font-size: 1.25rem;
     padding: 0.5rem;
+    font-weight: 700;
   }
 
   & span:nth-of-type(2) {
-    color: #adadad;
+    color: black;
     font-size: 0.875rem;
   }
 `;

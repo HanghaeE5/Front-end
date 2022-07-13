@@ -27,8 +27,8 @@ const SearchButton = styled(BiSearch)`
 const TextAreaElement = styled.textarea<{ isValidError?: boolean }>`
   height: 11.25rem;
   border-radius: ${(props) => props.theme.radius};
-  background-color: ${(props) => props.theme.color.grayLight};
-  border: none;
+  background-color: 'white';
+  border: 1px solid ${({ theme }) => theme.color.grayMedium};
   padding: ${(props) => props.theme.inputPadding};
   ::placeholder {
     color: ${(props) => props.theme.color.grayMedium};

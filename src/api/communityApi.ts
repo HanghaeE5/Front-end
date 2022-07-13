@@ -32,9 +32,7 @@ export const postCummunityFn = async (post: AddBoardData) => {
 };
 
 export const updateBoardFn = async ({ boardId, params }: { boardId: number; params: AddBoardData }) => {
-  const { data } = await callApi.put(`${COMMUNITY_URL}/${boardId}`, {
-    params,
-  });
+  const { data } = await callApi.put(`${COMMUNITY_URL}/${boardId}`, params);
   return data;
 };
 

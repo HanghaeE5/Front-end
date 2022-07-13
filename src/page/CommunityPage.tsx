@@ -51,6 +51,7 @@ export const CommunityPage = () => {
     () => fetchBoardFn(control),
     {
       onSuccess: (data) => {
+        console.log(control.page, data.content);
         if (control.page === 0) {
           setList([...removeListDuplicate<Board>(data.content, 'boardId')]);
           return;
