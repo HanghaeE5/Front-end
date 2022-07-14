@@ -19,6 +19,7 @@ export const ContentWrapper = styled.div`
 `;
 
 export const TodoItemWrapper = styled(Wrapper)<{ done: boolean }>`
+  position: relative;
   border: ${({ done, theme }) => (done ? `1px solid ${theme.color.grayMedium}` : `3px solid ${theme.mainColor}`)};
   height: 5.625rem;
   border-radius: ${({ theme }) => theme.radius};
@@ -43,6 +44,19 @@ export const TodoItemWrapper = styled(Wrapper)<{ done: boolean }>`
     bottom: 25%;
     margin-left: 0.25rem;
   }
+`;
+
+export const TodoLabel = styled.span<{ done: boolean }>`
+  position: absolute;
+  right: ${({ done }) => (done ? '-0.3rem' : ' -0.35rem')};
+  top: ${({ done }) => (done ? '0rem' : ' -0.25rem')};
+
+  background-color: ${({ done, theme }) => (done ? theme.color.grayMedium : theme.mainColor)};
+  color: ${({ done }) => (done ? 'white' : 'black')};
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  font-weight: ${({ done }) => (done ? 400 : 700)};
+  border-radius: 0px 6px;
 `;
 
 export const TodoListWrapper = styled(Wrapper)`

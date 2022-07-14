@@ -1,12 +1,18 @@
+import { useEffect } from 'react';
+import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { notiModalState, profileMenuModalState, userJoinTypeState, userprofilephotoState } from '../../recoil/store';
+import styled from 'styled-components';
+import { userApi } from '../../api/callApi';
+import {
+  notiModalState,
+  profileMenuModalState,
+  userInfoState,
+  userJoinTypeState,
+  userprofilephotoState,
+} from '../../recoil/store';
 import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
-import { useMutation } from 'react-query';
-import { userApi } from '../../api/callApi';
-import { useEffect } from 'react';
 
 const TopNavWrapper = styled.nav`
   height: 3.75rem;
@@ -67,8 +73,14 @@ export const TopNavLayout = () => {
   const [, setModalProfileMenu] = useRecoilState(profileMenuModalState);
   const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
   const [userJoinType, setUserJoinType] = useRecoilState(userJoinTypeState);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const nav = useNavigate();
+
+  // 유저 정보
+  useQuery('fetchUserInfo', userApi.userInformApi, {
+    onSuccess: (data) => setUserInfo(data.data),
+  });
 
   //회원가입 유형 파악 API
   const joinTypeData = useMutation(() => userApi.joinTypeApi(), {

@@ -1,4 +1,4 @@
-import { Button, Img, PopConfirm, Wrapper } from '../component/element';
+import { Button, Img, PopConfirm, PopConfirmNew, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
@@ -9,10 +9,15 @@ import { useNavigate, useParams } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { communityQueryKey, deleteBoardFn, fetchBoardDetailFn, joinChallengeFn } from '../api/communityApi';
 import { PATH } from '../route/routeList';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../recoil/store';
+import { ReactComponent as WithTodo } from '../asset/icons/icon_withtodo.svg';
+import { ReactComponent as Chat } from '../asset/icons/icon_chat.svg';
 
 export const CommunityDetailPage = () => {
   const nav = useNavigate();
   const { id } = useParams();
+  const userInfo = useRecoilValue(userInfoState);
 
   // TODO : 얘도 훅으로 빼기
   const queryClient = useQueryClient();
@@ -24,11 +29,12 @@ export const CommunityDetailPage = () => {
 
   const { visible: visibleChallange, openConfirm: openChallange, closeConfirm: closeChallange } = usePopConfirm();
   const { visible: visibleChat, openConfirm: openChatConfirm, closeConfirm: closeChatConfirm } = usePopConfirm();
+  const { visible: visibleError, openConfirm: openErrorConfirm, closeConfirm: closeErrorConfirm } = usePopConfirm();
 
   const { data: postDetail, isLoading } = useQuery<Board>([communityQueryKey.fetchBoardDetail], () =>
     fetchBoardDetailFn(Number(id)),
   );
-
+  const isMine = userInfo?.email === postDetail?.authorEmail;
   const { mutate: joinChallenge } = useMutation(joinChallengeFn);
   const { mutate: deleteBoard } = useMutation(deleteBoardFn);
 
@@ -51,14 +57,19 @@ export const CommunityDetailPage = () => {
     if (!postDetail) return;
 
     if (postDetail.category === 'CHALLENGE') {
-      alert('챌린지는 수정이 불가능합니다');
+      openErrorConfirm();
       return;
     }
-    nav(`${PATH.communityPosting}/${postDetail.boardId}`);
+    nav(`${PATH.COMMUNITY_POST}/${postDetail.boardId}`);
   };
 
   const onDeleteBoard = () => {
     if (!postDetail) return;
+
+    if (postDetail.category === 'CHALLENGE') {
+      openErrorConfirm();
+      return;
+    }
     deleteBoard(postDetail.boardId, {
       onSuccess: () => refectchBoardList(),
     });
@@ -71,38 +82,54 @@ export const CommunityDetailPage = () => {
   if (isLoading || !postDetail) return <>로딩중</>;
   return (
     <NavLayout>
-      <PopConfirm
-        icon={<AiFillFire />}
-        visible={visibleChallange}
-        onConfirm={onConfirmChallenge}
-        onCancel={() => {
-          closeChallange();
-          openChatConfirm();
-        }}
-      >
-        챌린져스에 참여하시겠어요?
-      </PopConfirm>
-      <PopConfirm
-        icon={<AiFillFire />}
-        visible={visibleChat}
-        onConfirm={() => {
-          console.log('네');
-          closeChatConfirm();
-        }}
-        onCancel={() => {
-          console.log('아니오');
-          closeChatConfirm();
-        }}
-      >
-        채팅방에도 참여하시겠어요?
-      </PopConfirm>
+      {visibleError && (
+        <PopConfirmNew
+          confirmType="warning"
+          title={`위드 투 두 게시물은 작성 이후  \n 수정, 삭제가 불가합니다`}
+          rightButton={{ text: '확인', onClick: closeErrorConfirm }}
+        />
+      )}
+      {visibleChallange && (
+        <PopConfirmNew
+          confirmType="withTodo"
+          title="위드 투 두에 참여하시겠어요?"
+          content="모집 마감일 이후 취소가 불가합니다"
+          rightButton={{ text: '네', onClick: onConfirmChallenge }}
+          leftButton={{
+            text: ' 아니오',
+            onClick: () => {
+              closeChallange();
+              openChatConfirm();
+            },
+          }}
+        />
+      )}
+      {visibleChat && (
+        <PopConfirmNew
+          confirmType="chat"
+          title="채팅방에도 참여하시겠어요?"
+          rightButton={{
+            text: '네',
+            onClick: () => {
+              // TODO: 채팅방 참여하기 로직
+              closeChatConfirm();
+            },
+          }}
+          leftButton={{
+            text: ' 아니오',
+            onClick: closeChatConfirm,
+          }}
+        />
+      )}
+
       <PageLayout title="커뮤니티">
         <Wrapper isColumn alignItems="start" height="100%">
           <PostCard.PostHeader
-            userImg={''} // TODO : userImage
-            userName={postDetail.authorEmail}
-            date={postDetail.boardCreatedDate.split('T')[0]}
+            userImg={postDetail.authorProfileImageUrl}
+            userName={postDetail.authorNick}
+            date={postDetail.boardCreatedDate.replaceAll('T', ' ')}
             boardId={postDetail.boardId}
+            isMine={isMine}
             dropDownProps={{
               onShare,
               onEdit: onEditBoard,
@@ -116,16 +143,23 @@ export const CommunityDetailPage = () => {
           )}
           <PostCard.PostTitle category={postDetail.category}>{postDetail.title}</PostCard.PostTitle>
           <PostCard.Content>{postDetail.boardContent}</PostCard.Content>
-          <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>
-          <Wrapper>
-            <Button
-              margin="1rem"
-              buttonType={postDetail.participating ? 'primary' : 'disable'}
-              onClick={postDetail.participating ? openChallange : undefined}
-            >
-              {postDetail.participating ? '챌린져스 참여하기' : '마감된 챌린져스입니다'}
-            </Button>
-          </Wrapper>
+
+          {postDetail.category === 'CHALLENGE' && (
+            <>
+              <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>
+              {!isMine && (
+                <Wrapper>
+                  <Button
+                    margin="1rem"
+                    buttonType={postDetail.participating ? 'primary' : 'disable'}
+                    onClick={postDetail.participating ? openChallange : undefined}
+                  >
+                    {postDetail.participating ? '위드 투 두 참여하기' : '마감되었습니다'}
+                  </Button>
+                </Wrapper>
+              )}
+            </>
+          )}
         </Wrapper>
       </PageLayout>
     </NavLayout>
