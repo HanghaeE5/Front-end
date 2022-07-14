@@ -87,13 +87,21 @@ const getSelectDate = (selectedDay: Date[] | undefined) => {
 };
 
 interface TodoModalProps {
-  modalType: 'edit' | 'add';
+  editType: 'edit' | 'add';
+  todoType?: 'with' | 'my';
   modalTitle: string;
   getTodoDataFromModal: (todo: TodoData) => void;
   closeModal: () => void;
   todoData?: ITodoItem;
 }
-export const TodoModal = ({ modalType, todoData, modalTitle, getTodoDataFromModal, closeModal }: TodoModalProps) => {
+export const TodoModal = ({
+  editType,
+  todoData,
+  todoType = 'my',
+  modalTitle,
+  getTodoDataFromModal,
+  closeModal,
+}: TodoModalProps) => {
   const { value: title, onChangeValue: onChangeTitle } = useInput(todoData?.todoContent);
   const [isTitleRequired, setIsTitleRequired] = useState(false);
   const [category, setCategory] = useState<Category>((todoData?.category as Category) || 'STUDY');
@@ -131,7 +139,7 @@ export const TodoModal = ({ modalType, todoData, modalTitle, getTodoDataFromModa
   const onDatePick = (dateList: Date[] | undefined) => {
     if (!dateList) return;
 
-    if (modalType === 'edit') {
+    if (editType === 'edit') {
       const lastPick = dateList[dateList.length - 1];
       setSelectedDay([lastPick]);
     } else {
@@ -163,11 +171,18 @@ export const TodoModal = ({ modalType, todoData, modalTitle, getTodoDataFromModa
     <ModalContainer>
       <Background onClick={() => closeModal()} />
       <TodoContents>
-        <HeaderTitle justifyContent="space-between" padding="1.25rem 1.25rem 0 1.25rem">
+        <HeaderTitle justifyContent="space-between" padding="1.25rem 1rem 0 1rem">
           <span>{modalTitle}</span>
           <BsX onClick={() => closeModal()} />
         </HeaderTitle>
-
+        {todoType === 'with' && (
+          <Wrapper padding="0.5rem 1rem">
+            <Typography color="#8D8D8D" size={0.875}>
+              잠깐! 위 드 투 두 게시물은 작성 이후 수정, 삭제가 불가합니다. 제목, 카테고리, 날짜/기간을 유의하여
+              신중하게 작성해주세요.
+            </Typography>
+          </Wrapper>
+        )}
         <Wrapper isColumn padding="1rem">
           <TextInput
             inputSize="large"

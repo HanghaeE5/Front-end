@@ -58,8 +58,7 @@ export const CategoryWrapper = styled.div<{ isSelect: boolean }>`
     justify-content: center;
     align-items: center;
     border: 1px solid ${({ theme, isSelect }) => (isSelect ? 'black' : theme.color.grayMedium)};
-    border-radius: ${({ theme }) => theme.radius};
-    padding: rem;
+    border-radius: ${({ theme }) => theme.radius};    
     width: 4.375rem;
     height: 4.375rem;
   }
@@ -67,7 +66,7 @@ export const CategoryWrapper = styled.div<{ isSelect: boolean }>`
   & > span {
     margin: 0.25rem;
     text-align: center;
-    font-family: 'Noto Sans CJK Light KR';
+    font-family: NotoLight';
     font-size: 0.813rem;
   }
 `;
@@ -98,5 +97,5 @@ export const CalendarWrapper = styled.div`
 `;
 export const StickyButton = styled(Button)`
   position: absolute;
-  bottom: 3.75rem;
+  bottom: 3.375rem;
 `;

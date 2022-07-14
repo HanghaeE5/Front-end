@@ -277,7 +277,8 @@ export const CommunitiPostingPage = () => {
       </PageLayout>
       {modalState.visible && (
         <TodoModal
-          modalType={modalState.type}
+          editType={modalState.type}
+          todoType="with"
           modalTitle="위드 투 두 추가하기"
           closeModal={() => setModalState((prev) => ({ ...prev, visible: false }))}
           getTodoDataFromModal={setTodoDataFromModal}

@@ -18,7 +18,8 @@ import { PATH } from '../../route/routeList';
 const NavWrapper = styled(Wrapper)`
   padding-top: 0.5rem;
   border: 1px solid ${({ theme }) => theme.color.grayMedium};
-
+  z-index: 10;
+  height: 3.375rem;
   & div {
     cursor: pointer;
 

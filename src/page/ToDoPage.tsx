@@ -3,13 +3,10 @@ import { useInView } from 'react-intersection-observer';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
 import { createTodo, deleteTodoFn, fetchTodoList, todoQueryKey, updateTodoFn, updateTodoScope } from '../api/todoApi';
-import { Button, ButtonFloating, Wrapper } from '../component/element';
-import { PopConfirmNew } from '../component/element/PopConfirmNew';
-import { Tab } from '../component/element/Tab';
-import { Typography } from '../component/element/Typography';
+import { Button, ButtonFloating, Wrapper, PopConfirmNew, Tab, Typography } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { ContentWrapper, TodoListWrapper } from './../component/styledComponent/TodoPageComponents';
+import { ContentWrapper, TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
 import { TodoItem } from '../component/TodoItem';
 import { TodoModal } from '../component/TodoModal';
 import { PATH } from '../route/routeList';
@@ -253,7 +250,7 @@ export const ToDoPage = () => {
           </Wrapper>
           {todoModalState.modalVisible && (
             <TodoModal
-              modalType={todoModalState.modalType}
+              editType={todoModalState.modalType}
               modalTitle={todoModalState.modalType === 'add' ? '마이 투 두 추가하기' : '마이 투 두 수정하기'}
               closeModal={toggleModal}
               getTodoDataFromModal={getTodoDataFromModal}
