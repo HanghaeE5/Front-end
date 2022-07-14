@@ -88,7 +88,8 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
               refreshTokenState: res.headers.refresh,
             }),
           );
-        });
+        })
+        .catch();
     }
     return Promise.reject(error);
   }

@@ -9,6 +9,7 @@ import {
   profileMenuModalState,
   userInfoState,
   userJoinTypeState,
+  userNicknameState,
   userprofilephotoState,
 } from '../../recoil/store';
 import NotiModal from '../modallayout/NotiModal';
@@ -74,13 +75,25 @@ export const TopNavLayout = () => {
   const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
   const [userJoinType, setUserJoinType] = useRecoilState(userJoinTypeState);
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
 
   const nav = useNavigate();
 
-  // 유저 정보
-  useQuery('fetchUserInfo', userApi.userInformApi, {
-    onSuccess: (data) => setUserInfo(data.data),
+  const userInformData = useQuery('userData', userApi.userInformApi, {
+    onSuccess: (data) => {
+      setUserNickname(data.data.nick);
+      setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
+    },
+    onError: () => {
+      // nav('/login');
+    },
   });
+  // console.log(userInformData);
+
+  // 유저 정보
+  // useQuery('fetchUserInfo', userApi.userInformApi, {
+  //   onSuccess: (data) => setUserInfo(data.data),
+  // });
 
   //회원가입 유형 파악 API
   const joinTypeData = useMutation(() => userApi.joinTypeApi(), {
