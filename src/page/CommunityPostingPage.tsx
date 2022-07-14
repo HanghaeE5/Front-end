@@ -6,7 +6,7 @@ import { useInput } from '../hooks/useInput';
 import { BiCamera } from 'react-icons/bi';
 import { TodoModal } from '../component/TodoModal';
 import { Category, ITodoItem, TodoData } from '../Types/todo';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import {
   communityQueryKey,
   fetchBoardDetailFn,
@@ -27,10 +27,8 @@ import { PATH } from '../route/routeList';
 export const CommunitiPostingPage = () => {
   const nav = useNavigate();
   const { boardId } = useParams();
-  const queryClient = useQueryClient();
 
   const refectchBoardList = () => {
-    // queryClient.invalidateQueries(communityQueryKey.fetchBoard);
     nav(PATH.COMMUNITY);
   };
 
@@ -50,7 +48,7 @@ export const CommunitiPostingPage = () => {
   const { value: title, onChangeValue: setTitleValue } = useInput();
   const { value: content, onChangeValue: setContentValue } = useInput();
 
-  const { data } = useQuery([communityQueryKey.fetchBoardDetail], () => fetchBoardDetailFn(Number(boardId)), {
+  useQuery([communityQueryKey.fetchBoardDetail], () => fetchBoardDetailFn(Number(boardId)), {
     enabled: !!boardId,
     onSuccess: (data) => {
       setPostType(data.category);
@@ -195,6 +193,8 @@ export const CommunitiPostingPage = () => {
     if (requiredError.content) {
       setRequiredError((prev) => ({ ...prev, content: false }));
     }
+
+    if (value.length > 2000) return;
 
     setContentValue(value);
   };
