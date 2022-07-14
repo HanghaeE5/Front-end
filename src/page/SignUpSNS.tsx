@@ -6,15 +6,13 @@ import styled from 'styled-components';
 import { registerApi } from '../api/callApi';
 import { AxiosError } from 'axios';
 import { accessTokenState, refreshTokenState } from '../recoil/store';
+import { PopNoti } from '../component/element/PopNoti';
 
 const RegisterContainer = styled.div`
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* align-items: center; */
   width: 100%;
   height: 100%;
   max-width: 768px;
-  background-color: #8e3939;
+  /* background-color: #8e3939; */
   overflow-y: auto;
   position: relative;
   ::-webkit-scrollbar {
@@ -45,17 +43,6 @@ type box = {
   margin?: string;
 };
 
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #deb3b3; */
-`;
-
 const BoxSide = styled.div`
   display: flex;
   flex-direction: column;
@@ -66,32 +53,12 @@ const BoxSide = styled.div`
   /* background-color: #6922bb; */
 `;
 
-const RowBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #683b3b; */
-`;
-
 type font = {
   size: number;
   color: string;
   isCorrect?: boolean;
   isBold?: boolean;
 };
-
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
 
 const LogoFontBig = styled.p`
   font-size: 1.6875rem;
@@ -156,6 +123,8 @@ const BtnAble = styled.button`
 
 export const SignUpSNS = () => {
   const [nickname, setNickname] = useState<string>('');
+  const [popNoti, setPopNoti] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string | undefined>('');
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const localToken = localStorage.getItem('accessToken');
@@ -185,7 +154,8 @@ export const SignUpSNS = () => {
       if (error.message === 'Request failed with status code 401') {
         setTimeout(() => joinSocial({ nick: nickname }), 200);
       } else {
-        alert(error.response?.data.msg);
+        setPopNoti(true);
+        setErrorMsg(error.response?.data.msg);
       }
     },
   });
@@ -296,6 +266,17 @@ export const SignUpSNS = () => {
             회원가입 완료
           </KoreanFont>
         </BtnAble>
+        <PopNoti
+          confirmType="warning"
+          visible={popNoti}
+          msg={errorMsg}
+          oneButton={{
+            text: '확인',
+            onClick: () => {
+              setPopNoti(false);
+            },
+          }}
+        />
       </ContentContainer>
     </RegisterContainer>
   );
