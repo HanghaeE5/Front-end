@@ -121,6 +121,11 @@ const chattingRoomDeleteAPi = async (roomId: { roomId: string }) => {
   return dfa;
 };
 
+const enterPublicChattingRoomApi = async (roomId: { roomId: string }) => {
+  const epcra = await callApi.post('/chat/room/enter/public', roomId);
+  return epcra;
+};
+
 export const registerApi = {
   joinApi: (data: FieldValues) => joinApi(data),
   emilCertificationApi: (email: { email: string }) => emilCertificationApi(email),
@@ -153,4 +158,5 @@ export const chattingApi = {
   makePublicChattingRoomApi: (name: { name: string }) => makePublicChattingRoomApi(name),
   chattingRoomDetailApi: (id: { id: string }) => chattingRoomDetailApi(id),
   chattingRoomDeleteAPi: (roomId: { roomId: string }) => chattingRoomDeleteAPi(roomId),
+  enterPublicChattingRoomApi: (roomId: { roomId: string }) => enterPublicChattingRoomApi(roomId),
 };

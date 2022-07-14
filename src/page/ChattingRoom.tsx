@@ -432,7 +432,7 @@ export const ChattingRoom = () => {
               );
             } else {
               return (
-                <MyChatBox>
+                <MyChatBox key={chatindex}>
                   <MyTextBox>
                     <KoreanFont size={1}>{chat.message}</KoreanFont>
                   </MyTextBox>

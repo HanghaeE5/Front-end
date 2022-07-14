@@ -21,6 +21,7 @@ export interface Board {
   boardCreatedDate: string;
   boardId: number;
   category: PostType;
+  chatRoomId: string;
   imageUrl?: string;
   participating: boolean;
   participatingCount: 0;

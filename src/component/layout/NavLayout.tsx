@@ -11,6 +11,7 @@ const LayoutContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 `;
 
 const BodyWrapper = styled.div`

@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
-import { useNavigate } from 'react-router';
+import { NavigateFunction, useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { registerApi } from '../api/callApi';
 import { FieldValues } from 'react-hook-form';
-import { accessTokenState, refreshTokenState } from '../recoil/store';
+import { accessTokenState, popNotiState, refreshTokenState } from '../recoil/store';
+import { EvAbleFont, EvBox, EvBtn, EvBtnAble, EvInputInfo, EvKoreanFont } from '../component/element/BoxStyle';
+import { AxiosError } from 'axios';
+import { PopNoti } from '../component/element/PopNoti';
 
 const RegisterContainer = styled.div`
-  /* display: flex;
-  flex-direction: column;
-  align-items: center; */
   width: 100%;
   max-width: 768px;
   height: 100%;
-  background-color: #8e3939;
+  /* background-color: #8e3939; */
   overflow-y: auto;
   position: relative;
   ::-webkit-scrollbar {
@@ -28,123 +28,36 @@ const ContentContainer = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-
-type box = {
-  width?: number | string;
-  height?: number;
-  margin?: string;
-  url?: string;
-};
-
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  background-image: ${(props: box) => props.url};
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: green;
-`;
-
-const RowBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin: ${(props: box) => props.margin};
-  width: ${(props: box) => props.width};
-  /* background-color: #ffffff; */
-`;
-
-const LogoFontBig = styled.p`
-  font-size: 27px;
-  font-family: 'OpensansBold';
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
-type font = {
-  size: number;
-  color: string;
-};
-
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoMed';
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
-const InputInfo = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  padding: 0 0 0 10px;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
-type btnable = {
-  width: number | string;
-  height: number | string;
-  margin: string;
-  isDisable?: boolean;
-};
-
-const BtnAble = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  width: ${(props: btnable) => props.width};
-  height: ${(props: btnable) => props.height}rem;
-  margin: ${(props: btnable) => props.margin};
-  background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
-
-  cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
-
-  &:hover {
-    ${(props: btnable) =>
-      props.isDisable
-        ? ''
-        : `color: white;
-    background-color: #358edc;`}
-  }
-`;
-
+type ConfirmType = 'warning' | 'chat' | 'withTodo';
 export const Login = () => {
+  const nav = useNavigate();
   const localToken = localStorage.getItem('recoil-persist');
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const [email, setNameText] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [autoLogin, setAutoLogin] = useState<boolean>(false);
+  const [popNoti, setPopNoti] = useRecoilState(popNotiState);
 
-  const nav = useNavigate();
+  const [informType, setInformType] = useState<ConfirmType | undefined>(undefined);
+  const [informMsg, setInformMsg] = useState<string | undefined>('');
+  const [quitOk, setQuitOk] = useState<boolean>(false);
 
   const loginUserData = useMutation((data: FieldValues) => registerApi.loginApi(data), {
     onSuccess: (token) => {
+      setQuitOk(true);
+      setPopNoti(true);
+      setInformType(undefined);
+      setInformMsg('로그인성공🙂');
       accessLoginToken(token.headers.authorization);
       refreshLoginToken(token.headers.refresh);
       console.log(token);
-      alert('로그인 성공!');
-      nav('/');
     },
-    onError: () => {
-      alert('아이디, 비밀번호를 확인해주세요');
+    onError: (error: AxiosError<{ msg: string }>) => {
+      setQuitOk(false);
+      setPopNoti(true);
+      setInformType('warning');
+      setInformMsg(error.response?.data.msg);
     },
   });
 
@@ -159,6 +72,12 @@ export const Login = () => {
     setPassword(e.target.value);
   };
 
+  const keyUpEvent = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      Login({ email: email, password: password });
+    }
+  };
+
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
     if (localToken) {
@@ -169,156 +88,166 @@ export const Login = () => {
   return (
     <RegisterContainer>
       <ContentContainer>
-        <Box width={'10.5rem'} height={1.5} margin={'3.75rem auto 1.875rem auto'} url="url(/assets/TODOWITH.svg)"></Box>
-        <Box width={'2.8125rem'} height={1.5} margin={'0px auto 10px 5.7%'}>
+        <EvBox
+          width={'10.5rem'}
+          height={1.5}
+          margin={'7rem auto 1.875rem auto'}
+          url="url(/assets/TODOWITH.svg)"
+        ></EvBox>
+        <EvBox width={'2.8125rem'} height={1.5} margin={'0px auto 0.625rem 5.3%'}>
           {email && (
-            <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
+            <EvKoreanFont size={1} color="#939393">
               이메일
-            </KoreanFont>
+            </EvKoreanFont>
           )}
-        </Box>
-        <InputInfo
-          width={'89%'}
-          height={2.5}
-          margin={'0px 1.25rem 0px 1.25rem'}
+        </EvBox>
+        <EvInputInfo
+          width={'88.5%'}
+          height={3.75}
+          margin={'0px 1.25rem 0px 1.43rem'}
           type="text"
-          placeholder="이메일을 입력하세요.    ex) todowith@naver.com"
+          placeholder="이메일을 입력하세요.    예) todowith@naver.com"
           name="email"
           value={email}
           onChange={onChange1}
-        ></InputInfo>
-        <Box width={3.6875} height={1.5} margin={'13px auto 10px 5.7%'}>
+        ></EvInputInfo>
+        <EvBox width={3.6875} height={1.5} margin={'1.4375rem auto 0.625rem 5.3%'}>
           {password && (
-            <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
+            <EvKoreanFont size={1} color="rgba(147, 147, 147, 1)">
               비밀번호
-            </KoreanFont>
+            </EvKoreanFont>
           )}
-        </Box>
-        <InputInfo
-          width="89%"
-          height={2.5}
-          margin={'0px 1.25rem 0px 1.25rem'}
+        </EvBox>
+        <EvInputInfo
+          width={'88.5%'}
+          height={3.75}
+          margin={'0px 1.25rem 0px 1.43rem'}
           placeholder="비밀번호를 입력하세요."
           type="password"
           value={password}
           onChange={onChange2}
-        ></InputInfo>
+          onKeyUp={keyUpEvent}
+        />
 
-        <RowBox width="100%" margin={'1.5rem 0 1rem 0'}>
-          <Box
+        <EvBtnAble
+          isDisable={!email || !password}
+          width={'88.5%'}
+          height={3.75}
+          margin={'1.4375rem 1.25rem 1.125rem 1.25rem'}
+          onClick={
+            email && password
+              ? () => {
+                  const goLogin = {
+                    email: email,
+                    password: password,
+                  };
+                  Login(goLogin);
+                }
+              : () => {
+                  null;
+                }
+          }
+        >
+          <EvAbleFont size={1.0625} color="white" isDisable={!email || !password}>
+            로그인
+          </EvAbleFont>
+        </EvBtnAble>
+
+        <EvBox direction={'row'} width="100%" margin={'0 0 1.75rem 0'}>
+          <EvBox
             width={'1.25rem'}
             height={1.25}
-            margin={'0 0.5625rem 0 5.7%'}
+            margin={'0 0.5625rem 0 8.8%'}
             style={{
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center',
-              backgroundSize: 'cover',
-              backgroundImage: autoLogin ? 'url(/assets/checkempty.svg)' : 'url(/assets/checkfull.png)',
+              backgroundSize: '1.5rem',
+              backgroundImage: autoLogin ? 'url(/assets/checkgray.svg)' : 'url(/assets/checkyellow.svg)',
             }}
             onClick={() => {
               setAutoLogin(!autoLogin);
             }}
-          ></Box>
-          <Box width={4.25} height={1.3125} margin={'0px auto 0px 0px'}>
-            <KoreanFont size={0.874} color="rgba(147, 147, 147, 1)">
+          ></EvBox>
+          <EvBox width={4.25} height={1.3125} margin={'0px auto 0px 0px'}>
+            <EvKoreanFont size={0.874} color="#939393">
               자동 로그인
-            </KoreanFont>
-          </Box>
-        </RowBox>
-        <BtnAble
-          isDisable={!email || !password}
-          width={'89%'}
-          height={4}
-          margin={'0rem 1.25rem 2rem 1.25rem'}
-          onClick={() => {
-            const goLogin = {
-              email: email,
-              password: password,
-            };
-            Login(goLogin);
-          }}
-        >
-          <KoreanFont size={1.0625} color="white">
-            로그인
-          </KoreanFont>
-        </BtnAble>
+            </EvKoreanFont>
+          </EvBox>
+        </EvBox>
 
-        <BtnAble
-          width={'89%'}
-          height={4}
-          margin={'0rem 1.25rem 2.375rem 1.25rem'}
+        <EvBtn
+          width={'88.5%'}
+          height={3.75}
+          margin={'0rem 1.25rem 0 1.25rem'}
+          border={'1px solid #989898;'}
           onClick={() => {
             nav('/signupemail');
           }}
         >
-          <KoreanFont size={1.0625} color="white">
+          <EvKoreanFont size={0.875} color=" #989898">
             회원가입
-          </KoreanFont>
-        </BtnAble>
+          </EvKoreanFont>
+        </EvBtn>
 
-        <RowBox margin={'0px 0px 1.625rem 0px'} width={'100%'}>
-          <hr style={{ width: '41.2%', marginLeft: '1.25rem' }} />
-          <Box width={1.875} height={1.3125} margin={'0px 0.625rem 0px 0.625rem'}>
-            <KoreanFont size={0.75} color="rgba(147, 147, 147, 1)">
+        <EvBox direction={'row'} margin={'1.6rem 0px 0 0px'} width={'100%'}>
+          <hr style={{ width: '40%' }} />
+          <EvBox width={2.6875} height={1.5} margin={'0px 0.625rem 0px 0.625rem'}>
+            <EvKoreanFont size={0.75} color="#989898">
               또는
-            </KoreanFont>
-          </Box>
-          <hr style={{ width: '41.2%', marginRight: '1.25rem' }} />
-        </RowBox>
-        <RowBox margin={'0'} width={'100%'}>
-          <Box
+            </EvKoreanFont>
+          </EvBox>
+          <hr style={{ width: '40%' }} />
+        </EvBox>
+        <EvBox direction={'row'} margin={'1.25rem 0 0 0'} width={'100%'} columnGap={'3rem'}>
+          <EvBox
             width={'3.75rem'}
             height={3.75}
-            margin={'0px 3rem 0px 3.0625rem'}
-            style={{
-              border: 'none',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-              backgroundImage: 'url(/assets/navericon.png)',
-            }}
+            isCursor={true}
+            url={'url(/assets/navericon.png)'}
             onClick={() => {
               window.location.replace(
                 'https://todowith.shop/oauth2/authorization/naver?redirect_uri=https://www.todowith.co.kr',
               );
             }}
-          ></Box>
+          ></EvBox>
 
-          <Box
+          <EvBox
             width={'3.75rem'}
             height={3.75}
-            margin={'0px 48px 0px 0px'}
-            style={{
-              border: 'none',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-              backgroundImage: 'url(/assets/kakaoicon.png)',
-            }}
+            isCursor={true}
+            url={'url(/assets/kakaoicon.png)'}
             onClick={() => {
               window.location.replace(
                 'https://todowith.shop/oauth2/authorization/kakao?redirect_uri=http://localhost:3000',
               );
             }}
-          ></Box>
-          <Box
+          ></EvBox>
+          <EvBox
             width={'3.75rem'}
             height={3.75}
-            margin={'0px 3.125rem 0px 0px'}
-            style={{
-              border: 'none',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-              backgroundImage: 'url(/assets/googleicon.png)',
-            }}
+            isCursor={true}
+            url={'url(/assets/googleicon.png)'}
             onClick={() => {
               window.location.replace(
                 'https://todowith.shop/oauth2/authorization/google?redirect_uri=https://www.todowith.co.kr',
               );
             }}
-          ></Box>
-        </RowBox>
+          ></EvBox>
+        </EvBox>
+
+        <PopNoti
+          confirmType={informType}
+          visible={popNoti}
+          msg={informMsg}
+          quitOk={quitOk}
+          oneButton={{
+            nav: '/',
+            text: '확인',
+            onClick: () => {
+              setPopNoti(false);
+            },
+          }}
+        />
       </ContentContainer>
     </RegisterContainer>
   );

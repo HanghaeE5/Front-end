@@ -161,7 +161,7 @@ export const Main = () => {
   console.log(userInformData);
 
   useEffect(() => {
-    if (accessToken != null) {
+    if (accessToken) {
       // console.log();
       const refreshToken = first[1].split('=')[1];
       // console.log(refreshToken);
@@ -176,7 +176,7 @@ export const Main = () => {
         window.location.replace('/');
       }
     }
-  }, [userNickname]);
+  }, []);
 
   return (
     <NavLayout>

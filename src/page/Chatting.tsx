@@ -62,7 +62,7 @@ const ChattingRoomTextBox = styled.div`
   width: 75%;
   height: 3rem;
   margin: auto auto auto 0.75rem;
-  background-color: #6922bb;
+  /* background-color: #6922bb; */
   cursor: pointer;
 `;
 
@@ -74,7 +74,7 @@ const RowBox = styled.div`
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
-  background-color: #683b3b;
+  /* background-color: #683b3b; */
   background-repeat: no-repeat;
   background-position: center;
 `;
@@ -87,7 +87,7 @@ const RowChattingBox = styled.div`
   width: 89%;
   height: 5rem;
   margin: 0 auto 0 auto;
-  background-color: #ffa6a6;
+  /* background-color: #ffa6a6; */
 `;
 
 type font = {
@@ -302,9 +302,13 @@ export const Chatting = () => {
                 return (
                   <RowChattingBox key={chatting.roomId}>
                     <ChattingRoomPhotoBox
-                      style={{
-                        backgroundImage: `url(${chatting.participantList[0].user.profileImageUrl})`,
-                      }}
+                      style={
+                        chatting.participantList[0]
+                          ? {
+                              backgroundImage: `url(${chatting.participantList[0].user.profileImageUrl})`,
+                            }
+                          : { backgroundImage: `url(/assets/defaultprofile.svg)` }
+                      }
                       onClick={() => {
                         nav(`/chat/room/${chatting.roomId}`);
                       }}

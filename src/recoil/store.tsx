@@ -138,3 +138,8 @@ export const userInfoState = atom<UserInfo | undefined>({
   key: atomKey.userInfo,
   default: undefined,
 });
+
+export const popNotiState = atom({
+  key: 'popNotiState',
+  default: false,
+});
