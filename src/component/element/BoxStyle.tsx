@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { StyledFunction } from 'styled-components';
 
 type box = {
   width?: number | string;
@@ -14,6 +14,10 @@ type box = {
   isPadding?: string;
   rowGap?: string;
   columnGap?: string;
+  border?: string;
+  borderRadius?: string;
+  helfBorder?: boolean;
+  backgroundsize?: string;
 };
 
 export const EvBox = styled.div`
@@ -26,19 +30,25 @@ export const EvBox = styled.div`
   margin: ${(props: box) => props.margin};
   row-gap: ${(props: box) => props.rowGap};
   column-gap: ${(props: box) => props.columnGap};
+  border: ${(props: box) => props.border};
+  border-radius: ${(props: box) => props.borderRadius};
+  border-top-right-radius: ${(props: box) => (props.helfBorder ? '6px' : '1px solid #dddddd')};
+  border-bottom-right-radius: ${(props: box) => (props.helfBorder ? '6px' : '1px solid #dddddd')};
   cursor: ${(props: box) => (props.isCursor ? 'pointer' : '')};
   background-image: ${(props: box) => props.url};
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: ${(props: box) => (props.backgroundsize ? props.backgroundsize : 'center')};
   background-position: center;
-  background-color: #b8ecb8;
+  /* background-color: #b8ecb8; */
 `;
 
 export const EvInputInfo = styled.input`
   display: flex;
   flex-direction: column;
   background: #ffffff;
-  border: 1px solid #dddddd;
+  border: ${(props: box) => (props.helfBorder ? 'none' : '1px solid #dddddd')};
+  border-top-left-radius: ${(props: box) => (props.helfBorder ? '6px' : '1px solid #dddddd')};
+  border-bottom-left-radius: ${(props: box) => (props.helfBorder ? '6px' : '1px solid #dddddd')};
   border-radius: 6px;
   padding: ${(props: box) => (props.isPadding ? props.isPadding : '0 0 0 10px')};
   width: ${(props: box) => props.width};
@@ -115,4 +125,13 @@ export const EvAbleFont = styled.p`
   color: ${(props: font) => (props.isDisable ? '#989898' : '#1A1A1A')};
   display: flex;
   margin: 0;
+`;
+
+export const EvCheckFont = styled.p`
+  font-size: ${(props: font) => props.size}rem;
+  font-family: 'NotoRegu';
+  color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'blue' : 'red') : props.color)};
+  display: flex;
+  margin: 0 0 0 0;
+  text-align: left;
 `;

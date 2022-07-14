@@ -28,7 +28,7 @@ const ContentContainer = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-type ConfirmType = 'warning' | 'chat' | 'withTodo';
+type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
 export const Login = () => {
   const nav = useNavigate();
   const localToken = localStorage.getItem('recoil-persist');
@@ -38,7 +38,6 @@ export const Login = () => {
   const [password, setPassword] = useState<string>('');
   const [autoLogin, setAutoLogin] = useState<boolean>(false);
   const [popNoti, setPopNoti] = useRecoilState(popNotiState);
-
   const [informType, setInformType] = useState<ConfirmType | undefined>(undefined);
   const [informMsg, setInformMsg] = useState<string | undefined>('');
   const [quitOk, setQuitOk] = useState<boolean>(false);
@@ -47,8 +46,8 @@ export const Login = () => {
     onSuccess: (token) => {
       setQuitOk(true);
       setPopNoti(true);
-      setInformType(undefined);
-      setInformMsg('로그인성공🙂');
+      setInformType('success');
+      setInformMsg('로그인 성공🙂');
       accessLoginToken(token.headers.authorization);
       refreshLoginToken(token.headers.refresh);
       console.log(token);
@@ -81,8 +80,10 @@ export const Login = () => {
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
     if (localToken) {
-      alert('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
-      nav('/');
+      setPopNoti(true);
+      setQuitOk(true);
+      setInformType('warning');
+      setInformMsg('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
     }
   }, []);
   return (
