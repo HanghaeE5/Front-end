@@ -39,12 +39,21 @@ const ContentWrapper = styled.div<ContentWrapperProps>`
   color: ${({ theme }) => theme.color.grayText};
   font-size: 14px;
   line-height: 19.6px;
-  font-family: 'Noto Sans CJK Light KR';
+  font-family: 'NotoLight';
   font-weight: 400;
   height: ${({ isSummary }) => (isSummary ? '2.5rem' : '14rem')};
   overflow-y: ${({ isSummary }) => (isSummary ? 'hidden' : 'scroll')};
   padding: 0 1rem;
+  height: ${({ isSummary }) => (isSummary ? '3rem' : '100%')};
   max-height: 18rem;
+  width: 100%;
+  white-space: ${({ isSummary }) => (isSummary ? 'nowrap' : 'pre-line')};
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+
+  ::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
 `;
 
 const StyledGather = styled.span`

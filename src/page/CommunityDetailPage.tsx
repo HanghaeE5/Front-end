@@ -1,9 +1,8 @@
-import { Button, Img, PopConfirm, PopConfirmNew, Wrapper } from '../component/element';
+import { Button, Img, PopConfirmNew, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
 import { Board } from '../Types/community';
-import { AiFillFire } from 'react-icons/ai';
 import { usePopConfirm } from '../hooks/usePopConfirm';
 import { useNavigate, useParams } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -11,8 +10,6 @@ import { communityQueryKey, deleteBoardFn, fetchBoardDetailFn, joinChallengeFn }
 import { PATH } from '../route/routeList';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/store';
-import { ReactComponent as WithTodo } from '../asset/icons/icon_withtodo.svg';
-import { ReactComponent as Chat } from '../asset/icons/icon_chat.svg';
 
 export const CommunityDetailPage = () => {
   const nav = useNavigate();
@@ -123,42 +120,39 @@ export const CommunityDetailPage = () => {
       )}
 
       <PageLayout title="커뮤니티">
-        <Wrapper isColumn alignItems="start" height="100%">
-          <PostCard.PostHeader
-            userImg={postDetail.authorProfileImageUrl}
-            userName={postDetail.authorNick}
-            date={postDetail.boardCreatedDate.replaceAll('T', ' ')}
-            boardId={postDetail.boardId}
-            isMine={isMine}
-            dropDownProps={{
-              onShare,
-              onEdit: onEditBoard,
-              onDelete: onDeleteBoard,
-            }}
-          />
-          {postDetail.imageUrl && (
+        <Wrapper isColumn alignItems="start" height="100%" justifyContent="space-between">
+          <Wrapper isColumn alignItems="start">
+            <PostCard.PostHeader
+              userImg={postDetail.authorProfileImageUrl}
+              userName={postDetail.authorNick}
+              date={postDetail.boardCreatedDate.replaceAll('T', ' ')}
+              boardId={postDetail.boardId}
+              isMine={isMine}
+              dropDownProps={{
+                onShare,
+                onEdit: onEditBoard,
+                onDelete: onDeleteBoard,
+              }}
+            />
+            {postDetail.imageUrl && (
+              <Wrapper>
+                <Img url={postDetail.imageUrl} type="square" />
+              </Wrapper>
+            )}
+            <PostCard.PostTitle category={postDetail.category}>{postDetail.title}</PostCard.PostTitle>
+            <PostCard.Content>{postDetail.boardContent}</PostCard.Content>
+            {postDetail.category === 'CHALLENGE' && <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>}
+          </Wrapper>
+          {postDetail.category === 'CHALLENGE' && !isMine && (
             <Wrapper>
-              <Img url={postDetail.imageUrl} type="square" />
+              <Button
+                margin="1rem"
+                buttonType={postDetail.participating ? 'primary' : 'disable'}
+                onClick={postDetail.participating ? openChallange : undefined}
+              >
+                {postDetail.participating ? '위드 투 두 참여하기' : '마감되었습니다'}
+              </Button>
             </Wrapper>
-          )}
-          <PostCard.PostTitle category={postDetail.category}>{postDetail.title}</PostCard.PostTitle>
-          <PostCard.Content>{postDetail.boardContent}</PostCard.Content>
-
-          {postDetail.category === 'CHALLENGE' && (
-            <>
-              <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>
-              {!isMine && (
-                <Wrapper>
-                  <Button
-                    margin="1rem"
-                    buttonType={postDetail.participating ? 'primary' : 'disable'}
-                    onClick={postDetail.participating ? openChallange : undefined}
-                  >
-                    {postDetail.participating ? '위드 투 두 참여하기' : '마감되었습니다'}
-                  </Button>
-                </Wrapper>
-              )}
-            </>
           )}
         </Wrapper>
       </PageLayout>

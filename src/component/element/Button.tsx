@@ -30,6 +30,8 @@ const StyledButton = styled.button<ButtonProps>`
   background-color: ${({ buttonType, theme }) => theme.button.backgroundColor[buttonType || 'primary']};
 
   border-radius: ${({ isSquare, theme }) => (isSquare ? '' : theme.radius)};
+
+  cursor: pointer;
 `;
 
 export const Button = ({
