@@ -38,7 +38,7 @@ export const EvBox = styled.div`
   cursor: ${(props: box) => (props.isCursor ? 'pointer' : '')};
   background-image: ${(props: box) => props.url};
   background-repeat: no-repeat;
-  background-size: ${(props: box) => (props.backgroundsize ? props.backgroundsize : 'center')};
+  background-size: ${(props: box) => (props.backgroundsize ? props.backgroundsize : 'cover')};
   background-position: center;
   background-color: ${(props: box) => (props.backgroundColor ? props.backgroundColor : '#fcbfbf')};
 `;
