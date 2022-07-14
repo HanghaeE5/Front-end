@@ -1,4 +1,4 @@
-import { CommunitiPostingPage } from './../page/CommunityPostingPage';
+import { CommunitiPostingPage } from '../page';
 import { ReactElement } from 'react';
 
 import {
@@ -13,7 +13,7 @@ import {
   Chatting,
   ChattingRoom,
   EditPassword,
-} from './../page';
+} from '../page';
 
 export interface IRoute {
   id: string;
@@ -25,12 +25,16 @@ export interface IRoute {
 export const PATH = {
   COMMUNITY: '/community',
   COMMUNITY_POST: '/community/post',
+  MAIN: '/',
+  TODO: '/todo',
+  FRIEND: '/friendlist',
+  CHAT: '/chat',
 };
 
 export const routeList: IRoute[] = [
   {
     id: 'main',
-    path: '/',
+    path: PATH.MAIN,
     page: Main,
   },
   {
@@ -61,7 +65,7 @@ export const routeList: IRoute[] = [
   {
     // TODO : route outlet 이용하기
     id: 'communityDetail',
-    path: '/community/:id',
+    path: `${PATH.COMMUNITY}/:id`,
     page: CommunityDetailPage,
   },
   {
@@ -76,22 +80,22 @@ export const routeList: IRoute[] = [
   },
   {
     id: 'todo',
-    path: '/todo',
+    path: PATH.TODO,
     page: ToDoPage,
   },
   {
     id: 'friendlist',
-    path: '/friendlist',
+    path: PATH.FRIEND,
     page: FriendList,
   },
   {
     id: 'chatting',
-    path: '/chatting',
+    path: PATH.CHAT,
     page: Chatting,
   },
   {
     id: 'chattingroom',
-    path: '/chat/room/:roomId',
+    path: `${PATH.CHAT}/room/:roomId`,
     page: ChattingRoom, //뒤에 방번호 넣기
   },
 ];
