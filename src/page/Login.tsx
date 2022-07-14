@@ -205,6 +205,7 @@ export const Login = () => {
             height={3.75}
             isCursor={true}
             url={'url(/assets/navericon.png)'}
+            backgroundsize={'3.75rem'}
             onClick={() => {
               window.location.replace(
                 'https://todowith.shop/oauth2/authorization/naver?redirect_uri=https://www.todowith.co.kr',
