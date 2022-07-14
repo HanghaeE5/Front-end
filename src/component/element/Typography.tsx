@@ -7,7 +7,8 @@ const SteyledTypo = styled.span<TypographyProps>`
   font-weight: ${({ weight }) => weight};
   cursor: ${({ isPointer }) => (isPointer ? 'pointer' : '')};
   text-decoration: ${({ underline }) => underline && 'underline'};
-  font-family: NotoLight;
+  font-family: ${({ isBold }) => (isBold ? 'NotoBold' : 'NotoLight')};
+  white-space: pre-line;
 `;
 
 interface TypographyProps {
@@ -17,6 +18,7 @@ interface TypographyProps {
   onClick?: () => void;
   isPointer?: boolean;
   underline?: boolean;
+  isBold?: boolean;
 }
 
 export const Typography = ({ onClick, children, ...style }: PropsWithChildren<TypographyProps>) => {

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { NavLayout } from '../component/layout/NavLayout';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { BsQuestionCircle } from 'react-icons/bs';
 import {
   accessTokenState,
   editNicknameModalState,
@@ -11,11 +12,12 @@ import {
   userprofilephotoState,
 } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 import { useQuery } from 'react-query';
 import { userApi } from '../api/callApi';
+import { InfoModal } from '../component/InfoModal';
 
 const MainContainer = styled.div`
   display: flex;
@@ -110,6 +112,7 @@ const EnglishFont = styled.p`
 console.log(window.location.href);
 
 export const Main = () => {
+  const [infoModalVisible, setInfoModalVisible] = useState(true);
   const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
   const [, setModalEditPhoto] = useRecoilState(editPhotoModalState);
   const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
@@ -157,6 +160,8 @@ export const Main = () => {
   return (
     <NavLayout>
       <MainContainer>
+        {infoModalVisible && <InfoModal closeModal={() => setInfoModalVisible(false)} />}
+        <BsQuestionCircle onClick={() => setInfoModalVisible(true)} />
         <Box
           width={'4.75rem'}
           height={4.75}

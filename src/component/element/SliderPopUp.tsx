@@ -35,7 +35,6 @@ export const Slide = keyframes`
 export const SliderWrapper = styled.div`
   animation: ${Slide} 0.6s ease;
   z-index: 4;
-  background-color: white;
 `;
 
 export const SliderPopUp = ({ children }: PropsWithChildren) => {
