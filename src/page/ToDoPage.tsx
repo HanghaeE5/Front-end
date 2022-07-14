@@ -156,14 +156,10 @@ export const ToDoPage = () => {
 
   // TODO : 무한스크롤 에러
   useEffect(() => {
-    if (!isBottom) return;
-
-    if (todoList?.last) {
-      return;
-    }
+    if (loadingTodoList || !isBottom || todoList?.last) return;
 
     setTodoFilter((prev) => ({ ...prev, page: prev.page + 1 }));
-  }, [isBottom]);
+  }, [isBottom, loadingTodoList, todoList]);
 
   return (
     <NavLayout>
