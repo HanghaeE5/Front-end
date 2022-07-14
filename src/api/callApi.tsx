@@ -51,6 +51,11 @@ const joinTypeApi = async () => {
   return jta;
 };
 
+const userCharacterChooseApi = async (type: { type: string }) => {
+  const ucca = await callApi.post('/character/select', type);
+  return ucca;
+};
+
 const editPasswordApi = async (data: { newPassword: string; oldPassword: string }) => {
   const epa = await callApi.put('/user/password', data);
   return epa;
@@ -133,6 +138,7 @@ export const registerApi = {
   nickCertificationApi: (nick: { nick: string }) => nickCertificationApi(nick),
   loginApi: (data: FieldValues) => loginApi(data),
   joinSocialApi: (nick: { nick: string }) => joinSocialApi(nick),
+  userCharacterChooseApi: (type: { type: string }) => userCharacterChooseApi(type),
 };
 
 export const userApi = {

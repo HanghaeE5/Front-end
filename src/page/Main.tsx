@@ -6,6 +6,7 @@ import {
   editNicknameModalState,
   editPhotoModalState,
   refreshTokenState,
+  userChatacterTypeState,
   userNicknameState,
   userPhotoWaitState,
   userprofilephotoState,
@@ -137,6 +138,7 @@ export const Main = () => {
   const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
   const [, setModalEditPhoto] = useRecoilState(editPhotoModalState);
   const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
+  const [userChatacterType, setUserChatacterType] = useRecoilState(userChatacterTypeState);
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
@@ -153,12 +155,12 @@ export const Main = () => {
       setUserNickname(data.data.nick);
       setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
       setUserPhotoWait({ img_show: data.data.profileImageUrl, img_file: '' });
+      setUserChatacterType(data.data.characterInfo.type);
     },
     onError: () => {
       // nav('/login');
     },
   });
-  console.log(userInformData);
 
   useEffect(() => {
     if (accessToken) {
@@ -174,6 +176,9 @@ export const Main = () => {
         nav('/signupsns');
       } else {
         window.location.replace('/');
+      }
+      if (!userChatacterType) {
+        nav('/choosecharacter');
       }
     }
   }, []);

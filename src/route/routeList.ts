@@ -14,6 +14,7 @@ import {
   ChattingRoom,
   EditPassword,
   FriendPage,
+  ChooseCharacter,
 } from './../page';
 
 export interface IRoute {
@@ -48,6 +49,11 @@ export const routeList: IRoute[] = [
     id: 'login',
     path: '/login',
     page: Login,
+  },
+  {
+    id: 'ChooseCharacter',
+    path: '/choosecharacter',
+    page: ChooseCharacter,
   },
   {
     id: 'editPassword',

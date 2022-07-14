@@ -130,7 +130,7 @@ export const SignUpSNS = () => {
       <HeaderContainer style={{ borderBottom: '1px solid #DDDDDD ' }}>
         <EvBox direction={'row'} margin={'1rem 0px 1rem   0px'}>
           <EvBox height={1.6875} margin={'0px auto'}>
-            <EvKoreanFont size={1.125} color="#000000">
+            <EvKoreanFont size={1.125} color="#000000" weight={700}>
               회원가입
             </EvKoreanFont>
           </EvBox>
@@ -141,7 +141,7 @@ export const SignUpSNS = () => {
 
         <EvBox width={2.8125} height={1.5} margin={'5rem auto 0.625rem 5.3%'}>
           {nickname && (
-            <EvKoreanFont size={1} color="#939393">
+            <EvKoreanFont size={1} color="#939393" weight={700}>
               닉네임
             </EvKoreanFont>
           )}
@@ -194,7 +194,9 @@ export const SignUpSNS = () => {
                   }
             }
           >
-            {check ? '확인완료' : '중복확인'}
+            <EvKoreanFont size={1} color="#939393" weight={500}>
+              {check ? '확인완료' : '중복확인'}
+            </EvKoreanFont>
           </EvBtnAble>
         </EvBox>
 
@@ -235,7 +237,7 @@ export const SignUpSNS = () => {
             joinSocial(gojoinSocial);
           }}
         >
-          <EvAbleFont size={0.875} isDisable={!check}>
+          <EvAbleFont size={0.875} isDisable={!check} weight={500}>
             회원가입
           </EvAbleFont>
         </EvBtnAble>

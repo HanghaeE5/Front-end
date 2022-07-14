@@ -18,6 +18,7 @@ type box = {
   borderRadius?: string;
   helfBorder?: boolean;
   backgroundsize?: string;
+  backgroundColor?: string;
 };
 
 export const EvBox = styled.div`
@@ -39,7 +40,7 @@ export const EvBox = styled.div`
   background-repeat: no-repeat;
   background-size: ${(props: box) => (props.backgroundsize ? props.backgroundsize : 'center')};
   background-position: center;
-  /* background-color: #b8ecb8; */
+  background-color: ${(props: box) => (props.backgroundColor ? props.backgroundColor : '#fcbfbf')};
 `;
 
 export const EvInputInfo = styled.input`
@@ -109,6 +110,9 @@ type font = {
   isCorrect?: boolean;
   isBold?: boolean;
   isDisable?: boolean;
+  align?: string;
+  weight?: number;
+  lineHeight?: string;
 };
 
 export const EvKoreanFont = styled.p`
@@ -116,7 +120,10 @@ export const EvKoreanFont = styled.p`
   font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
   color: ${(props: font) => (props.color ? props.color : '#1A1A1A')};
   display: flex;
+  font-weight: ${(props: font) => (props.weight ? props.weight : 400)};
+  text-align: ${(props: font) => (props.align ? props.align : '')};
   margin: 0;
+  line-height: ${(props: font) => (props.align ? props.lineHeight : '')};
 `;
 
 export const EvAbleFont = styled.p`

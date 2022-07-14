@@ -45,6 +45,11 @@ export const userNicknameState = atom({
   default: '',
 });
 
+export const userChatacterTypeState = atom({
+  key: 'userChatacterTypeState',
+  default: '',
+});
+
 export const friendAddModalState = atom({
   key: 'friendAddModalState',
   default: false,

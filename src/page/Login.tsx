@@ -97,7 +97,7 @@ export const Login = () => {
         ></EvBox>
         <EvBox width={'2.8125rem'} height={1.5} margin={'0px auto 0.625rem 5.3%'}>
           {email && (
-            <EvKoreanFont size={1} color="#939393">
+            <EvKoreanFont size={1} color="#939393" weight={700}>
               이메일
             </EvKoreanFont>
           )}
@@ -114,7 +114,7 @@ export const Login = () => {
         ></EvInputInfo>
         <EvBox width={3.6875} height={1.5} margin={'1.4375rem auto 0.625rem 5.3%'}>
           {password && (
-            <EvKoreanFont size={1} color="rgba(147, 147, 147, 1)">
+            <EvKoreanFont size={1} color="rgba(147, 147, 147, 1)" weight={700}>
               비밀번호
             </EvKoreanFont>
           )}
@@ -149,7 +149,7 @@ export const Login = () => {
                 }
           }
         >
-          <EvAbleFont size={1.0625} color="white" isDisable={!email || !password}>
+          <EvAbleFont size={1.0625} weight={700} color="white" isDisable={!email || !password}>
             로그인
           </EvAbleFont>
         </EvBtnAble>
@@ -170,7 +170,7 @@ export const Login = () => {
             }}
           ></EvBox>
           <EvBox width={4.25} height={1.3125} margin={'0px auto 0px 0px'}>
-            <EvKoreanFont size={0.874} color="#939393">
+            <EvKoreanFont size={0.874} weight={700} color="#939393">
               자동 로그인
             </EvKoreanFont>
           </EvBox>
@@ -185,7 +185,7 @@ export const Login = () => {
             nav('/signupemail');
           }}
         >
-          <EvKoreanFont size={0.875} color=" #989898">
+          <EvKoreanFont size={0.875} weight={500} color=" #989898">
             회원가입
           </EvKoreanFont>
         </EvBtn>
