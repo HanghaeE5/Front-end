@@ -16,8 +16,9 @@ const StyledButton = styled.button<ButtonProps>`
   align-items: center;
   justify-content: center;
   width: ${(props) => props.width || '100%'};
-  font: ${({ size, theme }) => theme.button.font[size || 'medium']};
+  font-size: ${({ size, theme }) => theme.button.font[size || 'medium']};
 
+  font-weight: 500;
   padding: 1rem 0;
   height: ${({ size, theme }) => theme.button.height[size || 'medium']};
   cursor: ${({ buttonType }) => buttonType && 'disable'};
@@ -29,6 +30,8 @@ const StyledButton = styled.button<ButtonProps>`
   background-color: ${({ buttonType, theme }) => theme.button.backgroundColor[buttonType || 'primary']};
 
   border-radius: ${({ isSquare, theme }) => (isSquare ? '' : theme.radius)};
+
+  cursor: pointer;
 `;
 
 export const Button = ({

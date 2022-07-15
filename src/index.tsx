@@ -1,6 +1,6 @@
-import './style/index.css';
-
 import React from 'react';
+import './style/index.css';
+import 'react-day-picker/dist/style.css';
 import ReactDOM from 'react-dom/client';
 
 import App from './App';
@@ -12,6 +12,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
+      retry: 2,
     },
   },
 });

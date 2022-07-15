@@ -11,18 +11,20 @@ import { chatListState, userNicknameState } from '../recoil/store';
 import { userApi } from '../api/callApi';
 import axios from 'axios';
 import setupInterceptorsTo from '../api/Interceptiors';
+import { EvBox, EvKoreanFont } from '../component/element/BoxStyle';
 
 const ContentWrapper = styled.div`
   /* background-color: seagreen; */
   height: calc(100% - 4rem);
   overflow-y: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
   display: flex;
   flex-direction: column-reverse;
   padding-bottom: 10px;
   //스크롤바 없애기
-  ::-webkit-scrollbar {
-    display: none;
-  }
+
   section:nth-of-type(1) {
     height: 10rem;
 
@@ -112,14 +114,24 @@ const YourChatBox = styled.div`
 
 const MyChatBox = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   max-width: 70%;
   margin: 1rem 1.25rem 0 auto;
   /* background: #bdefcd; */
 `;
 
+const InformChatBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 100%;
+  margin: 1rem 1.25rem;
+  /* background: #bdefcd; */
+`;
+
 const YourTextBox = styled.div`
+  max-width: calc(100% - 6.5rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -130,12 +142,25 @@ const YourTextBox = styled.div`
 `;
 
 const MyTextBox = styled.div`
+  max-width: calc(100% - 3.8rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 0 0 0 auto;
   background: #9addff;
   border-radius: 12px 12px 0px 12px;
+  padding: 10px 14px;
+  word-break: break-all;
+`;
+
+const InformTextBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 2.625rem;
+  background: #ccccc6cc;
+  border-radius: 12px;
   padding: 10px 14px;
 `;
 
@@ -201,13 +226,6 @@ export const ChattingRoom = () => {
       setmyText('');
     }
   };
-  // //채팅방 상세 API
-  // const getChattingQuery = useQuery('chattingLists', chattingApi.chattingListApi, {
-  //   //여기서 리코일에 저장
-  //   onSuccess: (data: any) => {
-  //     setChattingList(data.data);
-  //   },
-  // });
 
   //채팅 get 실행
   const queryClient = useQueryClient();
@@ -227,6 +245,7 @@ export const ChattingRoom = () => {
   const chattingMessageData = useQuery('chattingData', chattingMessageApi, {
     onSuccess: (data) => {
       setchatData(data.data.content);
+      console.log(data);
     },
     // onError: (error: AxiosError<{ msg: string }>) => {
     //   if (error.message === 'Request failed with status code 401') {
@@ -236,7 +255,6 @@ export const ChattingRoom = () => {
     //   }
     // },
   });
-  console.log(chattingMessageData);
 
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
@@ -247,7 +265,24 @@ export const ChattingRoom = () => {
       // nav('/login');
     },
   });
-  console.log(userInformData);
+  // console.log(userInformData);
+
+  //시간 변환
+  function messageTime(msgtime: string) {
+    const divide = msgtime.split('T')[1];
+    const divideHour = Number(divide.split(':')[0]);
+    const divideMin = divide.split(':')[1];
+
+    if (divideHour > 12) {
+      return `오후 ${divideHour - 12} : ${divideMin}`;
+    } else if (divideHour === 12) {
+      return `오후 ${divideHour} : ${divideMin}`;
+    } else if (divideHour === 0) {
+      return `오전 ${divideHour + 12} : ${divideMin}`;
+    } else {
+      return `오전 ${divideHour} : ${divideMin}`;
+    }
+  }
 
   //웹소켓 연결, 구독
   function wsConnectSubscribe() {
@@ -366,45 +401,48 @@ export const ChattingRoom = () => {
     <NavLayout>
       <PageLayout title="채팅">
         <ContentWrapper>
-          <RowBox
-            width={'2rem'}
-            height={2}
-            margin={'auto auto 0 auto'}
-            style={{
-              backgroundSize: 'cover',
-              backgroundImage: 'url(/assets/exit.svg)',
-              cursor: 'pointer',
-            }}
-            onClick={() => {
-              wsDisConnectUnsubscribe();
-            }}
-          ></RowBox>
           {chatData.map((chat, chatindex) => {
-            if (chat.sender !== userNickname) {
+            if (chat.type === 'QUIT') {
+              return (
+                <InformChatBox key={chatindex}>
+                  <InformTextBox>
+                    <KoreanFont size={1}>{chat.message}</KoreanFont>
+                  </InformTextBox>
+                </InformChatBox>
+              );
+            } else if (chat.sender !== userNickname) {
               return (
                 <YourChatBox key={chatindex}>
                   <RowChattingBox
                     onClick={() => {
-                      nav('/chattingroom/'); //아영:그사람 메인페이지로 보내기
+                      nav(`/friend/page/${chat.sender}`);
                     }}
                   >
                     <ChattingRoomPhotoBox
                       style={{
-                        backgroundImage: 'url(/assets/토끼.png)',
+                        backgroundImage: `url(${chat.profileImageUrl})`,
                       }}
                     ></ChattingRoomPhotoBox>
                     <ChattingRoomTextBox>
                       <KoreanFont size={0.75}>{chat.sender}</KoreanFont>
                     </ChattingRoomTextBox>
                   </RowChattingBox>
-                  <YourTextBox>
-                    <KoreanFont size={1}>{chat.message}</KoreanFont>
-                  </YourTextBox>
+                  <EvBox style={{ alignItems: 'flex-end' }} direction="row">
+                    <YourTextBox>
+                      <KoreanFont size={1}>{chat.message}</KoreanFont>
+                    </YourTextBox>
+                    <EvBox width={'3.5rem'} isAlignSide={true}>
+                      <KoreanFont size={0.625}>{messageTime(chat.createdDate)}</KoreanFont>
+                    </EvBox>
+                  </EvBox>
                 </YourChatBox>
               );
             } else {
               return (
-                <MyChatBox>
+                <MyChatBox key={chatindex} style={{ alignItems: 'flex-end' }}>
+                  <EvBox width={'3.5rem'} style={{ alignItems: 'flex-end' }}>
+                    <EvKoreanFont size={0.625}>{messageTime(chat.createdDate)}</EvKoreanFont>
+                  </EvBox>
                   <MyTextBox>
                     <KoreanFont size={1}>{chat.message}</KoreanFont>
                   </MyTextBox>
@@ -413,7 +451,6 @@ export const ChattingRoom = () => {
             }
           })}
         </ContentWrapper>
-
         <MessageSendBox>
           <RowBox width={'89%'} height={2.75} margin={'auto'}>
             <InputInfo

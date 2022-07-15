@@ -150,7 +150,7 @@ export const FriendList = () => {
       setRequestFriendList(data.data);
     },
   });
-  console.log(getRequestFriendQuery);
+  // console.log(getRequestFriendQuery);
 
   //친구 목록 API
   const getFriendQuery = useQuery('friendLists', friendApi.friendListApi, {
@@ -159,7 +159,7 @@ export const FriendList = () => {
       setFriendList(data.data);
     },
   });
-  console.log(getFriendQuery);
+  // console.log(getFriendQuery);
 
   //친구요청 허락 API
   const allowFriendData = useMutation((nick: { nick: string }) => friendApi.allowFriendApi(nick), {
@@ -234,7 +234,7 @@ export const FriendList = () => {
                   <RowBox
                     isCursor={true}
                     onClick={() => {
-                      nav('/'); // 아영 : 친구 메인페이지 넣기
+                      nav(`/friend/page/${requestfriend.nick}`);
                     }}
                   >
                     <FriendPhotoBox
@@ -297,7 +297,7 @@ export const FriendList = () => {
                   <RowBox
                     isCursor={true}
                     onClick={() => {
-                      nav('/'); // 아영 : 친구 메인페이지 넣기
+                      nav(`/friend/page/${myfriend.nick}`);
                     }}
                   >
                     <FriendPhotoBox

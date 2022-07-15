@@ -88,6 +88,10 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
               refreshTokenState: res.headers.refresh,
             }),
           );
+        })
+        .catch((error) => {
+          console.log('refesh 토큰 못 받아옴');
+          localStorage.clear();
         });
     }
     return Promise.reject(error);

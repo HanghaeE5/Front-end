@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
+import { UserInfo } from '../Types/user';
 const { persistAtom } = recoilPersist();
 
 export const accessTokenState = atom({
@@ -41,6 +42,11 @@ export const profileMenuModalState = atom({
 
 export const userNicknameState = atom({
   key: 'userNicknameState',
+  default: '',
+});
+
+export const userChatacterTypeState = atom({
+  key: 'userChatacterTypeState',
   default: '',
 });
 
@@ -98,7 +104,7 @@ export const requestFriendListState = atom<friendList>({
 type chatting = {
   roomId: string;
   name: string;
-  participantList: [{ profileImgUrl: string }];
+  participantList: [{ user: { profileImageUrl: string } }];
 };
 
 type chattingList = chatting[];
@@ -116,6 +122,7 @@ export const userJoinTypeState = atom({
 type chat = {
   createdDate: string;
   message: string;
+  profileImageUrl: string;
   roomId: string;
   sender: string;
   type: string;
@@ -126,4 +133,51 @@ type chatList = chat[];
 export const chatListState = atom<chatList>({
   key: 'chatListState',
   default: [],
+});
+
+export const atomKey = {
+  userInfo: 'userInfo',
+  friendInfo: 'friendInfo',
+};
+
+export const userInfoState = atom<UserInfo>({
+  key: atomKey.userInfo,
+  default: undefined,
+});
+
+export const friendInfoState = atom<UserInfo>({
+  key: atomKey.friendInfo,
+  default: undefined,
+});
+
+export const popNotiState = atom({
+  key: 'popNotiState',
+  default: false,
+});
+
+type todayTodo = {
+  boardId: number;
+  category: string;
+  createdDate: string;
+  state: boolean;
+  todoContent: string;
+  todoDate: string;
+  todoId: number;
+};
+
+type todayTodoList = todayTodo[];
+
+export const todayTodoListState = atom<todayTodoList>({
+  key: 'todayTodoListState',
+  default: [],
+});
+
+export const levelUpModalState = atom({
+  key: 'levelUpModalState',
+  default: false,
+});
+
+export const stepUpModalState = atom({
+  key: 'stepUpModalState',
+  default: false,
 });

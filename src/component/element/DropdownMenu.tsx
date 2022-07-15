@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { BiDotsVerticalRounded, BiEdit, BiShareAlt, BiX } from 'react-icons/bi';
+import { BiEdit, BiShareAlt, BiX } from 'react-icons/bi';
+import { RiMore2Fill } from 'react-icons/ri';
 
 import styled from 'styled-components';
 import { Wrapper } from './Wrapper';
@@ -54,9 +55,10 @@ interface DropDownMenuProps {
   onShare: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  isMine: boolean;
 }
 
-export const DropdownMenu = ({ onShare, onEdit, onDelete }: DropDownMenuProps) => {
+export const DropdownMenu = ({ onShare, onEdit, onDelete, isMine }: DropDownMenuProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
 
@@ -71,7 +73,7 @@ export const DropdownMenu = ({ onShare, onEdit, onDelete }: DropDownMenuProps) =
         // setIsActive(!isActive);
       }
     };
-    console.log(isActive);
+
     if (isActive) {
       window.addEventListener('click', pageClickEvent);
     }
@@ -84,7 +86,7 @@ export const DropdownMenu = ({ onShare, onEdit, onDelete }: DropDownMenuProps) =
   return (
     <MenuContainer>
       <MenuTrigger onClick={onClick}>
-        <BiDotsVerticalRounded />
+        <RiMore2Fill />
       </MenuTrigger>
       <Menu isActive={isActive} ref={dropdownRef}>
         <ul>
@@ -94,18 +96,22 @@ export const DropdownMenu = ({ onShare, onEdit, onDelete }: DropDownMenuProps) =
               <BiShareAlt />
             </Wrapper>
           </MenuItem>
-          <MenuItem>
-            <Wrapper justifyContent="space-between" onClick={onEdit}>
-              <span>수정</span>
-              <BiEdit />
-            </Wrapper>
-          </MenuItem>
-          <MenuItem>
-            <Wrapper justifyContent="space-between" onClick={onDelete}>
-              <span>삭제</span>
-              <BiX />
-            </Wrapper>
-          </MenuItem>
+          {isMine && (
+            <>
+              <MenuItem>
+                <Wrapper justifyContent="space-between" onClick={onEdit}>
+                  <span>수정</span>
+                  <BiEdit />
+                </Wrapper>
+              </MenuItem>
+              <MenuItem>
+                <Wrapper justifyContent="space-between" onClick={onDelete}>
+                  <span>삭제</span>
+                  <BiX />
+                </Wrapper>
+              </MenuItem>
+            </>
+          )}
         </ul>
       </Menu>
     </MenuContainer>

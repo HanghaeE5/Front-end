@@ -1,6 +1,5 @@
-import { Board } from './../Types/community';
 import { AddBoardData, CommunitySearchControl, FetchBoardResponse } from '../Types/community';
-import { TodoData, TodoParams } from '../Types/todo';
+import { Board } from './../Types/community';
 import { callApi } from './callApi';
 
 const COMMUNITY_URL = '/board';
@@ -33,9 +32,7 @@ export const postCummunityFn = async (post: AddBoardData) => {
 };
 
 export const updateBoardFn = async ({ boardId, params }: { boardId: number; params: AddBoardData }) => {
-  const { data } = await callApi.put(`${COMMUNITY_URL}/${boardId}`, {
-    params,
-  });
+  const { data } = await callApi.put(`${COMMUNITY_URL}/${boardId}`, params);
   return data;
 };
 
@@ -49,7 +46,7 @@ export const joinChallengeFn = async (boardId: number) => {
   return data;
 };
 
-export const exitChallengeFn = async (boardId: number) => {
+export const cancelChallengeFn = async (boardId: number) => {
   const { data } = await callApi.put(`${COMMUNITY_URL}/${boardId}/challenge`);
   return data;
 };

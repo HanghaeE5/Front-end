@@ -9,3 +9,5 @@ export * from './ButtonFloating';
 export * from './PopConfirm';
 export * from './Typography';
 export * from './Tab';
+export * from './PopConfirmNew';
+export * from './SliderPopUp';

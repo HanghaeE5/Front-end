@@ -34,3 +34,25 @@
   font-family: 'OpensansBold';
   src: url('./asset/font/OPENSANS-BOLD.TTF');
 }
+
+@font-face {
+  font-family: 'GmarketSans';
+  font-weight: 700;
+  font-style: normal;
+  src: url('./asset/font/GmarketSansTTFBold.ttf');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GmarketSans';
+  font-weight: 500;
+  font-style: normal;
+  src: url('./asset/font/GmarketSansTTFMedium.ttf');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GmarketSans';
+  font-weight: 300;
+  font-style: normal;
+  src: url('./asset/font/GmarketSansTTFLight.ttf');
+  font-display: swap;
+}
