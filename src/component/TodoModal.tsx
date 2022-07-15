@@ -103,7 +103,7 @@ export const TodoModal = ({
   closeModal,
 }: TodoModalProps) => {
   const { value: title, onChangeValue: onChangeTitle } = useInput(todoData?.todoContent);
-  const [isTitleRequired, setIsTitleRequired] = useState(false);
+  // const [isTitleRequired, setIsTitleRequired] = useState(false);
   const [category, setCategory] = useState<Category>((todoData?.category as Category) || 'STUDY');
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date[] | undefined>(
@@ -117,17 +117,15 @@ export const TodoModal = ({
   };
 
   const onChangeTitleInput = (value: string) => {
-    if (value) setIsTitleRequired(false);
+    // if (value) setIsTitleRequired(false);
     onChangeTitle(value);
   };
 
   const onClickAddButton = () => {
-    setIsTitleRequired(false);
+    // setIsTitleRequired(false);
 
-    if (!title) {
-      setIsTitleRequired(true);
-      return;
-    }
+    if (!title) return;
+    // setIsTitleRequired(true);
 
     const date = selectedDay?.map((date) => getYyyyMmDd(date)) || [];
 
@@ -190,7 +188,7 @@ export const TodoModal = ({
             value={title}
             onChange={onChangeTitleInput}
             placeholder="투 두 제목을 입력해주세요"
-            isValidError={isTitleRequired}
+            // isValidError={isTitleRequired}
           />
           <WarningText>투 두 제목은 필수사항입니다!</WarningText>
         </Wrapper>
@@ -267,7 +265,12 @@ export const TodoModal = ({
             )}
           </Wrapper>
         </Wrapper>
-        <StickyButton isSquare onClick={onClickAddButton} size="large">
+        <StickyButton
+          buttonType={title.length === 0 ? 'disable' : 'primary'}
+          isSquare
+          onClick={onClickAddButton}
+          size="large"
+        >
           추가하기
         </StickyButton>
       </TodoContents>

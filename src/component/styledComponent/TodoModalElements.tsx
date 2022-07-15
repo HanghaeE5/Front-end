@@ -97,5 +97,5 @@ export const CalendarWrapper = styled.div`
 `;
 export const StickyButton = styled(Button)`
   position: absolute;
-  bottom: 3.375rem;
+  bottom: 0;
 `;
