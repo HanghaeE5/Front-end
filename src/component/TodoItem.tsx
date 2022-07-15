@@ -1,7 +1,7 @@
 import { AiFillCheckCircle, AiOutlineCheckCircle } from 'react-icons/ai';
 import { VscDebugStackframeDot } from 'react-icons/vsc';
 import { GrTrash } from 'react-icons/gr';
-import { ITodoItem, TodoEvent } from '../Types/todo';
+import { ITodoItem, TodoDoneResponse, TodoEvent } from '../Types/todo';
 import { Typography, Wrapper } from './element';
 import { TodoItemWrapper, TodoLabel } from './styledComponent/TodoPageComponents';
 import { useMutation, useQueryClient } from 'react-query';
@@ -16,10 +16,12 @@ export const TodoItem = ({
   todoData,
   onClickEditButton,
   onClickDeleteButton,
+  handleDoneTodo,
 }: {
   todoData: ITodoItem;
   onClickEditButton: TodoEvent;
   onClickDeleteButton: TodoEvent;
+  handleDoneTodo: (data: TodoDoneResponse | undefined) => void;
 }) => {
   const queryClient = useQueryClient();
 
@@ -28,7 +30,15 @@ export const TodoItem = ({
   };
 
   const { mutate: doneTodo } = useMutation(updateDoneTodo, {
-    onSuccess: () => refectchTodoList(),
+    onSuccess: (data) => {
+      refectchTodoList();
+      handleDoneTodo(data);
+    },
+    onError: (error) => {
+      console.error(error);
+      refectchTodoList();
+      handleDoneTodo(undefined);
+    },
   });
 
   const onClickDone = () => {

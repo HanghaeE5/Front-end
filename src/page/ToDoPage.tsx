@@ -10,28 +10,19 @@ import { ContentWrapper, TodoListWrapper } from '../component/styledComponent/To
 import { TodoItem } from '../component/TodoItem';
 import { TodoModal } from '../component/TodoModal';
 import { PATH } from '../route/routeList';
-import { PublicScope, ITodoItem, Sort, TodoData, TodoParams, TodoStatusFilter } from '../Types/todo';
+import { PublicScope, ITodoItem, Sort, TodoData, TodoParams, TodoStatusFilter, TodoDoneResponse } from '../Types/todo';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { levelUpModalState, stepUpModalState, userInfoState } from '../recoil/store';
 import { EvBtn } from '../component/element/BoxStyle';
 import LevelUpModal from '../component/modallayout/LevelUpModal';
 import StepUpModal from '../component/modallayout/StepUpModal';
+import { MdTurnedIn } from 'react-icons/md';
 
 const AccessTabList: { label: string; value: TodoStatusFilter | 'all' }[] = [
   { label: '전체', value: 'all' },
   { label: '진행', value: 'doingList' },
   { label: '완료', value: 'doneList' },
 ];
-
-const confirmTitle: { [key in 'edit' | 'delete']: string } = {
-  delete: `위드 투두는 게시물에서 \n 신청을 취소할 수 있습니다.`,
-  edit: '위드 투 두는 수정이 불가합니다.',
-};
-
-const confirmContent: { [key in 'edit' | 'delete']: string } = {
-  delete: '모집 마감일까지 취소 가능합니다.',
-  edit: '',
-};
 
 // TODO : util에 있음
 const removeDuplicate = <T,>(list: T[], key: keyof T): T[] => {
@@ -66,7 +57,7 @@ export const ToDoPage = () => {
     visible: false,
     iconType: 'success',
     title: '',
-    button: { text: '확인', onClick: () => console.log('확인') },
+    button: { text: '확인', onClick: () => setConfirmState((prev) => ({ ...prev, setConfirmState: false })) },
   });
 
   const closeConfirm = () => setConfirmState((prev) => ({ ...prev, visible: false }));
@@ -177,6 +168,40 @@ export const ToDoPage = () => {
         },
       },
     });
+  };
+
+  const handleDoneTodo = (data: TodoDoneResponse | undefined) => {
+    if (!data) {
+      setConfirmState({
+        visible: true,
+        iconType: 'warning',
+        title: '😓실패했어요. 다시 시도해주세요',
+        button: { text: '확인', onClick: closeConfirm },
+      });
+      return;
+    }
+
+    const {
+      characterInfo: { levelUp, stepUp },
+    } = data;
+
+    if (levelUp) {
+      setModalLevelUp(true);
+      return;
+    }
+
+    if (stepUp) {
+      setModalStepUp(true);
+      return;
+    }
+
+    setConfirmState((prev) => ({
+      ...prev,
+      visible: true,
+      iconType: 'success',
+      title: '투두완료!',
+      button: { text: '확인', onClick: closeConfirm },
+    }));
   };
 
   const deleteTodoItem = (todo: ITodoItem) => {
@@ -292,6 +317,7 @@ export const ToDoPage = () => {
                       todoData={todo}
                       onClickEditButton={editTodoItem}
                       onClickDeleteButton={onClickDeleteButton}
+                      handleDoneTodo={handleDoneTodo}
                     />
                   ))}
                   {list.length ? <div ref={bottomRef} /> : ''}

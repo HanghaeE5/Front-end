@@ -1,4 +1,4 @@
-import { ITodoItem } from './../Types/todo';
+import { ITodoItem, TodoDoneResponse } from './../Types/todo';
 import { FetchTodoResponse, TodoData, TodoParams } from '../Types/todo';
 import { callApi } from './callApi';
 
@@ -24,7 +24,7 @@ export const updateTodoFn = async ({ todoId, params }: { todoId: number; params:
 };
 
 export const updateDoneTodo = async (todoId: number) => {
-  const { data } = await callApi.post(`/todo/${todoId}`);
+  const { data } = await callApi.post<TodoDoneResponse>(`/todo/${todoId}`);
   return data;
 };
 
@@ -33,7 +33,6 @@ export const deleteTodoFn = async (todoId: number) => {
   return data;
 };
 
-// TODO : scope 범위 확인하기
 export const updateTodoScope = async (publicScope: string) => {
   const { data } = await callApi.put(`/todo/scope`, { publicScope });
   return data;

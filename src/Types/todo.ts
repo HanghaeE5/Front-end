@@ -62,3 +62,22 @@ export interface FetchTodoResponse {
 }
 
 export type TodoEvent = (todoData: ITodoItem) => void;
+
+export interface TodoDoneResponse {
+  characterInfo: {
+    characterName: string;
+    characterUrl: string;
+    exercise: number;
+    expDone: number;
+    expNeed: number;
+    expPercent: 0;
+    level: number;
+    levelUp: boolean;
+    promise: number;
+    shopping: number;
+    step: string;
+    stepUp: boolean;
+    study: number;
+    type: string;
+  };
+}
