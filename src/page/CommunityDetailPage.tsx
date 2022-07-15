@@ -149,7 +149,6 @@ export const CommunityDetailPage = () => {
             text: ' 아니오',
             onClick: () => {
               closeChallange();
-              openChatConfirm();
             },
           }}
         />
@@ -162,6 +161,7 @@ export const CommunityDetailPage = () => {
             text: '네',
             onClick: () => {
               // TODO: 채팅방 참여하기 로직
+              refetchBoardDetail();
               closeChatConfirm();
               SetpublicChattingRoomId(postDetail.chatRoomId);
               enterPublicChattingRoom({ roomId: postDetail.chatRoomId });
@@ -169,7 +169,10 @@ export const CommunityDetailPage = () => {
           }}
           optionalButton={{
             text: ' 아니오',
-            onClick: closeChatConfirm,
+            onClick: () => {
+              refetchBoardDetail();
+              closeChatConfirm();
+            },
           }}
         />
       )}

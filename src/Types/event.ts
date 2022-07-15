@@ -3,3 +3,8 @@ export interface EventResponse {
   stampCnt: number;
   stampDates: string[];
 }
+
+export interface LuckyBoxResponse {
+  eventId: number;
+  name: string;
+}

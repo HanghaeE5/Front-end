@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ReactComponent as WarningIcon } from '../../asset/icons/icon_warning.svg';
 import { ReactComponent as Chat } from '../../asset/icons/icon_chat.svg';
 import { ReactComponent as WithTodo } from '../../asset/icons/icon_withtodo.svg';
+import { ReactComponent as Success } from '../../asset/icons/icon_success.svg';
 import { SliderPopUp } from './SliderPopUp';
 
 const PopupWrapper = styled.div`
@@ -67,7 +68,7 @@ type ConfirmIconType = 'warning' | 'chat' | 'withTodo' | 'success';
 
 const confirmIcon: { [key in ConfirmIconType]: ReactNode } = {
   warning: <WarningIcon />,
-  success: <WithTodo />,
+  success: <Success />,
   chat: <Chat />,
   withTodo: <WithTodo />,
 };
