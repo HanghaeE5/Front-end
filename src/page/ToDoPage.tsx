@@ -294,7 +294,7 @@ export const ToDoPage = () => {
                       onClickDeleteButton={onClickDeleteButton}
                     />
                   ))}
-                  <div ref={bottomRef} />
+                  {list.length && <div ref={bottomRef} />}
                 </TodoListWrapper>
               </Wrapper>
             </Wrapper>
