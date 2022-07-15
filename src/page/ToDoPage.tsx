@@ -3,7 +3,7 @@ import { useInView } from 'react-intersection-observer';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
 import { createTodo, deleteTodoFn, fetchTodoList, todoQueryKey, updateTodoFn, updateTodoScope } from '../api/todoApi';
-import { Button, ButtonFloating, Wrapper, PopConfirmNew, Tab, Typography } from '../component/element';
+import { Button, ButtonFloating, Wrapper, PopConfirmNew, Tab, Typography, PopConfirmProps } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { ContentWrapper, TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
@@ -57,10 +57,19 @@ export const ToDoPage = () => {
   });
 
   const [todoData, setTodoData] = useState<ITodoItem>();
-  const [confirmState, setConfirmState] = useState<{ confirmVisible: boolean; confirmType: 'edit' | 'delete' }>({
+  const [confirmStateOld, setConfirmStateOld] = useState<{ confirmVisible: boolean; confirmType: 'edit' | 'delete' }>({
     confirmVisible: false,
     confirmType: 'edit',
   });
+
+  const [confirmState, setConfirmState] = useState<PopConfirmProps & { visible: boolean }>({
+    visible: false,
+    iconType: 'success',
+    title: '',
+    rightButton: { text: '확인', onClick: () => console.log('확인') },
+  });
+
+  const closeConfirm = () => setConfirmState((prev) => ({ ...prev, visible: false }));
 
   const { data: todoList, isLoading: loadingTodoList } = useQuery(
     [todoQueryKey.fetchTodo, todoFilter],
@@ -98,7 +107,15 @@ export const ToDoPage = () => {
   const { mutate: updateTodoPublicScope } = useMutation(updateTodoScope, {
     onSuccess: () => {
       queryClient.invalidateQueries('fetchUserInfo');
-      alert('변경 완료되었습니다');
+      setConfirmState({
+        visible: true,
+        iconType: 'success',
+        title: '변경되었습니다',
+        rightButton: {
+          text: '확인',
+          onClick: closeConfirm,
+        },
+      });
     },
   });
 
@@ -117,7 +134,7 @@ export const ToDoPage = () => {
 
   const toggleModal = () => setTodoModalState((prev) => ({ ...prev, modalVisible: !prev.modalVisible }));
 
-  const toggleConfirm = () => setConfirmState((prev) => ({ ...prev, confirmVisible: !prev.confirmVisible }));
+  const toggleConfirm = () => setConfirmStateOld((prev) => ({ ...prev, confirmVisible: !prev.confirmVisible }));
 
   const onChangeTab = (todoStatus: TodoStatusFilter) =>
     setTodoFilter((prev) => ({ ...prev, filter: todoStatus, page: 0 }));
@@ -131,7 +148,7 @@ export const ToDoPage = () => {
 
   const editTodoItem = (todo: ITodoItem) => {
     if (todo.boardId) {
-      setConfirmState({ confirmVisible: true, confirmType: 'edit' });
+      setConfirmStateOld({ confirmVisible: true, confirmType: 'edit' });
       return;
     }
 
@@ -142,7 +159,7 @@ export const ToDoPage = () => {
   const deleteTodoItem = (todo: ITodoItem) => {
     if (todo.boardId) {
       ``;
-      setConfirmState({ confirmVisible: true, confirmType: 'delete' });
+      setConfirmStateOld({ confirmVisible: true, confirmType: 'delete' });
       return;
     }
 
@@ -171,14 +188,14 @@ export const ToDoPage = () => {
     <NavLayout>
       <PageLayout title="투 두 리스트">
         <ContentWrapper>
-          {confirmState.confirmVisible && (
+          {confirmStateOld.confirmVisible && (
             <PopConfirmNew
-              confirmType="warning"
-              title={confirmTitle[confirmState.confirmType]}
-              content={confirmContent[confirmState.confirmType]}
+              iconType="warning"
+              title={confirmTitle[confirmStateOld.confirmType]}
+              content={confirmContent[confirmStateOld.confirmType]}
               rightButton={{ text: '확인', onClick: () => toggleConfirm() }}
               leftButton={
-                confirmState.confirmType === 'delete'
+                confirmStateOld.confirmType === 'delete'
                   ? {
                       text: '게시물로 이동',
                       onClick: () => moveToBoard(),
@@ -187,6 +204,7 @@ export const ToDoPage = () => {
               }
             />
           )}
+          {confirmState.visible && <PopConfirmNew {...confirmState} />}
           <Wrapper padding="1rem" isColumn alignItems="start">
             <Wrapper isColumn alignItems="start" margin="1rem 0">
               <Typography weight={500} size={1.125}>
