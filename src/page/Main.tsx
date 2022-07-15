@@ -39,9 +39,6 @@ import StepUpModal from '../component/modallayout/StepUpModal';
 import ExpBar from '../component/element/ExpBar';
 
 const MainContainer = styled.div`
-  /* display: flex; */
-  /* flex-direction: column;
-  align-items: center; */
   height: 100%;
   background: #ffe074; /* fallback for old browsers */
   background: -webkit-linear-gradient(to bottom, #ffffff 25%, #ffe074); /* Chrome 10-25, Safari 5.1-6 */
@@ -126,9 +123,7 @@ export const Main = () => {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
   const [, setModalEditPhoto] = useRecoilState(editPhotoModalState);
-  const [modalLevelUp, setModalLevelUp] = useRecoilState(levelUpModalState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
-  const [modalStepUp, setModalStepUp] = useRecoilState(stepUpModalState);
   const [userChatacterType, setUserChatacterType] = useRecoilState(userChatacterTypeState);
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);
@@ -256,7 +251,7 @@ export const Main = () => {
               margin={'auto '}
               borderRadius="50%"
               url={`url(${userInfoData?.characterInfo.characterUrl})`}
-              backgroundsize="21rem"
+              backgroundsize="19rem"
             />
 
             <EvBox
@@ -274,13 +269,13 @@ export const Main = () => {
               backgroundsize="1.5rem"
             />
 
-            <EvBox width={'15rem'} height={4} margin={'1rem auto 0 auto '}>
+            <EvBox width={'22rem'} height={4} margin={'1rem auto 0 auto '}>
               <EvBox width={'10rem'} height={1.375}>
                 <EvKoreanFont size={1.25} color="#000000" weight={500}>
                   {`Lv.${userInfoData?.characterInfo.level}`}
                 </EvKoreanFont>
               </EvBox>
-              <EvBox width={'10'} height={1.375} margin={'0.875rem auto 0 auto '}>
+              <EvBox width={'22rem'} height={1.375} margin={'0.875rem auto 0 auto '}>
                 <EvKoreanFont size={1.64} color="#000000" weight={700}>
                   {userInfoData?.characterInfo.characterName}
                 </EvKoreanFont>
@@ -377,23 +372,13 @@ export const Main = () => {
                 );
               })}
             </ToDoBox>
-            <EvBtn
-              onClick={() => {
-                setModalLevelUp(true);
-              }}
+
+            <EvBox
+              style={{ top: '10rem', position: 'absolute' }}
+              width={'19.5rem'}
+              height="19.5"
+              // margin="-41.5rem auto auto auto"
             >
-              레벨업모달
-            </EvBtn>
-            <LevelUpModal />
-            <EvBtn
-              onClick={() => {
-                setModalStepUp(true);
-              }}
-            >
-              스텝업모달
-            </EvBtn>
-            <StepUpModal />
-            <EvBox width={'19.5rem'} height="19.5" margin="-41.5rem auto auto auto">
               <ExpBar exp={userInfoData?.characterInfo.expPercent}></ExpBar>
             </EvBox>
           </ContentContainer>

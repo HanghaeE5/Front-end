@@ -3,6 +3,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/store';
+import { GrAnalytics } from 'react-icons/gr';
 
 ChartJS.register(ArcElement, Legend);
 interface exptype {

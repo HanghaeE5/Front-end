@@ -137,10 +137,16 @@ export const chatListState = atom<chatList>({
 
 export const atomKey = {
   userInfo: 'userInfo',
+  friendInfo: 'friendInfo',
 };
 
 export const userInfoState = atom<UserInfo>({
   key: atomKey.userInfo,
+  default: undefined,
+});
+
+export const friendInfoState = atom<UserInfo>({
+  key: atomKey.friendInfo,
   default: undefined,
 });
 

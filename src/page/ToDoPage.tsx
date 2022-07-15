@@ -11,8 +11,11 @@ import { TodoItem } from '../component/TodoItem';
 import { TodoModal } from '../component/TodoModal';
 import { PATH } from '../route/routeList';
 import { PublicScope, ITodoItem, Sort, TodoData, TodoParams, TodoStatusFilter } from '../Types/todo';
-import { useRecoilValue } from 'recoil';
-import { userInfoState } from '../recoil/store';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { levelUpModalState, stepUpModalState, userInfoState } from '../recoil/store';
+import { EvBtn } from '../component/element/BoxStyle';
+import LevelUpModal from '../component/modallayout/LevelUpModal';
+import StepUpModal from '../component/modallayout/StepUpModal';
 
 const AccessTabList: { label: string; value: TodoStatusFilter | 'all' }[] = [
   { label: '전체', value: 'all' },
@@ -40,7 +43,8 @@ export const ToDoPage = () => {
   const [bottomRef, isBottom] = useInView();
   const nav = useNavigate();
   const queryClient = useQueryClient();
-
+  const [modalStepUp, setModalStepUp] = useRecoilState(stepUpModalState);
+  const [modalLevelUp, setModalLevelUp] = useRecoilState(levelUpModalState);
   const userInfo = useRecoilValue(userInfoState);
 
   const [list, setList] = useState<ITodoItem[]>([]);
@@ -301,6 +305,22 @@ export const ToDoPage = () => {
           )}
 
           {!todoModalState.modalVisible && <ButtonFloating onClick={onClickAddButton} />}
+          <EvBtn
+            onClick={() => {
+              setModalLevelUp(true);
+            }}
+          >
+            레벨업모달
+          </EvBtn>
+          <LevelUpModal />
+          <EvBtn
+            onClick={() => {
+              setModalStepUp(true);
+            }}
+          >
+            스텝업모달
+          </EvBtn>
+          <StepUpModal />
         </ContentWrapper>
       </PageLayout>
     </NavLayout>

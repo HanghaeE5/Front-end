@@ -234,7 +234,7 @@ export const FriendList = () => {
                   <RowBox
                     isCursor={true}
                     onClick={() => {
-                      nav('/'); // 아영 : 친구 메인페이지 넣기
+                      nav(`/friend/page/${requestfriend.nick}`);
                     }}
                   >
                     <FriendPhotoBox
@@ -297,7 +297,7 @@ export const FriendList = () => {
                   <RowBox
                     isCursor={true}
                     onClick={() => {
-                      nav('/'); // 아영 : 친구 메인페이지 넣기
+                      nav(`/friend/page/${myfriend.nick}`);
                     }}
                   >
                     <FriendPhotoBox

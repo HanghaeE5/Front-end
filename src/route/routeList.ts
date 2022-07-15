@@ -98,7 +98,7 @@ export const routeList: IRoute[] = [
   },
   {
     id: 'friendpage',
-    path: '/friend/page/:nick',
+    path: `/friend/page/:nick`,
     page: FriendPage,
   },
   {

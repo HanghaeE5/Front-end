@@ -11,6 +11,7 @@ import { chatListState, userNicknameState } from '../recoil/store';
 import { userApi } from '../api/callApi';
 import axios from 'axios';
 import setupInterceptorsTo from '../api/Interceptiors';
+import { EvBox, EvKoreanFont } from '../component/element/BoxStyle';
 
 const ContentWrapper = styled.div`
   /* background-color: seagreen; */
@@ -113,7 +114,7 @@ const YourChatBox = styled.div`
 
 const MyChatBox = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   max-width: 70%;
   margin: 1rem 1.25rem 0 auto;
@@ -130,6 +131,7 @@ const InformChatBox = styled.div`
 `;
 
 const YourTextBox = styled.div`
+  max-width: calc(100% - 6.5rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -140,6 +142,7 @@ const YourTextBox = styled.div`
 `;
 
 const MyTextBox = styled.div`
+  max-width: calc(100% - 3.8rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -147,6 +150,7 @@ const MyTextBox = styled.div`
   background: #9addff;
   border-radius: 12px 12px 0px 12px;
   padding: 10px 14px;
+  word-break: break-all;
 `;
 
 const InformTextBox = styled.div`
@@ -411,7 +415,7 @@ export const ChattingRoom = () => {
                 <YourChatBox key={chatindex}>
                   <RowChattingBox
                     onClick={() => {
-                      nav('/chattingroom/'); //아영:그사람 메인페이지로 보내기
+                      nav(`/friend/page/${chat.sender}`);
                     }}
                   >
                     <ChattingRoomPhotoBox
@@ -423,21 +427,25 @@ export const ChattingRoom = () => {
                       <KoreanFont size={0.75}>{chat.sender}</KoreanFont>
                     </ChattingRoomTextBox>
                   </RowChattingBox>
-                  <YourTextBox>
-                    <KoreanFont size={1}>{chat.message}</KoreanFont>
-                  </YourTextBox>
-
-                  <KoreanFont size={0.75}>{messageTime(chat.createdDate)}</KoreanFont>
+                  <EvBox style={{ alignItems: 'flex-end' }} direction="row">
+                    <YourTextBox>
+                      <KoreanFont size={1}>{chat.message}</KoreanFont>
+                    </YourTextBox>
+                    <EvBox width={'3.5rem'} isAlignSide={true}>
+                      <KoreanFont size={0.625}>{messageTime(chat.createdDate)}</KoreanFont>
+                    </EvBox>
+                  </EvBox>
                 </YourChatBox>
               );
             } else {
               return (
-                <MyChatBox key={chatindex}>
+                <MyChatBox key={chatindex} style={{ alignItems: 'flex-end' }}>
+                  <EvBox width={'3.5rem'} style={{ alignItems: 'flex-end' }}>
+                    <EvKoreanFont size={0.625}>{messageTime(chat.createdDate)}</EvKoreanFont>
+                  </EvBox>
                   <MyTextBox>
                     <KoreanFont size={1}>{chat.message}</KoreanFont>
                   </MyTextBox>
-
-                  <KoreanFont size={0.75}>{messageTime(chat.createdDate)}</KoreanFont>
                 </MyChatBox>
               );
             }
