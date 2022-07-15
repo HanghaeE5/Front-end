@@ -78,17 +78,14 @@ export const TopNavLayout = () => {
   const nav = useNavigate();
 
   // 유저 정보
-  useQuery('fetchUserInfo', userApi.userInformApi, {
-    onSuccess: (data) => setUserInfo(data.data),
-  });
+  // useQuery('fetchUserInfo', userApi.userInformApi, {
+  //   onSuccess: (data) => setUserInfo(data.data),
+  // });
 
   //회원가입 유형 파악 API
   const joinTypeData = useMutation(() => userApi.joinTypeApi(), {
     onSuccess: (data) => {
       setUserJoinType(data.data.socialUser);
-    },
-    onError: () => {
-      // nav('/login');
     },
   });
 
