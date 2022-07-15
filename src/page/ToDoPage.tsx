@@ -57,7 +57,7 @@ export const ToDoPage = () => {
     filter: 'all',
     sort: 'desc',
     page: 0,
-    size: 4,
+    size: 20,
   });
 
   const [todoData, setTodoData] = useState<ITodoItem>();
