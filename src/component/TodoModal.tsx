@@ -137,12 +137,7 @@ export const TodoModal = ({
   const onDatePick = (dateList: Date[] | undefined) => {
     if (!dateList) return;
 
-    if (editType === 'edit') {
-      const lastPick = dateList[dateList.length - 1];
-      setSelectedDay([lastPick]);
-    } else {
-      setSelectedDay(dateList);
-    }
+    setSelectedDay(dateList);
   };
 
   const isSelectedCategory = (thisCategory: Category) => {

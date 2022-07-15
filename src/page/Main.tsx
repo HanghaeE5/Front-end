@@ -165,7 +165,7 @@ export const Main = () => {
 
   return (
     <>
-      <EventWrapper
+      {/* <EventWrapper
         backgroundColor="black"
         height="2.85rem"
         justifyContent="center"
@@ -176,12 +176,11 @@ export const Main = () => {
         <Typography color="#FFD600" weight={700}>
           투두윗 100% 당첨 럭키박스 이벤트 바로가기 <DirectionIcon />
         </Typography>
-      </EventWrapper>
+      </EventWrapper> */}
 
       <NavLayout>
         <MainContainer>
           {infoModalVisible && <InfoModal closeModal={() => setInfoModalVisible(false)} />}
-          {/* <BsQuestionCircle onClick={() => setInfoModalVisible(true)} /> */}
           <Box
             width={'4.75rem'}
             height={4.75}

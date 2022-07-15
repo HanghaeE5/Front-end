@@ -6,7 +6,13 @@ import { Board } from '../Types/community';
 import { usePopConfirm } from '../hooks/usePopConfirm';
 import { useNavigate, useParams } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { communityQueryKey, deleteBoardFn, fetchBoardDetailFn, joinChallengeFn } from '../api/communityApi';
+import {
+  cancelChallengeFn,
+  communityQueryKey,
+  deleteBoardFn,
+  fetchBoardDetailFn,
+  joinChallengeFn,
+} from '../api/communityApi';
 import { PATH } from '../route/routeList';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/store';
@@ -27,12 +33,17 @@ export const CommunityDetailPage = () => {
   const { visible: visibleChallange, openConfirm: openChallange, closeConfirm: closeChallange } = usePopConfirm();
   const { visible: visibleChat, openConfirm: openChatConfirm, closeConfirm: closeChatConfirm } = usePopConfirm();
   const { visible: visibleError, openConfirm: openErrorConfirm, closeConfirm: closeErrorConfirm } = usePopConfirm();
+  const { visible: visibleCancel, openConfirm: openCancelConfirm, closeConfirm: closeCacnelConfirm } = usePopConfirm();
 
-  const { data: postDetail, isLoading } = useQuery<Board>([communityQueryKey.fetchBoardDetail], () =>
-    fetchBoardDetailFn(Number(id)),
-  );
+  const {
+    data: postDetail,
+    isLoading,
+    refetch: refetchBoardDetail,
+  } = useQuery<Board>([communityQueryKey.fetchBoardDetail], () => fetchBoardDetailFn(Number(id)));
   const isMine = userInfo?.email === postDetail?.authorEmail;
+
   const { mutate: joinChallenge } = useMutation(joinChallengeFn);
+  const { mutate: cancelChallenge } = useMutation(cancelChallengeFn);
   const { mutate: deleteBoard } = useMutation(deleteBoardFn);
 
   const onConfirmChallenge = () => {
@@ -76,6 +87,17 @@ export const CommunityDetailPage = () => {
     console.log('공유하기');
   };
 
+  const onClickButton = () => {
+    if (postDetail?.withTodoDeadline) return;
+
+    if (postDetail?.participating) {
+      // 참여취소
+      openCancelConfirm();
+    } else {
+      openChallange();
+    }
+  };
+
   if (isLoading || !postDetail) return <>로딩중</>;
   return (
     <NavLayout>
@@ -86,6 +108,7 @@ export const CommunityDetailPage = () => {
           button={{ text: '확인', onClick: closeErrorConfirm }}
         />
       )}
+
       {visibleChallange && (
         <PopConfirmNew
           iconType="withTodo"
@@ -118,6 +141,27 @@ export const CommunityDetailPage = () => {
           }}
         />
       )}
+      {visibleCancel && (
+        <PopConfirmNew
+          iconType="warning"
+          title={'위드 투 두 참여를 \n 취소하시겠어요?'}
+          button={{
+            text: '네',
+            onClick: () => {
+              cancelChallenge(postDetail.boardId, {
+                onSuccess: () => {
+                  refetchBoardDetail();
+                  closeCacnelConfirm();
+                },
+              });
+            },
+          }}
+          optionalButton={{
+            text: ' 아니오',
+            onClick: () => closeCacnelConfirm(),
+          }}
+        />
+      )}
 
       <PageLayout title="커뮤니티">
         <Wrapper isColumn alignItems="start" height="100%" justifyContent="space-between">
@@ -147,10 +191,14 @@ export const CommunityDetailPage = () => {
             <Wrapper>
               <Button
                 margin="1rem"
-                buttonType={postDetail.participating ? 'primary' : 'disable'}
-                onClick={postDetail.participating ? openChallange : undefined}
+                buttonType={postDetail.withTodoDeadline ? 'disable' : 'primary'}
+                onClick={onClickButton}
               >
-                {postDetail.participating ? '위드 투 두 참여하기' : '마감되었습니다'}
+                {postDetail.withTodoDeadline
+                  ? '마감되었습니다'
+                  : postDetail.participating
+                  ? '참여 취소하기'
+                  : '위드 투 두 참여하기'}
               </Button>
             </Wrapper>
           )}

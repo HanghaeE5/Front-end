@@ -63,7 +63,7 @@ export const CommunitiPostingPage = () => {
         const { todoContent, category, todoDate } = data.todos[0];
         setTodoData({
           category: category as Category,
-          todoDateList: [todoDate],
+          todoDateList: todoDate,
           content: todoContent,
         });
       }

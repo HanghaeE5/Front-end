@@ -25,13 +25,14 @@ export interface Board {
   participating: boolean;
   participatingCount: 0;
   title: string;
+  withTodoDeadline: boolean;
   todos?: [
     {
       category: string;
       createdDate: Date;
       id: number;
       todoContent: string;
-      todoDate: string;
+      todoDate: string[];
     },
   ];
 }

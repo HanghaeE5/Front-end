@@ -55,7 +55,6 @@ export const CommunityPage = () => {
           setList([...removeListDuplicate<Board>(data.content, 'boardId')]);
           return;
         }
-
         setList((prev) => removeListDuplicate<Board>([...prev, ...data.content], 'boardId'));
       },
     },
