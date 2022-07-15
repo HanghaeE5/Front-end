@@ -219,6 +219,11 @@ export const ToDoPage = () => {
     setTodoFilter((prev) => ({ ...prev, page: prev.page + 1 }));
   }, [isBottom, loadingTodoList, todoList]);
 
+  useEffect(() => {
+    if (!userInfo) return;
+    setScope(userInfo.publicScope);
+  }, [userInfo]);
+
   return (
     <NavLayout>
       <PageLayout title="투 두 리스트">
