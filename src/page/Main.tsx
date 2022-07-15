@@ -112,7 +112,7 @@ const EnglishFont = styled.p`
 console.log(window.location.href);
 
 export const Main = () => {
-  const [infoModalVisible, setInfoModalVisible] = useState(true);
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
   const [, setModalEditPhoto] = useRecoilState(editPhotoModalState);
   const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
