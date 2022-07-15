@@ -123,7 +123,7 @@ export const CommunityPage = () => {
                 <PostCard.Gather>{post.participatingCount}</PostCard.Gather>
               </PostCard>
             ))}
-            {list.length && <div ref={bottomRef} />}
+            {list.length ? <div ref={bottomRef} /> : ''}
           </section>
         </ContentWrapper>
         <ButtonFloating onClick={onClickWriteButton} />
