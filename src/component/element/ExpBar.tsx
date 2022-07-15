@@ -4,7 +4,7 @@ import { Doughnut } from 'react-chartjs-2';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../../recoil/store';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Legend);
 interface exptype {
   exp: number;
 }
