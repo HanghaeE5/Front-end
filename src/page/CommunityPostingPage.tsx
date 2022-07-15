@@ -6,7 +6,7 @@ import { useInput } from '../hooks/useInput';
 import { BiCamera } from 'react-icons/bi';
 import { TodoModal } from '../component/TodoModal';
 import { Category, ITodoItem, TodoData } from '../Types/todo';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import {
   communityQueryKey,
   fetchBoardDetailFn,
@@ -27,10 +27,8 @@ import { PATH } from '../route/routeList';
 export const CommunitiPostingPage = () => {
   const nav = useNavigate();
   const { boardId } = useParams();
-  const queryClient = useQueryClient();
 
   const refectchBoardList = () => {
-    // queryClient.invalidateQueries(communityQueryKey.fetchBoard);
     nav(PATH.COMMUNITY);
   };
 
@@ -50,7 +48,7 @@ export const CommunitiPostingPage = () => {
   const { value: title, onChangeValue: setTitleValue } = useInput();
   const { value: content, onChangeValue: setContentValue } = useInput();
 
-  const { data } = useQuery([communityQueryKey.fetchBoardDetail], () => fetchBoardDetailFn(Number(boardId)), {
+  useQuery([communityQueryKey.fetchBoardDetail], () => fetchBoardDetailFn(Number(boardId)), {
     enabled: !!boardId,
     onSuccess: (data) => {
       setPostType(data.category);
@@ -65,7 +63,7 @@ export const CommunitiPostingPage = () => {
         const { todoContent, category, todoDate } = data.todos[0];
         setTodoData({
           category: category as Category,
-          todoDateList: [todoDate],
+          todoDateList: todoDate,
           content: todoContent,
         });
       }
@@ -196,6 +194,8 @@ export const CommunitiPostingPage = () => {
       setRequiredError((prev) => ({ ...prev, content: false }));
     }
 
+    if (value.length > 2000) return;
+
     setContentValue(value);
   };
   return (
@@ -273,17 +273,18 @@ export const CommunitiPostingPage = () => {
           <Wrapper padding="0 1rem" margin="0.5rem 0">
             <Button onClick={onClickAddPostButton}>{boardId ? '수정하기' : '등록하기'}</Button>
           </Wrapper>
+          {modalState.visible && (
+            <TodoModal
+              editType={modalState.type}
+              todoType="with"
+              modalTitle="위드 투 두 추가하기"
+              closeModal={() => setModalState((prev) => ({ ...prev, visible: false }))}
+              getTodoDataFromModal={setTodoDataFromModal}
+              todoData={modalState.todoData}
+            />
+          )}
         </ScrollWraper>
       </PageLayout>
-      {modalState.visible && (
-        <TodoModal
-          modalType={modalState.type}
-          modalTitle="위드 투 두 추가하기"
-          closeModal={() => setModalState((prev) => ({ ...prev, visible: false }))}
-          getTodoDataFromModal={setTodoDataFromModal}
-          todoData={modalState.todoData}
-        />
-      )}
     </NavLayout>
   );
 };

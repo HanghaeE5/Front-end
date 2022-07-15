@@ -1,13 +1,18 @@
-import { Button, Img, PopConfirm, PopConfirmNew, Wrapper } from '../component/element';
+import { Button, Img, PopConfirmNew, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
 import { Board } from '../Types/community';
-import { AiFillFire } from 'react-icons/ai';
 import { usePopConfirm } from '../hooks/usePopConfirm';
 import { useNavigate, useParams } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { communityQueryKey, deleteBoardFn, fetchBoardDetailFn, joinChallengeFn } from '../api/communityApi';
+import {
+  cancelChallengeFn,
+  communityQueryKey,
+  deleteBoardFn,
+  fetchBoardDetailFn,
+  joinChallengeFn,
+} from '../api/communityApi';
 import { PATH } from '../route/routeList';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/store';
@@ -34,12 +39,17 @@ export const CommunityDetailPage = () => {
   const { visible: visibleChallange, openConfirm: openChallange, closeConfirm: closeChallange } = usePopConfirm();
   const { visible: visibleChat, openConfirm: openChatConfirm, closeConfirm: closeChatConfirm } = usePopConfirm();
   const { visible: visibleError, openConfirm: openErrorConfirm, closeConfirm: closeErrorConfirm } = usePopConfirm();
+  const { visible: visibleCancel, openConfirm: openCancelConfirm, closeConfirm: closeCacnelConfirm } = usePopConfirm();
 
-  const { data: postDetail, isLoading } = useQuery<Board>([communityQueryKey.fetchBoardDetail], () =>
-    fetchBoardDetailFn(Number(id)),
-  );
+  const {
+    data: postDetail,
+    isLoading,
+    refetch: refetchBoardDetail,
+  } = useQuery<Board>([communityQueryKey.fetchBoardDetail], () => fetchBoardDetailFn(Number(id)));
   const isMine = userInfo?.email === postDetail?.authorEmail;
+
   const { mutate: joinChallenge } = useMutation(joinChallengeFn);
+  const { mutate: cancelChallenge } = useMutation(cancelChallengeFn);
   const { mutate: deleteBoard } = useMutation(deleteBoardFn);
 
   const onConfirmChallenge = () => {
@@ -83,6 +93,17 @@ export const CommunityDetailPage = () => {
     console.log('공유하기');
   };
 
+  const onClickButton = () => {
+    if (postDetail?.withTodoDeadline) return;
+
+    if (postDetail?.participating) {
+      // 참여취소
+      openCancelConfirm();
+    } else {
+      openChallange();
+    }
+  };
+
   //단체채팅방 입장 API
   const enterPublicChattingRoomData = useMutation(
     (roomId: { roomId: string }) => chattingApi.enterPublicChattingRoomApi(roomId),
@@ -112,18 +133,19 @@ export const CommunityDetailPage = () => {
     <NavLayout>
       {visibleError && (
         <PopConfirmNew
-          confirmType="warning"
+          iconType="warning"
           title={`위드 투 두 게시물은 작성 이후  \n 수정, 삭제가 불가합니다`}
-          rightButton={{ text: '확인', onClick: closeErrorConfirm }}
+          button={{ text: '확인', onClick: closeErrorConfirm }}
         />
       )}
+
       {visibleChallange && (
         <PopConfirmNew
-          confirmType="withTodo"
+          iconType="withTodo"
           title="위드 투 두에 참여하시겠어요?"
           content="모집 마감일 이후 취소가 불가합니다"
-          rightButton={{ text: '네', onClick: onConfirmChallenge }}
-          leftButton={{
+          button={{ text: '네', onClick: onConfirmChallenge }}
+          optionalButton={{
             text: ' 아니오',
             onClick: () => {
               closeChallange();
@@ -134,9 +156,9 @@ export const CommunityDetailPage = () => {
       )}
       {visibleChat && (
         <PopConfirmNew
-          confirmType="chat"
+          iconType="chat"
           title="채팅방에도 참여하시겠어요?"
-          rightButton={{
+          button={{
             text: '네',
             onClick: () => {
               // TODO: 채팅방 참여하기 로직
@@ -145,50 +167,72 @@ export const CommunityDetailPage = () => {
               enterPublicChattingRoom({ roomId: postDetail.chatRoomId });
             },
           }}
-          leftButton={{
+          optionalButton={{
             text: ' 아니오',
             onClick: closeChatConfirm,
           }}
         />
       )}
+      {visibleCancel && (
+        <PopConfirmNew
+          iconType="warning"
+          title={'위드 투 두 참여를 \n 취소하시겠어요?'}
+          button={{
+            text: '네',
+            onClick: () => {
+              cancelChallenge(postDetail.boardId, {
+                onSuccess: () => {
+                  refetchBoardDetail();
+                  closeCacnelConfirm();
+                },
+              });
+            },
+          }}
+          optionalButton={{
+            text: ' 아니오',
+            onClick: () => closeCacnelConfirm(),
+          }}
+        />
+      )}
 
       <PageLayout title="커뮤니티">
-        <Wrapper isColumn alignItems="start" height="100%">
-          <PostCard.PostHeader
-            userImg={postDetail.authorProfileImageUrl}
-            userName={postDetail.authorNick}
-            date={postDetail.boardCreatedDate.replaceAll('T', ' ')}
-            boardId={postDetail.boardId}
-            isMine={isMine}
-            dropDownProps={{
-              onShare,
-              onEdit: onEditBoard,
-              onDelete: onDeleteBoard,
-            }}
-          />
-          {postDetail.imageUrl && (
+        <Wrapper isColumn alignItems="start" height="100%" justifyContent="space-between">
+          <Wrapper isColumn alignItems="start">
+            <PostCard.PostHeader
+              userImg={postDetail.authorProfileImageUrl}
+              userName={postDetail.authorNick}
+              date={postDetail.boardCreatedDate.replaceAll('T', ' ')}
+              boardId={postDetail.boardId}
+              isMine={isMine}
+              dropDownProps={{
+                onShare,
+                onEdit: onEditBoard,
+                onDelete: onDeleteBoard,
+              }}
+            />
+            {postDetail.imageUrl && (
+              <Wrapper>
+                <Img url={postDetail.imageUrl} type="square" />
+              </Wrapper>
+            )}
+            <PostCard.PostTitle category={postDetail.category}>{postDetail.title}</PostCard.PostTitle>
+            <PostCard.Content>{postDetail.boardContent}</PostCard.Content>
+            {postDetail.category === 'CHALLENGE' && <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>}
+          </Wrapper>
+          {postDetail.category === 'CHALLENGE' && !isMine && (
             <Wrapper>
-              <Img url={postDetail.imageUrl} type="square" />
+              <Button
+                margin="1rem"
+                buttonType={postDetail.withTodoDeadline ? 'disable' : 'primary'}
+                onClick={onClickButton}
+              >
+                {postDetail.withTodoDeadline
+                  ? '마감되었습니다'
+                  : postDetail.participating
+                  ? '참여 취소하기'
+                  : '위드 투 두 참여하기'}
+              </Button>
             </Wrapper>
-          )}
-          <PostCard.PostTitle category={postDetail.category}>{postDetail.title}</PostCard.PostTitle>
-          <PostCard.Content>{postDetail.boardContent}</PostCard.Content>
-
-          {postDetail.category === 'CHALLENGE' && (
-            <>
-              <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>
-              {!isMine && (
-                <Wrapper>
-                  <Button
-                    margin="1rem"
-                    buttonType={postDetail.participating ? 'primary' : 'disable'}
-                    onClick={postDetail.participating ? openChallange : undefined}
-                  >
-                    {postDetail.participating ? '위드 투 두 참여하기' : '마감되었습니다'}
-                  </Button>
-                </Wrapper>
-              )}
-            </>
           )}
         </Wrapper>
       </PageLayout>

@@ -89,7 +89,10 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
             }),
           );
         })
-        .catch();
+        .catch((error) => {
+          console.log('refesh 토큰 못 받아옴');
+          localStorage.clear();
+        });
     }
     return Promise.reject(error);
   }

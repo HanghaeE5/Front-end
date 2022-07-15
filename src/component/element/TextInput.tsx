@@ -11,7 +11,11 @@ const TextElement = styled.input<StyleProps>`
   ::placeholder {
     color: ${(props) => props.theme.color.grayMedium};
     font-size: ${({ inputSize }) => (inputSize === 'small' ? '0.938rem' : '1.063rem')};
-    font-family: 'NotoLight';
+    font-family: NotoLight;
+  }
+
+  :focus {
+    background-color: #fffbe9;
   }
   width: 100%;
   border: ${({ isValidError }) => isValidError && `1px solid red`};
@@ -27,15 +31,19 @@ const SearchButton = styled(BiSearch)`
 const TextAreaElement = styled.textarea<{ isValidError?: boolean }>`
   height: 11.25rem;
   border-radius: ${(props) => props.theme.radius};
-  background-color: 'white';
+  background-color: white;
   border: 1px solid ${({ theme }) => theme.color.grayMedium};
   padding: ${(props) => props.theme.inputPadding};
   ::placeholder {
     color: ${(props) => props.theme.color.grayMedium};
     font-size: 0.813rem;
   }
+
+  :focus {
+    background-color: #fffbe9;
+  }
   width: 100%;
-  font-family: 'NotoRegu';
+  font-family: NotoRegu;
   font-weight: 400;
   resize: none;
   border: ${({ isValidError }) => isValidError && `1px solid red`};

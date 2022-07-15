@@ -3,17 +3,16 @@ import { useInView } from 'react-intersection-observer';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
 import { createTodo, deleteTodoFn, fetchTodoList, todoQueryKey, updateTodoFn, updateTodoScope } from '../api/todoApi';
-import { Button, ButtonFloating, Wrapper } from '../component/element';
-import { PopConfirmNew } from '../component/element/PopConfirmNew';
-import { Tab } from '../component/element/Tab';
-import { Typography } from '../component/element/Typography';
+import { Button, ButtonFloating, Wrapper, PopConfirmNew, Tab, Typography, PopConfirmProps } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { ContentWrapper, TodoListWrapper } from './../component/styledComponent/TodoPageComponents';
+import { ContentWrapper, TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
 import { TodoItem } from '../component/TodoItem';
 import { TodoModal } from '../component/TodoModal';
 import { PATH } from '../route/routeList';
-import { Access, ITodoItem, Sort, TodoData, TodoParams, TodoStatusFilter } from '../Types/todo';
+import { PublicScope, ITodoItem, Sort, TodoData, TodoParams, TodoStatusFilter } from '../Types/todo';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../recoil/store';
 
 const AccessTabList: { label: string; value: TodoStatusFilter | 'all' }[] = [
   { label: '전체', value: 'all' },
@@ -31,21 +30,25 @@ const confirmContent: { [key in 'edit' | 'delete']: string } = {
   edit: '',
 };
 
+// TODO : util에 있음
 const removeDuplicate = <T,>(list: T[], key: keyof T): T[] => {
   return list.reduce((acc: T[], cur) => (acc.find((data: T) => data[key] === cur[key]) ? [...acc] : [...acc, cur]), []);
 };
 
+// TODO : context API 써볼까
 export const ToDoPage = () => {
   const [bottomRef, isBottom] = useInView();
   const nav = useNavigate();
   const queryClient = useQueryClient();
+
+  const userInfo = useRecoilValue(userInfoState);
 
   const [list, setList] = useState<ITodoItem[]>([]);
   const [todoModalState, setTodoModalState] = useState<{ modalVisible: boolean; modalType: 'edit' | 'add' }>({
     modalVisible: false,
     modalType: 'add',
   });
-  const [access, setAccess] = useState<Access>('ALL');
+  const [scope, setScope] = useState<PublicScope>(userInfo?.publicScope || 'ALL');
   const [todoFilter, setTodoFilter] = useState<TodoParams>({
     filter: 'all',
     sort: 'desc',
@@ -54,31 +57,37 @@ export const ToDoPage = () => {
   });
 
   const [todoData, setTodoData] = useState<ITodoItem>();
-  const [confirmState, setConfirmState] = useState<{ confirmVisible: boolean; confirmType: 'edit' | 'delete' }>({
-    confirmVisible: false,
-    confirmType: 'edit',
+
+  const [confirmState, setConfirmState] = useState<PopConfirmProps & { visible: boolean }>({
+    visible: false,
+    iconType: 'success',
+    title: '',
+    button: { text: '확인', onClick: () => console.log('확인') },
   });
 
-  const {
-    data: todoList,
-    isLoading: loadingTodoList,
-    refetch,
-  } = useQuery([todoQueryKey.fetchTodo, todoFilter], () => fetchTodoList(todoFilter), {
-    onSuccess: (data) => {
-      if (todoFilter.page === 0) {
-        setList([...removeDuplicate<ITodoItem>(data.content, 'todoId')]);
-        return;
-      }
+  const closeConfirm = () => setConfirmState((prev) => ({ ...prev, visible: false }));
 
-      setList((prev) => removeDuplicate<ITodoItem>([...prev, ...data.content], 'todoId'));
+  const { data: todoList, isLoading: loadingTodoList } = useQuery(
+    [todoQueryKey.fetchTodo, todoFilter],
+    () => fetchTodoList(todoFilter),
+    {
+      onSuccess: (data) => {
+        if (todoFilter.page === 0) {
+          setList([...removeDuplicate<ITodoItem>(data.content, 'todoId')]);
+          return;
+        }
+
+        setList((prev) => removeDuplicate<ITodoItem>([...prev, ...data.content], 'todoId'));
+      },
     },
-  });
+  );
 
   const refetchTodoList = () => {
     setTodoFilter((prev) => ({ ...prev, page: 0 }));
     queryClient.invalidateQueries(todoQueryKey.fetchTodo);
   };
 
+  // TODO : 훅으로 묶어볼까
   const { mutate: addTodoItem } = useMutation(createTodo, {
     onSuccess: () => refetchTodoList(),
   });
@@ -92,7 +101,18 @@ export const ToDoPage = () => {
   });
 
   const { mutate: updateTodoPublicScope } = useMutation(updateTodoScope, {
-    onSuccess: () => alert('변경 완료되었습니다'),
+    onSuccess: () => {
+      queryClient.invalidateQueries('fetchUserInfo');
+      setConfirmState({
+        visible: true,
+        iconType: 'success',
+        title: '변경되었습니다',
+        button: {
+          text: '확인',
+          onClick: closeConfirm,
+        },
+      });
+    },
   });
 
   const getTodoDataFromModal = (todo: TodoData) => {
@@ -110,21 +130,25 @@ export const ToDoPage = () => {
 
   const toggleModal = () => setTodoModalState((prev) => ({ ...prev, modalVisible: !prev.modalVisible }));
 
-  const toggleConfirm = () => setConfirmState((prev) => ({ ...prev, confirmVisible: !prev.confirmVisible }));
-
   const onChangeTab = (todoStatus: TodoStatusFilter) =>
     setTodoFilter((prev) => ({ ...prev, filter: todoStatus, page: 0 }));
 
   const onClickOrderFilter = (sort: Sort) => setTodoFilter((prev) => ({ ...prev, sort, page: 0 }));
 
-  const onChangeScope = (accessType: Access) => {
-    setAccess(accessType);
-    updateTodoPublicScope('ALL');
+  const onChangeScope = (accessType: PublicScope) => {
+    setScope(accessType);
+    updateTodoPublicScope(accessType);
   };
 
   const editTodoItem = (todo: ITodoItem) => {
     if (todo.boardId) {
-      setConfirmState({ confirmVisible: true, confirmType: 'edit' });
+      setConfirmState({
+        visible: true,
+        iconType: 'warning',
+        title: '위드 투 두는 수정이 불가합니다.',
+        button: { text: '확인', onClick: closeConfirm },
+      });
+
       return;
     }
 
@@ -132,10 +156,44 @@ export const ToDoPage = () => {
     setTodoModalState({ modalType: 'edit', modalVisible: true });
   };
 
+  const onClickDeleteButton = (todo: ITodoItem) => {
+    setConfirmState({
+      visible: true,
+      iconType: 'warning',
+      title: '삭제하시겠습니까?',
+      button: {
+        text: '닫기',
+        onClick: closeConfirm,
+      },
+      optionalButton: {
+        text: '삭제',
+        onClick: () => {
+          closeConfirm();
+          deleteTodoItem(todo);
+        },
+      },
+    });
+  };
+
   const deleteTodoItem = (todo: ITodoItem) => {
     if (todo.boardId) {
-      ``;
-      setConfirmState({ confirmVisible: true, confirmType: 'delete' });
+      setConfirmState({
+        visible: true,
+        iconType: 'warning',
+        title: '위드 투 두는 게시물에서 \n 신청을 취소할 수 있습니다.',
+        content: '모집 마감일까지 취소 가능합니다',
+        optionalButton: {
+          text: '게시물로 이동',
+          onClick: () => {
+            closeConfirm();
+            moveToBoard(todo?.boardId);
+          },
+        },
+        button: {
+          text: '확인',
+          onClick: closeConfirm,
+        },
+      });
       return;
     }
 
@@ -147,44 +205,21 @@ export const ToDoPage = () => {
     setTodoModalState({ modalType: 'add', modalVisible: true });
   };
 
-  const moveToBoard = () => {
-    if (!todoData?.boardId) return;
-
-    toggleConfirm();
-    nav(`${PATH.COMMUNITY_POST}/${todoData?.boardId}`);
+  const moveToBoard = (boardId: number | undefined) => {
+    nav(`${PATH.COMMUNITY_POST}/${boardId}`);
   };
 
-  // TODO : 무한스크롤 에러
   useEffect(() => {
-    if (!isBottom) return;
-
-    if (todoList?.last) {
-      return;
-    }
+    if (loadingTodoList || !isBottom || todoList?.last) return;
 
     setTodoFilter((prev) => ({ ...prev, page: prev.page + 1 }));
-  }, [isBottom]);
+  }, [isBottom, loadingTodoList, todoList]);
 
   return (
     <NavLayout>
       <PageLayout title="투 두 리스트">
         <ContentWrapper>
-          {confirmState.confirmVisible && (
-            <PopConfirmNew
-              confirmType="warning"
-              title={confirmTitle[confirmState.confirmType]}
-              content={confirmContent[confirmState.confirmType]}
-              rightButton={{ text: '확인', onClick: () => toggleConfirm() }}
-              leftButton={
-                confirmState.confirmType === 'delete'
-                  ? {
-                      text: '게시물로 이동',
-                      onClick: () => moveToBoard(),
-                    }
-                  : undefined
-              }
-            />
-          )}
+          {confirmState.visible && <PopConfirmNew {...confirmState} />}
           <Wrapper padding="1rem" isColumn alignItems="start">
             <Wrapper isColumn alignItems="start" margin="1rem 0">
               <Typography weight={500} size={1.125}>
@@ -193,21 +228,21 @@ export const ToDoPage = () => {
               <Wrapper justifyContent="space-between" padding="1rem 0">
                 <Button
                   width="32%"
-                  buttonType={access === 'ALL' ? 'primary' : 'default'}
+                  buttonType={scope === 'ALL' ? 'primary' : 'default'}
                   onClick={() => onChangeScope('ALL')}
                 >
                   전체 공개
                 </Button>
                 <Button
                   width="32%"
-                  buttonType={access === 'FRIEND' ? 'primary' : 'default'}
+                  buttonType={scope === 'FRIEND' ? 'primary' : 'default'}
                   onClick={() => onChangeScope('FRIEND')}
                 >
                   친구공개
                 </Button>
                 <Button
                   width="32%"
-                  buttonType={access === 'NONE' ? 'primary' : 'default'}
+                  buttonType={scope === 'NONE' ? 'primary' : 'default'}
                   onClick={() => onChangeScope('NONE')}
                 >
                   비공개
@@ -247,7 +282,7 @@ export const ToDoPage = () => {
                       key={todo.todoId}
                       todoData={todo}
                       onClickEditButton={editTodoItem}
-                      onClickDeleteButton={deleteTodoItem}
+                      onClickDeleteButton={onClickDeleteButton}
                     />
                   ))}
                   <div ref={bottomRef} />
@@ -257,7 +292,7 @@ export const ToDoPage = () => {
           </Wrapper>
           {todoModalState.modalVisible && (
             <TodoModal
-              modalType={todoModalState.modalType}
+              editType={todoModalState.modalType}
               modalTitle={todoModalState.modalType === 'add' ? '마이 투 두 추가하기' : '마이 투 두 수정하기'}
               closeModal={toggleModal}
               getTodoDataFromModal={getTodoDataFromModal}

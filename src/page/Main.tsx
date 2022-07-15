@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 import { NavLayout } from '../component/layout/NavLayout';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { BsQuestionCircle } from 'react-icons/bs';
+import { ReactComponent as DirectionIcon } from '../asset/icons/direction.svg';
+
 import {
   accessTokenState,
   editNicknameModalState,
@@ -13,11 +16,14 @@ import {
   userprofilephotoState,
 } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 import { useQuery } from 'react-query';
 import { userApi } from '../api/callApi';
+import { InfoModal } from '../component/InfoModal';
+import { Typography, Wrapper } from '../component/element';
+import { PATH } from '../route/routeList';
 import { NoHeaderPageLayout } from '../component/layout/NoHeaderPageLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { EvBox, EvKoreanFont } from '../component/element/BoxStyle';
@@ -134,9 +140,13 @@ const EnglishFont = styled.p`
   margin: 0 0 0 0;
 `;
 
+const EventWrapper = styled(Wrapper)`
+  cursor: pointer;
+`;
 console.log(window.location.href);
 
 export const Main = () => {
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
   const [, setModalEditPhoto] = useRecoilState(editPhotoModalState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
@@ -186,6 +196,18 @@ export const Main = () => {
 
   return (
     <NavLayout>
+      {/* <EventWrapper
+        backgroundColor="black"
+        height="2.85rem"
+        justifyContent="center"
+        padding="1rem"
+        alignItems="center"
+        onClick={() => nav(PATH.EVENT)}
+      >
+        <Typography color="#FFD600" weight={700}>
+          투두윗 100% 당첨 럭키박스 이벤트 바로가기 <DirectionIcon />
+        </Typography>
+      </EventWrapper> */}
       <MainContainer>
         <ContentContainer>
           <EvBox direction="row" margin="3rem 0 0 0 " height={4.75}>

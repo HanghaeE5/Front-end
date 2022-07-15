@@ -100,9 +100,6 @@ export const TopNavLayout = () => {
     onSuccess: (data) => {
       setUserJoinType(data.data.socialUser);
     },
-    onError: () => {
-      // nav('/login');
-    },
   });
 
   const joinType = () => {

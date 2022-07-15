@@ -46,7 +46,7 @@ export const joinChallengeFn = async (boardId: number) => {
   return data;
 };
 
-export const exitChallengeFn = async (boardId: number) => {
+export const cancelChallengeFn = async (boardId: number) => {
   const { data } = await callApi.put(`${COMMUNITY_URL}/${boardId}/challenge`);
   return data;
 };
