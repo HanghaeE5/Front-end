@@ -139,12 +139,39 @@ export const atomKey = {
   userInfo: 'userInfo',
 };
 
-export const userInfoState = atom<UserInfo | undefined>({
+export const userInfoState = atom<UserInfo>({
   key: atomKey.userInfo,
   default: undefined,
 });
 
 export const popNotiState = atom({
   key: 'popNotiState',
+  default: false,
+});
+
+type todayTodo = {
+  boardId: number;
+  category: string;
+  createdDate: string;
+  state: boolean;
+  todoContent: string;
+  todoDate: string;
+  todoId: number;
+};
+
+type todayTodoList = todayTodo[];
+
+export const todayTodoListState = atom<todayTodoList>({
+  key: 'todayTodoListState',
+  default: [],
+});
+
+export const levelUpModalState = atom({
+  key: 'levelUpModalState',
+  default: false,
+});
+
+export const stepUpModalState = atom({
+  key: 'stepUpModalState',
   default: false,
 });

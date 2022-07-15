@@ -148,7 +148,7 @@ export const ChooseCharacter = () => {
             ></EvBox>
             <EvBox width={'3.5rem'} height={1.375} margin={'0 auto'}>
               <EvKoreanFont size={0.9375} align={'center'} weight={700} color={'#989898'}>
-                나무늘보
+                브라우니
               </EvKoreanFont>
             </EvBox>
           </EvBox>
@@ -168,7 +168,7 @@ export const ChooseCharacter = () => {
             ></EvBox>
             <EvBox width={'3.5rem'} height={1.375} margin={'0 auto'}>
               <EvKoreanFont size={0.9375} align={'center'} weight={700} color={'#989898'}>
-                거북이
+                비니
               </EvKoreanFont>
             </EvBox>
           </EvBox>

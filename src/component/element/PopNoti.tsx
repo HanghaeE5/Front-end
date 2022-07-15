@@ -85,6 +85,7 @@ const Message = styled.span`
   padding: 0 10px 10px 10px;
   font-size: 1rem;
   font-weight: 700;
+  line-height: 23px;
 `;
 
 type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';

@@ -247,7 +247,7 @@ export const SignUpSNS = () => {
           msg={informMsg}
           quitOk={quitOk}
           oneButton={{
-            nav: '/',
+            nav: '/choosecharacter',
             text: '확인',
             onClick: () => {
               setPopNoti(false);
