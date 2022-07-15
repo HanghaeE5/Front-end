@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import { NavLayout } from '../component/layout/NavLayout';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { AiOutlineCheck } from 'react-icons/ai';
+import { BsQuestionCircle } from 'react-icons/bs';
+import { ReactComponent as DirectionIcon } from '../asset/icons/direction.svg';
+
 import {
   accessTokenState,
   editNicknameModalState,
@@ -15,11 +18,14 @@ import {
   userprofilephotoState,
 } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 import { useQuery } from 'react-query';
 import { userApi } from '../api/callApi';
+import { InfoModal } from '../component/InfoModal';
+import { Typography, Wrapper } from '../component/element';
+import { PATH } from '../route/routeList';
 import { NoHeaderPageLayout } from '../component/layout/NoHeaderPageLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { EvBox, EvBtn, EvEnglishFont, EvKoreanFont } from '../component/element/BoxStyle';
@@ -110,10 +116,14 @@ const ToDoBox = styled.div`
   margin: ${(props: box) => props.margin};
   background-color: #ffffff;
 `;
+const EventWrapper = styled(Wrapper)`
+  cursor: pointer;
+`;
 
 console.log(window.location.href);
 
 export const Main = () => {
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
   const [, setModalEditPhoto] = useRecoilState(editPhotoModalState);
   const [modalLevelUp, setModalLevelUp] = useRecoilState(levelUpModalState);
@@ -176,210 +186,219 @@ export const Main = () => {
   }, []);
 
   return (
-    <NavLayout>
-      <MainContainer>
-        <ContentContainer>
-          <EvBox direction="row" margin="3rem 0 0 0 " height={4.75}>
+    <Wrapper isColumn height="100vh">
+      <EventWrapper
+        backgroundColor="black"
+        height="2.85rem"
+        justifyContent="center"
+        padding="1rem"
+        alignItems="center"
+        onClick={() => nav(PATH.EVENT)}
+      >
+        <Typography color="#FFD600" weight={700}>
+          투두윗 100% 당첨 럭키박스 이벤트 바로가기 <DirectionIcon />
+        </Typography>
+      </EventWrapper>
+
+      <NavLayout>
+        <MainContainer>
+          <ContentContainer>
+            <EvBox direction="row" margin="3rem 0 0 0 " height={4.75}>
+              <EvBox
+                width={'4.75rem'}
+                height={4.75}
+                margin={'0 0 0 9rem'}
+                url={`url(${fileImage.img_show})`}
+                borderRadius="50%"
+                border="1px solid #D9D9D9"
+              />
+              <EvBox
+                width={'1.3294rem'}
+                height={1.2468}
+                margin={'auto 7.5625rem auto 0.5rem'}
+                url={'url(/assets/camera.svg)'}
+                isCursor={true}
+                onClick={() => {
+                  setModalEditPhoto(true);
+                }}
+              />
+            </EvBox>
+            <EditPhotoModal />
+            <EvBox direction="row" margin="1rem 0 0 0 " height={2.125} style={{ zIndex: 3 }}>
+              <EvBox
+                width={'9.125rem'}
+                height={2.125}
+                margin={'0 1rem 0 7.125rem'}
+                border="1px solid #DDDDDD"
+                borderRadius="100px"
+                backgroundColor="#ffffff"
+              >
+                <EvKoreanFont size={0.875} weight={700}>
+                  {userInfoData?.nick}
+                </EvKoreanFont>
+              </EvBox>
+              <EvBox
+                width={'1rem'}
+                height={1}
+                margin={'auto 5.375rem auto 0.6875rem'}
+                url="url(/assets/pencil.svg)"
+                isCursor={true}
+                onClick={() => {
+                  setmodalEditNickname(true);
+                }}
+              ></EvBox>
+            </EvBox>
+            <EditNicknameModal />
+
             <EvBox
-              width={'4.75rem'}
-              height={4.75}
-              margin={'0 0 0 9rem'}
-              url={`url(${fileImage.img_show})`}
+              width={'19.375rem'}
+              height={19.375}
+              margin={'auto '}
               borderRadius="50%"
-              border="1px solid #D9D9D9"
+              url={`url(${userInfoData?.characterInfo.characterUrl})`}
+              backgroundsize="21rem"
+            />
+
+            <EvBox
+              width={'5.25rem'}
+              height={0.75}
+              margin={'-4rem 9.0625rem 0 9.0625rem '}
+              url={`url(/assets/shadow.svg)`}
             />
             <EvBox
-              width={'1.3294rem'}
-              height={1.2468}
-              margin={'auto 7.5625rem auto 0.5rem'}
-              url={'url(/assets/camera.svg)'}
+              width={'1.3125rem'}
+              height={1.3125}
+              margin={'-1rem 2rem 0 21.0625rem '}
+              url="url(/assets/물음표.svg)"
               isCursor={true}
-              onClick={() => {
-                setModalEditPhoto(true);
-              }}
+              backgroundsize="1.5rem"
             />
-          </EvBox>
-          <EditPhotoModal />
-          <EvBox direction="row" margin="1rem 0 0 0 " height={2.125} style={{ zIndex: 3 }}>
-            <EvBox
-              width={'9.125rem'}
-              height={2.125}
-              margin={'0 1rem 0 7.125rem'}
-              border="1px solid #DDDDDD"
-              borderRadius="100px"
-              backgroundColor="#ffffff"
-            >
-              <EvKoreanFont size={0.875} weight={700}>
-                {userInfoData?.nick}
-              </EvKoreanFont>
-            </EvBox>
-            <EvBox
-              width={'1rem'}
-              height={1}
-              margin={'auto 5.0rem auto 0'}
-              url="url(/assets/pencil.svg)"
-              isCursor={true}
-              onClick={() => {
-                setmodalEditNickname(true);
-              }}
-            ></EvBox>
-          </EvBox>
-          <EditNicknameModal />
-          {/* <EvBox
-            width={'19.375rem'}
-            height={19.375}
-            margin={'-0.5rem auto 0 auto '}
-            borderRadius="50%"
-            backgroundColor="#ffad60"
-          > */}{' '}
-          <EvBox
-            width={'19.375rem'}
-            height={19.375}
-            margin={'auto '}
-            borderRadius="50%"
-            // backgroundColor="#ffffff"
-            url={`url(${userInfoData?.characterInfo.characterUrl})`}
-            backgroundsize="21rem"
-          ></EvBox>
-          {/* </EvBox> */}
-          <EvBox
-            width={'5.25rem'}
-            height={0.75}
-            margin={'-4rem 9.0625rem 0 9.0625rem '}
-            url={`url(/assets/shadow.svg)`}
-          ></EvBox>
-          <EvBox
-            width={'1.3125rem'}
-            height={1.3125}
-            margin={'-1rem 2rem 0 21.0625rem '}
-            url="url(/assets/물음표.svg)"
-            isCursor={true}
-            backgroundsize="1.5rem"
-          ></EvBox>
-          <EvBox width={'15rem'} height={4} margin={'0rem auto 0 auto '}>
-            <EvBox width={'10rem'} height={1.375}>
-              <EvKoreanFont size={1.25} color="#000000" weight={500}>
-                {`Lv.${userInfoData?.characterInfo.level}`}
-              </EvKoreanFont>
-            </EvBox>
-            <EvBox width={'10'} height={1.375} margin={'0.875rem auto 0 auto '}>
-              <EvKoreanFont size={1.64} color="#000000" weight={700}>
-                {userInfoData?.characterInfo.characterName}
-              </EvKoreanFont>
-            </EvBox>
-          </EvBox>
-          <EvBox direction={'row'} width={'92%'} height={5.75} columnGap={'10px'} margin={'1.125rem auto 0 auto '}>
-            <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
-              <EvBox
-                width={'4.3125rem'}
-                height={4.3125}
-                margin={'auto 0 0 0'}
-                border={'1px solid #1A1A1A'}
-                borderRadius="50%"
-                backgroundColor="#ffffff"
-              >
-                <EvBox width={'3.5rem'} height={3.5} margin={'auto'}>
-                  <Study />
-                  <EvKoreanFont size={0.875} color="#000000" weight={600}>
-                    {userInfoData?.characterInfo.shopping}
-                  </EvKoreanFont>
-                </EvBox>
+
+            <EvBox width={'15rem'} height={4} margin={'1rem auto 0 auto '}>
+              <EvBox width={'10rem'} height={1.375}>
+                <EvKoreanFont size={1.25} color="#000000" weight={500}>
+                  {`Lv.${userInfoData?.characterInfo.level}`}
+                </EvKoreanFont>
+              </EvBox>
+              <EvBox width={'10'} height={1.375} margin={'0.875rem auto 0 auto '}>
+                <EvKoreanFont size={1.64} color="#000000" weight={700}>
+                  {userInfoData?.characterInfo.characterName}
+                </EvKoreanFont>
               </EvBox>
             </EvBox>
-            <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
-              <EvBox
-                width={'4.3125rem'}
-                height={4.3125}
-                margin={'auto 0 0 0'}
-                border={'1px solid #1A1A1A'}
-                borderRadius="50%"
-                backgroundColor="#ffffff"
-              >
-                <EvBox width={'3.5rem'} height={3.5} margin={'auto'} backgroundColor="#fffff">
-                  <Excercise />
-                  <EvKoreanFont size={0.875} color="#000000" weight={600}>
-                    {userInfoData?.characterInfo.exercise}
-                  </EvKoreanFont>
-                </EvBox>
-              </EvBox>
-            </EvBox>
-            <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
-              <EvBox
-                width={'4.3125rem'}
-                height={4.3125}
-                margin={'auto 0 0 0'}
-                border={'1px solid #1A1A1A'}
-                borderRadius="50%"
-                backgroundColor="#ffffff"
-              >
-                <EvBox width={'3.5rem'} height={3.5} margin={'auto'}>
-                  <Shopping />
-                  <EvKoreanFont size={0.875} color="#000000" weight={600}>
-                    {userInfoData?.characterInfo.shopping}
-                  </EvKoreanFont>
-                </EvBox>
-              </EvBox>
-            </EvBox>
-            <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
-              <EvBox
-                width={'4.3125rem'}
-                height={4.3125}
-                margin={'auto 0 0 0'}
-                border={'1px solid #1A1A1A'}
-                borderRadius="50%"
-                backgroundColor="#ffffff"
-              >
-                <EvBox width={'3.5rem'} height={3.5} margin={'auto'} backgroundColor="#fffff">
-                  <PromiseIcon />
-                  <EvKoreanFont size={0.875} color="#000000" weight={600}>
-                    {userInfoData?.characterInfo.promise}
-                  </EvKoreanFont>
-                </EvBox>
-              </EvBox>
-            </EvBox>
-          </EvBox>
-          <EvBox width={10.0625} height={1.6875} margin={'1.75rem auto 0 8%'}>
-            <EvEnglishFont size={1.25} color="#000000" weight={700}>
-              Today_ to do list
-            </EvEnglishFont>
-          </EvBox>
-          <ToDoBox>
-            {userInfoData?.todayTodoList.map((today) => {
-              return (
-                <EvBox direction={'row'} width={'100%'} key={today.todoId}>
-                  <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
-                    <AiOutlineCheck color={today.state ? '#000000' : ' #BABABA'} />
-                  </EvBox>
-                  <EvBox width={'83%'} margin={'0rem auto 0 0'} isAlignSide={true}>
-                    <EvKoreanFont size={0.87} color="#000000">
-                      {today.todoContent}
+            <EvBox direction={'row'} width={'92%'} height={5.75} columnGap={'10px'} margin={'1.125rem auto 0 auto '}>
+              <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
+                <EvBox
+                  width={'4.3125rem'}
+                  height={4.3125}
+                  margin={'auto 0 0 0'}
+                  border={'1px solid #1A1A1A'}
+                  borderRadius="50%"
+                  backgroundColor="#ffffff"
+                >
+                  <EvBox width={'3.5rem'} height={3.5} margin={'auto'}>
+                    <Study />
+                    <EvKoreanFont size={0.875} color="#000000" weight={600}>
+                      {userInfoData?.characterInfo.shopping}
                     </EvKoreanFont>
                   </EvBox>
                 </EvBox>
-              );
-            })}
-          </ToDoBox>
-          <EvBtn
-            onClick={() => {
-              setModalLevelUp(true);
-            }}
-          >
-            레벨업모달
-          </EvBtn>
-          <LevelUpModal />
-          <EvBtn
-            onClick={() => {
-              setModalStepUp(true);
-            }}
-          >
-            스텝업모달
-          </EvBtn>
-          <StepUpModal />
-          <EvBox width={'19.5rem'} height="19.5" margin="-40.5rem auto auto auto">
-            <ExpBar exp={userInfoData?.characterInfo.expPercent}></ExpBar>
-          </EvBox>
-        </ContentContainer>
-      </MainContainer>
-    </NavLayout>
+              </EvBox>
+              <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
+                <EvBox
+                  width={'4.3125rem'}
+                  height={4.3125}
+                  margin={'auto 0 0 0'}
+                  border={'1px solid #1A1A1A'}
+                  borderRadius="50%"
+                  backgroundColor="#ffffff"
+                >
+                  <EvBox width={'3.5rem'} height={3.5} margin={'auto'} backgroundColor="#fffff">
+                    <Excercise />
+                    <EvKoreanFont size={0.875} color="#000000" weight={600}>
+                      {userInfoData?.characterInfo.exercise}
+                    </EvKoreanFont>
+                  </EvBox>
+                </EvBox>
+              </EvBox>
+              <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
+                <EvBox
+                  width={'4.3125rem'}
+                  height={4.3125}
+                  margin={'auto 0 0 0'}
+                  border={'1px solid #1A1A1A'}
+                  borderRadius="50%"
+                  backgroundColor="#ffffff"
+                >
+                  <EvBox width={'3.5rem'} height={3.5} margin={'auto'}>
+                    <Shopping />
+                    <EvKoreanFont size={0.875} color="#000000" weight={600}>
+                      {userInfoData?.characterInfo.shopping}
+                    </EvKoreanFont>
+                  </EvBox>
+                </EvBox>
+              </EvBox>
+              <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
+                <EvBox
+                  width={'4.3125rem'}
+                  height={4.3125}
+                  margin={'auto 0 0 0'}
+                  border={'1px solid #1A1A1A'}
+                  borderRadius="50%"
+                  backgroundColor="#ffffff"
+                >
+                  <EvBox width={'3.5rem'} height={3.5} margin={'auto'} backgroundColor="#fffff">
+                    <PromiseIcon />
+                    <EvKoreanFont size={0.875} color="#000000" weight={600}>
+                      {userInfoData?.characterInfo.promise}
+                    </EvKoreanFont>
+                  </EvBox>
+                </EvBox>
+              </EvBox>
+            </EvBox>
+            <EvBox width={10.0625} height={1.6875} margin={'1.75rem auto 0 8%'}>
+              <EvEnglishFont size={1.25} color="#000000" weight={700}>
+                Today_ to do list
+              </EvEnglishFont>
+            </EvBox>
+            <ToDoBox>
+              {userInfoData?.todayTodoList.map((today) => {
+                return (
+                  <EvBox direction={'row'} width={'100%'} key={today.todoId}>
+                    <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
+                      <AiOutlineCheck color={today.state ? '#000000' : ' #BABABA'} />
+                    </EvBox>
+                    <EvBox width={'83%'} margin={'0rem auto 0 0'} isAlignSide={true}>
+                      <EvKoreanFont size={0.87} color="#000000">
+                        {today.todoContent}
+                      </EvKoreanFont>
+                    </EvBox>
+                  </EvBox>
+                );
+              })}
+            </ToDoBox>
+            <EvBtn
+              onClick={() => {
+                setModalLevelUp(true);
+              }}
+            >
+              레벨업모달
+            </EvBtn>
+            <LevelUpModal />
+            <EvBtn
+              onClick={() => {
+                setModalStepUp(true);
+              }}
+            >
+              스텝업모달
+            </EvBtn>
+            <StepUpModal />
+            <EvBox width={'19.5rem'} height="19.5" margin="-41.5rem auto auto auto">
+              <ExpBar exp={userInfoData?.characterInfo.expPercent}></ExpBar>
+            </EvBox>
+          </ContentContainer>
+        </MainContainer>
+      </NavLayout>
+    </Wrapper>
   );
 };

@@ -12,3 +12,4 @@ export * from './FriendList';
 export * from './FriendPage';
 export * from './Chatting';
 export * from './ChattingRoom';
+export * from './Event';

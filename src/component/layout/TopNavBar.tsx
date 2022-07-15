@@ -83,25 +83,17 @@ export const TopNavLayout = () => {
     onSuccess: (data) => {
       setUserNickname(data.data.nick);
       setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
+      setUserInfo(data.data);
     },
     onError: () => {
       // nav('/login');
     },
   });
-  // console.log(userInformData);
-
-  // 유저 정보
-  // useQuery('fetchUserInfo', userApi.userInformApi, {
-  //   onSuccess: (data) => setUserInfo(data.data),
-  // });
 
   //회원가입 유형 파악 API
   const joinTypeData = useMutation(() => userApi.joinTypeApi(), {
     onSuccess: (data) => {
       setUserJoinType(data.data.socialUser);
-    },
-    onError: () => {
-      // nav('/login');
     },
   });
 

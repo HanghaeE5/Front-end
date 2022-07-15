@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
-import { userApi } from '../api/callApi';
 import { communityQueryKey, fetchBoardFn } from '../api/communityApi';
 import { ButtonFloating, Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
@@ -44,6 +43,7 @@ export const CommunityPage = () => {
     size: 10,
     sub: undefined,
   });
+
   const [list, setList] = useState<Board[]>([]);
 
   const { data: fetchBoardData, isLoading } = useQuery(
@@ -51,12 +51,10 @@ export const CommunityPage = () => {
     () => fetchBoardFn(control),
     {
       onSuccess: (data) => {
-        console.log(control.page, data.content);
         if (control.page === 0) {
           setList([...removeListDuplicate<Board>(data.content, 'boardId')]);
           return;
         }
-
         setList((prev) => removeListDuplicate<Board>([...prev, ...data.content], 'boardId'));
       },
     },
@@ -67,14 +65,10 @@ export const CommunityPage = () => {
   };
 
   useEffect(() => {
-    if (!isBottom) return;
-
-    if (fetchBoardData?.last) {
-      return;
-    }
+    if (isLoading || !isBottom || fetchBoardData?.last) return;
 
     setControl((prev) => ({ ...prev, page: prev.page + 1 }));
-  }, [isBottom]);
+  }, [isBottom, isLoading, fetchBoardData]);
 
   return (
     <NavLayout>

@@ -1,105 +1,91 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { Wrapper } from '../element';
+import { ReactNode } from 'react';
+import { ReactComponent as ChatOn } from '../../asset/icons/nav/chat_on.svg';
+import { ReactComponent as ChatOff } from '../../asset/icons/nav/chat_off.svg';
+import { ReactComponent as CommunityOn } from '../../asset/icons/nav/community_on.svg';
+import { ReactComponent as CommunityOff } from '../../asset/icons/nav/community_off.svg';
+import { ReactComponent as FriendOff } from '../../asset/icons/nav/friend_off.svg';
+import { ReactComponent as FriendOn } from '../../asset/icons/nav/friend_on.svg';
+import { ReactComponent as HomeOn } from '../../asset/icons/nav/home_on.svg';
+import { ReactComponent as HomeOff } from '../../asset/icons/nav/home_off.svg';
+import { ReactComponent as TodoOn } from '../../asset/icons/nav/td_on.svg';
+import { ReactComponent as TodoOff } from '../../asset/icons/nav/td_off.svg';
 
-const BottomNavWrapper = styled.div`
-  height: 3.75rem;
-  width: 100%;
-  max-width: 768px;
-  display: flex;
-  justify-content: row;
-  align-items: center;
-  background-color: #ffffff;
-  z-index: 3;
-  span {
-    font-size: 1.25rem;
-    font-family: 'OpensansBold';
-  }
+import { PATH } from '../../route/routeList';
 
-  svg {
-    position: absolute;
-    left: 20px;
-    font-size: 1.25rem;
-    cursor: pointer;
-  }
-`;
-
-const NavBox = styled.div`
-  width: 3.125rem;
-  height: 2.5625rem;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  cursor: pointer;
-  /* background-color: #f88181; */
-`;
-
-const NavRowBox = styled.div`
-  width: 100%;
+const NavWrapper = styled(Wrapper)`
+  padding-top: 0.5rem;
+  border: 1px solid ${({ theme }) => theme.color.grayMedium};
+  z-index: 10;
   height: 3.375rem;
-  margin: 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  row-gap: 1rem;
+  & div {
+    cursor: pointer;
+
+    &:hover {
+      svg {
+        transform: scale(1.2);
+        transition: 0.2s ease;
+      }
+    }
+  }
 `;
 
+interface MenuItemProps {
+  isCurrentMenu: boolean;
+  icon: ReactNode;
+  selectIcon: ReactNode;
+  onClick: () => void;
+}
+
+const MenuItem = ({ isCurrentMenu, onClick, icon, selectIcon }: MenuItemProps) => {
+  return (
+    <Wrapper justifyContent="center" onClick={() => onClick()}>
+      {isCurrentMenu ? selectIcon : icon}
+    </Wrapper>
+  );
+};
 export const BottomNavLayout = () => {
   const nav = useNavigate();
 
+  const isCurrentMenu = (menuPath: string) => window.location.pathname.includes(menuPath);
+  const movePage = (path: string) => {
+    nav(path);
+  };
+
   return (
-    <BottomNavWrapper>
-      <NavRowBox>
-        <NavBox
-          style={{
-            backgroundImage: 'url(/assets/nav/홈off.svg)',
-          }}
-          onClick={() => {
-            nav('/');
-          }}
-        ></NavBox>
-
-        <NavBox
-          style={{
-            backgroundImage: 'url(/assets/nav/커뮤니티off.svg)',
-          }}
-          onClick={() => {
-            nav('/community');
-          }}
-        ></NavBox>
-
-        <NavBox
-          style={{
-            backgroundImage: 'url(/assets/nav/투두리스트off.svg)',
-          }}
-          onClick={() => {
-            nav('/todo');
-          }}
-        ></NavBox>
-
-        <NavBox
-          style={{
-            backgroundImage: 'url(/assets/nav/친구목록off.svg)',
-          }}
-          onClick={() => {
-            nav('/friendlist');
-          }}
-        ></NavBox>
-
-        <NavBox
-          style={{
-            backgroundImage: 'url(/assets/nav/채팅off.svg)',
-          }}
-          onClick={() => {
-            nav('/chatting');
-          }}
-        ></NavBox>
-      </NavRowBox>
-    </BottomNavWrapper>
+    <NavWrapper justifyContent="center">
+      <MenuItem
+        icon={<HomeOff />}
+        selectIcon={<HomeOn />}
+        isCurrentMenu={window.location.pathname === PATH.MAIN}
+        onClick={() => movePage(PATH.MAIN)}
+      />
+      <MenuItem
+        icon={<CommunityOff />}
+        selectIcon={<CommunityOn />}
+        isCurrentMenu={isCurrentMenu(PATH.COMMUNITY)}
+        onClick={() => movePage(PATH.COMMUNITY)}
+      />
+      <MenuItem
+        icon={<TodoOff />}
+        selectIcon={<TodoOn />}
+        isCurrentMenu={isCurrentMenu(PATH.TODO)}
+        onClick={() => movePage(PATH.TODO)}
+      />
+      <MenuItem
+        icon={<FriendOff />}
+        selectIcon={<FriendOn />}
+        isCurrentMenu={isCurrentMenu(PATH.FRIEND)}
+        onClick={() => movePage(PATH.FRIEND)}
+      />
+      <MenuItem
+        icon={<ChatOff />}
+        selectIcon={<ChatOn />}
+        isCurrentMenu={isCurrentMenu(PATH.CHAT)}
+        onClick={() => movePage(PATH.CHAT)}
+      />
+    </NavWrapper>
   );
 };

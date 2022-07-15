@@ -21,7 +21,7 @@ interface WrapperProps {
   height?: string;
   margin?: string;
   padding?: string;
-  justifyContent?: 'start' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
+  justifyContent?: 'start' | 'center' | 'space-between' | 'space-around' | 'space-evenly' | 'end';
   alignItems?: 'stretch' | 'center' | 'start' | 'end';
   border?: string;
   onClick?: () => void;
