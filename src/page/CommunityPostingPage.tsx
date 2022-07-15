@@ -273,18 +273,18 @@ export const CommunitiPostingPage = () => {
           <Wrapper padding="0 1rem" margin="0.5rem 0">
             <Button onClick={onClickAddPostButton}>{boardId ? '수정하기' : '등록하기'}</Button>
           </Wrapper>
+          {modalState.visible && (
+            <TodoModal
+              editType={modalState.type}
+              todoType="with"
+              modalTitle="위드 투 두 추가하기"
+              closeModal={() => setModalState((prev) => ({ ...prev, visible: false }))}
+              getTodoDataFromModal={setTodoDataFromModal}
+              todoData={modalState.todoData}
+            />
+          )}
         </ScrollWraper>
       </PageLayout>
-      {modalState.visible && (
-        <TodoModal
-          editType={modalState.type}
-          todoType="with"
-          modalTitle="위드 투 두 추가하기"
-          closeModal={() => setModalState((prev) => ({ ...prev, visible: false }))}
-          getTodoDataFromModal={setTodoDataFromModal}
-          todoData={modalState.todoData}
-        />
-      )}
     </NavLayout>
   );
 };
