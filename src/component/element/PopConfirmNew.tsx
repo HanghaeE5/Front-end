@@ -76,10 +76,10 @@ export interface PopConfirmProps {
   iconType?: ConfirmIconType;
   title: string;
   content?: string;
-  rightButton: { text: string; onClick: () => void };
-  leftButton?: { text: string; onClick: () => void };
+  button: { text: string; onClick: () => void };
+  optionalButton?: { text: string; onClick: () => void };
 }
-export const PopConfirmNew = ({ iconType, title, content, rightButton, leftButton }: PopConfirmProps) => {
+export const PopConfirmNew = ({ iconType, title, content, button, optionalButton }: PopConfirmProps) => {
   return (
     <SliderPopUp>
       <PopupWrapper>
@@ -89,8 +89,8 @@ export const PopConfirmNew = ({ iconType, title, content, rightButton, leftButto
           {content && <Content>{content}</Content>}
         </div>
         <div>
-          <span onClick={rightButton.onClick}>{rightButton.text}</span>
-          {leftButton && <span onClick={leftButton.onClick}>{leftButton.text}</span>}
+          <span onClick={button.onClick}>{button.text}</span>
+          {optionalButton && <span onClick={optionalButton.onClick}>{optionalButton.text}</span>}
         </div>
       </PopupWrapper>
     </SliderPopUp>

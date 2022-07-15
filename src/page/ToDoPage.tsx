@@ -57,16 +57,12 @@ export const ToDoPage = () => {
   });
 
   const [todoData, setTodoData] = useState<ITodoItem>();
-  const [confirmStateOld, setConfirmStateOld] = useState<{ confirmVisible: boolean; confirmType: 'edit' | 'delete' }>({
-    confirmVisible: false,
-    confirmType: 'edit',
-  });
 
   const [confirmState, setConfirmState] = useState<PopConfirmProps & { visible: boolean }>({
     visible: false,
     iconType: 'success',
     title: '',
-    rightButton: { text: '확인', onClick: () => console.log('확인') },
+    button: { text: '확인', onClick: () => console.log('확인') },
   });
 
   const closeConfirm = () => setConfirmState((prev) => ({ ...prev, visible: false }));
@@ -111,7 +107,7 @@ export const ToDoPage = () => {
         visible: true,
         iconType: 'success',
         title: '변경되었습니다',
-        rightButton: {
+        button: {
           text: '확인',
           onClick: closeConfirm,
         },
@@ -134,8 +130,6 @@ export const ToDoPage = () => {
 
   const toggleModal = () => setTodoModalState((prev) => ({ ...prev, modalVisible: !prev.modalVisible }));
 
-  const toggleConfirm = () => setConfirmStateOld((prev) => ({ ...prev, confirmVisible: !prev.confirmVisible }));
-
   const onChangeTab = (todoStatus: TodoStatusFilter) =>
     setTodoFilter((prev) => ({ ...prev, filter: todoStatus, page: 0 }));
 
@@ -148,7 +142,13 @@ export const ToDoPage = () => {
 
   const editTodoItem = (todo: ITodoItem) => {
     if (todo.boardId) {
-      setConfirmStateOld({ confirmVisible: true, confirmType: 'edit' });
+      setConfirmState({
+        visible: true,
+        iconType: 'warning',
+        title: '위드 투 두는 수정이 불가합니다.',
+        button: { text: '확인', onClick: closeConfirm },
+      });
+
       return;
     }
 
@@ -156,10 +156,44 @@ export const ToDoPage = () => {
     setTodoModalState({ modalType: 'edit', modalVisible: true });
   };
 
+  const onClickDeleteButton = (todo: ITodoItem) => {
+    setConfirmState({
+      visible: true,
+      iconType: 'warning',
+      title: '삭제하시겠습니까?',
+      button: {
+        text: '닫기',
+        onClick: closeConfirm,
+      },
+      optionalButton: {
+        text: '삭제',
+        onClick: () => {
+          closeConfirm();
+          deleteTodoItem(todo);
+        },
+      },
+    });
+  };
+
   const deleteTodoItem = (todo: ITodoItem) => {
     if (todo.boardId) {
-      ``;
-      setConfirmStateOld({ confirmVisible: true, confirmType: 'delete' });
+      setConfirmState({
+        visible: true,
+        iconType: 'warning',
+        title: '위드 투 두는 게시물에서 \n 신청을 취소할 수 있습니다.',
+        content: '모집 마감일까지 취소 가능합니다',
+        optionalButton: {
+          text: '게시물로 이동',
+          onClick: () => {
+            closeConfirm();
+            moveToBoard(todo?.boardId);
+          },
+        },
+        button: {
+          text: '확인',
+          onClick: closeConfirm,
+        },
+      });
       return;
     }
 
@@ -171,11 +205,8 @@ export const ToDoPage = () => {
     setTodoModalState({ modalType: 'add', modalVisible: true });
   };
 
-  const moveToBoard = () => {
-    if (!todoData?.boardId) return;
-
-    toggleConfirm();
-    nav(`${PATH.COMMUNITY_POST}/${todoData?.boardId}`);
+  const moveToBoard = (boardId: number | undefined) => {
+    nav(`${PATH.COMMUNITY_POST}/${boardId}`);
   };
 
   useEffect(() => {
@@ -188,22 +219,6 @@ export const ToDoPage = () => {
     <NavLayout>
       <PageLayout title="투 두 리스트">
         <ContentWrapper>
-          {confirmStateOld.confirmVisible && (
-            <PopConfirmNew
-              iconType="warning"
-              title={confirmTitle[confirmStateOld.confirmType]}
-              content={confirmContent[confirmStateOld.confirmType]}
-              rightButton={{ text: '확인', onClick: () => toggleConfirm() }}
-              leftButton={
-                confirmStateOld.confirmType === 'delete'
-                  ? {
-                      text: '게시물로 이동',
-                      onClick: () => moveToBoard(),
-                    }
-                  : undefined
-              }
-            />
-          )}
           {confirmState.visible && <PopConfirmNew {...confirmState} />}
           <Wrapper padding="1rem" isColumn alignItems="start">
             <Wrapper isColumn alignItems="start" margin="1rem 0">
@@ -267,7 +282,7 @@ export const ToDoPage = () => {
                       key={todo.todoId}
                       todoData={todo}
                       onClickEditButton={editTodoItem}
-                      onClickDeleteButton={deleteTodoItem}
+                      onClickDeleteButton={onClickDeleteButton}
                     />
                   ))}
                   <div ref={bottomRef} />

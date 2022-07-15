@@ -6,6 +6,11 @@ import { Typography, Wrapper } from './element';
 import { TodoItemWrapper, TodoLabel } from './styledComponent/TodoPageComponents';
 import { useMutation, useQueryClient } from 'react-query';
 import { todoQueryKey, updateDoneTodo } from '../api/todoApi';
+import styled from 'styled-components';
+
+const Dot = styled(VscDebugStackframeDot)`
+  left: -0.35rem;
+`;
 
 export const TodoItem = ({
   todoData,
@@ -36,10 +41,10 @@ export const TodoItem = ({
         <TodoLabel done={todoData.state}>{todoData.boardId ? 'With To Do' : 'My To Do'}</TodoLabel>
         <>{todoData.state ? <AiFillCheckCircle /> : <AiOutlineCheckCircle onClick={onClickDone} />}</>
         <Wrapper isColumn alignItems="start" justifyContent="space-between" height="2.5rem">
-          <Typography weight={700}>{todoData.todoContent}</Typography>
+          <Typography isBold>{todoData.todoContent}</Typography>
           <Wrapper>
             <Typography size={0.75}>{todoData.todoDate}</Typography>
-            <VscDebugStackframeDot />
+            <Dot />
             <Typography size={0.75} underline isPointer onClick={() => onClickEditButton(todoData)}>
               수정
             </Typography>

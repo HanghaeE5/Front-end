@@ -83,7 +83,7 @@ export const CommunityDetailPage = () => {
         <PopConfirmNew
           iconType="warning"
           title={`위드 투 두 게시물은 작성 이후  \n 수정, 삭제가 불가합니다`}
-          rightButton={{ text: '확인', onClick: closeErrorConfirm }}
+          button={{ text: '확인', onClick: closeErrorConfirm }}
         />
       )}
       {visibleChallange && (
@@ -91,8 +91,8 @@ export const CommunityDetailPage = () => {
           iconType="withTodo"
           title="위드 투 두에 참여하시겠어요?"
           content="모집 마감일 이후 취소가 불가합니다"
-          rightButton={{ text: '네', onClick: onConfirmChallenge }}
-          leftButton={{
+          button={{ text: '네', onClick: onConfirmChallenge }}
+          optionalButton={{
             text: ' 아니오',
             onClick: () => {
               closeChallange();
@@ -105,14 +105,14 @@ export const CommunityDetailPage = () => {
         <PopConfirmNew
           iconType="chat"
           title="채팅방에도 참여하시겠어요?"
-          rightButton={{
+          button={{
             text: '네',
             onClick: () => {
               // TODO: 채팅방 참여하기 로직
               closeChatConfirm();
             },
           }}
-          leftButton={{
+          optionalButton={{
             text: ' 아니오',
             onClick: closeChatConfirm,
           }}
