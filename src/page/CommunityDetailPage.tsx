@@ -81,14 +81,14 @@ export const CommunityDetailPage = () => {
     <NavLayout>
       {visibleError && (
         <PopConfirmNew
-          confirmType="warning"
+          iconType="warning"
           title={`위드 투 두 게시물은 작성 이후  \n 수정, 삭제가 불가합니다`}
           rightButton={{ text: '확인', onClick: closeErrorConfirm }}
         />
       )}
       {visibleChallange && (
         <PopConfirmNew
-          confirmType="withTodo"
+          iconType="withTodo"
           title="위드 투 두에 참여하시겠어요?"
           content="모집 마감일 이후 취소가 불가합니다"
           rightButton={{ text: '네', onClick: onConfirmChallenge }}
@@ -103,7 +103,7 @@ export const CommunityDetailPage = () => {
       )}
       {visibleChat && (
         <PopConfirmNew
-          confirmType="chat"
+          iconType="chat"
           title="채팅방에도 참여하시겠어요?"
           rightButton={{
             text: '네',
