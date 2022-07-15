@@ -1,4 +1,4 @@
-import { CommunitiPostingPage } from '../page';
+import { CommunitiPostingPage, Event } from '../page';
 import { ReactElement } from 'react';
 
 import {
@@ -29,6 +29,7 @@ export const PATH = {
   TODO: '/todo',
   FRIEND: '/friendlist',
   CHAT: '/chat',
+  EVENT: '/event',
 };
 
 export const routeList: IRoute[] = [
@@ -97,5 +98,10 @@ export const routeList: IRoute[] = [
     id: 'chattingroom',
     path: `${PATH.CHAT}/room/:roomId`,
     page: ChattingRoom, //뒤에 방번호 넣기
+  },
+  {
+    id: 'event',
+    path: PATH.EVENT,
+    page: Event,
   },
 ];
