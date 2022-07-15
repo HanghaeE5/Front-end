@@ -1,4 +1,4 @@
-import { EventResponse } from '../Types/event';
+import { EventResponse, LuckyBoxResponse } from '../Types/event';
 import { callApi } from './callApi';
 
 export const fetchEventFn = async () => {
@@ -7,7 +7,7 @@ export const fetchEventFn = async () => {
 };
 
 export const openLuckyboxFn = async () => {
-  const { data } = await callApi.put<EventResponse>('/event/open-box');
+  const { data } = await callApi.put<LuckyBoxResponse>('/event/open-box');
   return data;
 };
 
@@ -16,7 +16,8 @@ export const exchangeCouponFn = async () => {
   return data;
 };
 
-export const enterPhoneFn = async () => {
-  const { data } = await callApi.put<EventResponse>('/event/phone');
+export const enterPhoneFn = async (param: { eventId: number; phone: string }) => {
+  console.log('param', param);
+  const { data } = await callApi.put<EventResponse>('/event/phone', param);
   return data;
 };
