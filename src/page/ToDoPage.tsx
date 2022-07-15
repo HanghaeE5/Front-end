@@ -143,7 +143,7 @@ export const ToDoPage = () => {
 
   const onChangeScope = (accessType: PublicScope) => {
     setScope(accessType);
-    updateTodoPublicScope('ALL');
+    updateTodoPublicScope(accessType);
   };
 
   const editTodoItem = (todo: ITodoItem) => {
