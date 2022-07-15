@@ -1,6 +1,6 @@
 export type Category = 'STUDY' | 'EXERCISE' | 'SHOPPING' | 'PROMISE' | 'ETC';
 
-export type Access = 'ALL' | 'FRIEND' | 'NONE';
+export type PublicScope = 'ALL' | 'FRIEND' | 'NONE';
 
 export type TodoStatusFilter = 'doingList' | 'doneList' | 'all';
 

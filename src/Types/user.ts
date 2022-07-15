@@ -1,3 +1,5 @@
+import { PublicScope } from './todo';
+
 export interface UserInfo {
   characterInfo: {
     exp: number;
@@ -14,6 +16,7 @@ export interface UserInfo {
   nick: string;
   profileImageUrl: string;
   providerType: string;
+  publicScope: PublicScope;
   roleType: string;
   userId: string;
 }

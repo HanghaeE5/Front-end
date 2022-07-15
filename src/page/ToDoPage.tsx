@@ -10,7 +10,9 @@ import { ContentWrapper, TodoListWrapper } from '../component/styledComponent/To
 import { TodoItem } from '../component/TodoItem';
 import { TodoModal } from '../component/TodoModal';
 import { PATH } from '../route/routeList';
-import { Access, ITodoItem, Sort, TodoData, TodoParams, TodoStatusFilter } from '../Types/todo';
+import { PublicScope, ITodoItem, Sort, TodoData, TodoParams, TodoStatusFilter } from '../Types/todo';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../recoil/store';
 
 const AccessTabList: { label: string; value: TodoStatusFilter | 'all' }[] = [
   { label: '전체', value: 'all' },
@@ -28,21 +30,25 @@ const confirmContent: { [key in 'edit' | 'delete']: string } = {
   edit: '',
 };
 
+// TODO : util에 있음
 const removeDuplicate = <T,>(list: T[], key: keyof T): T[] => {
   return list.reduce((acc: T[], cur) => (acc.find((data: T) => data[key] === cur[key]) ? [...acc] : [...acc, cur]), []);
 };
 
+// TODO : context API 써볼까
 export const ToDoPage = () => {
   const [bottomRef, isBottom] = useInView();
   const nav = useNavigate();
   const queryClient = useQueryClient();
+
+  const userInfo = useRecoilValue(userInfoState);
 
   const [list, setList] = useState<ITodoItem[]>([]);
   const [todoModalState, setTodoModalState] = useState<{ modalVisible: boolean; modalType: 'edit' | 'add' }>({
     modalVisible: false,
     modalType: 'add',
   });
-  const [access, setAccess] = useState<Access>('ALL');
+  const [scope, setScope] = useState<PublicScope>(userInfo?.publicScope || 'ALL');
   const [todoFilter, setTodoFilter] = useState<TodoParams>({
     filter: 'all',
     sort: 'desc',
@@ -56,26 +62,27 @@ export const ToDoPage = () => {
     confirmType: 'edit',
   });
 
-  const {
-    data: todoList,
-    isLoading: loadingTodoList,
-    refetch,
-  } = useQuery([todoQueryKey.fetchTodo, todoFilter], () => fetchTodoList(todoFilter), {
-    onSuccess: (data) => {
-      if (todoFilter.page === 0) {
-        setList([...removeDuplicate<ITodoItem>(data.content, 'todoId')]);
-        return;
-      }
+  const { data: todoList, isLoading: loadingTodoList } = useQuery(
+    [todoQueryKey.fetchTodo, todoFilter],
+    () => fetchTodoList(todoFilter),
+    {
+      onSuccess: (data) => {
+        if (todoFilter.page === 0) {
+          setList([...removeDuplicate<ITodoItem>(data.content, 'todoId')]);
+          return;
+        }
 
-      setList((prev) => removeDuplicate<ITodoItem>([...prev, ...data.content], 'todoId'));
+        setList((prev) => removeDuplicate<ITodoItem>([...prev, ...data.content], 'todoId'));
+      },
     },
-  });
+  );
 
   const refetchTodoList = () => {
     setTodoFilter((prev) => ({ ...prev, page: 0 }));
     queryClient.invalidateQueries(todoQueryKey.fetchTodo);
   };
 
+  // TODO : 훅으로 묶어볼까
   const { mutate: addTodoItem } = useMutation(createTodo, {
     onSuccess: () => refetchTodoList(),
   });
@@ -89,7 +96,10 @@ export const ToDoPage = () => {
   });
 
   const { mutate: updateTodoPublicScope } = useMutation(updateTodoScope, {
-    onSuccess: () => alert('변경 완료되었습니다'),
+    onSuccess: () => {
+      queryClient.invalidateQueries('fetchUserInfo');
+      alert('변경 완료되었습니다');
+    },
   });
 
   const getTodoDataFromModal = (todo: TodoData) => {
@@ -114,8 +124,8 @@ export const ToDoPage = () => {
 
   const onClickOrderFilter = (sort: Sort) => setTodoFilter((prev) => ({ ...prev, sort, page: 0 }));
 
-  const onChangeScope = (accessType: Access) => {
-    setAccess(accessType);
+  const onChangeScope = (accessType: PublicScope) => {
+    setScope(accessType);
     updateTodoPublicScope('ALL');
   };
 
@@ -151,7 +161,6 @@ export const ToDoPage = () => {
     nav(`${PATH.COMMUNITY_POST}/${todoData?.boardId}`);
   };
 
-  // TODO : 무한스크롤 에러
   useEffect(() => {
     if (loadingTodoList || !isBottom || todoList?.last) return;
 
@@ -186,21 +195,21 @@ export const ToDoPage = () => {
               <Wrapper justifyContent="space-between" padding="1rem 0">
                 <Button
                   width="32%"
-                  buttonType={access === 'ALL' ? 'primary' : 'default'}
+                  buttonType={scope === 'ALL' ? 'primary' : 'default'}
                   onClick={() => onChangeScope('ALL')}
                 >
                   전체 공개
                 </Button>
                 <Button
                   width="32%"
-                  buttonType={access === 'FRIEND' ? 'primary' : 'default'}
+                  buttonType={scope === 'FRIEND' ? 'primary' : 'default'}
                   onClick={() => onChangeScope('FRIEND')}
                 >
                   친구공개
                 </Button>
                 <Button
                   width="32%"
-                  buttonType={access === 'NONE' ? 'primary' : 'default'}
+                  buttonType={scope === 'NONE' ? 'primary' : 'default'}
                   onClick={() => onChangeScope('NONE')}
                 >
                   비공개
