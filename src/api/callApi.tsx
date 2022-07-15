@@ -51,6 +51,11 @@ const joinTypeApi = async () => {
   return jta;
 };
 
+const userCharacterChooseApi = async (type: { type: string }) => {
+  const ucca = await callApi.post('/character/select', type);
+  return ucca;
+};
+
 const editPasswordApi = async (data: { newPassword: string; oldPassword: string }) => {
   const epa = await callApi.put('/user/password', data);
   return epa;
@@ -116,6 +121,16 @@ const chattingRoomDetailApi = async (id: { id: string }) => {
   return cla;
 };
 
+const chattingRoomDeleteAPi = async (roomId: { roomId: string }) => {
+  const dfa = await callApi.delete(`/chat/room`, { data: roomId });
+  return dfa;
+};
+
+const enterPublicChattingRoomApi = async (roomId: { roomId: string }) => {
+  const epcra = await callApi.post('/chat/room/enter/public', roomId);
+  return epcra;
+};
+
 export const registerApi = {
   joinApi: (data: FieldValues) => joinApi(data),
   emilCertificationApi: (email: { email: string }) => emilCertificationApi(email),
@@ -123,6 +138,7 @@ export const registerApi = {
   nickCertificationApi: (nick: { nick: string }) => nickCertificationApi(nick),
   loginApi: (data: FieldValues) => loginApi(data),
   joinSocialApi: (nick: { nick: string }) => joinSocialApi(nick),
+  userCharacterChooseApi: (type: { type: string }) => userCharacterChooseApi(type),
 };
 
 export const userApi = {
@@ -147,4 +163,6 @@ export const chattingApi = {
   makePrivateChattingRoomApi: (data: { name: string; nick: string }) => makePrivateChattingRoomApi(data),
   makePublicChattingRoomApi: (name: { name: string }) => makePublicChattingRoomApi(name),
   chattingRoomDetailApi: (id: { id: string }) => chattingRoomDetailApi(id),
+  chattingRoomDeleteAPi: (roomId: { roomId: string }) => chattingRoomDeleteAPi(roomId),
+  enterPublicChattingRoomApi: (roomId: { roomId: string }) => enterPublicChattingRoomApi(roomId),
 };

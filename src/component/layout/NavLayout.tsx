@@ -11,6 +11,7 @@ const LayoutContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 `;
 
 const BodyWrapper = styled.div`
@@ -19,8 +20,10 @@ const BodyWrapper = styled.div`
   top: 3.5rem;
   width: 100%;
   height: 100%;
-  overflow: hidden;
   box-sizing: border-box;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const NavLayout = ({ children }: PropsWithChildren) => {

@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { registerApi } from '../api/callApi';
 import { AxiosError } from 'axios';
-import { accessTokenState, refreshTokenState } from '../recoil/store';
+import { accessTokenState, popNotiState, refreshTokenState } from '../recoil/store';
+import { PopNoti } from '../component/element/PopNoti';
+import { EvBox, EvBtnAble, EvInputInfo, EvKoreanFont, EvCheckFont, EvAbleFont } from '../component/element/BoxStyle';
 
 const RegisterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
-  height: 42.375rem;
-  background-color: #ffffff;
-  margin: 0px auto 4.625rem auto;
+  height: 100%;
+  max-width: 768px;
+  /* background-color: #8e3939; */
+  overflow-y: auto;
+  position: relative;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const HeaderContainer = styled.div`
@@ -27,130 +31,30 @@ const HeaderContainer = styled.div`
   margin: 0px auto 0px auto;
 `;
 
-type box = {
-  width?: number | string;
-  height?: number | string;
-  margin?: string;
-};
-
-const Box = styled.div`
+const ContentContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #deb3b3; */
-`;
-
-const BoxSide = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #6922bb; */
-`;
-
-const RowBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #683b3b; */
-`;
-
-type font = {
-  size: number;
-  color: string;
-  isCorrect?: boolean;
-  isBold?: boolean;
-};
-
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
-const LogoFontBig = styled.p`
-  font-size: 1.6875rem;
-  font-family: 'OpensansBold';
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
-const CheckFont = styled.p`
-  font-size: ${(props: font) => props.size};
-  font-family: 'NotoRegu';
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-  text-align: left;
-`;
-
-const InputInfo = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  padding: 0 0 0 10px;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
-type btnable = {
-  width: number | string;
-  height: number | string;
-  margin: string;
-  isDisable: boolean;
-};
-
-const BtnAble = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  width: ${(props: btnable) => props.width};
-  height: ${(props: btnable) => props.height}rem;
-  margin: ${(props: btnable) => props.margin};
-  background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
-
-  cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
-
-  &:hover {
-    ${(props: btnable) =>
-      props.isDisable
-        ? ''
-        : `color: white;
-    background-color: #358edc;`}
-  }
 `;
 
 export const SignUpSNS = () => {
   const [nickname, setNickname] = useState<string>('');
+  const [popNoti, setPopNoti] = useRecoilState(popNotiState);
+  const [informType, setInformType] = useState<ConfirmType | undefined>(undefined);
+  const [informMsg, setInformMsg] = useState<string | undefined>('');
+  const [quitOk, setQuitOk] = useState<boolean>(false);
+  const [check, setCheck] = useState<boolean>(false);
+  const [nickConfirm, setNickConfirm] = useState<boolean>(false);
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const localToken = localStorage.getItem('accessToken');
 
+  type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
+
   const nav = useNavigate();
 
-  const CheckNickname = (asValue: string) => {
+  const checkNickname = (asValue: string) => {
     const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
     return regExp.test(asValue);
   };
@@ -165,12 +69,20 @@ export const SignUpSNS = () => {
       localStorage.clear();
       accessLoginToken(token.headers.authorization);
       refreshLoginToken(token.headers.refresh);
-      console.log();
-      alert(`${nickname}님 반가워요!`);
-      nav('/');
+      setQuitOk(true);
+      setPopNoti(true);
+      setInformType('success');
+      setInformMsg(`${nickname}님 반가워요!`);
     },
-    onError: (error: AxiosError) => {
-      alert(error.response?.data);
+    onError: (error: AxiosError<{ msg: string }>) => {
+      if (error.message === 'Request failed with status code 401') {
+        setTimeout(() => joinSocial({ nick: nickname }), 200);
+      } else {
+        setPopNoti(true);
+        setQuitOk(false);
+        setInformType('warning');
+        setInformMsg(error.response?.data.msg);
+      }
     },
   });
 
@@ -179,96 +91,145 @@ export const SignUpSNS = () => {
   };
 
   //닉네임 중복확인 API
-  const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
+  const nickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
     onSuccess: () => {
-      alert(`${nickname}으로 닉네임이 설정되었습니다.`);
+      setPopNoti(true);
+      setQuitOk(false);
+      setInformType('success');
+      setInformMsg(`${nickname}으로 닉네임이 설정되었습니다.`);
+      setNickConfirm(true);
+      setCheck(true);
     },
-    onError: () => {
-      alert('중복된 닉네임입니다.');
+    onError: (error: AxiosError<{ msg: string }>) => {
+      setPopNoti(true);
+      setQuitOk(false);
+      setInformType('warning');
+      setInformMsg(error.response?.data.msg);
+      setCheck(false);
     },
   });
 
-  const NickCertification = (nick: { nick: string }) => {
-    NickCertificationData.mutate(nick);
+  const nickCertification = (nick: { nick: string }) => {
+    nickCertificationData.mutate(nick);
   };
 
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
     if (localToken) {
-      alert('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
+      setPopNoti(true);
+      setQuitOk(true);
+      setInformType('warning');
+      setInformMsg('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
+
       nav('/');
     }
   }, []);
 
   return (
-    <>
-      <HeaderContainer style={{ borderBottom: '1px solid #989898 ' }}>
-        <RowBox margin={'1rem 0px 1rem   0px'}>
-          <Box width={6.85} height={1.6875} margin={'0px 8.25rem 0px 8.3125rem'}>
-            <KoreanFont size={1.125} color="#000000">
+    <RegisterContainer>
+      <HeaderContainer style={{ borderBottom: '1px solid #DDDDDD ' }}>
+        <EvBox direction={'row'} margin={'1rem 0px 1rem   0px'}>
+          <EvBox height={1.6875} margin={'0px auto'}>
+            <EvKoreanFont size={1.125} color="#000000" weight={700}>
               회원가입
-            </KoreanFont>
-          </Box>
-        </RowBox>
+            </EvKoreanFont>
+          </EvBox>
+        </EvBox>
       </HeaderContainer>
-      <RegisterContainer>
-        <Box width={10.5} height={1.5} margin={'3.25rem auto 0px auto'}>
-          <LogoFontBig>TODOWITH</LogoFontBig>
-        </Box>
+      <ContentContainer>
+        <EvBox width={'10.5rem'} height={1.5} margin={'4.75rem auto 0px auto'} url="url(/assets/TODOWITH.svg)"></EvBox>
 
-        <Box width={2.8125} height={1.5} margin={'5rem auto 0.625rem 5.7%'}>
+        <EvBox width={2.8125} height={1.5} margin={'5rem auto 0.625rem 5.3%'}>
           {nickname && (
-            <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
+            <EvKoreanFont size={1} color="#939393" weight={700}>
               닉네임
-            </KoreanFont>
+            </EvKoreanFont>
           )}
-        </Box>
-        <RowBox width={'100%'} margin={'0px 0px 0px 0px'}>
-          <InputInfo
-            width={'67%'}
-            height={2.5}
-            margin={'0px 0.6875rem 0px 1.25rem'}
-            type="text"
-            placeholder="닉네임    ex) 빨강바지3456"
-            name="nickname"
-            value={nickname}
-            onChange={onChangeNickname}
-          ></InputInfo>
+        </EvBox>
 
-          <BtnAble
-            isDisable={!CheckNickname(nickname)}
-            width={'19.4%'}
-            height={2.625}
-            margin={'0px 1.25rem 0px 0px'}
-            onClick={() => {
-              const goNickCertification = {
-                nick: nickname,
-              };
-              NickCertification(goNickCertification);
-            }}
+        <EvBox direction={'row'} width={'100%'} margin={'0px 0px 0px 0px'}>
+          <EvBox
+            direction={'row'}
+            width={'66.9%'}
+            margin={'auto auto auto 1.25rem'}
+            border="1px solid #dddddd"
+            borderRadius="6px"
           >
-            중복확인
-          </BtnAble>
-        </RowBox>
-        <BoxSide width={20} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
-          {nickname ? (
-            <CheckFont size={0.75} color={'blue'} isCorrect={CheckNickname(nickname)}>
-              {CheckNickname(nickname)
+            <EvInputInfo
+              width={'85%'}
+              height={3.75}
+              margin={'0'}
+              helfBorder={true}
+              type="text"
+              placeholder="닉네임    ex) 투두윗3456"
+              name="nickname"
+              value={nickname}
+              onChange={onChangeNickname}
+            />
+            <EvBox
+              width={'15%'}
+              height={3.75}
+              margin={'0'}
+              helfBorder={true}
+              backgroundsize={'1.5rem'}
+              url={check ? 'url(/assets/checkyellow.svg)' : 'url(/assets/checkgray.svg)'}
+            ></EvBox>
+          </EvBox>
+
+          <EvBtnAble
+            isDisable={!checkNickname(nickname)}
+            width={'19.4%'}
+            height={3.75}
+            margin={'0px 1.25rem 0px 0px'}
+            onClick={
+              checkNickname(nickname)
+                ? () => {
+                    const goNickCertification = {
+                      nick: nickname,
+                    };
+                    nickCertification(goNickCertification);
+                  }
+                : () => {
+                    null;
+                  }
+            }
+          >
+            <EvKoreanFont size={1} color="#939393" weight={500}>
+              {check ? '확인완료' : '중복확인'}
+            </EvKoreanFont>
+          </EvBtnAble>
+        </EvBox>
+
+        <EvBox isAlignSide={true} width={20} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
+          {check ? (
+            <EvCheckFont size={0.875} color={'blue'}>
+              중복되지 않는 새로운 닉네임입니다.
+            </EvCheckFont>
+          ) : nickname ? (
+            <EvCheckFont size={0.875} color={'blue'} isCorrect={checkNickname(nickname)}>
+              {checkNickname(nickname)
                 ? '사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.'
                 : '닉네임 형식을 확인해 주세요.'}
-            </CheckFont>
+            </EvCheckFont>
           ) : (
-            <CheckFont size={0.75} color={'black'}>
+            <EvCheckFont size={0.875} color={'black'}>
               닉네임은 2-15자의 한글, 영어, 숫자입니다.
-            </CheckFont>
+            </EvCheckFont>
           )}
-        </BoxSide>
+        </EvBox>
 
-        <BtnAble
-          isDisable={!nickname}
-          width={'88.2%'}
-          height={4}
+        <EvBox
+          width={'89.3%'}
+          height={0.0625}
           margin={'5.125rem 1.25rem 0px 1.25rem'}
+          style={{ backgroundColor: '#989898' }}
+        ></EvBox>
+
+        <EvBtnAble
+          isDisable={!check}
+          width={'89.3%'}
+          height={3.75}
+          margin={'2.9375rem 1.25rem 0px 1.25rem'}
           onClick={() => {
             const gojoinSocial = {
               nick: nickname,
@@ -276,11 +237,24 @@ export const SignUpSNS = () => {
             joinSocial(gojoinSocial);
           }}
         >
-          <KoreanFont size={1.0625} color="white">
-            회원가입 완료
-          </KoreanFont>
-        </BtnAble>
-      </RegisterContainer>
-    </>
+          <EvAbleFont size={0.875} isDisable={!check} weight={500}>
+            회원가입
+          </EvAbleFont>
+        </EvBtnAble>
+        <PopNoti
+          confirmType={informType}
+          visible={popNoti}
+          msg={informMsg}
+          quitOk={quitOk}
+          oneButton={{
+            nav: '/',
+            text: '확인',
+            onClick: () => {
+              setPopNoti(false);
+            },
+          }}
+        />
+      </ContentContainer>
+    </RegisterContainer>
   );
 };

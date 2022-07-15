@@ -148,7 +148,7 @@ export const EditPassword = () => {
     setNewPassword2(e.target.value);
   };
 
-  const CheckPassword = (asValue: string) => {
+  const checkPassword = (asValue: string) => {
     const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{5,15}$/;
     return regExp.test(asValue);
   };
@@ -268,7 +268,7 @@ export const EditPassword = () => {
             ></Box>
           </RowBox>
 
-          {newPassword && CheckPassword(newPassword) ? (
+          {newPassword && checkPassword(newPassword) ? (
             <div>
               <Box width={'7.375rem'} height={1.375} margin={'1.875rem auto 0 5.3%'}>
                 <KoreanFont size={0.9375} color="#1A1A1A">
@@ -326,7 +326,7 @@ export const EditPassword = () => {
           )}
 
           <BoxSide width={21.25} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
-            {newPassword2 && CheckPassword(newPassword) && (
+            {newPassword2 && checkPassword(newPassword) && (
               <CheckFont size={0.75} color={'blue'} isCorrect={newPassword === newPassword2}>
                 {newPassword === newPassword2 ? '비밀번호가 일치합니다' : '비밀번호가 일치하지 않습니다'}
               </CheckFont>

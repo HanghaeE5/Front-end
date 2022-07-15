@@ -16,11 +16,17 @@ import {
 import { PATH } from '../route/routeList';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/store';
+import { ReactComponent as WithTodo } from '../asset/icons/icon_withtodo.svg';
+import { ReactComponent as Chat } from '../asset/icons/icon_chat.svg';
+import { chattingApi } from '../api/callApi';
+import { AxiosError } from 'axios';
+import { useState } from 'react';
 
 export const CommunityDetailPage = () => {
   const nav = useNavigate();
   const { id } = useParams();
   const userInfo = useRecoilValue(userInfoState);
+  const [publicChattingRoomId, SetpublicChattingRoomId] = useState<string>('');
 
   // TODO : 얘도 훅으로 빼기
   const queryClient = useQueryClient();
@@ -98,6 +104,30 @@ export const CommunityDetailPage = () => {
     }
   };
 
+  //단체채팅방 입장 API
+  const enterPublicChattingRoomData = useMutation(
+    (roomId: { roomId: string }) => chattingApi.enterPublicChattingRoomApi(roomId),
+    {
+      onSuccess: (token) => {
+        queryClient.invalidateQueries('chattingLists');
+        console.log(token);
+      },
+      onError: (error: AxiosError<{ msg: string }>) => {
+        if (error.message === 'Request failed with status code 401') {
+          setTimeout(() => enterPublicChattingRoom({ roomId: publicChattingRoomId }), 200);
+        } else {
+          alert(error.response?.data.msg);
+        }
+      },
+    },
+  );
+
+  const enterPublicChattingRoom = (roomId: { roomId: string }) => {
+    enterPublicChattingRoomData.mutate(roomId);
+  };
+
+  console.log(postDetail?.chatRoomId);
+
   if (isLoading || !postDetail) return <>로딩중</>;
   return (
     <NavLayout>
@@ -133,6 +163,8 @@ export const CommunityDetailPage = () => {
             onClick: () => {
               // TODO: 채팅방 참여하기 로직
               closeChatConfirm();
+              SetpublicChattingRoomId(postDetail.chatRoomId);
+              enterPublicChattingRoom({ roomId: postDetail.chatRoomId });
             },
           }}
           optionalButton={{

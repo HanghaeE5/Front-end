@@ -1,6 +1,3 @@
-import { CommunitiPostingPage, Event } from '../page';
-import { ReactElement } from 'react';
-
 import {
   Login,
   Main,
@@ -13,7 +10,12 @@ import {
   Chatting,
   ChattingRoom,
   EditPassword,
+  FriendPage,
+  ChooseCharacter,
+  CommunitiPostingPage,
+  Event,
 } from '../page';
+import { ReactElement } from 'react';
 
 export interface IRoute {
   id: string;
@@ -54,6 +56,11 @@ export const routeList: IRoute[] = [
     page: Login,
   },
   {
+    id: 'ChooseCharacter',
+    path: '/choosecharacter',
+    page: ChooseCharacter,
+  },
+  {
     id: 'editPassword',
     path: '/editpassword',
     page: EditPassword,
@@ -88,6 +95,11 @@ export const routeList: IRoute[] = [
     id: 'friendlist',
     path: PATH.FRIEND,
     page: FriendList,
+  },
+  {
+    id: 'friendpage',
+    path: '/friend/page/:nick',
+    page: FriendPage,
   },
   {
     id: 'chatting',
