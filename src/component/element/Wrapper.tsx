@@ -13,6 +13,7 @@ const Div = styled.div<WrapperProps>`
   box-sizing: border-box;
   border: ${({ border }) => border};
   background-color: ${({ backgroundColor }) => backgroundColor};
+  cursor: ${({ isPointer }) => isPointer && 'pointer'};
 `;
 
 interface WrapperProps {
@@ -26,6 +27,7 @@ interface WrapperProps {
   border?: string;
   onClick?: () => void;
   backgroundColor?: string;
+  isPointer?: boolean;
 }
 
 export const Wrapper = ({ children, onClick, ...style }: PropsWithChildren<WrapperProps>) => {

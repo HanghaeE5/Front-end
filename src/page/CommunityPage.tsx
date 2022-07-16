@@ -65,6 +65,7 @@ export const CommunityPage = () => {
   };
 
   useEffect(() => {
+    console.log(isBottom);
     if (isLoading || !isBottom || fetchBoardData?.last) return;
 
     setControl((prev) => ({ ...prev, page: prev.page + 1 }));
@@ -122,7 +123,7 @@ export const CommunityPage = () => {
                 <PostCard.Gather>{post.participatingCount}</PostCard.Gather>
               </PostCard>
             ))}
-            <div ref={bottomRef} />
+            {list.length ? <div ref={bottomRef} /> : ''}
           </section>
         </ContentWrapper>
         <ButtonFloating onClick={onClickWriteButton} />

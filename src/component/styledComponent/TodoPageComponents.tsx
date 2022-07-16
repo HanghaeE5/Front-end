@@ -38,6 +38,10 @@ export const TodoItemWrapper = styled(Wrapper)<{ done: boolean }>`
     font-size: 1.5rem;
   }
 
+  & svg {
+    cursor: pointer;
+  }
+
   & > div > div > svg {
     font-size: 0.5rem;
     position: relative;

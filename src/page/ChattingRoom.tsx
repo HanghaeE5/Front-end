@@ -150,7 +150,7 @@ const MyTextBox = styled.div`
   background: #9addff;
   border-radius: 12px 12px 0px 12px;
   padding: 10px 14px;
-  word-break: break-all;
+  /* word-break: break-all; */
 `;
 
 const InformTextBox = styled.div`

@@ -58,7 +58,7 @@ export const CategoryWrapper = styled.div<{ isSelect: boolean }>`
     justify-content: center;
     align-items: center;
     border: 1px solid ${({ theme, isSelect }) => (isSelect ? 'black' : theme.color.grayMedium)};
-    border-radius: ${({ theme }) => theme.radius};    
+    border-radius: ${({ theme }) => theme.radius};
     width: 4.375rem;
     height: 4.375rem;
   }
@@ -66,8 +66,8 @@ export const CategoryWrapper = styled.div<{ isSelect: boolean }>`
   & > span {
     margin: 0.25rem;
     text-align: center;
-    font-family: NotoLight';
-    font-size: 0.813rem;
+    font-family: NotoLight;
+    font-size: 0.823rem;
   }
 `;
 

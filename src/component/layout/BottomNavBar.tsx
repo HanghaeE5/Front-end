@@ -16,7 +16,7 @@ import { ReactComponent as TodoOff } from '../../asset/icons/nav/td_off.svg';
 import { PATH } from '../../route/routeList';
 
 const NavWrapper = styled(Wrapper)`
-  padding-top: 0.5rem;
+  padding-top: 0.75rem;
   border: 1px solid ${({ theme }) => theme.color.grayMedium};
   z-index: 10;
   height: 3.375rem;

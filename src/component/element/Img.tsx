@@ -9,7 +9,7 @@ interface ImgProps {
   height?: string;
 }
 
-const StyledImg = styled.div<ImgProps>`
+const StyledImg = styled.img<ImgProps>`
   max-width: 770px;
   max-height: 360px;
   border-radius: ${({ type }) => (type === 'profile' ? '50%' : type === 'round' ? '0.5rem' : '')};
@@ -23,5 +23,5 @@ const StyledImg = styled.div<ImgProps>`
 `;
 
 export const Img = ({ url, type = 'round', width = '100%', height = '200px' }: ImgProps) => {
-  return <StyledImg url={url} type={type} width={width} height={height} />;
+  return <StyledImg src={url} type={type} width={width} height={height} />;
 };

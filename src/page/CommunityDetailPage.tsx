@@ -1,4 +1,4 @@
-import { Button, Img, PopConfirmNew, Wrapper } from '../component/element';
+import { Button, Img, PopConfirmNew, PopConfirmProps, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
@@ -40,6 +40,11 @@ export const CommunityDetailPage = () => {
   const { visible: visibleChat, openConfirm: openChatConfirm, closeConfirm: closeChatConfirm } = usePopConfirm();
   const { visible: visibleError, openConfirm: openErrorConfirm, closeConfirm: closeErrorConfirm } = usePopConfirm();
   const { visible: visibleCancel, openConfirm: openCancelConfirm, closeConfirm: closeCacnelConfirm } = usePopConfirm();
+  const {
+    visible: copiedConfirmVisible,
+    openConfirm: openCopiedConfirm,
+    closeConfirm: closeCopiedConfirm,
+  } = usePopConfirm();
 
   const {
     data: postDetail,
@@ -90,7 +95,11 @@ export const CommunityDetailPage = () => {
   };
 
   const onShare = () => {
-    console.log('공유하기');
+    const url = window.location.protocol + '//' + window.location.host + '/' + window.location.pathname;
+    console.log(url);
+    navigator.clipboard.writeText(url);
+
+    openCopiedConfirm();
   };
 
   const onClickButton = () => {
@@ -125,8 +134,6 @@ export const CommunityDetailPage = () => {
   const enterPublicChattingRoom = (roomId: { roomId: string }) => {
     enterPublicChattingRoomData.mutate(roomId);
   };
-
-  console.log(postDetail?.chatRoomId);
 
   if (isLoading || !postDetail) return <>로딩중</>;
   return (
@@ -194,6 +201,16 @@ export const CommunityDetailPage = () => {
           optionalButton={{
             text: ' 아니오',
             onClick: () => closeCacnelConfirm(),
+          }}
+        />
+      )}
+      {copiedConfirmVisible && (
+        <PopConfirmNew
+          iconType="success"
+          title={'게시글 주소를 복사했습니다'}
+          button={{
+            text: '확인',
+            onClick: () => closeCopiedConfirm(),
           }}
         />
       )}
