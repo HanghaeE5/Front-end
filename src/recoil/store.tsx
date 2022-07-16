@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-import { UserInfo } from '../Types/user';
+import { UserInfo, FriendInfo } from '../Types/user';
 const { persistAtom } = recoilPersist();
 
 export const accessTokenState = atom({
@@ -145,7 +145,7 @@ export const userInfoState = atom<UserInfo>({
   default: undefined,
 });
 
-export const friendInfoState = atom<UserInfo>({
+export const friendInfoState = atom<FriendInfo>({
   key: atomKey.friendInfo,
   default: undefined,
 });

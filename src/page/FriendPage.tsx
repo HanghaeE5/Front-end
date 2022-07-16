@@ -338,7 +338,7 @@ export const FriendPage = () => {
             </EvEnglishFont>
           </EvBox>
           <ToDoBox>
-            {/* {frienduserInfoData?.todayTodoList.map((today) => {
+            {frienduserInfoData?.todoList.map((today) => {
               return (
                 <EvBox direction={'row'} width={'100%'} key={today.todoId}>
                   <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
@@ -351,7 +351,7 @@ export const FriendPage = () => {
                   </EvBox>
                 </EvBox>
               );
-            })} */}
+            })}
           </ToDoBox>
 
           <EvBox
