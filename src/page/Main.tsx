@@ -146,7 +146,7 @@ export const Main = () => {
     },
     onError: (error: AxiosError) => {
       if (error.message === 'Request failed with status code 404') {
-        nav(-1);
+        // nav(-1);
       }
     },
   });

@@ -336,21 +336,21 @@ export const ToDoPage = () => {
           )}
 
           {!todoModalState.modalVisible && <ButtonFloating onClick={onClickAddButton} />}
-          <EvBtn
+          {/* <EvBtn
             onClick={() => {
               setModalLevelUp(true);
             }}
           >
             레벨업모달
-          </EvBtn>
+          </EvBtn> */}
           <LevelUpModal />
-          <EvBtn
+          {/* <EvBtn
             onClick={() => {
               setModalStepUp(true);
             }}
           >
             스텝업모달
-          </EvBtn>
+          </EvBtn> */}
           <StepUpModal />
         </ContentWrapper>
       </PageLayout>
