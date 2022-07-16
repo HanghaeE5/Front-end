@@ -37,7 +37,7 @@ import { AxiosError } from 'axios';
 import LevelUpModal from '../component/modallayout/LevelUpModal';
 import StepUpModal from '../component/modallayout/StepUpModal';
 import ExpBar from '../component/element/ExpBar';
-import { TopNavLayout } from '../component/layout/TopNavLayout';
+import { TopNavLayout } from '../component/layout/TopNavBar';
 import { BottomNavLayout } from '../component/layout/BottomNavBar';
 
 const MainContainer = styled.div`
