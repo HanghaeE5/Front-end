@@ -251,9 +251,11 @@ export const ToDoPage = () => {
 
   return (
     <NavLayout>
+      {confirmState.visible && <PopConfirmNew {...confirmState} />}
+      <LevelUpModal />
+      <StepUpModal />
       <PageLayout title="투 두 리스트">
         <ContentWrapper>
-          {confirmState.visible && <PopConfirmNew {...confirmState} />}
           <Wrapper padding="1rem" isColumn alignItems="start">
             <Wrapper isColumn alignItems="start" margin="1rem 0">
               <Typography weight={500} size={1.125}>
@@ -336,22 +338,6 @@ export const ToDoPage = () => {
           )}
 
           {!todoModalState.modalVisible && <ButtonFloating onClick={onClickAddButton} />}
-          {/* <EvBtn
-            onClick={() => {
-              setModalLevelUp(true);
-            }}
-          >
-            레벨업모달
-          </EvBtn> */}
-          <LevelUpModal />
-          {/* <EvBtn
-            onClick={() => {
-              setModalStepUp(true);
-            }}
-          >
-            스텝업모달
-          </EvBtn> */}
-          <StepUpModal />
         </ContentWrapper>
       </PageLayout>
     </NavLayout>

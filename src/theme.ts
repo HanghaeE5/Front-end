@@ -1,5 +1,6 @@
 export const theme = {
   mainColor: '#FFD600',
+  maxWidth: '768px',
   color: {
     grayLight: '#F5F5F5',
     grayMediumLight: '#BCBCBC',
