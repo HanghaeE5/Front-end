@@ -40,6 +40,10 @@ import ExpBar from '../component/element/ExpBar';
 import { TopNavLayout } from '../component/layout/TopNavBar';
 import { BottomNavLayout } from '../component/layout/BottomNavBar';
 
+const MainPageWrapper = styled(Wrapper)`
+  max-width: 768px;
+`;
+
 const MainContainer = styled.div`
   height: 100%;
   background: #ffe074; /* fallback for old browsers */
@@ -183,7 +187,7 @@ export const Main = () => {
   }, []);
 
   return (
-    <Wrapper isColumn height="100vh">
+    <MainPageWrapper isColumn height="100%">
       <EventWrapper
         backgroundColor="black"
         height="2.85rem"
@@ -386,6 +390,6 @@ export const Main = () => {
         </ContentContainer>
       </MainContainer>
       <BottomNavLayout />
-    </Wrapper>
+    </MainPageWrapper>
   );
 };
