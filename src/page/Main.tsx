@@ -106,7 +106,7 @@ const ToDoBox = styled.div`
   border-radius: 6px;
   //스크롤바 없애기
   ::-webkit-scrollbar {
-    display: none;
+    /* display: none; */
   }
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
@@ -134,6 +134,7 @@ export const Main = () => {
   const first = all.split('&');
   const accessToken = first[0].split('=')[1];
   const nav = useNavigate();
+  console.log(all);
 
   //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
@@ -155,10 +156,10 @@ export const Main = () => {
       // console.log();
       const refreshToken = first[1].split('=')[1];
       // console.log(refreshToken);
-      const isNickname = first[2].split('=')[1];
+      const isNickname = first[1].split('=')[2];
       // console.log(isNickname);
       accessLoginToken(accessToken);
-      refreshLoginToken(refreshToken);
+      // refreshLoginToken(refreshToken);
 
       if (isNickname === 'N') {
         nav('/signupsns');
@@ -178,7 +179,7 @@ export const Main = () => {
     if (userInformData.error?.message === 'Request failed with status code 401') {
       userInformData.refetch();
     }
-  }, []);
+  }, [userInformData]);
 
   return (
     <Wrapper isColumn height="100vh">

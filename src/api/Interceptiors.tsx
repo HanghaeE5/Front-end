@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
+axios.defaults.withCredentials = true;
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   // console.info(`[request] [${JSON.stringify(config)}]`);
 
@@ -13,7 +14,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
       // console.log(config);
       config.headers = {
         Authorization: toto.accessTokenState || 0 || false,
-        Refresh: toto.refreshTokenState || 0 || false,
+        // Refresh: toto.refreshTokenState || 0 || false,
         'Content-Type': 'application/json',
       };
     }
@@ -30,13 +31,13 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
     if (localToken) {
       const toto = JSON.parse(localToken);
       const accessToken = toto.accessTokenState;
-      const refreshToken = toto.refreshTokenState;
+      // const refreshToken = toto.refreshTokenState;
 
       axios
         .get('https://todowith.shop/refresh', {
           headers: {
             Authorization: accessToken,
-            Refresh: refreshToken,
+            // Refresh: refreshToken,
             'Content-Type': 'application/json',
           },
         })
@@ -45,7 +46,7 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
             'recoil-persist',
             JSON.stringify({
               accessTokenState: res.headers.authorization,
-              refreshTokenState: res.headers.refresh,
+              // refreshTokenState: res.headers.refresh,
             }),
           );
         });
@@ -69,13 +70,13 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
     if (localToken) {
       const toto = JSON.parse(localToken);
       const accessToken = toto.accessTokenState;
-      const refreshToken = toto.refreshTokenState;
+      // const refreshToken = toto.refreshTokenState;
 
       axios
         .get('https://todowith.shop/refresh', {
           headers: {
             Authorization: accessToken,
-            Refresh: refreshToken,
+            // Refresh: refreshToken,
             'Content-Type': 'application/json',
           },
         })
@@ -85,7 +86,7 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
             'recoil-persist',
             JSON.stringify({
               accessTokenState: res.headers.authorization,
-              refreshTokenState: res.headers.refresh,
+              // refreshTokenState: res.headers.refresh,
             }),
           );
         })
