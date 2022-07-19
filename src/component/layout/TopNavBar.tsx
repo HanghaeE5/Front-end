@@ -17,6 +17,7 @@ import ProfileMenuModal from '../modallayout/ProfileMenuModal';
 
 const TopNavWrapper = styled.nav`
   height: 3.75rem;
+  min-height: 3.75rem;
   width: 100%;
   max-width: 768px;
   display: flex;
