@@ -120,8 +120,6 @@ const EventWrapper = styled(Wrapper)`
   cursor: pointer;
 `;
 
-console.log(window.location.href);
-
 export const FriendPage = () => {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [frienduserInfoData, setFriendUserInfoData] = useRecoilState(friendInfoState);

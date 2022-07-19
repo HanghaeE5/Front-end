@@ -32,8 +32,8 @@ type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
 export const Login = () => {
   const nav = useNavigate();
   const localToken = localStorage.getItem('recoil-persist');
-  const accessLoginToken = useSetRecoilState(accessTokenState);
-  const refreshLoginToken = useSetRecoilState(refreshTokenState);
+  const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
+  // const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const [email, setNameText] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [autoLogin, setAutoLogin] = useState<boolean>(false);
@@ -44,13 +44,14 @@ export const Login = () => {
 
   const loginUserData = useMutation((data: FieldValues) => registerApi.loginApi(data), {
     onSuccess: (token) => {
+      console.log(token);
       setQuitOk(true);
       setPopNoti(true);
       setInformType('success');
       setInformMsg('로그인 성공🙂');
-      accessLoginToken(token.headers.authorization);
-      refreshLoginToken(token.headers.refresh);
-      console.log(token);
+      setAccessLoginToken(token.headers.authorization);
+      // refreshLoginToken(token.headers.refresh);
+      console.log(accessLoginToken);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
       setQuitOk(false);

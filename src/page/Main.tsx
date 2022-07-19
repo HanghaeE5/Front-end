@@ -108,7 +108,7 @@ const ToDoBox = styled.div`
   border-radius: 6px;
   //스크롤바 없애기
   ::-webkit-scrollbar {
-    display: none;
+    /* display: none; */
   }
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
@@ -118,16 +118,13 @@ const ToDoBox = styled.div`
 const EventWrapper = styled(Wrapper)`
   cursor: pointer;
 `;
-
-console.log(window.location.href);
-
 export const Main = () => {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
   const [, setModalEditPhoto] = useRecoilState(editPhotoModalState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [userChatacterType, setUserChatacterType] = useRecoilState(userChatacterTypeState);
-  const accessLoginToken = useSetRecoilState(accessTokenState);
+  const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
   const setUserPhotoWait = useSetRecoilState(userPhotoWaitState);
@@ -154,24 +151,16 @@ export const Main = () => {
   console.log(userInformData);
   useEffect(() => {
     if (accessToken) {
-      // console.log();
-      const refreshToken = first[1].split('=')[1];
-      // console.log(refreshToken);
-      const isNickname = first[2].split('=')[1];
-      // console.log(isNickname);
-      accessLoginToken(accessToken);
-      refreshLoginToken(refreshToken);
-
-      if (isNickname === 'N') {
-        nav('/signupsns');
-      } else {
-        window.location.replace('/');
-      }
-      if (userInfoData?.nick === '') {
+      setAccessLoginToken(accessToken);
+      const isNickname = first[1].split('=')[1];
+      console.log(accessToken);
+      if (isNickname === 'N' || userInfoData?.nick === '') {
         nav('/signupsns');
       }
       if (isNickname === 'Y' && !userInfoData?.characterInfo.type) {
         nav('/choosecharacter');
+      } else {
+        window.location.replace('/');
       }
     }
   }, []);
@@ -180,7 +169,7 @@ export const Main = () => {
     if (userInformData.error?.message === 'Request failed with status code 401') {
       userInformData.refetch();
     }
-  }, []);
+  }, [userInformData]);
 
   return (
     <Wrapper isColumn height="100vh">
