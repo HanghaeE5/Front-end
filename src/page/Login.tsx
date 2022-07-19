@@ -32,7 +32,7 @@ type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
 export const Login = () => {
   const nav = useNavigate();
   const localToken = localStorage.getItem('recoil-persist');
-  const accessLoginToken = useSetRecoilState(accessTokenState);
+  const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
   // const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const [email, setNameText] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -49,7 +49,7 @@ export const Login = () => {
       setPopNoti(true);
       setInformType('success');
       setInformMsg('로그인 성공🙂');
-      accessLoginToken(token.headers.authorization);
+      setAccessLoginToken(token.headers.authorization);
       // refreshLoginToken(token.headers.refresh);
       console.log(accessLoginToken);
     },

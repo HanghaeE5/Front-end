@@ -116,16 +116,13 @@ const ToDoBox = styled.div`
 const EventWrapper = styled(Wrapper)`
   cursor: pointer;
 `;
-
-console.log(window.location.href);
-
 export const Main = () => {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
   const [, setModalEditPhoto] = useRecoilState(editPhotoModalState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [userChatacterType, setUserChatacterType] = useRecoilState(userChatacterTypeState);
-  const accessLoginToken = useSetRecoilState(accessTokenState);
+  const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
   const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
   const setUserPhotoWait = useSetRecoilState(userPhotoWaitState);
@@ -134,7 +131,6 @@ export const Main = () => {
   const first = all.split('&');
   const accessToken = first[0].split('=')[1];
   const nav = useNavigate();
-  console.log(all);
 
   //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
@@ -145,7 +141,7 @@ export const Main = () => {
     },
     onError: (error: AxiosError) => {
       if (error.message === 'Request failed with status code 404') {
-        nav(-1);
+        // nav(-1);
       }
     },
   });
@@ -153,24 +149,16 @@ export const Main = () => {
   console.log(userInformData);
   useEffect(() => {
     if (accessToken) {
-      // console.log();
-      const refreshToken = first[1].split('=')[1];
-      // console.log(refreshToken);
-      const isNickname = first[1].split('=')[2];
-      // console.log(isNickname);
-      accessLoginToken(accessToken);
-      // refreshLoginToken(refreshToken);
-
-      if (isNickname === 'N') {
-        nav('/signupsns');
-      } else {
-        window.location.replace('/');
-      }
-      if (userInfoData?.nick === '') {
+      setAccessLoginToken(accessToken);
+      const isNickname = first[1].split('=')[1];
+      console.log(accessToken);
+      if (isNickname === 'N' || userInfoData?.nick === '') {
         nav('/signupsns');
       }
       if (isNickname === 'Y' && !userInfoData?.characterInfo.type) {
         nav('/choosecharacter');
+      } else {
+        window.location.replace('/');
       }
     }
   }, []);
