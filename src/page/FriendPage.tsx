@@ -321,20 +321,22 @@ export const FriendPage = () => {
             </EvEnglishFont>
           </EvBox>
           <ToDoBox>
-            {frienduserInfoData?.todoList.map((today) => {
-              return (
-                <EvBox direction={'row'} width={'100%'} key={today.todoId}>
-                  <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
-                    <AiOutlineCheck color={today.state ? '#000000' : ' #BABABA'} />
-                  </EvBox>
-                  <EvBox width={'83%'} margin={'0rem auto 0 0'} isAlignSide={true}>
-                    <EvKoreanFont size={0.87} color="#000000">
-                      {today.todoContent}
-                    </EvKoreanFont>
-                  </EvBox>
-                </EvBox>
-              );
-            })}
+            {frienduserInfoData?.todoList
+              ? frienduserInfoData.todoList.map((today) => {
+                  return (
+                    <EvBox direction={'row'} width={'100%'} key={today.todoId}>
+                      <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
+                        <AiOutlineCheck color={today.state ? '#000000' : ' #BABABA'} />
+                      </EvBox>
+                      <EvBox width={'83%'} margin={'0rem auto 0 0'} isAlignSide={true}>
+                        <EvKoreanFont size={0.87} color="#000000">
+                          {today.todoContent}
+                        </EvKoreanFont>
+                      </EvBox>
+                    </EvBox>
+                  );
+                })
+              : '오늘 ToDo가 없거나, 비공개입니다'}
           </ToDoBox>
 
           <EvBox

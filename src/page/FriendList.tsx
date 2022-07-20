@@ -309,7 +309,7 @@ export const FriendList = () => {
                     <FriendNameTextBox>
                       <KoreanFont size={1}>{myfriend.nick}</KoreanFont>
                     </FriendNameTextBox>
-                    <Badge>{`Lv.`}</Badge>
+                    <Badge>{`Lv.${myfriend.characterLevel}`}</Badge>
                   </RowBox>
                   <Box
                     isCursor={true}

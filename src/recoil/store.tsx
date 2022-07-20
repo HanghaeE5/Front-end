@@ -14,7 +14,7 @@ type friend = {
   userId: string;
   nick: string;
   profileImageUrl: string;
-  characterInfo: { level: number };
+  characterLevel: number;
 };
 
 type friendList = friend[];

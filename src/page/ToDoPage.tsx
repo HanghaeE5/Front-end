@@ -184,7 +184,15 @@ export const ToDoPage = () => {
       characterInfo: { levelUp, stepUp },
     } = data;
     if (stepUp) {
-      console.log(data);
+      setUserInfoData({
+        ...userInfoData,
+        characterInfo: {
+          ...userInfoData.characterInfo,
+          characterName: data.characterInfo.characterName,
+          characterUrl: data.characterInfo.characterUrl,
+        },
+      });
+
       setmodalGather({ ...modalGather, stepUpModal: true });
       return;
     }
