@@ -2,9 +2,7 @@ import React, { ChangeEvent, useRef, useState } from 'react';
 import { Button, Img, PopConfirmNew, PopConfirmProps, TextInput, Typography, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { useInput } from '../hooks/useInput';
 import { BiCamera } from 'react-icons/bi';
-import { TodoModal } from '../component/TodoModal';
 import { Category, ITodoItem, TodoData } from '../Types/todo';
 import { useMutation, useQuery } from 'react-query';
 import {
@@ -15,11 +13,7 @@ import {
   uploadImageFn,
 } from '../api/communityApi';
 import { PostType } from '../Types/community';
-import {
-  ChallangersSection,
-  ImgPreviewSection,
-  ScrollWraper,
-} from '../component/styledComponent/CommunityPostingElements';
+import { ChallangersSection, ScrollWraper } from '../component/styledComponent/CommunityPostingElements';
 import { WarningText } from '../component/WarningText';
 import { useNavigate, useParams } from 'react-router';
 import { PATH } from '../route/routeList';

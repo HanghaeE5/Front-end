@@ -8,7 +8,6 @@ import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { ScrollWrapper, TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
 import { TodoItem } from '../component/TodoItem';
-import { TodoModal } from '../component/TodoModal';
 import { PATH } from '../route/routeList';
 import {
   PublicScope,
