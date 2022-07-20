@@ -440,22 +440,6 @@ export const ToDoPage = () => {
         </Wrapper>
         {todoModalStateNew.visible && <TodoModalNew {...todoModalStateNew.todoProps} />}
         {!todoModalStateNew.visible && <ButtonFloating onClick={onClickAddButton} />}
-        <EvBtn
-          onClick={() => {
-            setmodalGather({ ...modalGather, levelUpModal: true });
-          }}
-        >
-          레벨업모달
-        </EvBtn>
-        <LevelUpModal />
-        <EvBtn
-          onClick={() => {
-            setmodalGather({ ...modalGather, stepUpModal: true });
-          }}
-        >
-          스텝업모달
-        </EvBtn>
-        <StepUpModal />
       </PageLayout>
     </NavLayout>
   );
