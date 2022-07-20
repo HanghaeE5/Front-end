@@ -112,7 +112,25 @@ export const PopNoti = ({ confirmType, visible, oneButton, msg }: PopConfirmProp
     return <></>;
   }
   return (
-    <Container onClick={() => setPopNoti({ ...popNoti, openPopNoti: false })}>
+    <Container
+      onClick={
+        oneButton.nav === '-1'
+          ? () => {
+              setPopNoti({ ...popNoti, openPopNoti: false });
+              navi(-1);
+            }
+          : oneButton.nav
+          ? () => {
+              // oneButton.onClick;
+              setPopNoti({ ...popNoti, openPopNoti: false });
+              navi(oneButton.nav);
+            }
+          : () => {
+              // oneButton.onClick;
+              setPopNoti({ ...popNoti, openPopNoti: false });
+            }
+      }
+    >
       <Background />
       <PopupWrapper visible={visible}>
         <div>
@@ -129,11 +147,11 @@ export const PopNoti = ({ confirmType, visible, oneButton, msg }: PopConfirmProp
                   }
                 : oneButton.nav
                 ? () => {
-                    oneButton.onClick;
+                    // oneButton.onClick;
                     navi(oneButton.nav);
                   }
                 : () => {
-                    oneButton.onClick;
+                    // oneButton.onClick;
                   }
             }
           >

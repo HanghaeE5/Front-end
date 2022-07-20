@@ -5,7 +5,7 @@ import { AiOutlineCheck } from 'react-icons/ai';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { ReactComponent as DirectionIcon } from '../asset/icons/direction.svg';
 
-import { accessTokenState, friendInfoState, userInfoState } from '../recoil/store';
+import { accessTokenState, userInfoState } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';

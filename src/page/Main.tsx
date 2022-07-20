@@ -113,6 +113,7 @@ export const Main = () => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
+  const localToken = localStorage.getItem('recoil-persist');
   const all = window.location.href;
 
   const first = all.split('&');
@@ -146,6 +147,9 @@ export const Main = () => {
       } else {
         window.location.replace('/');
       }
+    }
+    if (!localToken) {
+      nav('/login');
     }
   }, []);
 

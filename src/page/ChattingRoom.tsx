@@ -7,11 +7,12 @@ import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import { useQuery, useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
-import { chatListState, userInfoState } from '../recoil/store';
+import { userInfoState } from '../recoil/store';
 import { userApi } from '../api/callApi';
 import axios, { AxiosError } from 'axios';
 import setupInterceptorsTo from '../api/Interceptiors';
 import { EvBox, EvKoreanFont } from '../component/element/BoxStyle';
+import { chatList } from '../Types/chat';
 
 const ContentWrapper = styled.div`
   /* background-color: seagreen; */
@@ -209,7 +210,7 @@ export const ChattingRoom = () => {
   const nav = useNavigate();
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [myText, setmyText] = useState<string>('');
-  const [chatData, setchatData] = useRecoilState(chatListState);
+  const [chatData, setchatData] = useState<chatList>([]);
 
   const onChangeMyText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setmyText(e.target.value);

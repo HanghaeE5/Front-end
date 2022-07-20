@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { registerApi } from '../api/callApi';
+import { registerApi, userApi } from '../api/callApi';
 import { AxiosError } from 'axios';
 import { accessTokenState, popNotiState, userInfoState } from '../recoil/store';
 import { PopNoti } from '../component/element/PopNoti';
@@ -112,17 +112,30 @@ export const SignUpSNS = () => {
     joinSocialApiData.mutate(nick);
   };
 
+  //유저정보 가져오기 API
+  const userInformData = useQuery('userData', userApi.userInformApi, {
+    onSuccess: (data) => {
+      setUserInfoData(data.data);
+    },
+    onError: (error: AxiosError) => {
+      if (error.message === 'Request failed with status code 404') {
+        // nav(-1);
+      }
+    },
+  });
+
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
-    if (userInfoData.nick) {
+
+    if (userInformData.status === 'success' && userInformData.data.data.nick) {
       setPopNoti({
         openPopNoti: true,
         informType: 'warning',
         informMsg: '🙅🏻‍♀️회원가입이 완료되었습니다. 닉네임 변경을 이용해주세요🙅🏻‍♀️',
-        btnNav: '-1',
+        btnNav: '/',
       });
     }
-  }, [userInfoData]);
+  }, [userInformData.status]);
 
   return (
     <RegisterContainer>

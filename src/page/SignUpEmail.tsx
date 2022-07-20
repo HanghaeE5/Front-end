@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { registerApi } from '../api/callApi';
 import { PageLayout } from '../component/layout/PageLayout';
+import { popNotiState } from '../recoil/store';
 
 const InfoContainer = styled.div`
   height: 100%;
@@ -214,6 +216,7 @@ export const SignUpEmail = () => {
   const [send, setSend] = useState<boolean>(false);
   const [view, setView] = useState<boolean>(false);
   const localToken = localStorage.getItem('recoil-persist');
+  const [popNoti, setPopNoti] = useRecoilState(popNotiState);
 
   const nav = useNavigate();
 
@@ -313,10 +316,14 @@ export const SignUpEmail = () => {
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
     if (localToken) {
-      alert('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
-      nav('/');
+      setPopNoti({
+        openPopNoti: true,
+        informType: 'warning',
+        informMsg: '🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️',
+        btnNav: '-1',
+      });
     }
-  }, []);
+  }, [localToken]);
 
   return (
     <PageLayout title="회원가입">

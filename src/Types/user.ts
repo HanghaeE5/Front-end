@@ -1,5 +1,10 @@
 import { PublicScope } from './todo';
 
+export const atomKey = {
+  userInfo: 'userInfo',
+  friendInfo: 'friendInfo',
+};
+
 export interface UserInfo {
   characterInfo: {
     characterName: string;
@@ -75,3 +80,13 @@ export interface FriendInfo {
     },
   ];
 }
+
+type friend = {
+  id: number;
+  userId: string;
+  nick: string;
+  profileImageUrl: string;
+  characterLevel: number;
+};
+
+export type friendList = friend[];

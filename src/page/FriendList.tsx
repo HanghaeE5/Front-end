@@ -9,7 +9,8 @@ import { Badge } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import FriendAddModal from '../component/modallayout/FriendAddModal';
-import { friendListState, modalGatherState, requestFriendListState } from '../recoil/store';
+import { friendListState, modalGatherState } from '../recoil/store';
+import { friendList } from '../Types/user';
 
 const ContentWrapper = styled.div`
   height: 100%;
@@ -136,7 +137,7 @@ const IconBox = styled.button`
 export const FriendList = () => {
   const [friendList, setFriendList] = useRecoilState(friendListState);
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
-  const [requestFriendList, setRequestFriendList] = useRecoilState(requestFriendListState);
+  const [requestFriendList, setRequestFriendList] = useState<friendList>([]);
   const [allowFriendName, setAllowFriendName] = useState<string>('');
   const [rejectRequestFriendName, setrejectRequestFriendName] = useState<string>('');
   const [deleteFriendName, setDeleteFriendName] = useState<string>('');
