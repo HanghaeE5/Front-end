@@ -23,6 +23,7 @@ import {
 import { WarningText } from '../component/WarningText';
 import { useNavigate, useParams } from 'react-router';
 import { PATH } from '../route/routeList';
+import { usePopConfirm } from '../hooks/usePopConfirm';
 
 export const CommunitiPostingPage = () => {
   const nav = useNavigate();
@@ -32,6 +33,7 @@ export const CommunitiPostingPage = () => {
     nav(PATH.COMMUNITY);
   };
 
+  usePopConfirm();
   const [postType, setPostType] = useState<PostType>('DAILY');
   const [preview, setPreview] = useState('');
   const [modalState, setModalState] = useState<{ visible: boolean; type: 'edit' | 'add'; todoData?: ITodoItem }>({
@@ -254,7 +256,7 @@ export const CommunitiPostingPage = () => {
               </Wrapper>
             </Wrapper>
             <Wrapper isColumn padding="0 1rem">
-              <Button buttonType="dashed" onClick={() => onClickImgUploadButton()}>
+              <Button size="large" buttonType="dashed" onClick={() => onClickImgUploadButton()}>
                 <BiCamera /> &nbsp; 사진 업로드
               </Button>
               {preview && (
@@ -285,8 +287,10 @@ export const CommunitiPostingPage = () => {
                 accept="image/*"
               />
             </Wrapper>
-            <Wrapper padding="0 1rem" margin="0 0 0.75rem 0">
-              <Button onClick={onClickAddPostButton}>{boardId ? '수정하기' : '등록하기'}</Button>
+            <Wrapper padding="0 1rem" margin="0.75rem 0">
+              <Button size="large" onClick={onClickAddPostButton}>
+                {boardId ? '수정하기' : '등록하기'}
+              </Button>
             </Wrapper>
             {modalState.visible && (
               <TodoModal
