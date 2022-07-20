@@ -70,7 +70,11 @@ export const CommunitiPostingPage = () => {
     },
   });
 
-  const { mutate: uploadImage } = useMutation(uploadImageFn);
+  const { mutate: uploadImage } = useMutation(uploadImageFn, {
+    onError: () => {
+      alert('사진 업로드에 실패했습니다. 재시도해주세요.');
+    },
+  });
   const { mutate: postBoard } = useMutation(postCummunityFn);
   const { mutate: updateBoard } = useMutation(updateBoardFn);
 
@@ -254,7 +258,7 @@ export const CommunitiPostingPage = () => {
             </Button>
             {preview && (
               <ImgPreviewSection>
-                <Img width="5rem" height="5rem" url={preview} />
+                <Img width="5rem" height="2rem" url={preview} />
                 <div>
                   <span>사진 업로드는 1장만 가능합니다</span>
                   <div>

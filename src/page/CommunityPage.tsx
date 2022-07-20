@@ -4,7 +4,7 @@ import { useInView } from 'react-intersection-observer';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { communityQueryKey, fetchBoardFn } from '../api/communityApi';
-import { ButtonFloating, Img, Select, SelectOption, TextInput, Wrapper } from '../component/element';
+import { ButtonFloating, Img, Select, SelectOption, TextInput, Typography, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
@@ -12,6 +12,7 @@ import { ContentWrapper } from '../component/styledComponent/CommunityElements';
 import { PATH } from '../route/routeList';
 import { Board, CommunitySearchControl, FilterType, KeywordFilter } from '../Types/community';
 import { removeListDuplicate } from '../utils/removeListDuplicate';
+import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
 
 // sub
 const serachOptions: SelectOption[] = [
@@ -65,7 +66,6 @@ export const CommunityPage = () => {
   };
 
   useEffect(() => {
-    console.log(isBottom);
     if (isLoading || !isBottom || fetchBoardData?.last) return;
 
     setControl((prev) => ({ ...prev, page: prev.page + 1 }));
@@ -110,20 +110,32 @@ export const CommunityPage = () => {
             />
           </section>
           <section>
-            {list.map((post: Board) => (
-              <PostCard key={post.boardId} onClick={() => nav(`${PATH.COMMUNITY}/${post.boardId}`)}>
-                <PostCard.PostHeader userImg={post.authorProfileImageUrl} userName={post.authorNick} />
-                {post.imageUrl && (
-                  <Wrapper padding="0 1rem">
-                    <Img url={post.imageUrl} type="round" />
-                  </Wrapper>
-                )}
-                <PostCard.PostTitle category={post.category}>{post.title}</PostCard.PostTitle>
-                <PostCard.Content isSummary>{post.boardContent}</PostCard.Content>
-                <PostCard.Gather>{post.participatingCount}</PostCard.Gather>
-              </PostCard>
-            ))}
-            {list.length ? <div ref={bottomRef} /> : ''}
+            {list.length === 0 && (
+              <Wrapper isColumn justifyContent="center">
+                <Empty />
+                <Typography size={0.875} align="center" color="#5F5F5F" weight={400} lineHeight={1.25}>
+                  게시글이 없습니다.
+                </Typography>
+              </Wrapper>
+            )}
+            {list.length > 0 && (
+              <Wrapper isColumn>
+                {list.map((post: Board) => (
+                  <PostCard key={post.boardId} onClick={() => nav(`${PATH.COMMUNITY}/${post.boardId}`)}>
+                    <PostCard.PostHeader userImg={post.authorProfileImageUrl} userName={post.authorNick} />
+                    {post.imageUrl && (
+                      <Wrapper padding="0 1rem">
+                        <Img url={post.imageUrl} type="round" />
+                      </Wrapper>
+                    )}
+                    <PostCard.PostTitle category={post.category}>{post.title}</PostCard.PostTitle>
+                    <PostCard.Content isSummary>{post.boardContent}</PostCard.Content>
+                    <PostCard.Gather>{post.participatingCount}</PostCard.Gather>
+                  </PostCard>
+                ))}
+                {list.length ? <div ref={bottomRef} /> : ''}
+              </Wrapper>
+            )}
           </section>
         </ContentWrapper>
         <ButtonFloating onClick={onClickWriteButton} />

@@ -96,7 +96,6 @@ export const CommunityDetailPage = () => {
 
   const onShare = () => {
     const url = window.location.protocol + '//' + window.location.host + '/' + window.location.pathname;
-    console.log(url);
     navigator.clipboard.writeText(url);
 
     openCopiedConfirm();
@@ -217,7 +216,7 @@ export const CommunityDetailPage = () => {
 
       <PageLayout title="커뮤니티">
         <Wrapper isColumn alignItems="start" height="100%" justifyContent="space-between">
-          <Wrapper isColumn alignItems="start">
+          <Wrapper isColumn alignItems="start" height="80%">
             <PostCard.PostHeader
               userImg={postDetail.authorProfileImageUrl}
               userName={postDetail.authorNick}
@@ -231,8 +230,8 @@ export const CommunityDetailPage = () => {
               }}
             />
             {postDetail.imageUrl && (
-              <Wrapper>
-                <Img url={postDetail.imageUrl} type="square" />
+              <Wrapper height="40%">
+                <Img url={postDetail.imageUrl} type="square" height="100%" />
               </Wrapper>
             )}
             <PostCard.PostTitle category={postDetail.category}>{postDetail.title}</PostCard.PostTitle>

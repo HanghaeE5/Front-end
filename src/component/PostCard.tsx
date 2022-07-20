@@ -5,6 +5,13 @@ import { Badge, DropdownMenu, Img, Typography, Wrapper } from './element';
 import { BsDot } from 'react-icons/bs';
 import { BiShareAlt } from 'react-icons/bi';
 
+const DropdownMenuButton = styled(DropdownMenu)`
+  cursor: pointer;
+`;
+
+const ShareButton = styled(BiShareAlt)`
+  cursor: pointer;
+`;
 const UserName = styled.span`
   font-size: 0.875rem;
   font-weight: 500;
@@ -98,8 +105,8 @@ const PostHeader = ({
           </PostInfo>
         )}
       </Wrapper>
-      {boardId && isMine && dropDownProps && <DropdownMenu isMine={isMine} {...dropDownProps} />}
-      {!isMine && dropDownProps && <BiShareAlt onClick={() => dropDownProps.onShare()} />}
+      {boardId && isMine && dropDownProps && <DropdownMenuButton isMine={isMine} {...dropDownProps} />}
+      {!isMine && dropDownProps && <ShareButton onClick={() => dropDownProps.onShare()} />}
     </Wrapper>
   );
 };
