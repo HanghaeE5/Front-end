@@ -23,6 +23,7 @@ import {
   CalendarWrapper,
   CategorySection,
   CategoryWrapper,
+  CloseButton,
   HeaderTitle,
   ModalContainer,
   StickyButton,
@@ -166,7 +167,7 @@ export const TodoModal = ({
       <TodoContents>
         <HeaderTitle justifyContent="space-between" padding="1.25rem 1rem 0 1rem">
           <span>{modalTitle}</span>
-          <BsX onClick={() => closeModal()} />
+          <CloseButton onClick={() => closeModal()} />
         </HeaderTitle>
         {todoType === 'with' && (
           <Wrapper padding="0.5rem 1rem">
