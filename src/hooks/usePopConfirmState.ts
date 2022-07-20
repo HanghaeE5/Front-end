@@ -8,9 +8,5 @@ interface usePopConfirmStateProps extends PopConfirmProps {
 export const usePopConfirmState = (initalState: usePopConfirmStateProps) => {
   const [confirmState, setConfirmState] = useState<PopConfirmProps>(initalState);
 
-  return {
-    confirmState,
-    openConfirm: setConfirmState((prev) => ({ ...prev, visible: true })),
-    closeConfirm: setConfirmState((prev) => ({ ...prev, visible: false })),
-  };
+  return { confirmState, setConfirmState };
 };

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
-import { Button, Img, TextInput, Typography, Wrapper } from '../component/element';
+import { Button, Img, PopConfirmNew, PopConfirmProps, TextInput, Typography, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { useInput } from '../hooks/useInput';
@@ -24,16 +24,32 @@ import { WarningText } from '../component/WarningText';
 import { useNavigate, useParams } from 'react-router';
 import { PATH } from '../route/routeList';
 import { usePopConfirm } from '../hooks/usePopConfirm';
+import { usePopConfirmState } from '../hooks/usePopConfirmState';
+import { PostCard } from '../component/PostCard';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '../recoil/store';
 
 export const CommunitiPostingPage = () => {
   const nav = useNavigate();
   const { boardId } = useParams();
 
+  const userInfo = useRecoilValue(userInfoState);
+
   const refectchBoardList = () => {
     nav(PATH.COMMUNITY);
   };
 
-  usePopConfirm();
+  const [confirmState, setConfirmState] = useState<PopConfirmProps & { visible: boolean }>({
+    visible: false,
+    iconType: 'warning',
+    title: '',
+    button: {
+      text: '확인',
+      onClick: () => {
+        console.log('gg');
+      },
+    },
+  });
   const [postType, setPostType] = useState<PostType>('DAILY');
   const [preview, setPreview] = useState('');
   const [modalState, setModalState] = useState<{ visible: boolean; type: 'edit' | 'add'; todoData?: ITodoItem }>({
@@ -73,12 +89,33 @@ export const CommunitiPostingPage = () => {
   });
 
   const { mutate: uploadImage } = useMutation(uploadImageFn, {
-    onError: () => {
-      alert('사진 업로드에 실패했습니다. 재시도해주세요.');
-    },
+    onError: () =>
+      setConfirmState((prev) => ({
+        ...prev,
+        visible: true,
+        title: `사진 업로드에 실패했습니다.`,
+        content: '다시 시도해주세요',
+        button: { text: '닫기', onClick: () => setConfirmState((prev) => ({ ...prev, visible: false })) },
+      })),
   });
-  const { mutate: postBoard } = useMutation(postCummunityFn);
-  const { mutate: updateBoard } = useMutation(updateBoardFn);
+  const { mutate: postBoard } = useMutation(postCummunityFn, {
+    onError: () =>
+      setConfirmState((prev) => ({
+        ...prev,
+        visible: true,
+        title: '게시글 등록에 실패했습니다.',
+        button: { text: '닫기', onClick: () => setConfirmState((prev) => ({ ...prev, visible: false })) },
+      })),
+  });
+  const { mutate: updateBoard } = useMutation(updateBoardFn, {
+    onError: () =>
+      setConfirmState((prev) => ({
+        ...prev,
+        visible: true,
+        title: '게시글 등록에 실패했습니다.',
+        button: { text: '닫기', onClick: () => setConfirmState((prev) => ({ ...prev, visible: false })) },
+      })),
+  });
 
   const imageInput = useRef<HTMLInputElement>(null);
 
@@ -206,11 +243,13 @@ export const CommunitiPostingPage = () => {
   };
   return (
     <NavLayout>
+      {confirmState.visible && <PopConfirmNew {...confirmState} />}
       <PageLayout title="글쓰기">
         <Wrapper height="100%">
           <ScrollWraper isColumn height="100%">
-            <Wrapper isColumn padding="1rem">
-              <Wrapper justifyContent="space-between">
+            <PostCard.PostHeader userImg={userInfo.profileImageUrl} userName={userInfo.nick} />
+            <Wrapper isColumn padding="0 1rem">
+              <Wrapper justifyContent="space-between" padding="0 0 0.5rem 0">
                 <Button
                   buttonType={postType === 'DAILY' ? 'primary' : 'default'}
                   width="49%"
