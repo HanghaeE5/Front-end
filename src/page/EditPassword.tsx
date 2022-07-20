@@ -2,13 +2,13 @@ import { AxiosError } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { userApi } from '../api/callApi';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { ContentWrapper } from '../component/styledComponent/TodoPageComponents';
-import { userNicknameState } from '../recoil/store';
+import { userInfoState } from '../recoil/store';
 
 type box = {
   width?: number | string;
@@ -128,12 +128,12 @@ const BtnAble = styled.button`
 `;
 
 export const EditPassword = () => {
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [prePassword, setPrePassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [newPassword2, setNewPassword2] = useState<string>('');
 
   const [view, setView] = useState<boolean>(false);
-  const userNickname = useRecoilValue(userNicknameState);
   const localToken = localStorage.getItem('recoil-persist');
 
   const nav = useNavigate();
@@ -159,7 +159,7 @@ export const EditPassword = () => {
     {
       onSuccess: () => {
         console.log();
-        alert(`${userNickname}님의 비밀번호가 변경되었습니다`);
+        alert(`${userInfoData.nick}님의 비밀번호가 변경되었습니다`);
         nav('/');
       },
       onError: (error: AxiosError<{ msg: string }>) => {

@@ -12,7 +12,7 @@ import { TodoModal } from '../component/TodoModal';
 import { PATH } from '../route/routeList';
 import { PublicScope, ITodoItem, Sort, TodoData, TodoParams, TodoStatusFilter, TodoDoneResponse } from '../Types/todo';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { levelUpModalState, stepUpModalState, userInfoState } from '../recoil/store';
+import { modalGatherState, userInfoState } from '../recoil/store';
 import { EvBtn } from '../component/element/BoxStyle';
 import LevelUpModal from '../component/modallayout/LevelUpModal';
 import StepUpModal from '../component/modallayout/StepUpModal';
@@ -34,16 +34,15 @@ export const ToDoPage = () => {
   const [bottomRef, isBottom] = useInView();
   const nav = useNavigate();
   const queryClient = useQueryClient();
-  const [modalStepUp, setModalStepUp] = useRecoilState(stepUpModalState);
-  const [modalLevelUp, setModalLevelUp] = useRecoilState(levelUpModalState);
-  const userInfo = useRecoilValue(userInfoState);
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
 
   const [list, setList] = useState<ITodoItem[]>([]);
   const [todoModalState, setTodoModalState] = useState<{ modalVisible: boolean; modalType: 'edit' | 'add' }>({
     modalVisible: false,
     modalType: 'add',
   });
-  const [scope, setScope] = useState<PublicScope>(userInfo?.publicScope || 'ALL');
+  const [scope, setScope] = useState<PublicScope>(userInfoData?.publicScope || 'ALL');
   const [todoFilter, setTodoFilter] = useState<TodoParams>({
     filter: 'all',
     sort: 'desc',
@@ -184,14 +183,13 @@ export const ToDoPage = () => {
     const {
       characterInfo: { levelUp, stepUp },
     } = data;
-
-    if (levelUp) {
-      setModalLevelUp(true);
+    if (stepUp) {
+      console.log(data);
+      setmodalGather({ ...modalGather, stepUpModal: true });
       return;
     }
-
-    if (stepUp) {
-      setModalStepUp(true);
+    if (!stepUp && levelUp) {
+      setmodalGather({ ...modalGather, levelUpModal: true });
       return;
     }
 
@@ -245,9 +243,9 @@ export const ToDoPage = () => {
   }, [isBottom, loadingTodoList, todoList]);
 
   useEffect(() => {
-    if (!userInfo) return;
-    setScope(userInfo.publicScope);
-  }, [userInfo]);
+    if (!userInfoData) return;
+    setScope(userInfoData.publicScope);
+  }, [userInfoData]);
 
   return (
     <NavLayout>
@@ -336,21 +334,21 @@ export const ToDoPage = () => {
           )}
 
           {!todoModalState.modalVisible && <ButtonFloating onClick={onClickAddButton} />}
-          {/* <EvBtn
+          <EvBtn
             onClick={() => {
-              setModalLevelUp(true);
+              setmodalGather({ ...modalGather, levelUpModal: true });
             }}
           >
             레벨업모달
-          </EvBtn> */}
+          </EvBtn>
           <LevelUpModal />
-          {/* <EvBtn
+          <EvBtn
             onClick={() => {
-              setModalStepUp(true);
+              setmodalGather({ ...modalGather, stepUpModal: true });
             }}
           >
             스텝업모달
-          </EvBtn> */}
+          </EvBtn>
           <StepUpModal />
         </ContentWrapper>
       </PageLayout>

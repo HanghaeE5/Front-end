@@ -5,19 +5,7 @@ import { AiOutlineCheck } from 'react-icons/ai';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { ReactComponent as DirectionIcon } from '../asset/icons/direction.svg';
 
-import {
-  accessTokenState,
-  editNicknameModalState,
-  editPhotoModalState,
-  friendInfoState,
-  levelUpModalState,
-  refreshTokenState,
-  stepUpModalState,
-  userChatacterTypeState,
-  userInfoState,
-  userPhotoWaitState,
-  userprofilephotoState,
-} from '../recoil/store';
+import { accessTokenState, friendInfoState, userInfoState } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -40,6 +28,7 @@ import StepUpModal from '../component/modallayout/StepUpModal';
 import ExpBar from '../component/element/ExpBar';
 import setupInterceptorsTo from '../api/Interceptiors';
 import { useParams } from 'react-router';
+import { FriendInfo } from '../Types/user';
 
 const MainContainer = styled.div`
   height: 100%;
@@ -122,11 +111,8 @@ const EventWrapper = styled(Wrapper)`
 
 export const FriendPage = () => {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
-  const [frienduserInfoData, setFriendUserInfoData] = useRecoilState(friendInfoState);
+  const [frienduserInfoData, setFriendUserInfoData] = useState<FriendInfo>();
   const accessLoginToken = useSetRecoilState(accessTokenState);
-  const refreshLoginToken = useSetRecoilState(refreshTokenState);
-  const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
-  const setUserPhotoWait = useSetRecoilState(userPhotoWaitState);
   const all = window.location.href;
 
   const first = all.split('&');
@@ -171,7 +157,6 @@ export const FriendPage = () => {
       const isNickname = first[2].split('=')[1];
       // console.log(isNickname);
       accessLoginToken(accessToken);
-      refreshLoginToken(refreshToken);
 
       if (isNickname === 'N') {
         nav('/signupsns');
@@ -358,7 +343,7 @@ export const FriendPage = () => {
             height="19.5"
             // margin="-41.5rem auto auto auto"
           >
-            <ExpBar exp={frienduserInfoData?.characterInfo.expPercent}></ExpBar>
+            {frienduserInfoData && <ExpBar exp={frienduserInfoData?.characterInfo.expPercent} />}
           </EvBox>
         </ContentContainer>
       </MainContainer>

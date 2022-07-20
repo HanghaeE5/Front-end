@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { chattingApi, friendApi } from '../api/callApi';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { chattingListState, friendListState, userNicknameState } from '../recoil/store';
+import { chattingListState, friendListState, userInfoState } from '../recoil/store';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 
@@ -138,10 +138,10 @@ const BtnBox = styled.button`
 `;
 
 export const Chatting = () => {
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [chattingListbtn, setChattingListbtn] = useState<boolean>(true);
   const [friendListbtn, setFriendListbtn] = useState<boolean>(false);
   const [friendList, setFriendList] = useRecoilState(friendListState);
-  const userNickname = useRecoilValue(userNicknameState);
   const [chattingList, setChattingList] = useRecoilState(chattingListState);
   const [makeChattingRoomName, setMakeChattingRoomName] = useState<string>('');
   const [makeChattingRoomNickname, setMakeChattingRoomNickname] = useState<string>('');
@@ -245,7 +245,7 @@ export const Chatting = () => {
           const data = {
             type: 'QUIT',
             roomId: roomIdName,
-            sender: userNickname,
+            sender: userInfoData.nick,
             message: '',
           };
           ws.send('/pub/chat/message', { Authorization: toto.accessTokenState }, JSON.stringify(data));
@@ -344,10 +344,10 @@ export const Chatting = () => {
                   <RowChattingBox
                     key={friend.id}
                     onClick={() => {
-                      setMakeChattingRoomName(`${friend.nick}님과 ${userNickname}님의 대화`);
+                      setMakeChattingRoomName(`${friend.nick}님과 ${userInfoData.nick}님의 대화`);
                       setMakeChattingRoomNickname(friend.nick);
                       makePrivateChattingRoom({
-                        name: `${friend.nick}님과 ${userNickname}님의 대화`,
+                        name: `${friend.nick}님과 ${userInfoData.nick}님의 대화`,
                         nick: friend.nick,
                       });
                     }}

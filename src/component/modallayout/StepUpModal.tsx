@@ -67,9 +67,9 @@ const StepUpModal = () => {
 
   console.log(userInformData);
 
-  // useEffect(() => {
-  //   userInformData;
-  // }, []);
+  useEffect(() => {
+    userInformData;
+  }, [userInformData]);
 
   return (
     <>
