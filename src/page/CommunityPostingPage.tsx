@@ -23,11 +23,11 @@ import {
 import { WarningText } from '../component/WarningText';
 import { useNavigate, useParams } from 'react-router';
 import { PATH } from '../route/routeList';
-import { usePopConfirm } from '../hooks/usePopConfirm';
-import { usePopConfirmState } from '../hooks/usePopConfirmState';
+
 import { PostCard } from '../component/PostCard';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/store';
+import { TodoModalNew, TodoModalProps } from '../component/TodoModalNew';
 
 export const CommunitiPostingPage = () => {
   const nav = useNavigate();
@@ -45,37 +45,42 @@ export const CommunitiPostingPage = () => {
     title: '',
     button: {
       text: '확인',
-      onClick: () => {
-        console.log('gg');
-      },
+      onClick: () => console.log('gg'),
     },
   });
-  const [postType, setPostType] = useState<PostType>('DAILY');
-  const [preview, setPreview] = useState('');
-  const [modalState, setModalState] = useState<{ visible: boolean; type: 'edit' | 'add'; todoData?: ITodoItem }>({
-    visible: false,
-    type: 'add',
-    todoData: undefined,
-  });
+
   const [todoData, setTodoData] = useState<TodoData>();
+
   const [requiredError, setRequiredError] = useState<{ title: boolean; content: boolean }>({
     title: false,
     content: false,
   });
 
-  const { value: title, onChangeValue: setTitleValue } = useInput();
-  const { value: content, onChangeValue: setContentValue } = useInput();
+  const [post, setPost] = useState<{ postType: PostType; title: string; content: string; preview?: string }>({
+    postType: 'DAILY',
+    title: '',
+    content: '',
+    preview: '',
+  });
 
+  const [todoModalStateNew, setTodoModalStateNew] = useState<{
+    visible: boolean;
+    todoProps: TodoModalProps;
+  }>({
+    visible: false,
+    todoProps: {
+      modalTitle: '마이 투 두 추가하기',
+      closeModal: () => setTodoModalStateNew((prev) => ({ ...prev, visible: false })),
+      buttonTitle: '추가하기',
+      onClickButton: (todo: TodoData) => console.log(todo),
+    },
+  });
+
+  // CRUD query
   useQuery([communityQueryKey.fetchBoardDetail], () => fetchBoardDetailFn(Number(boardId)), {
     enabled: !!boardId,
     onSuccess: (data) => {
-      setPostType(data.category);
-      setContentValue(data.boardContent);
-      setTitleValue(data.title);
-
-      if (data.imageUrl) {
-        setPreview(data.imageUrl);
-      }
+      setPost({ postType: data.category, title: data.title, content: data.boardContent, preview: data.imageUrl });
 
       if (data.todos) {
         const { todoContent, category, todoDate } = data.todos[0];
@@ -89,16 +94,32 @@ export const CommunitiPostingPage = () => {
   });
 
   const { mutate: uploadImage } = useMutation(uploadImageFn, {
+    onSuccess: (data) => setPost((prev) => ({ ...prev, preview: data })),
     onError: () =>
       setConfirmState((prev) => ({
-        ...prev,
+        iconType: 'warning',
         visible: true,
         title: `사진 업로드에 실패했습니다.`,
         content: '다시 시도해주세요',
         button: { text: '닫기', onClick: () => setConfirmState((prev) => ({ ...prev, visible: false })) },
       })),
   });
-  const { mutate: postBoard } = useMutation(postCummunityFn, {
+
+  const { mutate: addBoard } = useMutation(postCummunityFn, {
+    onSuccess: () => {
+      setConfirmState((prev) => ({
+        iconType: 'success',
+        visible: true,
+        title: '게시글을 등록했습니다.',
+        button: {
+          text: '닫기',
+          onClick: () => {
+            setConfirmState((prev) => ({ ...prev, visible: false }));
+            refectchBoardList();
+          },
+        },
+      }));
+    },
     onError: () =>
       setConfirmState((prev) => ({
         ...prev,
@@ -107,10 +128,25 @@ export const CommunitiPostingPage = () => {
         button: { text: '닫기', onClick: () => setConfirmState((prev) => ({ ...prev, visible: false })) },
       })),
   });
+
   const { mutate: updateBoard } = useMutation(updateBoardFn, {
+    onSuccess: () => {
+      setConfirmState((prev) => ({
+        iconType: 'success',
+        visible: true,
+        title: '게시글을 수정했습니다.',
+        button: {
+          text: '닫기',
+          onClick: () => {
+            setConfirmState((prev) => ({ ...prev, visible: false }));
+            refectchBoardList();
+          },
+        },
+      }));
+    },
     onError: () =>
       setConfirmState((prev) => ({
-        ...prev,
+        iconType: 'warning',
         visible: true,
         title: '게시글 등록에 실패했습니다.',
         button: { text: '닫기', onClick: () => setConfirmState((prev) => ({ ...prev, visible: false })) },
@@ -130,9 +166,7 @@ export const CommunitiPostingPage = () => {
     const formData = new FormData();
     formData.append('file', input.target.files[0]);
 
-    uploadImage(formData, {
-      onSuccess: (data) => setPreview(data),
-    });
+    uploadImage(formData);
   };
 
   const removeImg = () => {
@@ -140,87 +174,76 @@ export const CommunitiPostingPage = () => {
       imageInput.current.value = '';
     }
 
-    setPreview('');
+    setPost((prev) => ({ ...prev, preview: '' }));
   };
 
-  const onClickChallangersButton = () => {
-    setPostType('CHALLENGE');
+  const addWithTodo = () => {
+    setPost((prev) => ({ ...prev, postType: 'CHALLENGE' }));
 
-    if (todoData) {
-      const { content, category, todoDateList } = todoData;
-      setModalState({
-        visible: true,
-        type: 'edit',
-        todoData: {
-          category: category as Category,
-          todoContent: content,
-          todoDate: String(todoDateList[0]),
-          // TODO : 데이터틀림
-          todoId: 1000000000,
-          state: false,
+    if (todoData) return;
+
+    setTodoModalStateNew({
+      visible: true,
+      todoProps: {
+        isWithTodo: true,
+        modalTitle: '위드 투 두 추가하기',
+        closeModal: () => setTodoModalStateNew((prev) => ({ ...prev, visible: false })),
+        buttonTitle: '추가하기',
+        onClickButton: (todo: TodoData) => {
+          setTodoData(todo);
+          setTodoModalStateNew((prev) => ({ ...prev, visible: false }));
         },
-      });
-    } else {
-      setModalState({
-        visible: true,
-        type: 'add',
-      });
-    }
+      },
+    });
   };
 
-  const setTodoDataFromModal = (todo: TodoData | ITodoItem) => {
-    setTodoData(todo as TodoData);
+  const editWithTodo = () => {
+    setTodoModalStateNew({
+      visible: true,
+      todoProps: {
+        isWithTodo: true,
+        modalTitle: '위드 투 두 수정하기',
+        closeModal: () => setTodoModalStateNew((prev) => ({ ...prev, visible: false })),
+        buttonTitle: '수정하기',
+        todoData,
+        onClickButton: (todo: TodoData) => {
+          setTodoData(todo);
+          setTodoModalStateNew((prev) => ({ ...prev, visible: false }));
+        },
+      },
+    });
   };
 
   const onClickAddPostButton = () => {
-    if (!title) {
-      setRequiredError((prev) => ({ ...prev, title: true }));
-      return;
-    }
+    if (!post.title || !post.content) return;
 
-    if (!content) {
-      setRequiredError((prev) => ({ ...prev, content: true }));
-      return;
-    }
+    const todo = post.postType === 'CHALLENGE' ? { todo: todoData } : undefined;
 
-    const todo = postType === 'CHALLENGE' ? { todo: todoData } : undefined;
+    addBoard({
+      board: {
+        category: post.postType,
+        content: post.content,
+        title: post.title,
+        imageUrl: post.preview,
+      },
+      ...todo,
+    });
+  };
 
-    if (boardId) {
-      // 수정
-      // updateBoard(
-      //   {
-      //     boardId: Number(boardId),
-      //     params: {
-      //       board: {
-      //         category: postType,
-      //         content,
-      //         title,
-      //         imageUrl: preview,
-      //       },
-      //       ...todo,
-      //     },
-      //   },
-      //   {
-      //     onSuccess: () => refectchBoardList(),
-      //   },
-      // );
-    } else {
-      //추가
-      // postBoard(
-      //   {
-      //     board: {
-      //       category: postType,
-      //       content,
-      //       title,
-      //       imageUrl: preview,
-      //     },
-      //     ...todo,
-      //   },
-      //   {
-      //     onSuccess: () => refectchBoardList(),
-      //   },
-      // );
-    }
+  const onClickEditPostButton = () => {
+    if (!post.title || !post.content) return;
+
+    updateBoard({
+      boardId: Number(boardId),
+      params: {
+        board: {
+          category: post.postType,
+          content: post.content,
+          title: post.title,
+          imageUrl: post.preview,
+        },
+      },
+    });
   };
 
   // TODO : 리팩토링
@@ -229,7 +252,7 @@ export const CommunitiPostingPage = () => {
       setRequiredError((prev) => ({ ...prev, title: false }));
     }
 
-    setTitleValue(value);
+    setPost((prev) => ({ ...prev, title: value }));
   };
 
   const onChangeContent = (value: string) => {
@@ -239,7 +262,7 @@ export const CommunitiPostingPage = () => {
 
     if (value.length > 2000) return;
 
-    setContentValue(value);
+    setPost((prev) => ({ ...prev, content: value }));
   };
   return (
     <NavLayout>
@@ -247,26 +270,26 @@ export const CommunitiPostingPage = () => {
       <PageLayout title="글쓰기">
         <Wrapper height="100%">
           <ScrollWraper isColumn height="100%">
-            <PostCard.PostHeader userImg={userInfo.profileImageUrl} userName={userInfo.nick} />
+            <PostCard.PostHeader userImg={userInfo?.profileImageUrl} userName={userInfo?.nick} />
             <Wrapper isColumn padding="0 1rem">
               <Wrapper justifyContent="space-between" padding="0 0 0.5rem 0">
                 <Button
-                  buttonType={postType === 'DAILY' ? 'primary' : 'default'}
+                  buttonType={post.postType === 'DAILY' ? 'primary' : 'default'}
                   width="49%"
-                  onClick={() => setPostType('DAILY')}
+                  onClick={() => setPost((prev) => ({ ...prev, postType: 'DAILY' }))}
                 >
                   일상
                 </Button>
                 <Button
-                  buttonType={postType === 'CHALLENGE' ? 'primary' : 'default'}
+                  buttonType={post.postType === 'CHALLENGE' ? 'primary' : 'default'}
                   width="49%"
-                  onClick={() => onClickChallangersButton()}
+                  onClick={() => addWithTodo()}
                 >
                   위드 투 두
                 </Button>
               </Wrapper>
-              {postType === 'CHALLENGE' && todoData && (
-                <ChallangersSection onClick={() => onClickChallangersButton()}>
+              {post.postType === 'CHALLENGE' && todoData && (
+                <ChallangersSection onClick={() => editWithTodo()}>
                   <span>{todoData.content}</span>
                   <span>{`${todoData.todoDateList[0]} ${
                     todoData.todoDateList.length > 1 ? `외 ${todoData.todoDateList.length - 1}` : ``
@@ -276,7 +299,7 @@ export const CommunitiPostingPage = () => {
 
               <Wrapper isColumn justifyContent="start" padding="0.5rem 0">
                 <TextInput
-                  value={title}
+                  value={post.title}
                   onChange={onChangeTitle}
                   placeholder="제목을 입력해주세요"
                   isValidError={requiredError.title}
@@ -286,7 +309,7 @@ export const CommunitiPostingPage = () => {
               <Wrapper isColumn justifyContent="start">
                 <TextInput
                   type="area"
-                  value={content}
+                  value={post.content}
                   onChange={onChangeContent}
                   placeholder="내용을 입력해주세요"
                   isValidError={requiredError.content}
@@ -298,9 +321,9 @@ export const CommunitiPostingPage = () => {
               <Button size="large" buttonType="dashed" onClick={() => onClickImgUploadButton()}>
                 <BiCamera /> &nbsp; 사진 업로드
               </Button>
-              {preview && (
+              {post.preview && (
                 <Wrapper margin="0.75rem 0rem">
-                  <Img width="5rem" height="5rem" url={preview} />
+                  <Img width="5rem" height="5rem" url={post.preview} />
                   <Wrapper isColumn alignItems="start" padding="0 0.75rem">
                     <Typography size={0.813} color="#696969" weight={400}>
                       사진 업로드는 1장만 가능합니다
@@ -327,20 +350,15 @@ export const CommunitiPostingPage = () => {
               />
             </Wrapper>
             <Wrapper padding="0 1rem" margin="0.75rem 0">
-              <Button size="large" onClick={onClickAddPostButton}>
+              <Button
+                buttonType={!post.title || !post.content ? 'disable' : 'primary'}
+                size="large"
+                onClick={boardId ? onClickEditPostButton : onClickAddPostButton}
+              >
                 {boardId ? '수정하기' : '등록하기'}
               </Button>
             </Wrapper>
-            {modalState.visible && (
-              <TodoModal
-                editType={modalState.type}
-                todoType="with"
-                modalTitle="위드 투 두 추가하기"
-                closeModal={() => setModalState((prev) => ({ ...prev, visible: false }))}
-                getTodoDataFromModal={setTodoDataFromModal}
-                todoData={modalState.todoData}
-              />
-            )}
+            {todoModalStateNew.visible && <TodoModalNew {...todoModalStateNew.todoProps} />}
           </ScrollWraper>
         </Wrapper>
       </PageLayout>

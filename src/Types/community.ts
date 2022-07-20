@@ -13,6 +13,13 @@ export interface CommunitySearchControl {
   size: number;
 }
 
+export interface BoardTodo {
+  category: string;
+  createdDate: Date;
+  id: number;
+  todoContent: string;
+  todoDate: string[];
+}
 export interface Board {
   authorEmail: string;
   authorNick: string;
@@ -27,15 +34,7 @@ export interface Board {
   participatingCount: 0;
   title: string;
   withTodoDeadline: boolean;
-  todos?: [
-    {
-      category: string;
-      createdDate: Date;
-      id: number;
-      todoContent: string;
-      todoDate: string[];
-    },
-  ];
+  todos?: BoardTodo[];
 }
 
 export interface AddBoardData {
