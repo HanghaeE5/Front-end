@@ -8,7 +8,7 @@ import { ButtonFloating, Img, Select, SelectOption, TextInput, Typography, Wrapp
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
-import { ContentWrapper } from '../component/styledComponent/CommunityElements';
+import { ContentWrapper, ScrollWrapper } from '../component/styledComponent/CommunityElements';
 import { PATH } from '../route/routeList';
 import { Board, CommunitySearchControl, FilterType, KeywordFilter } from '../Types/community';
 import { removeListDuplicate } from '../utils/removeListDuplicate';
@@ -119,7 +119,7 @@ export const CommunityPage = () => {
               </Wrapper>
             )}
             {list.length > 0 && (
-              <Wrapper isColumn>
+              <ScrollWrapper isColumn>
                 {list.map((post: Board) => (
                   <PostCard key={post.boardId} onClick={() => nav(`${PATH.COMMUNITY}/${post.boardId}`)}>
                     <PostCard.PostHeader userImg={post.authorProfileImageUrl} userName={post.authorNick} />
@@ -134,7 +134,7 @@ export const CommunityPage = () => {
                   </PostCard>
                 ))}
                 {list.length ? <div ref={bottomRef} /> : ''}
-              </Wrapper>
+              </ScrollWrapper>
             )}
           </section>
         </ContentWrapper>
