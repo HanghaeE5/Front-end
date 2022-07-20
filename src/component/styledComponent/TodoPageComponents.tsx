@@ -38,7 +38,7 @@ export const TodoItemWrapper = styled(Wrapper)<{ done: boolean }>`
   & > svg:nth-of-type(2) {
     margin: 0.5rem;
     font-size: 1.75rem;
-    color: ${({ done, theme }) => (done ? theme.color.grayMedium : theme.color.grayMedium)};
+    color: ${({ done, theme }) => (done ? theme.color.grayMedium : 'black')};
   }
 
   & svg {
