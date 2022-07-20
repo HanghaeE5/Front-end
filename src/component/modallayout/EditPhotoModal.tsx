@@ -1,7 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { editPhotoModalState, userPhotoWaitState, userprofilephotoState } from '../../recoil/store';
-import React, { useState } from 'react';
+import { modalGatherState, userInfoState } from '../../recoil/store';
+import React, { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { userApi } from '../../api/callApi';
 
@@ -136,17 +136,18 @@ const BtnAble = styled.button`
 `;
 
 const EditPhotoModal = () => {
-  const [modalEditPhoto, setModalEditPhoto] = useRecoilState(editPhotoModalState);
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   type Img = {
     img_show: string;
-    img_file: File | string | Blob;
+    img_file: File | string | Blob | undefined;
   };
 
-  //파일 미리볼 url을 저장해줄 state
-  const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
-
   //파일 임시 미리봄
-  const [userPhotoWait, setUserPhotoWait] = useRecoilState(userPhotoWaitState);
+  const [userPhotoWait, setUserPhotoWait] = useState<Img>({
+    img_show: '',
+    img_file: '',
+  });
 
   // 파일 가져오기
   const saveFileImage = (event: React.ChangeEvent) => {
@@ -163,7 +164,7 @@ const EditPhotoModal = () => {
 
   // 파일 삭제
   const deleteFileImage = () => {
-    URL.revokeObjectURL(fileImage.img_show);
+    URL.revokeObjectURL(userPhotoWait.img_show);
     setUserPhotoWait({
       img_show: '',
       img_file: '',
@@ -174,23 +175,30 @@ const EditPhotoModal = () => {
   // 사진파일 저장 API
   const profilePhotoEditData = useMutation((forms: FormData) => userApi.profilePhotoEditApi(forms), {
     onSuccess: () => {
-      setModalEditPhoto(false);
+      setmodalGather({ ...modalGather, editPhotoModal: false });
       queryClient.invalidateQueries('userData'); //userData 키값 query 실행
     },
   });
 
   const profilePhotoEdit = () => {
     const formData = new FormData();
-    if (userPhotoWait) {
+    if (userPhotoWait.img_file != undefined) {
       formData.append('file', userPhotoWait.img_file);
     }
+    console.log(userPhotoWait.img_file);
     profilePhotoEditData.mutate(formData);
   };
 
+  useEffect(() => {
+    if (userInfoData) {
+      setUserPhotoWait({ ...userPhotoWait, img_show: userInfoData.profileImageUrl });
+    }
+  }, [userInfoData]);
+
   return (
     <>
-      {modalEditPhoto && (
-        <ModalBackground onClick={() => setModalEditPhoto(false)}>
+      {modalGather.editPhotoModal && (
+        <ModalBackground onClick={() => setmodalGather({ ...modalGather, editPhotoModal: false })}>
           <BoxWrap
             width={'100%'}
             height={34.8}
@@ -216,7 +224,7 @@ const EditPhotoModal = () => {
                   cursor: 'pointer',
                 }}
                 onClick={() => {
-                  setModalEditPhoto(false);
+                  setmodalGather({ ...modalGather, editPhotoModal: false });
                 }}
               ></Box>
             </RowBox>
@@ -250,24 +258,20 @@ const EditPhotoModal = () => {
                 <KoreanFont size={1}>사진 업로드</KoreanFont>
               </ImgLable>
               <input id="img" type="file" accept="image/*" onChange={saveFileImage} style={{ display: 'none' }} />
-              {fileImage ? (
-                <BtnAble
-                  width={'25%'}
-                  height={3}
-                  margin={'0 0 0 1.5rem'}
-                  onClick={() => {
-                    console.log('얍');
-                    setUserPhotoWait({
-                      img_show: '/assets/defaultprofile.svg',
-                      img_file: '/assets/defaultprofile.svg',
-                    });
-                  }}
-                >
-                  <KoreanFont size={1}>기본이미지</KoreanFont>
-                </BtnAble>
-              ) : (
-                ''
-              )}
+              <BtnAble
+                width={'25%'}
+                height={3}
+                margin={'0 0 0 1.5rem'}
+                onClick={() => {
+                  setUserPhotoWait({
+                    img_show: '/assets/defaultprofile.svg',
+                    img_file: '',
+                  });
+                }}
+              >
+                <KoreanFont size={1}>기본이미지</KoreanFont>
+              </BtnAble>
+
               <BtnAble
                 isDisable={!userPhotoWait}
                 width={'25%'}
