@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from 'react-query';
 import styled from 'styled-components';
 import { enterPhoneFn, exchangeCouponFn, fetchEventFn, openLuckyboxFn } from '../api/eventApi';
-import EventImg from '../asset/eventPage.jpg';
+import EventImg from '../asset/event.png';
 import {
   Badge,
   Button,
@@ -19,12 +19,18 @@ import { useState } from 'react';
 import { EventResponse } from '../Types/event';
 import { useInput } from '../hooks/useInput';
 import { AxiosError } from 'axios';
+import { PageHeader, PageLayout } from '../component/layout/PageLayout';
+import { TopNavLayout } from '../component/layout/TopNavBar';
 
 const ScrollWrapper = styled.div`
   font-family: 'GmarketSans';
   background-color: #130c51;
   overflow-y: scroll;
   box-sizing: border-box;
+  width: 375px;
+  ::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
 `;
 
 const EventSection = styled.section`
@@ -33,52 +39,58 @@ const EventSection = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2rem 0;
-  border-top: 4px solid #251d71;
+  padding: 36px;
+  border-bottom: 4px solid #251d71;
   box-sizing: border-box;
 `;
 
 const EventImage = styled.img`
-  width: 100%;
+  width: 375px;
+  height: 510px;
 `;
 
 const EventBadge = styled.div`
   color: #ffeb37;
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 1.75rem;
-  font-size: 14px;
-  font-weight: 500;
   border-radius: 50px 50px;
   border: 1px solid #ffeb37;
-  padding: 0.25rem 0.75rem;
+  padding: 0 1rem;
   text-align: center;
-  font-size: 0.875rem;
+  font-size: 12px;
   margin: 0.5rem;
+  line-height: 15px;
 `;
 
 const EventTitle = styled(Wrapper)`
   font-weight: 700;
   color: #ffeb37;
-  font-size: 1.625rem;
+  font-size: 24px;
   padding: 0;
   margin: 0.5rem 0;
+  letter-spacing: -5%;
+  word-spacing: -5%;
 `;
 
 const EventContent = styled(Wrapper)`
   color: white;
-  font-weight: 400;
-  font-size: 0.875rem;
+  font-size: 13px;
   text-align: center;
   line-height: 20px;
+  letter-spacing: -5%;
+  word-spacing: -5%;
 `;
 
 const EventCalendar = styled.div`
   box-sizing: border-box;
+  margin-top: 20px;
+  width: 305px;
+
   & > div:nth-of-type(1) {
     box-sizing: border-box;
     background-color: #5441ff;
-    width: 19.063rem;
     height: 50px;
     border-radius: 20px 20px 0 0;
     font-weight: 700;
@@ -87,19 +99,25 @@ const EventCalendar = styled.div`
     align-items: center;
     font-size: 1.25rem;
     color: white;
-    // padding: 0 0.5rem;
+    padding-top: 3px;
   }
 
   & > div:nth-of-type(2) {
     background-color: white;
     border-radius: 0 0 20px 20px;
-    //padding: 0 0.5rem;
+    padding: 0 12px 6px 12px;
+    box-sizing: border-box;
+
+    & > div {
+      max-width: 305px;
+    }
   }
 `;
 
 const DayComponent = styled.div`
-  width: 3rem;
-  height: 2.5rem;
+  width: 40px;
+  height: 40px;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -107,8 +125,9 @@ const DayComponent = styled.div`
 `;
 
 const DateComponent = styled.div`
-  width: 3rem;
-  height: 2.5rem;
+  width: 40px;
+  max-width: 40px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -124,8 +143,8 @@ const Day = ({ dd, stampedList }: { dd: string; stampedList: string[] }) => {
 };
 
 const ScoreBox = styled.div<{ isRed?: boolean }>`
-  width: 9.063rem;
-  height: 8.125rem;
+  width: 145px;
+  height: 130px;
   background-color: white;
   border-radius: 20px;
   display: flex;
@@ -145,9 +164,13 @@ const ScoreBox = styled.div<{ isRed?: boolean }>`
   & > div {
     height: 60%;
     padding: 1rem;
-    & > span:nth-of-type(1) {
-      font-size: 4rem;
+
+    & > span {
       font-weight: 700;
+    }
+
+    & > span:nth-of-type(1) {
+      font-size: 60px;
     }
   }
 `;
@@ -247,110 +270,112 @@ export const Event = () => {
   };
 
   return (
-    <ScrollWrapper>
-      {confirmState.visible && <PopConfirmNew {...confirmState} />}
-      <EventImage src={EventImg} />
-      <EventSection>
-        <Wrapper isColumn padding="1rem" alignItems="center">
-          <EventBadge>STEP 01</EventBadge>
-          <EventTitle justifyContent="center" padding="1rem">
-            투 두 완료하고 도장받기
-          </EventTitle>
-          <EventContent alignItems="center" justifyContent="center">
-            미완료된 투두리스트 없이 1개 이상의 투두를 완료하면 <br />
-            해당일 자정 12시에 도장이 찍힙니다.
-          </EventContent>
-        </Wrapper>
-        <EventCalendar>
-          <div>2022년 7월</div>
-          <div>
-            <Wrapper justifyContent="space-between" width="305px" padding="0 0.5rem">
-              <DayComponent>일</DayComponent>
-              <DayComponent>월</DayComponent>
-              <DayComponent>화</DayComponent>
-              <DayComponent>수</DayComponent>
-              <DayComponent>목</DayComponent>
-              <DayComponent>금</DayComponent>
-              <DayComponent>토</DayComponent>
-            </Wrapper>
-            <Wrapper justifyContent="space-between" width="305px" padding="0 0.5rem">
-              <DateComponent />
-              <DateComponent />
-              <DateComponent />
-              <DateComponent />
-              <DateComponent />
-              <Day dd="1" stampedList={eventData.stampDates} />
-              <Day dd="2" stampedList={eventData.stampDates} />
-            </Wrapper>
-            <Wrapper width="19.063rem" justifyContent="space-between" padding="0 0.5rem">
-              {['3', '4', '5', '6', '7', '8', '9'].map((dd) => (
-                <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
-              ))}
-            </Wrapper>
-            <Wrapper width="19.063rem" justifyContent="space-between" padding="0 0.5rem">
-              {['10', '11', '12', '13', '14', '15', '16'].map((dd) => (
-                <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
-              ))}
-            </Wrapper>
-            <Wrapper width="19.063rem" justifyContent="space-between" padding="0 0.5rem">
-              {['17', '18', '19', '20', '21', '22', '23'].map((dd) => (
-                <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
-              ))}
-            </Wrapper>
-            <Wrapper width="19.063rem" justifyContent="space-between" padding="0 0.5rem">
-              {['24', '25', '26', '27', '28', '29', '31'].map((dd) => (
-                <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
-              ))}
-            </Wrapper>
-            <Wrapper width="19.063rem" justifyContent="space-between" padding="0 0.25rem">
-              <Day dd="31" stampedList={eventData.stampDates} />
-            </Wrapper>
-          </div>
-        </EventCalendar>
-      </EventSection>
-      <EventSection>
-        <Wrapper isColumn padding="2rem" alignItems="center">
-          <EventBadge>STEP 02</EventBadge>
-          <EventTitle justifyContent="center" padding="1rem">
-            도장으로 이벤트 응모권 교환
-          </EventTitle>
-          <EventContent alignItems="center" justifyContent="center">
-            도장 5개당 이벤트 응모권 1개로 교환이 가능합니다.
-          </EventContent>
-          <Wrapper justifyContent="space-between" margin="1rem">
-            <Score isRed title="나의 도장 개수" count={eventData.stampCnt || 0} />
-            <Score title="나의 응모권 개수" count={eventData.couponCnt || 0} />
+    <Wrapper height="100%" width="375px" isColumn>
+      <TopNavLayout />
+      <PageHeader title="이벤트" />
+      <ScrollWrapper>
+        {confirmState.visible && <PopConfirmNew {...confirmState} />}
+        <EventImage src={EventImg} />
+        <EventSection>
+          <Wrapper isColumn alignItems="center">
+            <EventBadge>STEP 01</EventBadge>
+            <EventTitle justifyContent="center" padding="1rem">
+              투 두 완료하고 도장받기
+            </EventTitle>
+            <EventContent alignItems="center" justifyContent="center">
+              미완료된 투두리스트 없이 1개 이상의 투두를 완료하면 <br />
+              해당일 자정 12시에 도장이 찍힙니다.
+            </EventContent>
           </Wrapper>
-          <EventButton bgColor="#5441FF" onClick={() => onClickExchangeButton()}>
-            응모권으로 교환하기
-          </EventButton>
-        </Wrapper>
-      </EventSection>
-      <EventSection>
-        <Wrapper isColumn padding="2rem" alignItems="center">
-          <EventBadge>STEP 03</EventBadge>
-          <EventTitle justifyContent="center" padding="1rem">
-            응모권으로 럭키박스 오픈
-          </EventTitle>
-          <EventContent alignItems="center" justifyContent="center">
-            100% 당첨 럭키박스를 오픈해보세요!
-          </EventContent>
-          <Wrapper justifyContent="space-between" margin="1rem">
-            <LuckyBox />
+          <EventCalendar>
+            <div>2022년 7월</div>
+            <div>
+              <Wrapper justifyContent="space-between">
+                <DayComponent>일</DayComponent>
+                <DayComponent>월</DayComponent>
+                <DayComponent>화</DayComponent>
+                <DayComponent>수</DayComponent>
+                <DayComponent>목</DayComponent>
+                <DayComponent>금</DayComponent>
+                <DayComponent>토</DayComponent>
+              </Wrapper>
+              <Wrapper justifyContent="space-between">
+                <DateComponent />
+                <DateComponent />
+                <DateComponent />
+                <DateComponent />
+                <DateComponent />
+                <Day dd="1" stampedList={eventData.stampDates} />
+                <Day dd="2" stampedList={eventData.stampDates} />
+              </Wrapper>
+              <Wrapper justifyContent="space-between">
+                {['3', '4', '5', '6', '7', '8', '9'].map((dd) => (
+                  <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
+                ))}
+              </Wrapper>
+              <Wrapper justifyContent="space-between">
+                {['10', '11', '12', '13', '14', '15', '16'].map((dd) => (
+                  <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
+                ))}
+              </Wrapper>
+              <Wrapper justifyContent="space-between">
+                {['17', '18', '19', '20', '21', '22', '23'].map((dd) => (
+                  <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
+                ))}
+              </Wrapper>
+              <Wrapper justifyContent="space-between">
+                {['24', '25', '26', '27', '28', '29', '31'].map((dd) => (
+                  <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
+                ))}
+              </Wrapper>
+              <Wrapper justifyContent="space-between">
+                <Day dd="31" stampedList={eventData.stampDates} />
+              </Wrapper>
+            </div>
+          </EventCalendar>
+        </EventSection>
+        <EventSection>
+          <Wrapper isColumn alignItems="center">
+            <EventBadge>STEP 02</EventBadge>
+            <EventTitle justifyContent="center">도장으로 이벤트 응모권 교환</EventTitle>
+            <EventContent alignItems="center" justifyContent="center">
+              도장 5개당 이벤트 응모권 1개로 교환이 가능합니다.
+            </EventContent>
+            <Wrapper justifyContent="space-between" margin="1rem">
+              <Score isRed title="나의 도장 개수" count={eventData.stampCnt || 0} />
+              <Score title="나의 응모권 개수" count={eventData.couponCnt || 0} />
+            </Wrapper>
+            <EventButton bgColor="#5441FF" onClick={() => onClickExchangeButton()}>
+              응모권으로 교환하기
+            </EventButton>
           </Wrapper>
-          <EventButton bgColor="#FF534E" onClick={() => onClickOpenLuckyBoxButton()}>
-            럭키 박스 열기
-          </EventButton>
-        </Wrapper>
-      </EventSection>
-      {luckyBoxState.visible && (
-        <LuckyBoxModal
-          closeModal={resetLuckyBoxState}
-          item={luckyBoxState.item}
-          onClickConfirmButton={enterPhoneNumber}
-        />
-      )}
-    </ScrollWrapper>
+        </EventSection>
+        <EventSection>
+          <Wrapper isColumn alignItems="center">
+            <EventBadge>STEP 03</EventBadge>
+            <EventTitle justifyContent="center" padding="1rem">
+              응모권으로 럭키박스 오픈
+            </EventTitle>
+            <EventContent alignItems="center" justifyContent="center">
+              100% 당첨 럭키박스를 오픈해보세요!
+            </EventContent>
+            <Wrapper justifyContent="space-between" margin="1rem">
+              <LuckyBox />
+            </Wrapper>
+            <EventButton bgColor="#FF534E" onClick={() => onClickOpenLuckyBoxButton()}>
+              럭키 박스 열기
+            </EventButton>
+          </Wrapper>
+        </EventSection>
+        {luckyBoxState.visible && (
+          <LuckyBoxModal
+            closeModal={resetLuckyBoxState}
+            item={luckyBoxState.item}
+            onClickConfirmButton={enterPhoneNumber}
+          />
+        )}
+      </ScrollWrapper>
+    </Wrapper>
   );
 };
 

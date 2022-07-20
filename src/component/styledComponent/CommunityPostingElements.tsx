@@ -3,7 +3,9 @@ import { Wrapper } from '../element';
 
 export const ScrollWraper = styled(Wrapper)`
   overflow-y: scroll;
-  height: 42rem;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const WarningText = styled.div`
@@ -20,17 +22,16 @@ export const WarningText = styled.div`
 export const ImgPreviewSection = styled(Wrapper)`
   margin: 0.75rem 0rem;
 
-  & > div:nth-of-type(2) {
+  & > div:nth-of-type(1) {
+    border: 1px solid green;
     margin-left: 1rem;
-    width: 15rem;
-    font-family: 'NotoRegu';
-    font-weight: 400;
+    width: 14rem;
     color: ${({ theme }) => theme.color.grayDark};
     & div {
       display: flex;
       justify-content: space-between;
       margin: 0.5rem 0;
-      width: 12rem;
+      width: 11rem;
     }
   }
 `;
@@ -46,6 +47,7 @@ export const ChallangersSection = styled.div`
   margin: 0.5rem;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 
   & span:nth-of-type(1) {
     color: black;
