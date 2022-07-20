@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
-import { Button, Img, TextInput, Wrapper } from '../component/element';
+import { Button, Img, TextInput, Typography, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { useInput } from '../hooks/useInput';
@@ -115,7 +115,7 @@ export const CommunitiPostingPage = () => {
         todoData: {
           category: category as Category,
           todoContent: content,
-          todoDate: todoDateList[0],
+          todoDate: todoDateList,
           // TODO : 데이터틀림
           todoId: 1000000000,
           state: false,
@@ -205,89 +205,101 @@ export const CommunitiPostingPage = () => {
   return (
     <NavLayout>
       <PageLayout title="글쓰기">
-        <ScrollWraper isColumn>
-          <Wrapper isColumn padding="1rem">
-            <Wrapper justifyContent="space-between">
-              <Button
-                buttonType={postType === 'DAILY' ? 'primary' : 'default'}
-                width="49%"
-                onClick={() => setPostType('DAILY')}
-              >
-                일상
-              </Button>
-              <Button
-                buttonType={postType === 'CHALLENGE' ? 'primary' : 'default'}
-                width="49%"
-                onClick={() => onClickChallangersButton()}
-              >
-                위드 투 두
-              </Button>
-            </Wrapper>
-            {postType === 'CHALLENGE' && todoData && (
-              <ChallangersSection onClick={() => onClickChallangersButton()}>
-                <span>{todoData.content}</span>
-                <span>{`${todoData.todoDateList[0].replaceAll('-', '.')} ${
-                  todoData.todoDateList.length > 1 ? `외 ${todoData.todoDateList.length - 1}` : ``
-                }`}</span>
-              </ChallangersSection>
-            )}
+        <Wrapper height="100%">
+          <ScrollWraper isColumn height="100%">
+            <Wrapper isColumn padding="1rem">
+              <Wrapper justifyContent="space-between">
+                <Button
+                  buttonType={postType === 'DAILY' ? 'primary' : 'default'}
+                  width="49%"
+                  onClick={() => setPostType('DAILY')}
+                >
+                  일상
+                </Button>
+                <Button
+                  buttonType={postType === 'CHALLENGE' ? 'primary' : 'default'}
+                  width="49%"
+                  onClick={() => onClickChallangersButton()}
+                >
+                  위드 투 두
+                </Button>
+              </Wrapper>
+              {postType === 'CHALLENGE' && todoData && (
+                <ChallangersSection onClick={() => onClickChallangersButton()}>
+                  <span>{todoData.content}</span>
+                  <span>{`${todoData.todoDateList[0].replaceAll('-', '.')} ${
+                    todoData.todoDateList.length > 1 ? `외 ${todoData.todoDateList.length - 1}` : ``
+                  }`}</span>
+                </ChallangersSection>
+              )}
 
-            <Wrapper isColumn justifyContent="start" padding="0.5rem 0">
-              <TextInput
-                value={title}
-                onChange={onChangeTitle}
-                placeholder="제목을 입력해주세요"
-                isValidError={requiredError.title}
-              />
-              <WarningText>필수사항입니다!</WarningText>
+              <Wrapper isColumn justifyContent="start" padding="0.5rem 0">
+                <TextInput
+                  value={title}
+                  onChange={onChangeTitle}
+                  placeholder="제목을 입력해주세요"
+                  isValidError={requiredError.title}
+                />
+                <WarningText>필수사항입니다!</WarningText>
+              </Wrapper>
+              <Wrapper isColumn justifyContent="start">
+                <TextInput
+                  type="area"
+                  value={content}
+                  onChange={onChangeContent}
+                  placeholder="내용을 입력해주세요"
+                  isValidError={requiredError.content}
+                />
+                <WarningText>필수사항입니다!</WarningText>
+              </Wrapper>
             </Wrapper>
-            <Wrapper isColumn justifyContent="start">
-              <TextInput
-                type="area"
-                value={content}
-                onChange={onChangeContent}
-                placeholder="내용을 입력해주세요"
-                isValidError={requiredError.content}
+            <Wrapper isColumn padding="0 1rem">
+              <Button buttonType="dashed" onClick={() => onClickImgUploadButton()}>
+                <BiCamera /> &nbsp; 사진 업로드
+              </Button>
+              {preview && (
+                <Wrapper margin="0.75rem 0rem">
+                  <Img width="5rem" height="5rem" url={preview} />
+                  <Wrapper isColumn alignItems="start" padding="0 0.75rem">
+                    <Typography size={0.813} color="#696969" weight={400}>
+                      사진 업로드는 1장만 가능합니다
+                    </Typography>
+                    <Wrapper width="10rem" justifyContent="space-between" margin="0.5rem 0 0 0">
+                      <Button buttonType="ghost" size="small" width="48.5%" onClick={() => removeImg()}>
+                        삭제하기
+                      </Button>
+                      <Button buttonType="ghost" size="small" width="48.5%" onClick={() => onClickImgUploadButton()}>
+                        변경하기
+                      </Button>
+                    </Wrapper>
+                  </Wrapper>
+                </Wrapper>
+              )}
+              <input
+                type="file"
+                name="image"
+                multiple
+                hidden
+                ref={imageInput}
+                onChange={onChangeImg}
+                accept="image/*"
               />
-              <WarningText>필수사항입니다!</WarningText>
             </Wrapper>
-          </Wrapper>
-          <Wrapper isColumn padding="1rem">
-            <Button buttonType="dashed" onClick={() => onClickImgUploadButton()}>
-              <BiCamera /> &nbsp; 사진 업로드
-            </Button>
-            {preview && (
-              <ImgPreviewSection>
-                <Img width="5rem" height="2rem" url={preview} />
-                <div>
-                  <span>사진 업로드는 1장만 가능합니다</span>
-                  <div>
-                    <Button buttonType="ghost" size="small" width="48%" onClick={() => removeImg()}>
-                      삭제하기
-                    </Button>
-                    <Button buttonType="ghost" size="small" width="48%" onClick={() => onClickImgUploadButton()}>
-                      변경하기
-                    </Button>
-                  </div>
-                </div>
-              </ImgPreviewSection>
+            <Wrapper padding="0 1rem" margin="0 0 0.75rem 0">
+              <Button onClick={onClickAddPostButton}>{boardId ? '수정하기' : '등록하기'}</Button>
+            </Wrapper>
+            {modalState.visible && (
+              <TodoModal
+                editType={modalState.type}
+                todoType="with"
+                modalTitle="위드 투 두 추가하기"
+                closeModal={() => setModalState((prev) => ({ ...prev, visible: false }))}
+                getTodoDataFromModal={setTodoDataFromModal}
+                todoData={modalState.todoData}
+              />
             )}
-            <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImg} accept="image/*" />
-          </Wrapper>
-          <Wrapper padding="0 1rem" margin="0.5rem 0">
-            <Button onClick={onClickAddPostButton}>{boardId ? '수정하기' : '등록하기'}</Button>
-          </Wrapper>
-          {modalState.visible && (
-            <TodoModal
-              editType={modalState.type}
-              todoType="with"
-              modalTitle="위드 투 두 추가하기"
-              closeModal={() => setModalState((prev) => ({ ...prev, visible: false }))}
-              getTodoDataFromModal={setTodoDataFromModal}
-              todoData={modalState.todoData}
-            />
-          )}
-        </ScrollWraper>
+          </ScrollWraper>
+        </Wrapper>
       </PageLayout>
     </NavLayout>
   );

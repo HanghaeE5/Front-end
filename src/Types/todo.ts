@@ -27,7 +27,7 @@ export interface ITodoItem {
   createdDate?: string;
   state: boolean;
   todoContent: string;
-  todoDate: string;
+  todoDate: string[];
   todoId: number;
   boardId?: number;
 }

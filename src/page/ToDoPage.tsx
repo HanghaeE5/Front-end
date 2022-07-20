@@ -119,7 +119,7 @@ export const ToDoPage = () => {
 
       updateTodo({
         todoId: todo.todoId,
-        params: { ...todo, todoDate: todo.todoDateList[0] },
+        params: { ...todo, todoDate: todo.todoDateList },
       });
     }
   };

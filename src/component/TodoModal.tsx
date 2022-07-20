@@ -107,7 +107,7 @@ export const TodoModal = ({
   const [category, setCategory] = useState<Category>((todoData?.category as Category) || 'STUDY');
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date[] | undefined>(
-    todoData ? [new Date(todoData.todoDate)] : [new Date()],
+    todoData ? todoData.todoDate.map((date) => new Date(date)) : [new Date()],
   );
 
   const onCloseCalendar = () => setShowCalendar(false);

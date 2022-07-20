@@ -13,7 +13,7 @@ export const theme = {
   inputPadding: '0.75rem 1.25rem',
   button: {
     height: {
-      small: '1.125rem',
+      small: '1.625rem',
       medium: '3.125rem',
       large: '3.75rem',
     },
@@ -26,8 +26,8 @@ export const theme = {
       primary: 'black',
       default: 'black',
       disable: 'white',
-      dashed: '#5F5F5F',
-      ghost: 'black',
+      dashed: 'black',
+      ghost: '#888888',
     },
     borderColor: {
       primary: '#FFD600',
