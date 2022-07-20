@@ -4,10 +4,10 @@ import styled from 'styled-components';
 const SteyledTypo = styled.span<TypographyProps>`
   font-size: ${({ size }) => `${size}rem`};
   color: ${({ color }) => color};
-  font-weight: ${({ weight }) => weight};
   cursor: ${({ isPointer }) => (isPointer ? 'pointer' : '')};
   text-decoration: ${({ underline }) => underline && 'underline'};
-  font-family: ${({ isBold }) => (isBold ? 'NotoBold' : 'NotoLight')};
+  font-family: 'NotoSans';
+  font-weight: ${({ weight }) => weight || 500};
   white-space: pre-line;
   text-align: ${({ align }) => align || 'left'};
   line-height: ${({ lineHeight }) => `${lineHeight}rem`}; ;
