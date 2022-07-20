@@ -10,6 +10,7 @@ const SteyledTypo = styled.span<TypographyProps>`
   font-family: ${({ isBold }) => (isBold ? 'NotoBold' : 'NotoLight')};
   white-space: pre-line;
   text-align: ${({ align }) => align || 'left'};
+  line-height: ${({ lineHeight }) => `${lineHeight}rem`}; ;
 `;
 
 interface TypographyProps {
@@ -21,6 +22,7 @@ interface TypographyProps {
   underline?: boolean;
   isBold?: boolean;
   align?: 'left' | 'center' | 'right';
+  lineHeight?: number;
 }
 
 export const Typography = ({ onClick, children, ...style }: PropsWithChildren<TypographyProps>) => {

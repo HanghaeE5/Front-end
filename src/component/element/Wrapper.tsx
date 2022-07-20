@@ -6,6 +6,8 @@ const Div = styled.div<WrapperProps>`
   flex-direction: ${(props) => (props.isColumn ? 'column' : 'row')};
   width: ${({ width }) => width || '100%'};
   height: ${({ height }) => height || ''};
+  max-height: ${({ maxHeight }) => maxHeight};
+  min-height: ${({ minHeight }) => minHeight};
   margin: ${({ margin }) => margin || 0};
   padding: ${({ padding }) => (padding ? padding : 0)};
   justify-content: ${({ justifyContent }) => (justifyContent ? justifyContent : '')};
@@ -20,6 +22,8 @@ interface WrapperProps {
   isColumn?: boolean;
   width?: string;
   height?: string;
+  minHeight?: string;
+  maxHeight?: string;
   margin?: string;
   padding?: string;
   justifyContent?: 'start' | 'center' | 'space-between' | 'space-around' | 'space-evenly' | 'end';

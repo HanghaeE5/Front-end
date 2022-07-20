@@ -6,17 +6,17 @@ import { createTodo, deleteTodoFn, fetchTodoList, todoQueryKey, updateTodoFn, up
 import { Button, ButtonFloating, Wrapper, PopConfirmNew, Tab, Typography, PopConfirmProps } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { ContentWrapper, TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
+import { TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
 import { TodoItem } from '../component/TodoItem';
 import { TodoModal } from '../component/TodoModal';
 import { PATH } from '../route/routeList';
 import { PublicScope, ITodoItem, Sort, TodoData, TodoParams, TodoStatusFilter, TodoDoneResponse } from '../Types/todo';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { levelUpModalState, stepUpModalState, userInfoState } from '../recoil/store';
-import { EvBtn } from '../component/element/BoxStyle';
 import LevelUpModal from '../component/modallayout/LevelUpModal';
 import StepUpModal from '../component/modallayout/StepUpModal';
-import { MdTurnedIn } from 'react-icons/md';
+import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
+import { removeListDuplicate } from '../utils/removeListDuplicate';
 
 const AccessTabList: { label: string; value: TodoStatusFilter | 'all' }[] = [
   { label: '전체', value: 'all' },
@@ -24,9 +24,10 @@ const AccessTabList: { label: string; value: TodoStatusFilter | 'all' }[] = [
   { label: '완료', value: 'doneList' },
 ];
 
-// TODO : util에 있음
-const removeDuplicate = <T,>(list: T[], key: keyof T): T[] => {
-  return list.reduce((acc: T[], cur) => (acc.find((data: T) => data[key] === cur[key]) ? [...acc] : [...acc, cur]), []);
+const emptyParagraph: { [key in TodoStatusFilter | 'all']: string } = {
+  all: `아직 투 두 리스트가 없어요. \n 오른쪽 하단에 버튼을 눌러 추가하거나 \n 커뮤니티에서 위드 투 두에 참여해보세요!`,
+  doingList: `진행중인 투 두 리스트가 없어요. \n 오른쪽 하단에 버튼을 눌러 추가하거나 \n 커뮤니티에서 위드 투 두에 참여해보세요!`,
+  doneList: `완료한 투 두 리스트가 없어요. \n 혼자서 그리고 함께 투 두 리스트를 완료해보세요!`,
 };
 
 // TODO : context API 써볼까
@@ -68,11 +69,11 @@ export const ToDoPage = () => {
     {
       onSuccess: (data) => {
         if (todoFilter.page === 0) {
-          setList([...removeDuplicate<ITodoItem>(data.content, 'todoId')]);
+          setList([...removeListDuplicate<ITodoItem>(data.content, 'todoId')]);
           return;
         }
 
-        setList((prev) => removeDuplicate<ITodoItem>([...prev, ...data.content], 'todoId'));
+        setList((prev) => removeListDuplicate<ITodoItem>([...prev, ...data.content], 'todoId'));
       },
     },
   );
@@ -235,7 +236,7 @@ export const ToDoPage = () => {
   };
 
   const moveToBoard = (boardId: number | undefined) => {
-    nav(`${PATH.COMMUNITY_POST}/${boardId}`);
+    nav(`${PATH.COMMUNITY}/${boardId}`);
   };
 
   useEffect(() => {
@@ -255,7 +256,7 @@ export const ToDoPage = () => {
       <LevelUpModal />
       <StepUpModal />
       <PageLayout title="투 두 리스트">
-        <ContentWrapper>
+        <Wrapper isColumn>
           <Wrapper padding="1rem" isColumn alignItems="start">
             <Wrapper isColumn alignItems="start" margin="1rem 0">
               <Typography weight={500} size={1.125}>
@@ -312,7 +313,15 @@ export const ToDoPage = () => {
                     오래된순
                   </Typography>
                 </Wrapper>
-                <TodoListWrapper isColumn margin="1rem 0">
+                <TodoListWrapper isColumn margin="1rem 0" justifyContent="center" alignItems="center">
+                  {list.length === 0 && (
+                    <Wrapper isColumn border="1px solid blue" justifyContent="center">
+                      <Empty />
+                      <Typography size={0.875} align="center" color="#5F5F5F" lineHeight={1.25}>
+                        {emptyParagraph[todoFilter.filter]}
+                      </Typography>
+                    </Wrapper>
+                  )}
                   {list.map((todo) => (
                     <TodoItem
                       key={todo.todoId}
@@ -338,7 +347,7 @@ export const ToDoPage = () => {
           )}
 
           {!todoModalState.modalVisible && <ButtonFloating onClick={onClickAddButton} />}
-        </ContentWrapper>
+        </Wrapper>
       </PageLayout>
     </NavLayout>
   );
