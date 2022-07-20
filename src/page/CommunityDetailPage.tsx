@@ -36,6 +36,17 @@ export const CommunityDetailPage = () => {
     nav(PATH.COMMUNITY);
   };
 
+  // TODO : 컨펌 하나로 관리
+  const [confirmState, setConfirmState] = useState<PopConfirmProps & { visible: boolean }>({
+    visible: false,
+    iconType: 'warning',
+    title: '',
+    button: {
+      text: '확인',
+      onClick: () => console.log('gg'),
+    },
+  });
+
   const { visible: visibleChallange, openConfirm: openChallange, closeConfirm: closeChallange } = usePopConfirm();
   const { visible: visibleChat, openConfirm: openChatConfirm, closeConfirm: closeChatConfirm } = usePopConfirm();
   const { visible: visibleError, openConfirm: openErrorConfirm, closeConfirm: closeErrorConfirm } = usePopConfirm();
@@ -53,9 +64,34 @@ export const CommunityDetailPage = () => {
   } = useQuery<Board>([communityQueryKey.fetchBoardDetail], () => fetchBoardDetailFn(Number(id)));
   const isMine = userInfo?.email === postDetail?.authorEmail;
 
+  const { mutate: exitChattingRoom } = useMutation((roomId: { roomId: string }) =>
+    chattingApi.chattingRoomDeleteAPi(roomId),
+  );
   const { mutate: joinChallenge } = useMutation(joinChallengeFn);
   const { mutate: cancelChallenge } = useMutation(cancelChallengeFn);
-  const { mutate: deleteBoard } = useMutation(deleteBoardFn);
+  const { mutate: deleteBoard } = useMutation(deleteBoardFn, {
+    onSuccess: () => {
+      setConfirmState((prev) => ({
+        iconType: 'success',
+        visible: true,
+        title: '게시글을 삭제했습니다.',
+        button: {
+          text: '닫기',
+          onClick: () => {
+            setConfirmState((prev) => ({ ...prev, visible: false }));
+            refectchBoardList();
+          },
+        },
+      }));
+    },
+    onError: () =>
+      setConfirmState((prev) => ({
+        ...prev,
+        visible: true,
+        title: '삭제에 실패했습니다.',
+        button: { text: '닫기', onClick: () => setConfirmState((prev) => ({ ...prev, visible: false })) },
+      })),
+  });
 
   const onConfirmChallenge = () => {
     if (!postDetail) return;
@@ -89,9 +125,7 @@ export const CommunityDetailPage = () => {
       openErrorConfirm();
       return;
     }
-    deleteBoard(postDetail.boardId, {
-      onSuccess: () => refectchBoardList(),
-    });
+    deleteBoard(postDetail.boardId);
   };
 
   const onShare = () => {
@@ -137,6 +171,7 @@ export const CommunityDetailPage = () => {
   if (isLoading || !postDetail) return <>로딩중</>;
   return (
     <NavLayout>
+      {confirmState.visible && <PopConfirmNew {...confirmState} />}
       {visibleError && (
         <PopConfirmNew
           iconType="warning"
@@ -195,6 +230,8 @@ export const CommunityDetailPage = () => {
                   closeCacnelConfirm();
                 },
               });
+
+              exitChattingRoom({ roomId: postDetail.chatRoomId });
             },
           }}
           optionalButton={{
