@@ -130,7 +130,7 @@ export const CommunityPage = () => {
                     )}
                     <PostCard.PostTitle category={post.category}>{post.title}</PostCard.PostTitle>
                     <PostCard.Content isSummary>{post.boardContent}</PostCard.Content>
-                    <PostCard.Gather>{post.participatingCount}</PostCard.Gather>
+                    {post.category === 'CHALLENGE' && <PostCard.Gather>{post.participatingCount}</PostCard.Gather>}
                   </PostCard>
                 ))}
                 {list.length ? <div ref={bottomRef} /> : ''}
