@@ -6,7 +6,7 @@ import { createTodo, deleteTodoFn, fetchTodoList, todoQueryKey, updateTodoFn, up
 import { Button, ButtonFloating, Wrapper, PopConfirmNew, Tab, Typography, PopConfirmProps } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
+import { ScrollWrapper, TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
 import { TodoItem } from '../component/TodoItem';
 import { TodoModal } from '../component/TodoModal';
 import { PATH } from '../route/routeList';
@@ -256,98 +256,99 @@ export const ToDoPage = () => {
       <LevelUpModal />
       <StepUpModal />
       <PageLayout title="투 두 리스트">
-        <Wrapper isColumn>
-          <Wrapper padding="1rem" isColumn alignItems="start">
-            <Wrapper isColumn alignItems="start" margin="1rem 0">
-              <Typography weight={500} size={1.125}>
-                공개 범위 설정
-              </Typography>
-              <Wrapper justifyContent="space-between" padding="1rem 0">
-                <Button
-                  width="32%"
-                  buttonType={scope === 'ALL' ? 'primary' : 'default'}
-                  onClick={() => onChangeScope('ALL')}
-                >
-                  전체 공개
-                </Button>
-                <Button
-                  width="32%"
-                  buttonType={scope === 'FRIEND' ? 'primary' : 'default'}
-                  onClick={() => onChangeScope('FRIEND')}
-                >
-                  친구공개
-                </Button>
-                <Button
-                  width="32%"
-                  buttonType={scope === 'NONE' ? 'primary' : 'default'}
-                  onClick={() => onChangeScope('NONE')}
-                >
-                  비공개
-                </Button>
-              </Wrapper>
-              <Wrapper isColumn alignItems="start" margin="1em 0">
-                <Typography weight={500} size={1.125}>
-                  나의 TO DO LIST
-                </Typography>
-                <Tab<TodoStatusFilter>
-                  selectedValue={todoFilter.filter}
-                  tabList={AccessTabList}
-                  onClickItem={onChangeTab}
-                />
-                <Wrapper width="8rem" justifyContent="space-between">
-                  <Typography
-                    size={0.875}
-                    color={todoFilter.sort === 'desc' ? 'black' : '#989898'}
-                    weight={400}
-                    onClick={() => onClickOrderFilter('desc')}
-                  >
-                    최신순
-                  </Typography>
-                  <Typography color={'#989898'}>|</Typography>
-                  <Typography
-                    size={0.875}
-                    color={todoFilter.sort === 'asc' ? 'black' : '#989898'}
-                    isPointer
-                    onClick={() => onClickOrderFilter('asc')}
-                  >
-                    오래된순
-                  </Typography>
-                </Wrapper>
-                <TodoListWrapper isColumn margin="1rem 0" justifyContent="center" alignItems="center">
-                  {list.length === 0 && (
-                    <Wrapper isColumn border="1px solid blue" justifyContent="center">
-                      <Empty />
-                      <Typography size={0.875} align="center" color="#5F5F5F" lineHeight={1.25}>
-                        {emptyParagraph[todoFilter.filter]}
-                      </Typography>
-                    </Wrapper>
-                  )}
-                  {list.map((todo) => (
-                    <TodoItem
-                      key={todo.todoId}
-                      todoData={todo}
-                      onClickEditButton={editTodoItem}
-                      onClickDeleteButton={onClickDeleteButton}
-                      handleDoneTodo={handleDoneTodo}
-                    />
-                  ))}
-                  {list.length ? <div ref={bottomRef} /> : ''}
-                </TodoListWrapper>
-              </Wrapper>
-            </Wrapper>
+        <Wrapper padding="1rem" isColumn alignItems="start" height="100%">
+          <Typography weight={500} size={1.125}>
+            공개 범위 설정
+          </Typography>
+          <Wrapper justifyContent="space-between" padding="1rem 0">
+            <Button
+              width="32%"
+              buttonType={scope === 'ALL' ? 'primary' : 'default'}
+              onClick={() => onChangeScope('ALL')}
+            >
+              전체 공개
+            </Button>
+            <Button
+              width="32%"
+              buttonType={scope === 'FRIEND' ? 'primary' : 'default'}
+              onClick={() => onChangeScope('FRIEND')}
+            >
+              친구공개
+            </Button>
+            <Button
+              width="32%"
+              buttonType={scope === 'NONE' ? 'primary' : 'default'}
+              onClick={() => onChangeScope('NONE')}
+            >
+              비공개
+            </Button>
           </Wrapper>
-          {todoModalState.modalVisible && (
-            <TodoModal
-              editType={todoModalState.modalType}
-              modalTitle={todoModalState.modalType === 'add' ? '마이 투 두 추가하기' : '마이 투 두 수정하기'}
-              closeModal={toggleModal}
-              getTodoDataFromModal={getTodoDataFromModal}
-              todoData={todoModalState.modalType === 'edit' ? todoData : undefined}
+          <Wrapper isColumn alignItems="start" margin="1em 0">
+            <Typography weight={500} size={1.125}>
+              나의 TO DO LIST
+            </Typography>
+            <Tab<TodoStatusFilter>
+              selectedValue={todoFilter.filter}
+              tabList={AccessTabList}
+              onClickItem={onChangeTab}
             />
-          )}
-
-          {!todoModalState.modalVisible && <ButtonFloating onClick={onClickAddButton} />}
+          </Wrapper>
+          <Wrapper width="8rem" justifyContent="space-between">
+            <Typography
+              size={0.875}
+              color={todoFilter.sort === 'desc' ? 'black' : '#989898'}
+              weight={400}
+              onClick={() => onClickOrderFilter('desc')}
+            >
+              최신순
+            </Typography>
+            <Typography color={'#989898'}>|</Typography>
+            <Typography
+              size={0.875}
+              color={todoFilter.sort === 'asc' ? 'black' : '#989898'}
+              isPointer
+              onClick={() => onClickOrderFilter('asc')}
+            >
+              오래된순
+            </Typography>
+          </Wrapper>
+          <TodoListWrapper isColumn margin="1rem 0" justifyContent="center">
+            {list.length === 0 && (
+              <Wrapper isColumn justifyContent="center">
+                <Empty />
+                <Typography size={0.875} align="center" color="#5F5F5F" weight={400} lineHeight={1.25}>
+                  {emptyParagraph[todoFilter.filter]}
+                </Typography>
+              </Wrapper>
+            )}
+            {list.length > 0 && (
+              <ScrollWrapper isColumn>
+                {list.map((todo) => (
+                  <TodoItem
+                    key={todo.todoId}
+                    todoData={todo}
+                    onClickEditButton={editTodoItem}
+                    onClickDeleteButton={onClickDeleteButton}
+                    handleDoneTodo={handleDoneTodo}
+                  />
+                ))}
+                {list.length ? <div ref={bottomRef} /> : ''}
+              </ScrollWrapper>
+            )}
+          </TodoListWrapper>
         </Wrapper>
+
+        {todoModalState.modalVisible && (
+          <TodoModal
+            editType={todoModalState.modalType}
+            modalTitle={todoModalState.modalType === 'add' ? '마이 투 두 추가하기' : '마이 투 두 수정하기'}
+            closeModal={toggleModal}
+            getTodoDataFromModal={getTodoDataFromModal}
+            todoData={todoModalState.modalType === 'edit' ? todoData : undefined}
+          />
+        )}
+
+        {!todoModalState.modalVisible && <ButtonFloating onClick={onClickAddButton} />}
       </PageLayout>
     </NavLayout>
   );
