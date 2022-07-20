@@ -9,7 +9,9 @@ const MenuContainer = styled.div`
   position: relative;
 `;
 
-const MenuTrigger = styled.div``;
+const MenuTrigger = styled.div`
+  cursor: pointer;
+`;
 
 const Menu = styled.div<{ isActive: boolean }>`
   background: #ffffff;

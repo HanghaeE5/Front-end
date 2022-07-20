@@ -18,7 +18,7 @@ export const createTodo = async (params: TodoData) => {
   return data;
 };
 
-export const updateTodoFn = async ({ todoId, params }: { todoId: number; params: Partial<ITodoItem> }) => {
+export const updateTodoFn = async ({ todoId, params }: { todoId: number; params: Partial<TodoData> }) => {
   const { data } = await callApi.put(`/todo/${todoId}`, params);
   return data;
 };

@@ -15,6 +15,7 @@ const TabWrapper = styled.div`
 
 const TabItem = styled.div<{ isSelect: boolean }>`
   height: 3.125rem;
+  min-height: 3.125rem;
   display: flex;
   flex-direction: column;
   align-items: center;

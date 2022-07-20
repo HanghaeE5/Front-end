@@ -7,19 +7,19 @@ const HeaderWrapper = styled.div`
   width: 100%;
   max-width: 768px;
   height: 3.75rem;
+  min-height: 3.75rem;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #dddddd;
+  padding: 1rem;
 
   span {
     font-size: 1.25rem;
     font-weight: 700;
   }
 
-  svg {
-    position: absolute;
-    left: 20px;
+  & > svg {
     font-size: 1.25rem;
     cursor: pointer;
   }
@@ -53,18 +53,25 @@ const KoreanFont = styled.p`
   margin: 0 0 0 0;
 `;
 
-export const PageLayout = ({ children, title }: PropsWithChildren<{ title: string }>) => {
+export const PageHeader = ({ title }: { title: string }) => {
   const nav = useNavigate();
   return (
+    <HeaderWrapper>
+      <FiChevronLeft
+        onClick={() => {
+          nav(-1);
+        }}
+      />
+      <KoreanFont size={1.125}>{title}</KoreanFont>
+      <div />
+    </HeaderWrapper>
+  );
+};
+
+export const PageLayout = ({ children, title }: PropsWithChildren<{ title: string }>) => {
+  return (
     <LayoutContainer>
-      <HeaderWrapper>
-        <FiChevronLeft
-          onClick={() => {
-            nav(-1);
-          }}
-        />
-        <KoreanFont size={1.125}>{title}</KoreanFont>
-      </HeaderWrapper>
+      <PageHeader title={title} />
       <BodyWrapper>{children}</BodyWrapper>
     </LayoutContainer>
   );
