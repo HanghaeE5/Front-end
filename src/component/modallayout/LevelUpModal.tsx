@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { editNicknameModalState, levelUpModalState, userInfoState, userNicknameState } from '../../recoil/store';
+import { modalGatherState } from '../../recoil/store';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 import { registerApi, userApi } from '../../api/callApi';
@@ -50,12 +50,12 @@ const BoxWrap = styled.div`
 `;
 
 const LevelUpModal = () => {
-  const [modalLevelUp, setModalLevelUp] = useRecoilState(levelUpModalState);
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
 
   return (
     <>
-      {modalLevelUp && (
-        <ModalBackground onClick={() => setModalLevelUp(false)}>
+      {modalGather.levelUpModal && (
+        <ModalBackground onClick={() => setmodalGather({ ...modalGather, levelUpModal: false })}>
           <BoxWrap
             onClick={(e) => {
               e.stopPropagation();
@@ -85,10 +85,9 @@ const LevelUpModal = () => {
               border="none"
               background="#FFD600"
               onClick={() => {
-                setModalLevelUp(false);
+                setmodalGather({ ...modalGather, levelUpModal: false });
               }}
             >
-              {' '}
               <EvKoreanFont size={1.25} color="#1A1A1A" weight={700} lineHeight={'26px'}>
                 닫기
               </EvKoreanFont>

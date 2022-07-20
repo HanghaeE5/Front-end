@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { notiModalState } from '../../recoil/store';
+import { modalGatherState } from '../../recoil/store';
 
 const Slide = keyframes`
     0% {
@@ -45,11 +45,11 @@ const BoxWrap = styled.div`
 `;
 
 const NotiModal = () => {
-  const [modalNoti, setModalNoti] = useRecoilState(notiModalState);
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   return (
     <>
-      {modalNoti && (
-        <ModalBackground onClick={() => setModalNoti(false)}>
+      {modalGather.notiModal && (
+        <ModalBackground onClick={() => setmodalGather({ ...modalGather, notiModal: false })}>
           <BoxWrap
             width={'100%'}
             height={15}

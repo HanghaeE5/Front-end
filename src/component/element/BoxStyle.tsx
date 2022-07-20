@@ -8,11 +8,9 @@ type box = {
   isCursor?: boolean;
   isAlignSide?: boolean;
   isContentSide?: boolean;
-  color?: string;
   url?: string;
   direction?: string;
   isPadding?: string;
-  rowGap?: string;
   columnGap?: string;
   border?: string;
   borderRadius?: string;
@@ -29,7 +27,6 @@ export const EvBox = styled.div`
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
-  row-gap: ${(props: box) => props.rowGap};
   column-gap: ${(props: box) => props.columnGap};
   border: ${(props: box) => props.border};
   border-radius: ${(props: box) => props.borderRadius};

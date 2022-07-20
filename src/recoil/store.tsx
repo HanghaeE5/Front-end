@@ -9,84 +9,12 @@ export const accessTokenState = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const refreshTokenState = atom({
-  key: 'refreshTokenState',
-  default: '',
-  effects_UNSTABLE: [persistAtom],
-});
-
-export const editNicknameModalState = atom({
-  key: 'nicknameModalState',
-  default: false,
-});
-
-export const editPasswordModalState = atom({
-  key: 'editPasswordModalState',
-  default: false,
-});
-
-export const notiModalState = atom({
-  key: 'notiModalState',
-  default: false,
-});
-
-export const editPhotoModalState = atom({
-  key: 'editPhotoModalState',
-  default: false,
-});
-
-export const profileMenuModalState = atom({
-  key: 'profileMenuModalState',
-  default: false,
-});
-
-export const userNicknameState = atom({
-  key: 'userNicknameState',
-  default: '',
-});
-
-export const userChatacterTypeState = atom({
-  key: 'userChatacterTypeState',
-  default: '',
-});
-
-export const friendAddModalState = atom({
-  key: 'friendAddModalState',
-  default: false,
-});
-
-export const friendNicknameState = atom({
-  key: 'friendNicknameState',
-  default: '',
-});
-
-type Img = {
-  img_show: string;
-  img_file: File | string | Blob;
-};
-
-export const userprofilephotoState = atom<Img>({
-  key: 'userprofilephotoState',
-  default: {
-    img_show: '',
-    img_file: '',
-  },
-});
-
-export const userPhotoWaitState = atom<Img>({
-  key: 'userPhotoWaitState',
-  default: {
-    img_show: '',
-    img_file: '',
-  },
-});
-
 type friend = {
   id: number;
   userId: string;
   nick: string;
-  level: number;
   profileImageUrl: string;
+  characterLevel: number;
 };
 
 type friendList = friend[];
@@ -112,11 +40,6 @@ type chattingList = chatting[];
 export const chattingListState = atom<chattingList>({
   key: 'chattingListState',
   default: [],
-});
-
-export const userJoinTypeState = atom({
-  key: 'userJoinTypeState',
-  default: false,
 });
 
 type chat = {
@@ -150,34 +73,57 @@ export const friendInfoState = atom<FriendInfo>({
   default: undefined,
 });
 
-export const popNotiState = atom({
-  key: 'popNotiState',
-  default: false,
-});
+type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
 
-type todayTodo = {
-  boardId: number;
-  category: string;
-  createdDate: string;
-  state: boolean;
-  todoContent: string;
-  todoDate: string;
-  todoId: number;
+type popNoti = {
+  openPopNoti?: boolean;
+  informType?: ConfirmType;
+  informMsg?: string;
+  btnNav?: string;
+  btnText?: string;
 };
 
-type todayTodoList = todayTodo[];
-
-export const todayTodoListState = atom<todayTodoList>({
-  key: 'todayTodoListState',
-  default: [],
+export const popNotiState = atom<popNoti>({
+  key: 'popNotiState',
+  default: { openPopNoti: false, informMsg: '' },
 });
 
-export const levelUpModalState = atom({
-  key: 'levelUpModalState',
-  default: false,
-});
+// type todayTodo = {
+//   boardId: number;
+//   category: string;
+//   createdDate: string;
+//   state: boolean;
+//   todoContent: string;
+//   todoDate: string;
+//   todoId: number;
+// };
 
-export const stepUpModalState = atom({
-  key: 'stepUpModalState',
-  default: false,
+// type todayTodoList = todayTodo[];
+
+// export const todayTodoListState = atom<todayTodoList>({
+//   key: 'todayTodoListState',
+//   default: [],
+// });
+
+type modalGather = {
+  levelUpModal?: boolean;
+  stepUpModal?: boolean;
+  editNicknameModal?: boolean;
+  notiModal?: boolean;
+  editPhotoModal?: boolean;
+  profileMenuModal?: boolean;
+  friendAddModal?: boolean;
+};
+
+export const modalGatherState = atom<modalGather>({
+  key: 'modalGatherState',
+  default: {
+    levelUpModal: false,
+    stepUpModal: false,
+    editNicknameModal: false,
+    notiModal: false,
+    editPhotoModal: false,
+    profileMenuModal: false,
+    friendAddModal: false,
+  },
 });

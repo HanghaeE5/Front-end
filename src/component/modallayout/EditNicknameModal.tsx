@@ -1,10 +1,11 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { editNicknameModalState, userNicknameState } from '../../recoil/store';
+import { modalGatherState, userInfoState } from '../../recoil/store';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 import { registerApi, userApi } from '../../api/callApi';
 import { AxiosError } from 'axios';
+import { userInfo } from 'os';
 
 const Slide = keyframes`
     0% {
@@ -151,8 +152,8 @@ const BtnAble = styled.button`
 `;
 
 const EditNicknameModal = () => {
-  const [modalEditNickname, setModalEditNickname] = useRecoilState(editNicknameModalState);
-  const [, setUserNickname] = useRecoilState(userNicknameState);
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [nickname, setNickname] = useState<string>('');
   const [nicknameOk, setnicknameOk] = useState<boolean>(false);
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -185,8 +186,8 @@ const EditNicknameModal = () => {
 
   const NicknameEditData = useMutation((nick: { nick: string }) => userApi.nicknameEditApi(nick), {
     onSuccess: () => {
-      setModalEditNickname(false);
-      setUserNickname(nickname);
+      setmodalGather({ ...modalGather, editNicknameModal: false });
+      setUserInfoData({ ...userInfoData, nick: nickname });
       alert(`변경 완료!`);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
@@ -206,8 +207,8 @@ const EditNicknameModal = () => {
 
   return (
     <>
-      {modalEditNickname && (
-        <ModalBackground onClick={() => setModalEditNickname(false)}>
+      {modalGather.editNicknameModal && (
+        <ModalBackground onClick={() => setmodalGather({ ...modalGather, editNicknameModal: false })}>
           <BoxWrap
             width={'100%'}
             height={34.8}
@@ -256,7 +257,7 @@ const EditNicknameModal = () => {
                     backgroundImage: nicknameOk ? 'url(/assets/checkfull.png)' : 'url(/assets/checkempty.svg)',
                   }}
                   onClick={() => {
-                    setModalEditNickname(false);
+                    setmodalGather({ ...modalGather, editNicknameModal: false });
                   }}
                 ></Box>
               </RowBox>

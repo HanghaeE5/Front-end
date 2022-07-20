@@ -88,7 +88,7 @@ const Message = styled.span`
   line-height: 23px;
 `;
 
-type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
+export type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
 
 const confirmIcon: { [key in ConfirmType]: ReactNode } = {
   warning: <WarningIcon />,
@@ -103,18 +103,16 @@ interface PopConfirmProps {
   visible?: boolean;
   oneButton: { text: string; onClick: () => void; nav: string };
   msg: string | undefined;
-  quitOk?: boolean;
-  nav?: void | null;
 }
 
-export const PopNoti = ({ quitOk, confirmType, visible, oneButton, msg, nav }: PopConfirmProps) => {
+export const PopNoti = ({ confirmType, visible, oneButton, msg }: PopConfirmProps) => {
   const [popNoti, setPopNoti] = useRecoilState(popNotiState);
   const navi = useNavigate();
   if (!visible) {
     return <></>;
   }
   return (
-    <Container onClick={() => setPopNoti(false)}>
+    <Container onClick={() => setPopNoti({ ...popNoti, openPopNoti: false })}>
       <Background />
       <PopupWrapper visible={visible}>
         <div>
@@ -125,13 +123,17 @@ export const PopNoti = ({ quitOk, confirmType, visible, oneButton, msg, nav }: P
         <div>
           <span
             onClick={
-              !quitOk
+              oneButton.nav === '-1'
+                ? () => {
+                    navi(-1);
+                  }
+                : oneButton.nav
                 ? () => {
                     oneButton.onClick;
+                    navi(oneButton.nav);
                   }
                 : () => {
                     oneButton.onClick;
-                    navi(oneButton.nav);
                   }
             }
           >

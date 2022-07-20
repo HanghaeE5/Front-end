@@ -5,7 +5,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { registerApi, userApi } from '../api/callApi';
 import { AxiosError } from 'axios';
-import { accessTokenState, popNotiState, refreshTokenState, userChatacterTypeState } from '../recoil/store';
+import { accessTokenState, popNotiState, userInfoState } from '../recoil/store';
 import { PopNoti } from '../component/element/PopNoti';
 import { EvBox, EvBtnAble, EvInputInfo, EvKoreanFont, EvCheckFont, EvAbleFont } from '../component/element/BoxStyle';
 
@@ -38,9 +38,8 @@ export const ChooseCharacter = () => {
   const [check, setCheck] = useState<boolean>(false);
   const [select, setSelect] = useState<string>('');
   const [nickConfirm, setNickConfirm] = useState<boolean>(false);
-  const [userChatacterType, setUserChatacterType] = useRecoilState(userChatacterTypeState);
   const accessLoginToken = useSetRecoilState(accessTokenState);
-  const refreshLoginToken = useSetRecoilState(refreshTokenState);
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const localToken = localStorage.getItem('accessToken');
 
   type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
@@ -50,29 +49,34 @@ export const ChooseCharacter = () => {
   //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
-      setUserChatacterType(data.data.characterInfo.type);
+      setUserInfoData(data.data);
     },
-    onError: () => {
-      // nav('/login');
+    onError: (error: AxiosError) => {
+      if (error.message === 'Request failed with status code 404') {
+        // nav(login);
+      }
     },
   });
 
   //캐릭터 선택 API
   const userCharacterChooseData = useMutation((type: { type: string }) => registerApi.userCharacterChooseApi(type), {
     onSuccess: (token) => {
-      setQuitOk(true);
-      setPopNoti(true);
-      setInformType('success');
-      setInformMsg(`${select} 선택완료🙂`);
+      setPopNoti({
+        openPopNoti: true,
+        informType: 'success',
+        informMsg: `${select} 선택완료🙂`,
+        btnNav: '/',
+      });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
       if (error.message === 'Request failed with status code 401') {
         setTimeout(() => userCharacterChoose({ type: select }), 200);
       } else {
-        setQuitOk(false);
-        setPopNoti(true);
-        setInformType('warning');
-        setInformMsg(error.response?.data.msg);
+        setPopNoti({
+          openPopNoti: true,
+          informType: 'warning',
+          informMsg: error.response?.data.msg,
+        });
       }
     },
   });
@@ -81,16 +85,16 @@ export const ChooseCharacter = () => {
     userCharacterChooseData.mutate(data);
   };
 
-  // useEffect(() => {
-  //   //useEffect 리턴 바로 위에 써주기.
-  //   if (userChatacterType) {
-  //     setPopNoti(true);
-  //     setQuitOk(true);
-  //     setInformType('warning');
-  //     setInformMsg('🙅🏻‍♀️이미 캐릭터를 선택했습니다🙅🏻‍♀️');
-  //   }
-  // }, [userChatacterType]);
-  console.log(userChatacterType);
+  useEffect(() => {
+    //useEffect 리턴 바로 위에 써주기.
+    if (userInfoData?.characterInfo.type) {
+      setPopNoti({
+        openPopNoti: true,
+        informType: 'warning',
+        informMsg: '🙅🏻‍♀️이미 캐릭터를 선택했습니다🙅🏻‍♀️',
+      });
+    }
+  }, [userInfoData]);
 
   return (
     <RegisterContainer>
@@ -193,20 +197,6 @@ export const ChooseCharacter = () => {
             시작하기
           </EvKoreanFont>
         </EvBtnAble>
-
-        <PopNoti
-          confirmType={informType}
-          visible={popNoti}
-          msg={informMsg}
-          quitOk={quitOk}
-          oneButton={{
-            nav: '/',
-            text: '확인',
-            onClick: () => {
-              setPopNoti(false);
-            },
-          }}
-        />
       </ContentContainer>
     </RegisterContainer>
   );

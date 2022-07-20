@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { stepUpModalState, userInfoState, userNicknameState } from '../../recoil/store';
+import { modalGatherState, userInfoState } from '../../recoil/store';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { registerApi, userApi } from '../../api/callApi';
@@ -50,13 +50,31 @@ const BoxWrap = styled.div`
 `;
 
 const StepUpModal = () => {
-  const [modalStepUp, setModalStepUp] = useRecoilState(stepUpModalState);
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
+
+  //유저정보 가져오기 API
+  const userInformData = useQuery('userData', userApi.userInformApi, {
+    onSuccess: (data) => {
+      setUserInfoData(data.data);
+    },
+    onError: (error: AxiosError) => {
+      if (error.message === 'Request failed with status code 404') {
+        // nav(-1);
+      }
+    },
+  });
+
+  console.log(userInformData);
+
+  useEffect(() => {
+    userInformData;
+  }, [userInformData]);
 
   return (
     <>
-      {modalStepUp && (
-        <ModalBackground onClick={() => setModalStepUp(false)}>
+      {modalGather.stepUpModal && (
+        <ModalBackground onClick={() => setmodalGather({ ...modalGather, stepUpModal: false })}>
           <BoxWrap
             onClick={(e) => {
               e.stopPropagation();
@@ -95,7 +113,7 @@ const StepUpModal = () => {
               border="none"
               background="#FFD600"
               onClick={() => {
-                setModalStepUp(false);
+                setmodalGather({ ...modalGather, stepUpModal: false });
               }}
             >
               {' '}

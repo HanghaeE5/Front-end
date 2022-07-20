@@ -1,17 +1,11 @@
-import { useEffect } from 'react';
+import { AxiosError } from 'axios';
+import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { userApi } from '../../api/callApi';
-import {
-  notiModalState,
-  profileMenuModalState,
-  userInfoState,
-  userJoinTypeState,
-  userNicknameState,
-  userprofilephotoState,
-} from '../../recoil/store';
+import { modalGatherState, userInfoState } from '../../recoil/store';
 import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
 
@@ -71,40 +65,28 @@ const RowBox = styled.div`
 `;
 
 export const TopNavLayout = () => {
-  const [, setModalNoti] = useRecoilState(notiModalState);
-  const [, setModalProfileMenu] = useRecoilState(profileMenuModalState);
-  const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
-  const [userJoinType, setUserJoinType] = useRecoilState(userJoinTypeState);
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
 
   const nav = useNavigate();
 
+  //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
-      setUserNickname(data.data.nick);
-      setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
-      setUserInfo(data.data);
+      setUserInfoData(data.data);
     },
-    onError: () => {
-      // nav('/login');
-    },
-  });
-
-  //회원가입 유형 파악 API
-  const joinTypeData = useMutation(() => userApi.joinTypeApi(), {
-    onSuccess: (data) => {
-      setUserJoinType(data.data.socialUser);
+    onError: (error: AxiosError) => {
+      if (error.message === 'Request failed with status code 404') {
+        // nav(-1);
+      }
     },
   });
-
-  const joinType = () => {
-    joinTypeData.mutate();
-  };
 
   useEffect(() => {
-    joinType();
-  }, []);
+    if (userInformData.error?.message === 'Request failed with status code 401') {
+      userInformData.refetch();
+    }
+  }, [userInformData]);
 
   return (
     <TopNavWrapper>
@@ -137,7 +119,15 @@ export const TopNavLayout = () => {
             backgroundImage: 'url(/assets/nav/알림.svg)',
           }}
           onClick={() => {
-            setModalNoti(true);
+            setmodalGather({
+              levelUpModal: false,
+              stepUpModal: false,
+              editNicknameModal: false,
+              editPhotoModal: false,
+              profileMenuModal: false,
+              friendAddModal: false,
+              notiModal: true,
+            });
           }}
         ></Box>
         <Box
@@ -145,18 +135,20 @@ export const TopNavLayout = () => {
           height={1.6}
           margin={'auto'}
           style={{
-            backgroundImage: `url(${fileImage.img_show})`,
+            backgroundImage: `url(${userInfoData?.profileImageUrl})`,
             border: '0.3px solid',
             backgroundSize: 'cover',
             borderRadius: '50%',
           }}
           onClick={() => {
-            setModalProfileMenu(true);
+            setmodalGather({
+              profileMenuModal: true,
+            });
           }}
         ></Box>
       </RowBox>
-      <NotiModal></NotiModal>
-      <ProfileMenuModal></ProfileMenuModal>
+      <NotiModal />
+      <ProfileMenuModal />
     </TopNavWrapper>
   );
 };

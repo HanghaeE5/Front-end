@@ -5,10 +5,10 @@ import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { registerApi } from '../api/callApi';
 import { FieldValues } from 'react-hook-form';
-import { accessTokenState, popNotiState, refreshTokenState } from '../recoil/store';
+import { accessTokenState, popNotiState } from '../recoil/store';
 import { EvAbleFont, EvBox, EvBtn, EvBtnAble, EvInputInfo, EvKoreanFont } from '../component/element/BoxStyle';
 import { AxiosError } from 'axios';
-import { PopNoti } from '../component/element/PopNoti';
+import { ConfirmType, PopNoti } from '../component/element/PopNoti';
 
 const RegisterContainer = styled.div`
   width: 100%;
@@ -28,35 +28,35 @@ const ContentContainer = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
+
 export const Login = () => {
   const nav = useNavigate();
   const localToken = localStorage.getItem('recoil-persist');
-  const accessLoginToken = useSetRecoilState(accessTokenState);
-  const refreshLoginToken = useSetRecoilState(refreshTokenState);
+  const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
+  // const refreshLoginToken = useSetRecoilState(refreshTokenState);
   const [email, setNameText] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [autoLogin, setAutoLogin] = useState<boolean>(false);
   const [popNoti, setPopNoti] = useRecoilState(popNotiState);
-  const [informType, setInformType] = useState<ConfirmType | undefined>(undefined);
-  const [informMsg, setInformMsg] = useState<string | undefined>('');
-  const [quitOk, setQuitOk] = useState<boolean>(false);
 
   const loginUserData = useMutation((data: FieldValues) => registerApi.loginApi(data), {
     onSuccess: (token) => {
-      setQuitOk(true);
-      setPopNoti(true);
-      setInformType('success');
-      setInformMsg('로그인 성공🙂');
-      accessLoginToken(token.headers.authorization);
-      refreshLoginToken(token.headers.refresh);
       console.log(token);
+      setPopNoti({
+        openPopNoti: true,
+        informType: 'success',
+        informMsg: '로그인 성공🙂',
+        btnNav: '/',
+      });
+      setAccessLoginToken(token.headers.authorization);
+      console.log(accessLoginToken);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      setQuitOk(false);
-      setPopNoti(true);
-      setInformType('warning');
-      setInformMsg(error.response?.data.msg);
+      setPopNoti({
+        openPopNoti: true,
+        informType: 'warning',
+        informMsg: error.response?.data.msg,
+      });
     },
   });
 
@@ -80,12 +80,14 @@ export const Login = () => {
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
     if (localToken) {
-      setPopNoti(true);
-      setQuitOk(true);
-      setInformType('warning');
-      setInformMsg('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
+      setPopNoti({
+        openPopNoti: true,
+        informType: 'warning',
+        informMsg: '🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️',
+        btnNav: '-1',
+      });
     }
-  }, []);
+  }, [localToken]);
   return (
     <RegisterContainer>
       <ContentContainer>
@@ -236,20 +238,6 @@ export const Login = () => {
             }}
           ></EvBox>
         </EvBox>
-
-        <PopNoti
-          confirmType={informType}
-          visible={popNoti}
-          msg={informMsg}
-          quitOk={quitOk}
-          oneButton={{
-            nav: '/',
-            text: '확인',
-            onClick: () => {
-              setPopNoti(false);
-            },
-          }}
-        />
       </ContentContainer>
     </RegisterContainer>
   );

@@ -5,18 +5,7 @@ import { AiOutlineCheck } from 'react-icons/ai';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { ReactComponent as DirectionIcon } from '../asset/icons/direction.svg';
 
-import {
-  accessTokenState,
-  editNicknameModalState,
-  editPhotoModalState,
-  levelUpModalState,
-  refreshTokenState,
-  stepUpModalState,
-  userChatacterTypeState,
-  userInfoState,
-  userPhotoWaitState,
-  userprofilephotoState,
-} from '../recoil/store';
+import { accessTokenState, modalGatherState, userInfoState } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -45,6 +34,7 @@ const MainPageWrapper = styled(Wrapper)`
 `;
 
 const MainContainer = styled.div`
+  max-width: 768px;
   height: 100%;
   background: #ffe074; /* fallback for old browsers */
   background: -webkit-linear-gradient(to bottom, #ffffff 25%, #ffe074); /* Chrome 10-25, Safari 5.1-6 */
@@ -112,7 +102,7 @@ const ToDoBox = styled.div`
   border-radius: 6px;
   //스크롤바 없애기
   ::-webkit-scrollbar {
-    display: none;
+    /* display: none; */
   }
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
@@ -122,19 +112,11 @@ const ToDoBox = styled.div`
 const EventWrapper = styled(Wrapper)`
   cursor: pointer;
 `;
-
-console.log(window.location.href);
-
 export const Main = () => {
-  const [infoModalVisible, setInfoModalVisible] = useState(false);
-  const [, setmodalEditNickname] = useRecoilState(editNicknameModalState);
-  const [, setModalEditPhoto] = useRecoilState(editPhotoModalState);
+  // const [infoModalVisible, setInfoModalVisible] = useState(false);
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
-  const [userChatacterType, setUserChatacterType] = useRecoilState(userChatacterTypeState);
-  const accessLoginToken = useSetRecoilState(accessTokenState);
-  const refreshLoginToken = useSetRecoilState(refreshTokenState);
-  const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
-  const setUserPhotoWait = useSetRecoilState(userPhotoWaitState);
+  const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
   const all = window.location.href;
 
   const first = all.split('&');
@@ -145,8 +127,6 @@ export const Main = () => {
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
       setUserInfoData(data.data);
-      setFileImage({ img_show: data.data.profileImageUrl, img_file: '' });
-      // setUserPhotoWait({ img_show: data.data.profileImageUrl, img_file: '' });
     },
     onError: (error: AxiosError) => {
       if (error.message === 'Request failed with status code 404') {
@@ -156,26 +136,19 @@ export const Main = () => {
   });
 
   console.log(userInformData);
+
   useEffect(() => {
     if (accessToken) {
-      // console.log();
-      const refreshToken = first[1].split('=')[1];
-      // console.log(refreshToken);
-      const isNickname = first[2].split('=')[1];
-      // console.log(isNickname);
-      accessLoginToken(accessToken);
-      refreshLoginToken(refreshToken);
-
-      if (isNickname === 'N') {
-        nav('/signupsns');
-      } else {
-        window.location.replace('/');
-      }
-      if (userInfoData?.nick === '') {
+      setAccessLoginToken(accessToken);
+      const isNickname = first[1].split('=')[1];
+      console.log(accessToken);
+      if (isNickname === 'N' || userInfoData?.nick === '') {
         nav('/signupsns');
       }
       if (isNickname === 'Y' && !userInfoData?.characterInfo.type) {
         nav('/choosecharacter');
+      } else {
+        window.location.replace('/');
       }
     }
   }, []);
@@ -184,7 +157,7 @@ export const Main = () => {
     if (userInformData.error?.message === 'Request failed with status code 401') {
       userInformData.refetch();
     }
-  }, []);
+  }, [userInformData]);
 
   return (
     <MainPageWrapper isColumn height="100%">
@@ -209,7 +182,7 @@ export const Main = () => {
               width={'4.75rem'}
               height={4.75}
               margin={'0 0 0 9rem'}
-              url={`url(${fileImage.img_show})`}
+              url={`url(${userInfoData?.profileImageUrl})`}
               borderRadius="50%"
               border="1px solid #D9D9D9"
             />
@@ -220,7 +193,7 @@ export const Main = () => {
               url={'url(/assets/camera.svg)'}
               isCursor={true}
               onClick={() => {
-                setModalEditPhoto(true);
+                setmodalGather({ ...modalGather, editPhotoModal: true });
               }}
             />
           </EvBox>
@@ -245,7 +218,7 @@ export const Main = () => {
               url="url(/assets/pencil.svg)"
               isCursor={true}
               onClick={() => {
-                setmodalEditNickname(true);
+                setmodalGather({ ...modalGather, editNicknameModal: true });
               }}
             ></EvBox>
           </EvBox>
