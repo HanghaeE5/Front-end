@@ -1,5 +1,5 @@
 import { ko } from 'date-fns/locale';
-import { PropsWithChildren, ReactNode, useState } from 'react';
+import { PropsWithChildren, ReactNode, useEffect, useState } from 'react';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { BsX } from 'react-icons/bs';
@@ -87,67 +87,73 @@ const getSelectDate = (selectedDay: Date[] | undefined) => {
   return `${firstDate ? firstDate : ''} ${selectedDay.length > 1 ? `외 ${selectedDay.length - 1}일` : ''}`;
 };
 
-interface TodoModalProps {
-  editType: 'edit' | 'add';
-  todoType?: 'with' | 'my';
+export interface TodoModalProps {
   modalTitle: string;
-  getTodoDataFromModal: (todo: TodoData) => void;
   closeModal: () => void;
-  todoData?: ITodoItem;
+  buttonTitle: string;
+  onClickButton: (todoData: TodoData) => void;
+  todoData?: TodoData;
+  isWithTodo?: boolean;
 }
-export const TodoModal = ({
-  editType,
-  todoData,
-  todoType = 'my',
+export const TodoModalNew = ({
   modalTitle,
-  getTodoDataFromModal,
+  buttonTitle,
+  onClickButton,
+  todoData,
   closeModal,
+  isWithTodo,
 }: TodoModalProps) => {
-  const { value: title, onChangeValue: onChangeTitle } = useInput(todoData?.todoContent);
+  const [todo, setTodo] = useState<TodoData>(
+    todoData || {
+      content: '',
+      category: 'STUDY',
+      todoDateList: [],
+    },
+  );
+
+  // const { value: title, onChangeValue: onChangeTitle } = useInput(todoData?.todoContent);
   // const [isTitleRequired, setIsTitleRequired] = useState(false);
-  const [category, setCategory] = useState<Category>((todoData?.category as Category) || 'STUDY');
+  // const [category, setCategory] = useState<Category>((todoData?.category as Category) || 'STUDY');
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date[] | undefined>(
-    todoData ? [new Date(todoData.todoDate)] : [new Date()],
+    todoData ? todoData?.todoDateList.map((date) => new Date(date)) : [new Date()],
   );
 
   const onCloseCalendar = () => setShowCalendar(false);
 
   const onClickCategoryButton = (category: Category) => {
-    setCategory(category);
+    setTodo((prev) => ({ ...prev, category }));
   };
 
   const onChangeTitleInput = (value: string) => {
-    // if (value) setIsTitleRequired(false);
-    onChangeTitle(value);
+    setTodo((prev) => ({ ...prev, content: value }));
   };
 
-  const onClickAddButton = () => {
-    // setIsTitleRequired(false);
+  // const onClickAddButton = () => {
+  //   // setIsTitleRequired(false);
 
-    if (!title) return;
-    // setIsTitleRequired(true);
+  //   if (!title) return;
+  //   // setIsTitleRequired(true);
 
-    const date = selectedDay?.map((date) => getYyyyMmDd(date)) || [];
+  //   const date = selectedDay?.map((date) => getYyyyMmDd(date)) || [];
 
-    getTodoDataFromModal({
-      content: title,
-      category,
-      todoDateList: date,
-      todoId: todoData?.todoId,
-    });
+  //   getTodoDataFromModal({ content: title, category, todoDateList: date, todoId: todoData?.todoId });
 
-    closeModal();
-  };
+  //   closeModal();
+  // };
 
   const onDatePick = (dateList: Date[] | undefined) => {
     if (!dateList) return;
 
+    if (todo.todoId) {
+      setSelectedDay([dateList[dateList.length - 1]]);
+      return;
+    }
     setSelectedDay(dateList);
   };
 
   const isSelectedCategory = (thisCategory: Category) => {
-    return thisCategory === category;
+    return thisCategory === todo.category;
   };
 
   const onClickEveryDay = () => {
@@ -158,7 +164,7 @@ export const TodoModal = ({
 
     const lastDay = new Date(year, month, 0).getDate();
 
-    const allDate = [];
+    const allDate: Date[] = [];
 
     for (let i = today; i <= lastDay; i++) {
       allDate.push(new Date(year, month - 1, i));
@@ -166,6 +172,15 @@ export const TodoModal = ({
 
     setSelectedDay([...allDate]);
   };
+
+  const translateTodoData = () => {
+    if (!todo.content) return;
+
+    const date = selectedDay?.map((date) => getYyyyMmDd(date)) || [];
+
+    onClickButton({ ...todo, todoDateList: date });
+  };
+
   return (
     <ModalContainer>
       <Background onClick={() => closeModal()} />
@@ -174,7 +189,7 @@ export const TodoModal = ({
           <span>{modalTitle}</span>
           <CloseButton onClick={() => closeModal()} />
         </HeaderTitle>
-        {todoType === 'with' && (
+        {isWithTodo && (
           <Wrapper padding="0.5rem 1rem">
             <Typography color="#8D8D8D" size={0.875}>
               잠깐! 위 드 투 두 게시물은 작성 이후 수정, 삭제가 불가합니다. 제목, 카테고리, 날짜/기간을 유의하여
@@ -186,10 +201,9 @@ export const TodoModal = ({
           <TextInput
             inputSize="large"
             inputType="default"
-            value={title}
+            value={todo.content}
             onChange={onChangeTitleInput}
             placeholder="투 두 제목을 입력해주세요"
-            // isValidError={isTitleRequired}
           />
           <WarningText>투 두 제목은 필수사항입니다!</WarningText>
         </Wrapper>
@@ -267,12 +281,12 @@ export const TodoModal = ({
           </Wrapper>
         </Wrapper>
         <StickyButton
-          buttonType={title.length === 0 ? 'disable' : 'primary'}
+          buttonType={todo.content.length === 0 ? 'disable' : 'primary'}
           isSquare
-          onClick={onClickAddButton}
+          onClick={translateTodoData}
           size="large"
         >
-          추가하기
+          {buttonTitle}
         </StickyButton>
       </TodoContents>
     </ModalContainer>

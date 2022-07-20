@@ -154,7 +154,7 @@ export const CommunitiPostingPage = () => {
         todoData: {
           category: category as Category,
           todoContent: content,
-          todoDate: todoDateList,
+          todoDate: String(todoDateList[0]),
           // TODO : 데이터틀림
           todoId: 1000000000,
           state: false,
@@ -187,39 +187,39 @@ export const CommunitiPostingPage = () => {
 
     if (boardId) {
       // 수정
-      updateBoard(
-        {
-          boardId: Number(boardId),
-          params: {
-            board: {
-              category: postType,
-              content,
-              title,
-              imageUrl: preview,
-            },
-            ...todo,
-          },
-        },
-        {
-          onSuccess: () => refectchBoardList(),
-        },
-      );
+      // updateBoard(
+      //   {
+      //     boardId: Number(boardId),
+      //     params: {
+      //       board: {
+      //         category: postType,
+      //         content,
+      //         title,
+      //         imageUrl: preview,
+      //       },
+      //       ...todo,
+      //     },
+      //   },
+      //   {
+      //     onSuccess: () => refectchBoardList(),
+      //   },
+      // );
     } else {
       //추가
-      postBoard(
-        {
-          board: {
-            category: postType,
-            content,
-            title,
-            imageUrl: preview,
-          },
-          ...todo,
-        },
-        {
-          onSuccess: () => refectchBoardList(),
-        },
-      );
+      // postBoard(
+      //   {
+      //     board: {
+      //       category: postType,
+      //       content,
+      //       title,
+      //       imageUrl: preview,
+      //     },
+      //     ...todo,
+      //   },
+      //   {
+      //     onSuccess: () => refectchBoardList(),
+      //   },
+      // );
     }
   };
 
@@ -268,7 +268,7 @@ export const CommunitiPostingPage = () => {
               {postType === 'CHALLENGE' && todoData && (
                 <ChallangersSection onClick={() => onClickChallangersButton()}>
                   <span>{todoData.content}</span>
-                  <span>{`${todoData.todoDateList[0].replaceAll('-', '.')} ${
+                  <span>{`${todoData.todoDateList[0]} ${
                     todoData.todoDateList.length > 1 ? `외 ${todoData.todoDateList.length - 1}` : ``
                   }`}</span>
                 </ChallangersSection>
