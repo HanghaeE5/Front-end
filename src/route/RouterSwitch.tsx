@@ -1,28 +1,31 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { PopConfirmNew } from '../component/element';
 import { PopNoti } from '../component/element/PopNoti';
-import { popNotiState } from '../recoil/store';
+import { commonPopConfirmState, popNotiState } from '../recoil/store';
 
 import { routeList } from './routeList';
 
 export const RouterSwitch = () => {
-  const [popNoti, setPopNoti] = useRecoilState(popNotiState);
+  const [confirmState, setConfirmState] = useRecoilState(commonPopConfirmState);
+  const { visible, type, title, content, button } = confirmState;
   return (
     <BrowserRouter>
-      <PopNoti
-        confirmType={popNoti.informType}
-        visible={popNoti.openPopNoti}
-        msg={popNoti.informMsg}
-        oneButton={{
-          nav: popNoti.btnNav ? popNoti.btnNav : '',
-          text: popNoti.btnText ? popNoti.btnText : '확인',
-          onClick: () => {
-            setPopNoti({
-              openPopNoti: false,
-            });
-          },
-        }}
-      />
+      {visible && (
+        <PopConfirmNew
+          iconType={type === 'success' ? 'success' : 'warning'}
+          title={title || (type === 'success' ? '성공했습니다.' : '실패했습니다')}
+          content={content}
+          button={{
+            text: button?.text || '확인',
+            onClick: () => {
+              button?.onClick();
+              setConfirmState((prev) => ({ ...prev, visible: false }));
+            },
+          }}
+        />
+      )}
+
       <Routes>
         {routeList.map((route) => (
           <Route key={route.id} path={route.path} element={<route.page />} />

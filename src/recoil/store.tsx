@@ -1,9 +1,15 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 import { chatList, chattingList } from '../Types/chat';
-import { modalGather, popNoti } from '../Types/modal';
-import { UserInfo, FriendInfo, friendList, atomKey } from '../Types/user';
+import { CommonConfirmProps, modalGather, popNoti } from '../Types/modal';
+import { UserInfo, FriendInfo, friendList } from '../Types/user';
 const { persistAtom } = recoilPersist();
+
+export const atomKey = {
+  USER_INFO: 'userInfo',
+  FRIEND_INFO: 'friendInfo',
+  COMMON_POP_CONFIRM: 'commonPopConfirm',
+};
 
 export const accessTokenState = atom({
   key: 'accessTokenState',
@@ -22,7 +28,7 @@ export const chattingListState = atom<chattingList>({
 });
 
 export const userInfoState = atom<UserInfo>({
-  key: atomKey.userInfo,
+  key: atomKey.USER_INFO,
   default: undefined,
 });
 
@@ -41,5 +47,19 @@ export const modalGatherState = atom<modalGather>({
     editPhotoModal: false,
     profileMenuModal: false,
     friendAddModal: false,
+  },
+});
+
+export const commonPopConfirmState = atom<CommonConfirmProps>({
+  key: atomKey.COMMON_POP_CONFIRM,
+  default: {
+    visible: false,
+    type: 'success',
+    title: '',
+    content: '',
+    button: {
+      text: '확인',
+      onClick: () => console.log('컨펌'),
+    },
   },
 });

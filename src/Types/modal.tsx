@@ -1,3 +1,5 @@
+import { PopConfirmProps } from '../component/element';
+
 export type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
 
 export type popNoti = {
@@ -17,3 +19,8 @@ export type modalGather = {
   profileMenuModal?: boolean;
   friendAddModal?: boolean;
 };
+
+export interface CommonConfirmProps extends Partial<PopConfirmProps> {
+  visible: boolean;
+  type: 'error' | 'success';
+}
