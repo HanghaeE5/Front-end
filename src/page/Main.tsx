@@ -31,6 +31,7 @@ import { BottomNavLayout } from '../component/layout/BottomNavBar';
 
 const MainPageWrapper = styled(Wrapper)`
   max-width: 768px;
+  position: relative;
 `;
 
 const MainContainer = styled.div`
