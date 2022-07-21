@@ -15,12 +15,19 @@ export const RouterSwitch = () => {
         <PopConfirmNew
           iconType={type === 'success' ? 'success' : 'warning'}
           title={title || (type === 'success' ? '성공했습니다.' : '실패했습니다')}
-          content={content}
+          content={content || (type === 'error' ? '다시 시도해주세요.' : '')}
           button={{
             text: button?.text || '확인',
             onClick: () => {
               button?.onClick();
-              setConfirmState((prev) => ({ ...prev, visible: false }));
+              setConfirmState({
+                visible: false,
+                type: 'success',
+                title: '',
+                button: undefined,
+                content: '',
+                optionalButton: undefined,
+              });
             },
           }}
         />

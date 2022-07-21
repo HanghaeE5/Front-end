@@ -28,3 +28,8 @@ export const ScrollWrapper = styled(Wrapper)`
     display: none;
   }
 `;
+
+export const SpinnerWrapper = styled.div`
+  background-color: ${({ theme }) => theme.color.grayLight};
+  color: ${({ theme }) => theme.color.grayLight};
+`;

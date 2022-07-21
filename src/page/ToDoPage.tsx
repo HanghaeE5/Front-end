@@ -19,8 +19,8 @@ import {
   TodoDoneResponse,
   Category,
 } from '../Types/todo';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { modalGatherState, userInfoState } from '../recoil/store';
+import { useRecoilState } from 'recoil';
+import { commonPopConfirmState, modalGatherState, userInfoState } from '../recoil/store';
 import { EvBtn } from '../component/element/BoxStyle';
 import LevelUpModal from '../component/modallayout/LevelUpModal';
 import StepUpModal from '../component/modallayout/StepUpModal';
@@ -47,6 +47,7 @@ export const ToDoPage = () => {
   const queryClient = useQueryClient();
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
+  const [commonConfrimState, setCommonConfirmState] = useRecoilState(commonPopConfirmState);
 
   const [list, setList] = useState<ITodoItem[]>([]);
 
@@ -103,95 +104,34 @@ export const ToDoPage = () => {
 
   const { mutate: addTodoItem } = useMutation(createTodo, {
     onSuccess: () => {
-      setTodoModalStateNew((prev) => ({ ...prev, visible: false }));
       refetchTodoList();
-      setConfirmState({
-        visible: true,
-        iconType: 'success',
-        title: '투두를 등록했습니다.',
-        button: {
-          text: '확인',
-          onClick: closeConfirm,
-        },
-      });
+      setCommonConfirmState({ ...commonConfrimState, type: 'success', title: '등록했습니다', visible: true });
     },
-    onError: () =>
-      setConfirmState({
-        visible: true,
-        iconType: 'warning',
-        title: '등록에 실패했습니다.',
-        button: {
-          text: '확인',
-          onClick: closeConfirm,
-        },
-      }),
+    onError: () => setCommonConfirmState({ ...commonConfrimState, type: 'error', visible: true }),
   });
 
   const { mutate: updateTodo } = useMutation(updateTodoFn, {
     onSuccess: () => {
-      setTodoModalStateNew((prev) => ({ ...prev, visible: false }));
       refetchTodoList();
-      setConfirmState({
-        visible: true,
-        iconType: 'success',
-        title: '투두를 수정했습니다.',
-        button: {
-          text: '확인',
-          onClick: closeConfirm,
-        },
-      });
+      setCommonConfirmState({ ...commonConfrimState, type: 'success', title: '수정했습니다', visible: true });
     },
-    onError: () =>
-      setConfirmState({
-        visible: true,
-        iconType: 'warning',
-        title: '수정에 실패했습니다.',
-        button: {
-          text: '확인',
-          onClick: closeConfirm,
-        },
-      }),
+    onError: () => setCommonConfirmState({ ...commonConfrimState, type: 'error', visible: true }),
   });
 
   const { mutate: deleteTodo } = useMutation(deleteTodoFn, {
     onSuccess: () => {
-      setTodoModalStateNew((prev) => ({ ...prev, visible: false }));
       refetchTodoList();
-      setConfirmState({
-        visible: true,
-        iconType: 'success',
-        title: '삭제했습니다.',
-        button: {
-          text: '확인',
-          onClick: closeConfirm,
-        },
-      });
+      setCommonConfirmState({ ...commonConfrimState, type: 'success', title: '삭제했습니다', visible: true });
     },
-    onError: () =>
-      setConfirmState({
-        visible: true,
-        iconType: 'warning',
-        title: '삭제에 실패했습니다.',
-        button: {
-          text: '확인',
-          onClick: closeConfirm,
-        },
-      }),
+    onError: () => setCommonConfirmState({ ...commonConfrimState, type: 'error', visible: true }),
   });
 
   const { mutate: updateTodoPublicScope } = useMutation(updateTodoScope, {
     onSuccess: () => {
       queryClient.invalidateQueries('fetchUserInfo');
-      setConfirmState({
-        visible: true,
-        iconType: 'success',
-        title: '변경되었습니다',
-        button: {
-          text: '확인',
-          onClick: closeConfirm,
-        },
-      });
+      setCommonConfirmState({ ...commonConfrimState, type: 'success', title: '변경했습니다', visible: true });
     },
+    onError: () => setCommonConfirmState({ ...commonConfrimState, type: 'error', visible: true }),
   });
 
   const onChangeTab = (todoStatus: TodoStatusFilter) =>
@@ -219,11 +159,11 @@ export const ToDoPage = () => {
 
   const onClickEditButton = (todoItem: ITodoItem) => {
     if (todoItem.boardId) {
-      setConfirmState({
-        visible: true,
-        iconType: 'warning',
+      setCommonConfirmState({
+        ...commonConfrimState,
+        type: 'error',
         title: '위드 투 두는 수정이 불가합니다.',
-        button: { text: '확인', onClick: closeConfirm },
+        visible: true,
       });
 
       return;
@@ -296,12 +236,12 @@ export const ToDoPage = () => {
   // TODO 완료
   const handleDoneTodo = (data: TodoDoneResponse | undefined) => {
     if (!data) {
-      setConfirmState({
+      setCommonConfirmState({
+        ...commonConfrimState,
+        type: 'error',
         visible: true,
-        iconType: 'warning',
-        title: '😓실패했어요. 다시 시도해주세요',
-        button: { text: '확인', onClick: closeConfirm },
       });
+
       return;
     }
 
@@ -326,13 +266,12 @@ export const ToDoPage = () => {
       return;
     }
 
-    setConfirmState((prev) => ({
-      ...prev,
+    setCommonConfirmState({
+      ...commonConfrimState,
+      type: 'success',
+      title: '투두 완료!',
       visible: true,
-      iconType: 'success',
-      title: '투두완료!',
-      button: { text: '확인', onClick: closeConfirm },
-    }));
+    });
   };
 
   const moveToBoard = (boardId: number | undefined) => {
