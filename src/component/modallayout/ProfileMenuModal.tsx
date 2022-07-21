@@ -32,14 +32,14 @@ const ModalBackground = styled.div`
   z-index: 10;
 `;
 
-const BoxWrap = styled.div`
+const BoxWrap = styled.div<{ isWithBanner?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 10.625rem;
   border-radius: 12px;
-  top: 3.3rem;
+  top: ${({ isWithBanner }) => (isWithBanner ? '6rem' : ' 3.3rem')};
   right: 5.3%;
   border: 1px solid #dddddd;
   position: absolute;
@@ -60,7 +60,7 @@ const RowBox = styled.div`
   /* background-color: blue; */
 `;
 
-const ProfileMenuModal = () => {
+const ProfileMenuModal = ({ isWithBanner }: { isWithBanner?: boolean }) => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [userJoinType, setUserJoinType] = useState<boolean>();
@@ -87,6 +87,7 @@ const ProfileMenuModal = () => {
       {modalGather.profileMenuModal && (
         <ModalBackground onClick={() => setmodalGather({ ...modalGather, profileMenuModal: false })}>
           <BoxWrap
+            isWithBanner={isWithBanner}
             style={{ borderRadius: '12px' }}
             onClick={(e) => {
               e.stopPropagation();

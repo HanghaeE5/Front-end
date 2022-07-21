@@ -20,7 +20,7 @@ import { EventResponse } from '../Types/event';
 import { useInput } from '../hooks/useInput';
 import { AxiosError } from 'axios';
 import { PageHeader, PageLayout } from '../component/layout/PageLayout';
-import { TopNavLayout } from '../component/layout/TopNavBar';
+import { TopNavBar } from '../component/layout/TopNavBar';
 
 const ScrollWrapper = styled.div`
   font-family: 'GmarketSans';
@@ -271,7 +271,7 @@ export const Event = () => {
 
   return (
     <Wrapper height="100%" width="375px" isColumn>
-      <TopNavLayout />
+      <TopNavBar />
       <PageHeader title="이벤트" />
       <ScrollWrapper>
         {confirmState.visible && <PopConfirmNew {...confirmState} />}
