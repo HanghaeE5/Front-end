@@ -2,7 +2,7 @@ import './App.css';
 
 import styled, { ThemeProvider } from 'styled-components';
 import { theme } from './theme';
-import { commonPopConfirmState } from './recoil/store';
+import { commonPopConfirm } from './recoil/store';
 import { useRecoilValue } from 'recoil';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { PopConfirmNew } from './component/element';
@@ -22,7 +22,7 @@ const ResponseContainer = styled.div`
 `;
 
 function App() {
-  const confirmState = useRecoilValue(commonPopConfirmState);
+  const confirmState = useRecoilValue(commonPopConfirm);
 
   return (
     <ResponseContainer>
