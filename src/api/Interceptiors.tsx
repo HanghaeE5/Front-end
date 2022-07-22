@@ -93,6 +93,7 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
         .catch((error) => {
           console.log('refesh 토큰 못 받아옴');
           localStorage.clear();
+          alert('로그인 시간 만료로 로그인이 필요합니다.');
         });
     }
     return Promise.reject(error);

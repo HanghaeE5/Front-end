@@ -1,7 +1,4 @@
 import axios from 'axios';
-
-import { FieldValues } from 'react-hook-form';
-
 import setupInterceptorsTo from './Interceptiors';
 
 const baseApi = axios.create({
@@ -11,7 +8,7 @@ const baseApi = axios.create({
 
 export const callApi = setupInterceptorsTo(baseApi);
 
-const joinApi = async (data: FieldValues) => {
+const joinApi = async (data: { email: string; nick: string; password: string }) => {
   const ja = await callApi.post('/register', data);
   return ja;
 };
@@ -21,7 +18,7 @@ const emilCertificationApi = async (email: { email: string }) => {
   return eca;
 };
 
-const emilCertificationNumberApi = async (data: FieldValues) => {
+const emilCertificationNumberApi = async (data: { code: string; email: string }) => {
   const ecna = await callApi.post('/register/email-check', data);
   return ecna;
 };
@@ -36,7 +33,7 @@ const joinSocialApi = async (nick: { nick: string }) => {
   return jsa;
 };
 
-const loginApi = async (data: FieldValues) => {
+const loginApi = async (data: { email: string; password: string }) => {
   const la = await callApi.post('/login', data);
   return la;
 };
@@ -132,11 +129,11 @@ const enterPublicChattingRoomApi = async (roomId: { roomId: string }) => {
 };
 
 export const registerApi = {
-  joinApi: (data: FieldValues) => joinApi(data),
+  joinApi: (data: { email: string; nick: string; password: string }) => joinApi(data),
   emilCertificationApi: (email: { email: string }) => emilCertificationApi(email),
-  emilCertificationNumberApi: (data: FieldValues) => emilCertificationNumberApi(data),
+  emilCertificationNumberApi: (data: { code: string; email: string }) => emilCertificationNumberApi(data),
   nickCertificationApi: (nick: { nick: string }) => nickCertificationApi(nick),
-  loginApi: (data: FieldValues) => loginApi(data),
+  loginApi: (data: { email: string; password: string }) => loginApi(data),
   joinSocialApi: (nick: { nick: string }) => joinSocialApi(nick),
   userCharacterChooseApi: (type: { type: string }) => userCharacterChooseApi(type),
 };
