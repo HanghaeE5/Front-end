@@ -1,7 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { modalGatherState } from '../../recoil/store';
-import { EvColumnBox, EvKoreanFont, EvRowBox } from '../element/BoxStyle';
+import { EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont, EvRowBox } from '../element/BoxStyle';
 
 const Slide = keyframes`
     0% {
@@ -56,27 +56,27 @@ const NotiModal = () => {
             }}
           >
             <EvRowBox width="92%" height={1.875} margin={'2.5rem 1.25rem 0rem 1.25rem'}>
-              <EvColumnBox width={'3.5rem'} margin={'auto auto auto 0rem'}>
+              <EvFontBox width={'3.5rem'} margin={'auto auto auto 0rem'}>
                 <EvKoreanFont size={1} color="rgba(147, 147, 147, 1)">
                   알림
                 </EvKoreanFont>
-              </EvColumnBox>
-              <EvColumnBox
-                width={'1.3rem'}
-                height={1.3}
+              </EvFontBox>
+              <EvImgBox
+                width={'1rem'}
+                height={1}
                 margin={'auto 0rem auto auto'}
-                style={{
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center',
-                  backgroundSize: 'cover',
-                  backgroundImage: 'url(/assets/X.svg)',
-                  cursor: 'pointer',
-                }}
+                url={'url(/assets/X.svg)'}
+                isCursor={true}
                 onClick={() => {
-                  setmodalGather({ ...modalGather, explainModal: false });
+                  setmodalGather({ ...modalGather, notiModal: false });
                 }}
-              ></EvColumnBox>
+              />
             </EvRowBox>
+            <EvFontBox width={'15rem'} margin={'auto'}>
+              <EvKoreanFont size={1.2} color="#000000">
+                곧 오픈될 기능이에요 😎
+              </EvKoreanFont>
+            </EvFontBox>
           </BoxWrap>
         </ModalBackground>
       )}
