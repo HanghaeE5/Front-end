@@ -1,10 +1,5 @@
 import { PublicScope } from './todo';
 
-export const atomKey = {
-  userInfo: 'userInfo',
-  friendInfo: 'friendInfo',
-};
-
 export interface UserInfo {
   characterInfo: {
     characterName: string;

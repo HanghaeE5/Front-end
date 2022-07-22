@@ -64,7 +64,7 @@ const RowBox = styled.div`
   /* background-color: #683b3b; */
 `;
 
-export const TopNavLayout = () => {
+export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
 
@@ -149,7 +149,7 @@ export const TopNavLayout = () => {
         ></Box>
       </RowBox>
       <NotiModal />
-      <ProfileMenuModal />
+      <ProfileMenuModal isWithBanner={isWithBanner} />
     </TopNavWrapper>
   );
 };

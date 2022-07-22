@@ -22,26 +22,18 @@ import { PostCard } from '../component/PostCard';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '../recoil/store';
 import { TodoModalNew, TodoModalProps } from '../component/TodoModalNew';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
 export const CommunitiPostingPage = () => {
   const nav = useNavigate();
   const { boardId } = useParams();
 
   const userInfo = useRecoilValue(userInfoState);
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   const refectchBoardList = () => {
     nav(PATH.COMMUNITY);
   };
-
-  const [confirmState, setConfirmState] = useState<PopConfirmProps & { visible: boolean }>({
-    visible: false,
-    iconType: 'warning',
-    title: '',
-    button: {
-      text: '확인',
-      onClick: () => console.log('gg'),
-    },
-  });
 
   const [todoData, setTodoData] = useState<TodoData>();
 
@@ -89,62 +81,19 @@ export const CommunitiPostingPage = () => {
 
   const { mutate: uploadImage } = useMutation(uploadImageFn, {
     onSuccess: (data) => setPost((prev) => ({ ...prev, preview: data })),
-    onError: () =>
-      setConfirmState((prev) => ({
-        iconType: 'warning',
-        visible: true,
-        title: `사진 업로드에 실패했습니다.`,
-        content: '다시 시도해주세요',
-        button: { text: '닫기', onClick: () => setConfirmState((prev) => ({ ...prev, visible: false })) },
-      })),
+    onError: () => openErrorConfirm({ title: '사진 업로드에 실패했습니다.' }),
   });
 
   const { mutate: addBoard } = useMutation(postCummunityFn, {
-    onSuccess: () => {
-      setConfirmState((prev) => ({
-        iconType: 'success',
-        visible: true,
-        title: '게시글을 등록했습니다.',
-        button: {
-          text: '닫기',
-          onClick: () => {
-            setConfirmState((prev) => ({ ...prev, visible: false }));
-            refectchBoardList();
-          },
-        },
-      }));
-    },
-    onError: () =>
-      setConfirmState((prev) => ({
-        ...prev,
-        visible: true,
-        title: '게시글 등록에 실패했습니다.',
-        button: { text: '닫기', onClick: () => setConfirmState((prev) => ({ ...prev, visible: false })) },
-      })),
+    onSuccess: () =>
+      openSuccessConfirm({ title: '게시글을 등록했습니다.', button: { text: '확인', onClick: refectchBoardList } }),
+    onError: () => openSuccessConfirm({}),
   });
 
   const { mutate: updateBoard } = useMutation(updateBoardFn, {
-    onSuccess: () => {
-      setConfirmState((prev) => ({
-        iconType: 'success',
-        visible: true,
-        title: '게시글을 수정했습니다.',
-        button: {
-          text: '닫기',
-          onClick: () => {
-            setConfirmState((prev) => ({ ...prev, visible: false }));
-            refectchBoardList();
-          },
-        },
-      }));
-    },
-    onError: () =>
-      setConfirmState((prev) => ({
-        iconType: 'warning',
-        visible: true,
-        title: '게시글 등록에 실패했습니다.',
-        button: { text: '닫기', onClick: () => setConfirmState((prev) => ({ ...prev, visible: false })) },
-      })),
+    onSuccess: () =>
+      openSuccessConfirm({ title: '게시글을 수정했습니다.', button: { text: '확인', onClick: refectchBoardList } }),
+    onError: () => openErrorConfirm({ title: '게시글 등록에 실패했습니다.' }),
   });
 
   const imageInput = useRef<HTMLInputElement>(null);
@@ -236,6 +185,7 @@ export const CommunitiPostingPage = () => {
           title: post.title,
           imageUrl: post.preview,
         },
+        todo: todoData,
       },
     });
   };
@@ -260,7 +210,6 @@ export const CommunitiPostingPage = () => {
   };
   return (
     <NavLayout>
-      {confirmState.visible && <PopConfirmNew {...confirmState} />}
       <PageLayout title="글쓰기">
         <Wrapper height="100%">
           <ScrollWraper isColumn height="100%">
