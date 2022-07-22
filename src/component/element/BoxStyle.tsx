@@ -126,6 +126,7 @@ export const EvInputInfo = styled.input`
   display: flex;
   flex-direction: column;
   background: #ffffff;
+  border: ${(props: box) => (props.border ? props.border : '1px solid #DDDDDD')};
   border-radius: 6px;
   padding: ${(props: box) => (props.isPadding ? props.isPadding : '0 0 0 10px')};
   width: ${(props: box) => props.width};
@@ -180,12 +181,12 @@ export const EvBtnAble = styled.button`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: ${(props: btnable) => (props.border ? props.border : '1px solid #dddddd')};
+  border: ${(props: btnable) => (props.isDisable ? '1px solid #989898' : 'none')};
   border-radius: 6px;
   width: ${(props: btnable) => props.width};
   height: ${(props: btnable) => props.height}rem;
   margin: ${(props: btnable) => props.margin};
-  background: ${(props: btnable) => (props.isDisable ? '#F7F7F7' : '#FFD600')};
+  background: ${(props: btnable) => (props.isDisable ? '#F7F7F7  ' : '#FFD600')};
   cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
   /* &:hover {
     ${(props: btnable) =>
