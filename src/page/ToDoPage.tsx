@@ -20,8 +20,7 @@ import {
   Category,
 } from '../Types/todo';
 import { useRecoilState } from 'recoil';
-import { commonPopConfirmState, modalGatherState, userInfoState } from '../recoil/store';
-import { EvBtn } from '../component/element/BoxStyle';
+import { modalGatherState, userInfoState } from '../recoil/store';
 import LevelUpModal from '../component/modallayout/LevelUpModal';
 import StepUpModal from '../component/modallayout/StepUpModal';
 import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
@@ -48,7 +47,7 @@ export const ToDoPage = () => {
   const queryClient = useQueryClient();
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
-  // const [commonConfrimState, setCommonConfirmState] = useRecoilState(commonPopConfirmState);
+
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   const [list, setList] = useState<ITodoItem[]>([]);
@@ -113,7 +112,6 @@ export const ToDoPage = () => {
       refetchTodoList();
       closeTodoModal();
       openSuccessConfirm({ title: '등록했습니다' });
-      // setCommonConfirmState({ ...commonConfrimState, type: 'success', title: '등록했습니다', visible: true });
     },
     onError: () => openErrorConfirm({}),
   });
