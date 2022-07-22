@@ -185,6 +185,7 @@ export const CommunitiPostingPage = () => {
           title: post.title,
           imageUrl: post.preview,
         },
+        todo: todoData,
       },
     });
   };
