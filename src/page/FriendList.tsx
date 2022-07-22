@@ -9,7 +9,8 @@ import { Badge } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import FriendAddModal from '../component/modallayout/FriendAddModal';
-import { friendAddModalState, friendListState, requestFriendListState } from '../recoil/store';
+import { friendListState, modalGatherState } from '../recoil/store';
+import { friendList } from '../Types/user';
 
 const ContentWrapper = styled.div`
   height: 100%;
@@ -134,9 +135,9 @@ const IconBox = styled.button`
 `;
 
 export const FriendList = () => {
-  const setModalFriendAdd = useSetRecoilState(friendAddModalState);
   const [friendList, setFriendList] = useRecoilState(friendListState);
-  const [requestFriendList, setRequestFriendList] = useRecoilState(requestFriendListState);
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
+  const [requestFriendList, setRequestFriendList] = useState<friendList>([]);
   const [allowFriendName, setAllowFriendName] = useState<string>('');
   const [rejectRequestFriendName, setrejectRequestFriendName] = useState<string>('');
   const [deleteFriendName, setDeleteFriendName] = useState<string>('');
@@ -157,9 +158,9 @@ export const FriendList = () => {
     //여기서 리코일에 저장
     onSuccess: (data) => {
       setFriendList(data.data);
+      console.log(data);
     },
   });
-  // console.log(getFriendQuery);
 
   //친구요청 허락 API
   const allowFriendData = useMutation((nick: { nick: string }) => friendApi.allowFriendApi(nick), {
@@ -216,6 +217,7 @@ export const FriendList = () => {
   const rejectFriend = (data: { nick: string }) => {
     rejectFriendData.mutate(data);
   };
+  console.log(friendList);
 
   return (
     <NavLayout>
@@ -308,7 +310,7 @@ export const FriendList = () => {
                     <FriendNameTextBox>
                       <KoreanFont size={1}>{myfriend.nick}</KoreanFont>
                     </FriendNameTextBox>
-                    <Badge>Lv.21</Badge>
+                    <Badge>{`Lv.${myfriend.characterLevel}`}</Badge>
                   </RowBox>
                   <Box
                     isCursor={true}
@@ -339,7 +341,7 @@ export const FriendList = () => {
               zIndex: 50,
             }}
             onClick={() => {
-              setModalFriendAdd(true);
+              setmodalGather({ ...modalGather, friendAddModal: true });
             }}
           ></IconBox>
           <FriendAddModal />

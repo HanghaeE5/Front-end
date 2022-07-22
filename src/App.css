@@ -1,7 +1,8 @@
 * {
   margin: 0px;
   padding: 0px;
-  font-family: 'NotoMed';
+  font-family: 'NotoSans';
+  font-weight: 500;
   box-sizing: border-box;
 }
 
@@ -55,4 +56,64 @@
   font-style: normal;
   src: url('./asset/font/GmarketSansTTFLight.ttf');
   font-display: swap;
+}
+
+/*gmarket sans*/
+@font-face {
+  font-family: 'GmarketSans';
+  font-weight: 700;
+  font-style: normal;
+  src: url('./asset/font/GmarketSansTTFBold.ttf');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GmarketSans';
+  font-weight: 500;
+  font-style: normal;
+  src: url('./asset/font/GmarketSansTTFMedium.ttf');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GmarketSans';
+  font-weight: 300;
+  font-style: normal;
+  src: url('./asset/font/GmarketSansTTFLight.ttf');
+  font-display: swap;
+}
+
+/*Noto Sans CJK*/
+@font-face {
+  font-family: 'NotoSans';
+  src: url('./asset/font/NOTOSANSCJKKR-THIN.OTF') format('truetype');
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: 'NotoSans';
+  src: url('./asset/font/NOTOSANSCJKKR-LIGHT.OTF') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'NotoSans';
+  src: url('./asset/font/NOTOSANSCJKKR-REGULAR.OTF') format('truetype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'NotoSans';
+  src: url('./asset/font/NOTOSANSCJKKR-MEDIUM.OTF') format('truetype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'NotoSans';
+  src: url('./asset/font/NOTOSANSCJKKR-BOLD.OTF') format('truetype');
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'NotoSans';
+  src: url('./asset/font/NOTOSANSCJKKR-BLACK.OTF') format('truetype');
+  font-weight: 900;
 }

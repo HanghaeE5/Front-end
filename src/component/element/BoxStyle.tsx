@@ -8,11 +8,9 @@ type box = {
   isCursor?: boolean;
   isAlignSide?: boolean;
   isContentSide?: boolean;
-  color?: string;
   url?: string;
   direction?: string;
   isPadding?: string;
-  rowGap?: string;
   columnGap?: string;
   border?: string;
   borderRadius?: string;
@@ -29,7 +27,6 @@ export const EvBox = styled.div`
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
-  row-gap: ${(props: box) => props.rowGap};
   column-gap: ${(props: box) => props.columnGap};
   border: ${(props: box) => props.border};
   border-radius: ${(props: box) => props.borderRadius};
@@ -43,15 +40,110 @@ export const EvBox = styled.div`
   background-color: ${(props: box) => (props.backgroundColor ? props.backgroundColor : '')};
 `;
 
+export const EvColumnBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: ${(props: box) => (props.isAlignSide ? '' : 'center')};
+  justify-content: ${(props: box) => (props.isContentSide ? '' : 'center')};
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
+  border: ${(props: box) => props.border};
+  border-radius: ${(props: box) => props.borderRadius};
+  cursor: ${(props: box) => (props.isCursor ? 'pointer' : '')};
+  background-image: ${(props: box) => props.url};
+  background-repeat: no-repeat;
+  background-size: ${(props: box) => (props.backgroundsize ? props.backgroundsize : 'cover')};
+  background-position: center;
+  background-color: ${(props: box) => (props.backgroundColor ? props.backgroundColor : '')};
+`;
+
+export const EvRowBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: ${(props: box) => (props.isAlignSide ? '' : 'center')};
+  justify-content: ${(props: box) => (props.isContentSide ? '' : 'center')};
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
+  border: ${(props: box) => props.border};
+  border-radius: ${(props: box) => props.borderRadius};
+  cursor: ${(props: box) => (props.isCursor ? 'pointer' : '')};
+  background-image: ${(props: box) => props.url};
+  background-repeat: no-repeat;
+  background-size: ${(props: box) => (props.backgroundsize ? props.backgroundsize : 'cover')};
+  background-position: center;
+  background-color: ${(props: box) => (props.backgroundColor ? props.backgroundColor : '')};
+`;
+
+export const EvCheckHelfBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: ${(props: box) => (props.isAlignSide ? '' : 'center')};
+  justify-content: ${(props: box) => (props.isContentSide ? '' : 'center')};
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
+  border-radius: 6px;
+  border-top-right-radius: 1px solid #dddddd;
+  border-bottom-right-radius: 1px solid #dddddd;
+  cursor: ${(props: box) => (props.isCursor ? 'pointer' : '')};
+  background-image: ${(props: box) => props.url};
+  background-repeat: no-repeat;
+  background-size: ${(props: box) => (props.backgroundsize ? props.backgroundsize : 'cover')};
+  background-position: center;
+  background-color: ${(props: box) => (props.backgroundColor ? props.backgroundColor : '')};
+`;
+
+export const EvFontBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: ${(props: box) => (props.isAlignSide ? '' : 'center')};
+  justify-content: ${(props: box) => (props.isContentSide ? '' : 'center')};
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
+  background-color: ${(props: box) => (props.backgroundColor ? props.backgroundColor : '')};
+`;
+
+export const EvImgBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: ${(props: box) => (props.isAlignSide ? '' : 'center')};
+  justify-content: ${(props: box) => (props.isContentSide ? '' : 'center')};
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
+  cursor: ${(props: box) => (props.isCursor ? 'pointer' : '')};
+  background-image: ${(props: box) => props.url};
+  background-repeat: no-repeat;
+  background-size: ${(props: box) => (props.backgroundsize ? props.backgroundsize : 'cover')};
+  background-position: center;
+  background-color: ${(props: box) => (props.backgroundColor ? props.backgroundColor : '')};
+`;
+
 export const EvInputInfo = styled.input`
   display: flex;
   flex-direction: column;
   background: #ffffff;
-  border: ${(props: box) => (props.helfBorder ? 'none' : '1px solid #dddddd')};
-  border-top-left-radius: ${(props: box) => (props.helfBorder ? '6px' : '1px solid #dddddd')};
-  border-bottom-left-radius: ${(props: box) => (props.helfBorder ? '6px' : '1px solid #dddddd')};
   border-radius: 6px;
   padding: ${(props: box) => (props.isPadding ? props.isPadding : '0 0 0 10px')};
+  width: ${(props: box) => props.width};
+  height: ${(props: box) => props.height}rem;
+  margin: ${(props: box) => props.margin};
+  :focus {
+    background-color: #fffbe9;
+  }
+`;
+
+export const EvHelfInputInfo = styled.input`
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-top-left-radius: 1px solid #dddddd;
+  border-bottom-left-radius: 1px solid #dddddd;
+  border-radius: 6px;
+  padding: 0 0 0 10px;
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
@@ -79,7 +171,7 @@ export const EvBtn = styled.button`
   width: ${(props: btnable) => props.width};
   height: ${(props: btnable) => props.height}rem;
   margin: ${(props: btnable) => props.margin};
-  background: ${(props: btnable) => (props.background ? props.background : '')};
+  background-color: ${(props: btnable) => (props.background ? props.background : '')};
   cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
 `;
 
@@ -123,7 +215,7 @@ export const EvKoreanFont = styled.p`
   font-weight: ${(props: font) => (props.weight ? props.weight : 400)};
   text-align: ${(props: font) => (props.align ? props.align : '')};
   margin: 0;
-  line-height: ${(props: font) => (props.align ? props.lineHeight : '')};
+  line-height: ${(props: font) => (props.lineHeight ? props.lineHeight : '')};
 `;
 
 export const EvEnglishFont = styled.p`
@@ -134,7 +226,7 @@ export const EvEnglishFont = styled.p`
   font-weight: ${(props: font) => (props.weight ? props.weight : 400)};
   text-align: ${(props: font) => (props.align ? props.align : '')};
   margin: 0;
-  line-height: ${(props: font) => (props.align ? props.lineHeight : '')};
+  line-height: ${(props: font) => (props.lineHeight ? props.lineHeight : '')};
 `;
 
 export const EvAbleFont = styled.p`

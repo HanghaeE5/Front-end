@@ -1,6 +1,6 @@
 import { AiFillCheckCircle, AiOutlineCheckCircle } from 'react-icons/ai';
 import { VscDebugStackframeDot } from 'react-icons/vsc';
-import { GrTrash } from 'react-icons/gr';
+import { BiTrash } from 'react-icons/bi';
 import { ITodoItem, TodoDoneResponse, TodoEvent } from '../Types/todo';
 import { Typography, Wrapper } from './element';
 import { TodoItemWrapper, TodoLabel } from './styledComponent/TodoPageComponents';
@@ -33,6 +33,7 @@ export const TodoItem = ({
     onSuccess: (data) => {
       refectchTodoList();
       handleDoneTodo(data);
+      console.log(data);
     },
     onError: (error) => {
       console.error(error);
@@ -49,7 +50,7 @@ export const TodoItem = ({
     <>
       <TodoItemWrapper done={todoData.state}>
         <TodoLabel done={todoData.state}>{todoData.boardId ? 'With To Do' : 'My To Do'}</TodoLabel>
-        <>{todoData.state ? <AiFillCheckCircle /> : <AiOutlineCheckCircle onClick={onClickDone} />}</>
+        {todoData.state ? <AiFillCheckCircle /> : <AiOutlineCheckCircle onClick={onClickDone} />}
         <Wrapper isColumn alignItems="start" justifyContent="space-between" height="2.5rem">
           <Typography isBold>{todoData.todoContent}</Typography>
           <Wrapper>
@@ -60,7 +61,7 @@ export const TodoItem = ({
             </Typography>
           </Wrapper>
         </Wrapper>
-        <GrTrash onClick={() => onClickDeleteButton(todoData)} />
+        <BiTrash onClick={() => onClickDeleteButton(todoData)} />
       </TodoItemWrapper>
     </>
   );

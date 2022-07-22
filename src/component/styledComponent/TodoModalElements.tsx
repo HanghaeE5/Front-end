@@ -1,16 +1,16 @@
 import styled, { keyframes } from 'styled-components';
 import { Button, Wrapper } from '../element';
-
+import { BsX } from 'react-icons/bs';
 export const ModalContainer = styled.div`
-  position: absolute;
-  top: 0;
+  position: fixed;
+  bottom: 3.375rem;
   width: 100%;
   height: 100%;
+  max-width: ${({ theme }) => theme.maxWidth};
 `;
 
 export const Background = styled.div`
-  background-color: black;
-  opacity: 0.65;
+  background-color: rgba(18, 18, 18, 0.65);
   width: 100%;
   height: 100%;
   position: absolute;
@@ -29,7 +29,7 @@ export const Slide = keyframes`
 `;
 
 export const TodoContents = styled.div`
-  height: 39rem;
+  padding-bottom: 2rem;
   bottom: 0;
   width: 100%;
   position: absolute;
@@ -85,6 +85,9 @@ export const CategorySection = styled(Wrapper)`
     overflow-x: scroll;
     display: flex;
     padding: 0.5rem;
+    ::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera*/
+    }
   }
 `;
 export const CalendarWrapper = styled.div`
@@ -98,4 +101,8 @@ export const CalendarWrapper = styled.div`
 export const StickyButton = styled(Button)`
   position: absolute;
   bottom: 0;
+`;
+
+export const CloseButton = styled(BsX)`
+  cursor: pointer;
 `;

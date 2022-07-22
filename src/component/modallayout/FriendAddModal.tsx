@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { editNicknameModalState, friendAddModalState, userNicknameState } from '../../recoil/store';
+import { modalGatherState } from '../../recoil/store';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 import { friendApi, registerApi, userApi } from '../../api/callApi';
@@ -144,8 +144,8 @@ const BtnAble = styled.button`
 `;
 
 const FriendAddModal = () => {
-  const [modalFriendAdd, setModalFriendAdd] = useRecoilState(friendAddModalState);
   const [friendnickname, setFriendNickname] = useState<string>('');
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
 
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFriendNickname(e.target.value);
@@ -174,8 +174,8 @@ const FriendAddModal = () => {
 
   return (
     <>
-      {modalFriendAdd && (
-        <ModalBackground onClick={() => setModalFriendAdd(false)}>
+      {modalGather.friendAddModal && (
+        <ModalBackground onClick={() => setmodalGather({ ...modalGather, friendAddModal: false })}>
           <BoxWrap
             onClick={(e) => {
               e.stopPropagation();

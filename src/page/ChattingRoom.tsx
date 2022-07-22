@@ -7,11 +7,12 @@ import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import { useQuery, useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
-import { chatListState, userNicknameState } from '../recoil/store';
+import { userInfoState } from '../recoil/store';
 import { userApi } from '../api/callApi';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import setupInterceptorsTo from '../api/Interceptiors';
 import { EvBox, EvKoreanFont } from '../component/element/BoxStyle';
+import { chatList } from '../Types/chat';
 
 const ContentWrapper = styled.div`
   /* background-color: seagreen; */
@@ -207,10 +208,9 @@ const MessageSendBox = styled.div`
 
 export const ChattingRoom = () => {
   const nav = useNavigate();
-  const [userNickname, setUserNickname] = useRecoilState(userNicknameState);
-
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [myText, setmyText] = useState<string>('');
-  const [chatData, setchatData] = useRecoilState(chatListState);
+  const [chatData, setchatData] = useState<chatList>([]);
 
   const onChangeMyText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setmyText(e.target.value);
@@ -256,16 +256,17 @@ export const ChattingRoom = () => {
     // },
   });
 
+  //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
-      // console.log(data);
-      setUserNickname(data.data.nick);
+      setUserInfoData(data.data);
     },
-    onError: () => {
-      // nav('/login');
+    onError: (error: AxiosError) => {
+      if (error.message === 'Request failed with status code 404') {
+        // nav(-1);
+      }
     },
   });
-  // console.log(userInformData);
 
   //시간 변환
   function messageTime(msgtime: string) {
@@ -325,7 +326,7 @@ export const ChattingRoom = () => {
           const data = {
             type: 'QUIT',
             roomId: roomIdName,
-            sender: userNickname,
+            sender: userInfoData.nick,
             message: myText,
           };
           ws.disconnect(
@@ -369,7 +370,7 @@ export const ChattingRoom = () => {
       const data = {
         type: 'TALK',
         roomId: roomIdName,
-        sender: userNickname,
+        sender: userInfoData.nick,
         message: myText,
       };
       // 빈문자열이면 리턴
@@ -410,7 +411,7 @@ export const ChattingRoom = () => {
                   </InformTextBox>
                 </InformChatBox>
               );
-            } else if (chat.sender !== userNickname) {
+            } else if (chat.sender !== userInfoData.nick) {
               return (
                 <YourChatBox key={chatindex}>
                   <RowChattingBox

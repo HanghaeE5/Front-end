@@ -1,13 +1,11 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  editPasswordModalState,
-  profileMenuModalState,
-  userJoinTypeState,
-  userNicknameState,
-} from '../../recoil/store';
+import { modalGatherState, userInfoState } from '../../recoil/store';
 import { useNavigate } from 'react-router';
 import { EvBox, EvKoreanFont } from '../element/BoxStyle';
+import { useMutation } from 'react-query';
+import { userApi } from '../../api/callApi';
+import { useEffect, useState } from 'react';
 
 const Slide = keyframes`
     0% {
@@ -34,14 +32,14 @@ const ModalBackground = styled.div`
   z-index: 10;
 `;
 
-const BoxWrap = styled.div`
+const BoxWrap = styled.div<{ isWithBanner?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 10.625rem;
   border-radius: 12px;
-  top: 3.3rem;
+  top: ${({ isWithBanner }) => (isWithBanner ? '6rem' : ' 3.3rem')};
   right: 5.3%;
   border: 1px solid #dddddd;
   position: absolute;
@@ -62,37 +60,55 @@ const RowBox = styled.div`
   /* background-color: blue; */
 `;
 
-const ProfileMenuModal = () => {
-  const [modalProfileMenu, setModalProfileMenu] = useRecoilState(profileMenuModalState);
-  const userJoinType = useRecoilValue(userJoinTypeState);
-  const userNickname = useRecoilValue(userNicknameState);
+const ProfileMenuModal = ({ isWithBanner }: { isWithBanner?: boolean }) => {
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
+  const [userJoinType, setUserJoinType] = useState<boolean>();
+
   const nav = useNavigate();
+
+  //회원가입 유형 파악 API
+  const joinTypeData = useMutation(() => userApi.joinTypeApi(), {
+    onSuccess: (data) => {
+      setUserJoinType(data.data.socialUser);
+    },
+  });
+
+  const joinType = () => {
+    joinTypeData.mutate();
+  };
+
+  useEffect(() => {
+    joinType();
+  }, [userJoinType]);
+
   return (
     <>
-      {modalProfileMenu && (
-        <ModalBackground onClick={() => setModalProfileMenu(false)}>
+      {modalGather.profileMenuModal && (
+        <ModalBackground onClick={() => setmodalGather({ ...modalGather, profileMenuModal: false })}>
           <BoxWrap
+            isWithBanner={isWithBanner}
             style={{ borderRadius: '12px' }}
             onClick={(e) => {
               e.stopPropagation();
             }}
           >
-            {!userNickname && (
+            {!userInfoData.nick && (
               <RowBox
                 onClick={() => {
-                  setModalProfileMenu(false);
+                  setmodalGather({ ...modalGather, profileMenuModal: false });
                   nav('/login');
                 }}
               >
                 Log(삭제예정)
               </RowBox>
             )}
-            {userNickname && (
+            {userInfoData.nick && (
               <RowBox
                 onClick={() => {
                   localStorage.clear();
                   alert('로그아웃되었습니다');
-                  setModalProfileMenu(false);
+                  setmodalGather({ ...modalGather, profileMenuModal: false });
                   nav('/login');
                 }}
               >
@@ -106,7 +122,7 @@ const ProfileMenuModal = () => {
               <RowBox
                 style={{ borderTop: '1px solid #DDDDDD' }}
                 onClick={() => {
-                  setModalProfileMenu(false);
+                  setmodalGather({ ...modalGather, profileMenuModal: false });
                   nav('/editpassword');
                 }}
               >

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { registerApi } from '../api/callApi';
+import { registerApi, userApi } from '../api/callApi';
 import { AxiosError } from 'axios';
-import { accessTokenState, popNotiState, refreshTokenState } from '../recoil/store';
+import { accessTokenState, popNotiState, userInfoState } from '../recoil/store';
 import { PopNoti } from '../component/element/PopNoti';
 import { EvBox, EvBtnAble, EvInputInfo, EvKoreanFont, EvCheckFont, EvAbleFont } from '../component/element/BoxStyle';
 
@@ -39,15 +39,12 @@ const ContentContainer = styled.div`
 `;
 
 export const SignUpSNS = () => {
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [nickname, setNickname] = useState<string>('');
   const [popNoti, setPopNoti] = useRecoilState(popNotiState);
-  const [informType, setInformType] = useState<ConfirmType | undefined>(undefined);
-  const [informMsg, setInformMsg] = useState<string | undefined>('');
-  const [quitOk, setQuitOk] = useState<boolean>(false);
   const [check, setCheck] = useState<boolean>(false);
-  const [nickConfirm, setNickConfirm] = useState<boolean>(false);
   const accessLoginToken = useSetRecoilState(accessTokenState);
-  const refreshLoginToken = useSetRecoilState(refreshTokenState);
+
   const localToken = localStorage.getItem('accessToken');
 
   type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
@@ -63,48 +60,22 @@ export const SignUpSNS = () => {
     setNickname(e.target.value);
   };
 
-  //소셜로그인 닉네임 저장 API
-  const joinSocialApiData = useMutation((nick: { nick: string }) => registerApi.joinSocialApi(nick), {
-    onSuccess: (token) => {
-      localStorage.clear();
-      accessLoginToken(token.headers.authorization);
-      refreshLoginToken(token.headers.refresh);
-      setQuitOk(true);
-      setPopNoti(true);
-      setInformType('success');
-      setInformMsg(`${nickname}님 반가워요!`);
-    },
-    onError: (error: AxiosError<{ msg: string }>) => {
-      if (error.message === 'Request failed with status code 401') {
-        setTimeout(() => joinSocial({ nick: nickname }), 200);
-      } else {
-        setPopNoti(true);
-        setQuitOk(false);
-        setInformType('warning');
-        setInformMsg(error.response?.data.msg);
-      }
-    },
-  });
-
-  const joinSocial = (nick: { nick: string }) => {
-    joinSocialApiData.mutate(nick);
-  };
-
   //닉네임 중복확인 API
   const nickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
     onSuccess: () => {
-      setPopNoti(true);
-      setQuitOk(false);
-      setInformType('success');
-      setInformMsg(`${nickname}으로 닉네임이 설정되었습니다.`);
-      setNickConfirm(true);
+      setPopNoti({
+        openPopNoti: true,
+        informType: 'success',
+        informMsg: `${nickname}으로 닉네임이 설정되었습니다.`,
+      });
       setCheck(true);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      setPopNoti(true);
-      setQuitOk(false);
-      setInformType('warning');
-      setInformMsg(error.response?.data.msg);
+      setPopNoti({
+        openPopNoti: true,
+        informType: 'warning',
+        informMsg: error.response?.data.msg,
+      });
       setCheck(false);
     },
   });
@@ -113,17 +84,58 @@ export const SignUpSNS = () => {
     nickCertificationData.mutate(nick);
   };
 
+  //소셜로그인 닉네임 저장 API
+  const joinSocialApiData = useMutation((nick: { nick: string }) => registerApi.joinSocialApi(nick), {
+    onSuccess: (token) => {
+      localStorage.clear();
+      accessLoginToken(token.headers.authorization);
+      setPopNoti({
+        openPopNoti: true,
+        informType: 'success',
+        informMsg: `${nickname}님 반가워요!`,
+      });
+    },
+    onError: (error: AxiosError<{ msg: string }>) => {
+      if (error.message === 'Request failed with status code 401') {
+        setTimeout(() => joinSocial({ nick: nickname }), 200);
+      } else {
+        setPopNoti({
+          openPopNoti: true,
+          informType: 'warning',
+          informMsg: error.response?.data.msg,
+        });
+      }
+    },
+  });
+
+  const joinSocial = (nick: { nick: string }) => {
+    joinSocialApiData.mutate(nick);
+  };
+
+  //유저정보 가져오기 API
+  const userInformData = useQuery('userData', userApi.userInformApi, {
+    onSuccess: (data) => {
+      setUserInfoData(data.data);
+    },
+    onError: (error: AxiosError) => {
+      if (error.message === 'Request failed with status code 404') {
+        // nav(-1);
+      }
+    },
+  });
+
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
-    if (localToken) {
-      setPopNoti(true);
-      setQuitOk(true);
-      setInformType('warning');
-      setInformMsg('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
 
-      nav('/');
+    if (userInformData.status === 'success' && userInformData.data.data.nick) {
+      setPopNoti({
+        openPopNoti: true,
+        informType: 'warning',
+        informMsg: '🙅🏻‍♀️회원가입이 완료되었습니다. 닉네임 변경을 이용해주세요🙅🏻‍♀️',
+        btnNav: '/',
+      });
     }
-  }, []);
+  }, [userInformData.status]);
 
   return (
     <RegisterContainer>
@@ -187,7 +199,7 @@ export const SignUpSNS = () => {
                     const goNickCertification = {
                       nick: nickname,
                     };
-                    nickCertification(goNickCertification);
+                    // nickCertification(goNickCertification);
                   }
                 : () => {
                     null;
@@ -241,19 +253,6 @@ export const SignUpSNS = () => {
             회원가입
           </EvAbleFont>
         </EvBtnAble>
-        <PopNoti
-          confirmType={informType}
-          visible={popNoti}
-          msg={informMsg}
-          quitOk={quitOk}
-          oneButton={{
-            nav: '/choosecharacter',
-            text: '확인',
-            onClick: () => {
-              setPopNoti(false);
-            },
-          }}
-        />
       </ContentContainer>
     </RegisterContainer>
   );

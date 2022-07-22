@@ -11,7 +11,6 @@ const TextElement = styled.input<StyleProps>`
   ::placeholder {
     color: ${(props) => props.theme.color.grayMedium};
     font-size: ${({ inputSize }) => (inputSize === 'small' ? '0.938rem' : '1.063rem')};
-    font-family: NotoLight;
   }
 
   :focus {
