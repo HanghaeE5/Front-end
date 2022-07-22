@@ -7,7 +7,23 @@ import { registerApi, userApi } from '../api/callApi';
 import { AxiosError } from 'axios';
 import { accessTokenState, popNotiState, userInfoState } from '../recoil/store';
 import { PopNoti } from '../component/element/PopNoti';
-import { EvBox, EvBtnAble, EvInputInfo, EvKoreanFont, EvCheckFont, EvAbleFont } from '../component/element/BoxStyle';
+import {
+  EvBox,
+  EvBtnAble,
+  EvInputInfo,
+  EvKoreanFont,
+  EvCheckFont,
+  EvAbleFont,
+  EvLogoBox,
+  EvRowBox,
+  EvColumnBox,
+  EvFontBox,
+  EvHelfInputInfo,
+  EvCheckHelfBox,
+  EvLineBox,
+} from '../component/element/BoxStyle';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
+import { PATH } from '../route/routeList';
 
 const RegisterContainer = styled.div`
   width: 100%;
@@ -60,22 +76,19 @@ export const SignUpSNS = () => {
     setNickname(e.target.value);
   };
 
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
+
   //닉네임 중복확인 API
   const nickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
     onSuccess: () => {
-      setPopNoti({
-        openPopNoti: true,
-        informType: 'success',
-        informMsg: `${nickname}으로 닉네임이 설정되었습니다.`,
+      openSuccessConfirm({
+        title: `${nickname}으로 닉네임이 설정되었습니다.`,
+        button: { text: '확인', onClick: () => console.log('닉네임설정') },
       });
       setCheck(true);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      setPopNoti({
-        openPopNoti: true,
-        informType: 'warning',
-        informMsg: error.response?.data.msg,
-      });
+      openErrorConfirm({ title: error.response?.data.msg });
       setCheck(false);
     },
   });
@@ -89,10 +102,9 @@ export const SignUpSNS = () => {
     onSuccess: (token) => {
       localStorage.clear();
       accessLoginToken(token.headers.authorization);
-      setPopNoti({
-        openPopNoti: true,
-        informType: 'success',
-        informMsg: `${nickname}님 반가워요!`,
+      openSuccessConfirm({
+        title: `${nickname}님 반가워요!`,
+        button: { text: '확인', onClick: () => nav(PATH.MAIN) },
       });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
@@ -148,71 +160,62 @@ export const SignUpSNS = () => {
           </EvBox>
         </EvBox>
       </HeaderContainer>
-      <ContentContainer>
-        <EvBox width={'10.5rem'} height={1.5} margin={'4.75rem auto 0px auto'} url="url(/assets/TODOWITH.svg)"></EvBox>
 
-        <EvBox width={2.8125} height={1.5} margin={'5rem auto 0.625rem 5.3%'}>
+      <ContentContainer>
+        <EvLogoBox margin={'3.4375rem auto 0 auto'} />
+        <EvFontBox width={2.8125} height={1.5} margin={'4.375rem auto 0.625rem 5.3%'}>
           {nickname && (
             <EvKoreanFont size={1} color="#939393" weight={700}>
               닉네임
             </EvKoreanFont>
           )}
-        </EvBox>
+        </EvFontBox>
 
-        <EvBox direction={'row'} width={'100%'} margin={'0px 0px 0px 0px'}>
-          <EvBox
-            direction={'row'}
-            width={'66.9%'}
-            margin={'auto auto auto 1.25rem'}
-            border="1px solid #dddddd"
-            borderRadius="6px"
-          >
-            <EvInputInfo
+        <EvRowBox width={'89.3%'} margin={'0 auto'}>
+          <EvRowBox width={'75%'} margin={'0 auto 0 0 '} border="1px solid #dddddd" borderRadius="6px">
+            <EvHelfInputInfo
               width={'85%'}
               height={3.75}
-              margin={'0'}
-              helfBorder={true}
+              margin={'0 auto 0 0'}
               type="text"
               placeholder="닉네임    ex) 투두윗3456"
               name="nickname"
               value={nickname}
               onChange={onChangeNickname}
             />
-            <EvBox
+            <EvCheckHelfBox
               width={'15%'}
               height={3.75}
-              margin={'0'}
-              helfBorder={true}
+              margin={'0 0 0 auto'}
               backgroundsize={'1.5rem'}
               url={check ? 'url(/assets/checkyellow.svg)' : 'url(/assets/checkgray.svg)'}
-            ></EvBox>
-          </EvBox>
+            />
+          </EvRowBox>
 
           <EvBtnAble
             isDisable={!checkNickname(nickname)}
-            width={'19.4%'}
+            width={'22.6%'}
             height={3.75}
-            margin={'0px 1.25rem 0px 0px'}
+            margin={'0 0 0 auto'}
             onClick={
               checkNickname(nickname)
                 ? () => {
                     const goNickCertification = {
                       nick: nickname,
                     };
-                    // nickCertification(goNickCertification);
                   }
                 : () => {
                     null;
                   }
             }
           >
-            <EvKoreanFont size={1} color="#939393" weight={500}>
+            <EvAbleFont size={1} color="#939393" weight={500} isDisable={!nickname}>
               {check ? '확인완료' : '중복확인'}
-            </EvKoreanFont>
+            </EvAbleFont>
           </EvBtnAble>
-        </EvBox>
+        </EvRowBox>
 
-        <EvBox isAlignSide={true} width={20} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
+        <EvFontBox isAlignSide={true} width={20} height={1.3125} margin={'0.3125rem auto 0px 5.3%'}>
           {check ? (
             <EvCheckFont size={0.875} color={'blue'}>
               중복되지 않는 새로운 닉네임입니다.
@@ -228,20 +231,15 @@ export const SignUpSNS = () => {
               닉네임은 2-15자의 한글, 영어, 숫자입니다.
             </EvCheckFont>
           )}
-        </EvBox>
+        </EvFontBox>
 
-        <EvBox
-          width={'89.3%'}
-          height={0.0625}
-          margin={'5.125rem 1.25rem 0px 1.25rem'}
-          style={{ backgroundColor: '#989898' }}
-        ></EvBox>
+        <EvLineBox width={'89.3%'} margin={'9rem 1.25rem 0px 1.25rem'} />
 
         <EvBtnAble
           isDisable={!check}
           width={'89.3%'}
           height={3.75}
-          margin={'2.9375rem 1.25rem 0px 1.25rem'}
+          margin={'1.4375rem 1.25rem 0px 1.25rem'}
           onClick={() => {
             const gojoinSocial = {
               nick: nickname,

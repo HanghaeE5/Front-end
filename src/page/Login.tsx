@@ -4,7 +4,6 @@ import { NavigateFunction, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { registerApi } from '../api/callApi';
-import { FieldValues } from 'react-hook-form';
 import { accessTokenState, popNotiState } from '../recoil/store';
 import {
   EvAbleFont,
@@ -15,6 +14,8 @@ import {
   EvImgBox,
   EvInputInfo,
   EvKoreanFont,
+  EvLogoBox,
+  EvRowBox,
 } from '../component/element/BoxStyle';
 import { AxiosError } from 'axios';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
@@ -50,18 +51,17 @@ export const Login = () => {
 
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
-  const loginUserData = useMutation((data: FieldValues) => registerApi.loginApi(data), {
+  const loginUserData = useMutation((data: { email: string; password: string }) => registerApi.loginApi(data), {
     onSuccess: (token) => {
       console.log(token);
       openSuccessConfirm({ title: '로그인 성공🙂', button: { text: '확인', onClick: () => nav(PATH.MAIN) } });
-
       setAccessLoginToken(token.headers.authorization);
-      console.log(accessLoginToken);
+      // console.log(accessLoginToken);
     },
     onError: (error: AxiosError<{ msg: string }>) => openErrorConfirm({ title: error.response?.data.msg }),
   });
 
-  const Login = (data: FieldValues) => {
+  const Login = (data: { email: string; password: string }) => {
     loginUserData.mutate(data);
   };
 
@@ -87,12 +87,7 @@ export const Login = () => {
   return (
     <RegisterContainer>
       <ContentContainer>
-        <EvImgBox
-          width={'7rem'}
-          height={3.4375}
-          margin={'7.1875rem auto 2.5rem auto'}
-          url="url(/assets/투두윗원형로고.svg)"
-        />
+        <EvLogoBox margin={'7.1875rem auto 2.5rem auto'} />
 
         {/* 이메일 */}
         <EvFontBox width={'2.8125rem'} height={1.5} margin={'0px auto 0.625rem 5.3%'}>
@@ -111,7 +106,7 @@ export const Login = () => {
           name="email"
           value={email}
           onChange={onChange1}
-        ></EvInputInfo>
+        />
 
         {/* 비밀번호 */}
         <EvFontBox width={3.6875} height={1.5} margin={'1.4375rem auto 0.625rem 5.3%'}>
@@ -132,11 +127,12 @@ export const Login = () => {
           onKeyUp={keyUpEvent}
         />
 
+        {/* 로그인버튼 */}
         <EvBtnAble
           isDisable={!email || !password}
           width={'88.5%'}
           height={3.75}
-          margin={'1.4375rem 1.25rem 1.125rem 1.25rem'}
+          margin={'1.4375rem auto'}
           onClick={
             email && password
               ? () => {
@@ -151,33 +147,12 @@ export const Login = () => {
                 }
           }
         >
-          <EvAbleFont size={1.0625} weight={700} color="white" isDisable={!email || !password}>
+          <EvAbleFont size={1.0625} weight={700} isDisable={!email || !password}>
             로그인
           </EvAbleFont>
         </EvBtnAble>
 
-        <EvBox direction={'row'} width="100%" margin={'0 0 1.75rem 0'}>
-          <EvBox
-            width={'1.25rem'}
-            height={1.25}
-            margin={'0 0.5625rem 0 8.8%'}
-            style={{
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-              backgroundSize: '1.5rem',
-              backgroundImage: autoLogin ? 'url(/assets/checkgray.svg)' : 'url(/assets/checkyellow.svg)',
-            }}
-            onClick={() => {
-              setAutoLogin(!autoLogin);
-            }}
-          ></EvBox>
-          <EvBox width={4.25} height={1.3125} margin={'0px auto 0px 0px'}>
-            <EvKoreanFont size={0.874} weight={700} color="#939393">
-              자동 로그인
-            </EvKoreanFont>
-          </EvBox>
-        </EvBox>
-
+        {/* 회원가입버튼 */}
         <EvBtn
           width={'88.5%'}
           height={3.75}
@@ -192,17 +167,18 @@ export const Login = () => {
           </EvKoreanFont>
         </EvBtn>
 
-        <EvBox direction={'row'} margin={'1.6rem 0px 0 0px'} width={'100%'}>
+        <EvRowBox margin={'1.6rem 0px 0 0px'} width={'100%'}>
           <hr style={{ width: '40%' }} />
-          <EvBox width={2.6875} height={1.5} margin={'0px 0.625rem 0px 0.625rem'}>
+          <EvFontBox width={2.6875} height={1.5} margin={'0px 0.625rem 0px 0.625rem'}>
             <EvKoreanFont size={0.75} color="#989898">
               또는
             </EvKoreanFont>
-          </EvBox>
+          </EvFontBox>
           <hr style={{ width: '40%' }} />
-        </EvBox>
-        <EvBox direction={'row'} margin={'1.25rem 0 0 0'} width={'100%'} columnGap={'3rem'}>
-          <EvBox
+        </EvRowBox>
+
+        <EvRowBox margin={'1.25rem 0 0 0'} width={'100%'} style={{ columnGap: '3rem' }}>
+          <EvImgBox
             width={'3.75rem'}
             height={3.75}
             isCursor={true}
@@ -213,9 +189,9 @@ export const Login = () => {
                 'https://todowith.shop/oauth2/authorization/naver?redirect_uri=https://www.todowith.co.kr',
               );
             }}
-          ></EvBox>
+          />
 
-          <EvBox
+          <EvImgBox
             width={'3.75rem'}
             height={3.75}
             isCursor={true}
@@ -225,8 +201,8 @@ export const Login = () => {
                 'https://todowith.shop/oauth2/authorization/kakao?redirect_uri=http://localhost:3000',
               );
             }}
-          ></EvBox>
-          <EvBox
+          />
+          <EvImgBox
             width={'3.75rem'}
             height={3.75}
             isCursor={true}
@@ -236,8 +212,8 @@ export const Login = () => {
                 'https://todowith.shop/oauth2/authorization/google?redirect_uri=https://www.todowith.co.kr',
               );
             }}
-          ></EvBox>
-        </EvBox>
+          />
+        </EvRowBox>
       </ContentContainer>
     </RegisterContainer>
   );

@@ -223,8 +223,8 @@ const EditNicknameModal = () => {
                 </KoreanFont>
               </Box>
               <Box
-                width={'1.3rem'}
-                height={1.3}
+                width={'1rem'}
+                height={1}
                 margin={'auto 0rem auto auto'}
                 style={{
                   backgroundRepeat: 'no-repeat',
@@ -259,7 +259,7 @@ const EditNicknameModal = () => {
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
                     backgroundSize: '24px',
-                    backgroundImage: nicknameOk ? 'url(/assets/checkfull.png)' : 'url(/assets/checkempty.svg)',
+                    backgroundImage: nicknameOk ? 'url(/assets/checkyellow.svg)' : 'url(/assets/checkgray.svg)',
                   }}
                   onClick={() => {
                     setmodalGather({ ...modalGather, editNicknameModal: false });

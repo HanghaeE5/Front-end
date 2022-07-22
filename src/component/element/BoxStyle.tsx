@@ -85,8 +85,8 @@ export const EvCheckHelfBox = styled.div`
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   border-radius: 6px;
-  border-top-right-radius: 1px solid #dddddd;
-  border-bottom-right-radius: 1px solid #dddddd;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
   cursor: ${(props: box) => (props.isCursor ? 'pointer' : '')};
   background-image: ${(props: box) => props.url};
   background-repeat: no-repeat;
@@ -122,10 +122,21 @@ export const EvImgBox = styled.div`
   background-color: ${(props: box) => (props.backgroundColor ? props.backgroundColor : '')};
 `;
 
+export const EvLogoBox = styled(EvImgBox)`
+  width: 7rem;
+  height: 3.4375rem;
+  background-image: url(/assets/투두윗원형로고.svg);
+`;
+
+export const EvLineBox = styled(EvColumnBox)`
+  height: 0.0625rem;
+  background-color: #989898;
+`;
+
 export const EvInputInfo = styled.input`
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background-color: #ffffff;
   border: ${(props: box) => (props.border ? props.border : '1px solid #DDDDDD')};
   border-radius: 6px;
   padding: ${(props: box) => (props.isPadding ? props.isPadding : '0 0 0 10px')};
@@ -141,10 +152,11 @@ export const EvHelfInputInfo = styled.input`
   display: flex;
   flex-direction: column;
   background: #ffffff;
-  border-top-left-radius: 1px solid #dddddd;
-  border-bottom-left-radius: 1px solid #dddddd;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
   border-radius: 6px;
   padding: 0 0 0 10px;
+  border: none;
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
@@ -167,7 +179,7 @@ export const EvBtn = styled.button`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: ${(props: btnable) => (props.border ? props.border : '1px solid #dddddd')};
+  border: ${(props: btnable) => (props.border ? props.border : '1px solid #989898')};
   border-radius: 6px;
   width: ${(props: btnable) => props.width};
   height: ${(props: btnable) => props.height}rem;
@@ -181,7 +193,7 @@ export const EvBtnAble = styled.button`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: ${(props: btnable) => (props.isDisable ? '1px solid #989898' : 'none')};
+  border: ${(props: btnable) => (props.isDisable ? '1px solid #DDDDDD' : 'none')};
   border-radius: 6px;
   width: ${(props: btnable) => props.width};
   height: ${(props: btnable) => props.height}rem;
