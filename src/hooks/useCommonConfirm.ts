@@ -1,14 +1,15 @@
+import { commonPopConfirm } from './../recoil/store';
 import { useRecoilState } from 'recoil';
 import { PopConfirmProps } from '../component/element';
 import { commonPopConfirmState } from '../recoil/store';
 
 export const useCommonConfirm = () => {
-  const [confirmState, setConfirmState] = useRecoilState(commonPopConfirmState);
+  const [confirmState, setConfirmState] = useRecoilState(commonPopConfirm);
 
   const openSuccessConfirm = ({ title, content, button }: Partial<PopConfirmProps>) => {
     setConfirmState({
       visible: true,
-      type: 'success',
+      iconType: 'success',
       title: title || '성공했습니다.',
       content: content,
       button: {
@@ -24,7 +25,7 @@ export const useCommonConfirm = () => {
   const openErrorConfirm = ({ title, content, button }: Partial<PopConfirmProps>) => {
     setConfirmState({
       visible: true,
-      type: 'error',
+      iconType: 'warning',
       title: title || '실패했습니다.',
       content: content || '다시 시도해주세요',
       button: {
