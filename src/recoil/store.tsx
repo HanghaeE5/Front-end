@@ -62,25 +62,3 @@ export const commonPopConfirmState = atom<PopConfirmProps & { visible: boolean }
     button: { text: '확인', onClick: () => console.log('확인') },
   },
 });
-
-export const commonPopConfirmState = atom<PopConfirmProps & { visible: boolean }>({
-  key: atomKey.COMMON_POP_CONFIRM,
-  default: {
-    visible: false,
-    iconType: 'success',
-    title: '',
-    content: '',
-    button: { text: '확인', onClick: () => console.log('확인') },
-  },
-});
-
-export const commonPopConfirmState = atom<PopConfirmProps & { visible: boolean }>({
-  key: atomKey.COMMON_POP_CONFIRM,
-  default: {
-    visible: false,
-    iconType: 'success',
-    title: '',
-    content: '',
-    button: { text: '확인', onClick: () => console.log('확인') },
-  },
-});
