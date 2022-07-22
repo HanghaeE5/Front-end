@@ -8,7 +8,7 @@ import { ButtonFloating, Img, Select, SelectOption, TextInput, Typography, Wrapp
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
-import { ContentWrapper, ScrollWrapper } from '../component/styledComponent/CommunityElements';
+import { ContentWrapper, ScrollWrapper, SpinnerWrapper } from '../component/styledComponent/CommunityElements';
 import { PATH } from '../route/routeList';
 import { Board, CommunitySearchControl, FilterType, KeywordFilter } from '../Types/community';
 import { removeListDuplicate } from '../utils/removeListDuplicate';
@@ -133,7 +133,7 @@ export const CommunityPage = () => {
                     {post.category === 'CHALLENGE' && <PostCard.Gather>{post.participatingCount}</PostCard.Gather>}
                   </PostCard>
                 ))}
-                {list.length ? <div ref={bottomRef} /> : ''}
+                {list.length ? <SpinnerWrapper ref={bottomRef}>df</SpinnerWrapper> : ''}
               </ScrollWrapper>
             )}
           </section>

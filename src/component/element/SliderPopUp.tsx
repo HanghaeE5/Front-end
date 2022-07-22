@@ -12,14 +12,13 @@ export const ModalContainer = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 10;
-  max-width: ${({ theme }) => theme.maxWidth};
+  // max-width: ${({ theme }) => theme.maxWidth};
 `;
 
 export const Background = styled.div`
   background-color: black;
   opacity: 0.65;
   width: 100%;
-
   height: 100%;
   position: absolute;
   top: 0;

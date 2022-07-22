@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 import { BottomNavLayout } from './BottomNavBar';
-import { TopNavLayout } from './TopNavBar';
+import { TopNavBar } from './TopNavBar';
 
 const LayoutContainer = styled.div`
   display: flex;
@@ -29,7 +29,7 @@ const BodyWrapper = styled.div`
 export const NavLayout = ({ children }: PropsWithChildren) => {
   return (
     <LayoutContainer>
-      <TopNavLayout />
+      <TopNavBar />
       <BodyWrapper>{children}</BodyWrapper>
       <BottomNavLayout />
     </LayoutContainer>

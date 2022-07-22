@@ -36,11 +36,12 @@ import { AxiosError } from 'axios';
 import LevelUpModal from '../component/modallayout/LevelUpModal';
 import StepUpModal from '../component/modallayout/StepUpModal';
 import ExpBar from '../component/element/ExpBar';
-import { TopNavLayout } from '../component/layout/TopNavBar';
+import { TopNavBar } from '../component/layout/TopNavBar';
 import { BottomNavLayout } from '../component/layout/BottomNavBar';
 
 const MainPageWrapper = styled(Wrapper)`
   max-width: 768px;
+  position: relative;
 `;
 
 const MainContainer = styled.div`
@@ -206,7 +207,7 @@ export const Main = () => {
         </Typography>
       </EventWrapper>
 
-      <TopNavLayout />
+      <TopNavBar isWithBanner />
       <MainContainer>
         <ContentContainer>
           <EvBox direction="row" margin="1.875rem 0 0 0 " height={4.75}>

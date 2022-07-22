@@ -17,7 +17,8 @@ import {
   EvKoreanFont,
 } from '../component/element/BoxStyle';
 import { AxiosError } from 'axios';
-import { ConfirmType, PopNoti } from '../component/element/PopNoti';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
+import { PATH } from '../route/routeList';
 
 const RegisterContainer = styled.div`
   width: 100%;
@@ -42,31 +43,22 @@ export const Login = () => {
   const nav = useNavigate();
   const localToken = localStorage.getItem('recoil-persist');
   const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
-  // const refreshLoginToken = useSetRecoilState(refreshTokenState);
+
   const [email, setNameText] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [autoLogin, setAutoLogin] = useState<boolean>(false);
-  const [popNoti, setPopNoti] = useRecoilState(popNotiState);
+
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   const loginUserData = useMutation((data: FieldValues) => registerApi.loginApi(data), {
     onSuccess: (token) => {
       console.log(token);
-      setPopNoti({
-        openPopNoti: true,
-        informType: 'success',
-        informMsg: '로그인 성공🙂',
-        btnNav: '/',
-      });
+      openSuccessConfirm({ title: '로그인 성공🙂', button: { text: '확인', onClick: () => nav(PATH.MAIN) } });
+
       setAccessLoginToken(token.headers.authorization);
       console.log(accessLoginToken);
     },
-    onError: (error: AxiosError<{ msg: string }>) => {
-      setPopNoti({
-        openPopNoti: true,
-        informType: 'warning',
-        informMsg: error.response?.data.msg,
-      });
-    },
+    onError: (error: AxiosError<{ msg: string }>) => openErrorConfirm({ title: error.response?.data.msg }),
   });
 
   const Login = (data: FieldValues) => {
@@ -89,12 +81,7 @@ export const Login = () => {
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
     if (localToken) {
-      setPopNoti({
-        openPopNoti: true,
-        informType: 'warning',
-        informMsg: '🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️',
-        btnNav: '-1',
-      });
+      openSuccessConfirm({ title: '🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️', button: { text: '확인', onClick: () => nav(-1) } });
     }
   }, [localToken]);
   return (

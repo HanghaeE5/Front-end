@@ -6,6 +6,7 @@ export const ModalContainer = styled.div`
   bottom: 3.375rem;
   width: 100%;
   height: 100%;
+  max-width: ${({ theme }) => theme.maxWidth};
 `;
 
 export const Background = styled.div`

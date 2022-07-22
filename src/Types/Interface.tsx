@@ -3,3 +3,9 @@ export interface TokenList {
   sub: string;
   nick: string;
 }
+
+export interface ErrorResponse {
+  errorCode: string;
+  httpStatu: string;
+  msg: string;
+}
