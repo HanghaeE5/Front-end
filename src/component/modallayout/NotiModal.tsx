@@ -1,6 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { modalGatherState } from '../../recoil/store';
+import { EvColumnBox, EvKoreanFont, EvRowBox } from '../element/BoxStyle';
 
 const Slide = keyframes`
     0% {
@@ -36,10 +37,9 @@ const BoxWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
+  width: 89%;
+  height: 54%;
+  border-radius: 12px;
   background-color: #ffffff;
   animation: ${Slide} 0.6s ease;
 `;
@@ -51,14 +51,32 @@ const NotiModal = () => {
       {modalGather.notiModal && (
         <ModalBackground onClick={() => setmodalGather({ ...modalGather, notiModal: false })}>
           <BoxWrap
-            width={'100%'}
-            height={15}
-            style={{ borderRadius: '20px 20px 0px 0px' }}
             onClick={(e) => {
               e.stopPropagation();
             }}
           >
-            알림
+            <EvRowBox width="92%" height={1.875} margin={'2.5rem 1.25rem 0rem 1.25rem'}>
+              <EvColumnBox width={'3.5rem'} margin={'auto auto auto 0rem'}>
+                <EvKoreanFont size={1} color="rgba(147, 147, 147, 1)">
+                  알림
+                </EvKoreanFont>
+              </EvColumnBox>
+              <EvColumnBox
+                width={'1.3rem'}
+                height={1.3}
+                margin={'auto 0rem auto auto'}
+                style={{
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                  backgroundImage: 'url(/assets/X.svg)',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  setmodalGather({ ...modalGather, explainModal: false });
+                }}
+              ></EvColumnBox>
+            </EvRowBox>
           </BoxWrap>
         </ModalBackground>
       )}

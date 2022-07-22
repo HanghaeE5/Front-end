@@ -1,9 +1,9 @@
 import { useRecoilState } from 'recoil';
 import { PopConfirmProps } from '../component/element';
-import { commonPopConfirm } from '../recoil/store';
+import { commonPopConfirmState } from '../recoil/store';
 
 export const useCommonConfirm = () => {
-  const [confirmState, setConfirmState] = useRecoilState(commonPopConfirm);
+  const [confirmState, setConfirmState] = useRecoilState(commonPopConfirmState);
 
   const openSuccessConfirm = ({ title, content, button }: Partial<PopConfirmProps>) => {
     setConfirmState({

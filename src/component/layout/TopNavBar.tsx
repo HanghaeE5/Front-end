@@ -127,6 +127,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
               profileMenuModal: false,
               friendAddModal: false,
               notiModal: true,
+              explainModal: false,
             });
           }}
         ></Box>

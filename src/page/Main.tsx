@@ -7,9 +7,10 @@ import { ReactComponent as DirectionIcon } from '../asset/icons/direction.svg';
 
 import { accessTokenState, modalGatherState, userInfoState } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
+import EditPhotoModal from '../component/modallayout/EditPhotoModal';
+import ExplainModal from '../component/modallayout/ExplainModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 import { useQuery } from 'react-query';
 import { userApi } from '../api/callApi';
 import { InfoModal } from '../component/InfoModal';
@@ -17,7 +18,16 @@ import { Typography, Wrapper } from '../component/element';
 import { PATH } from '../route/routeList';
 import { NoHeaderPageLayout } from '../component/layout/NoHeaderPageLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { EvBox, EvBtn, EvEnglishFont, EvKoreanFont } from '../component/element/BoxStyle';
+import {
+  EvBox,
+  EvBtn,
+  EvColumnBox,
+  EvEnglishFont,
+  EvFontBox,
+  EvImgBox,
+  EvKoreanFont,
+  EvRowBox,
+} from '../component/element/BoxStyle';
 import { ReactComponent as Excercise } from '../asset/icons/todoIcon/icon_exercise.svg';
 import { ReactComponent as PromiseIcon } from '../asset/icons/todoIcon/icon_promise.svg';
 import { ReactComponent as Shopping } from '../asset/icons/todoIcon/icon_shopping.svg';
@@ -36,6 +46,7 @@ const MainPageWrapper = styled(Wrapper)`
 
 const MainContainer = styled.div`
   max-width: 768px;
+  width: 100%;
   height: 100%;
   background: #ffe074; /* fallback for old browsers */
   background: -webkit-linear-gradient(to bottom, #ffffff 25%, #ffe074); /* Chrome 10-25, Safari 5.1-6 */
@@ -91,28 +102,45 @@ const Box = styled.div`
 const ToDoBox = styled.div`
   display: flex;
   width: 89.3%;
-  max-height: 6.1875rem;
   margin: 0.375rem 5.3% 0 5.3%;
   flex-direction: column;
   align-items: center;
   overflow-x: hidden;
-  overflow-y: scroll;
   padding: 1rem 0;
   gap: 0.7rem;
   background-color: #ffffff;
   border-radius: 6px;
-  //스크롤바 없애기
-  ::-webkit-scrollbar {
-    /* display: none; */
-  }
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
   background-color: #ffffff;
 `;
+
 const EventWrapper = styled(Wrapper)`
   cursor: pointer;
 `;
+
+export const BadgeBox = styled(EvColumnBox)`
+  background-color: #ffffff;
+  width: 4.875rem;
+  height: 7.9375rem;
+  box-shadow: 0px 2px 8px rgba(235, 197, 0, 0.5);
+  border-radius: 6px;
+`;
+
+export const BadgeImgBox = styled(EvImgBox)`
+  width: 3.75rem;
+  height: 3.75rem;
+`;
+
+export const TodoNumberBox = styled(EvColumnBox)`
+  background: #ffd600;
+  border-radius: 100px;
+  width: 3.125rem;
+  height: 1.375rem;
+  margin: 0 auto 0.875rem auto;
+`;
+
 export const Main = () => {
   // const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
@@ -182,10 +210,10 @@ export const Main = () => {
       <TopNavBar isWithBanner />
       <MainContainer>
         <ContentContainer>
-          <EvBox direction="row" margin="3rem 0 0 0 " height={4.75}>
+          <EvBox direction="row" margin="1.875rem 0 0 0 " height={4.75}>
             <EvBox
-              width={'4.75rem'}
-              height={4.75}
+              width={'5.625rem'}
+              height={5.625}
               margin={'0 0 0 9rem'}
               url={`url(${userInfoData?.profileImageUrl})`}
               borderRadius="50%"
@@ -203,7 +231,7 @@ export const Main = () => {
             />
           </EvBox>
           <EditPhotoModal />
-          <EvBox direction="row" margin="1rem 0 0 0 " height={2.125} style={{ zIndex: 3 }}>
+          <EvBox direction="row" margin="0.625rem 0 0 0 " height={2.125} style={{ zIndex: 3 }}>
             <EvBox
               width={'9.125rem'}
               height={2.125}
@@ -219,7 +247,7 @@ export const Main = () => {
             <EvBox
               width={'1rem'}
               height={1}
-              margin={'auto 5.375rem auto 0.6875rem'}
+              margin={'auto 5.5rem auto 0rem'}
               url="url(/assets/pencil.svg)"
               isCursor={true}
               onClick={() => {
@@ -232,28 +260,31 @@ export const Main = () => {
           <EvBox
             width={'19.375rem'}
             height={19.375}
-            margin={'auto '}
-            borderRadius="50%"
+            margin={'0.5rem auto 0 auto '}
             url={`url(${userInfoData?.characterInfo.characterUrl})`}
-            backgroundsize="19rem"
           />
 
           <EvBox
             width={'5.25rem'}
             height={0.75}
-            margin={'-4rem 9.0625rem 0 9.0625rem '}
+            margin={'-2.5rem 9.0625rem 0 9.0625rem '}
             url={`url(/assets/shadow.svg)`}
           />
           <EvBox
+            style={{ zIndex: 2 }}
             width={'1.3125rem'}
             height={1.3125}
-            margin={'-1rem 2rem 0 21.0625rem '}
+            margin={'-0.4rem 2rem 0 20.0625rem '}
             url="url(/assets/물음표.svg)"
             isCursor={true}
-            backgroundsize="1.5rem"
+            onClick={() => {
+              setmodalGather({ ...modalGather, explainModal: true });
+            }}
           />
+          <ExplainModal />
 
-          <EvBox width={'22rem'} height={4} margin={'1rem auto 0 auto '}>
+          {/* 나의 보유아이템 */}
+          <EvBox width={'22rem'} height={4} margin={'-0.2rem auto 0 auto '}>
             <EvBox width={'10rem'} height={1.375}>
               <EvKoreanFont size={1.25} color="#000000" weight={500}>
                 {`Lv.${userInfoData?.characterInfo.level}`}
@@ -265,81 +296,125 @@ export const Main = () => {
               </EvKoreanFont>
             </EvBox>
           </EvBox>
-          <EvBox direction={'row'} width={'92%'} height={5.75} columnGap={'10px'} margin={'1.125rem auto 0 auto '}>
-            <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
-              <EvBox
-                width={'4.3125rem'}
-                height={4.3125}
-                margin={'auto 0 0 0'}
-                border={'1px solid #1A1A1A'}
-                borderRadius="50%"
-                backgroundColor="#ffffff"
-              >
-                <EvBox width={'3.5rem'} height={3.5} margin={'auto'}>
-                  <Study />
-                  <EvKoreanFont size={0.875} color="#000000" weight={600}>
-                    {userInfoData?.characterInfo.shopping}
+
+          <EvFontBox width={10.0625} height={1.6875} margin={'2.5rem auto 0 5.3%'}>
+            <EvKoreanFont size={1.125} color="#000000" weight={500}>
+              나의 보유 아이템
+            </EvKoreanFont>
+          </EvFontBox>
+
+          <EvRowBox width={'89.3%'} height={7.9375} margin={'0.625rem auto 0 auto '} style={{ columnGap: '2.1%' }}>
+            <BadgeBox margin="0 auto 0 0">
+              <EvFontBox width={'2.4375rem'} height={1.3125} margin={'0.625rem auto 0 auto'}>
+                <EvKoreanFont size={0.875} weight={700}>
+                  스터디
+                </EvKoreanFont>
+              </EvFontBox>
+              <BadgeImgBox
+                url={
+                  userInfoData?.characterInfo.study >= 30
+                    ? 'url(/assets/mainbadge/badge_study01.svg)'
+                    : userInfoData?.characterInfo.study >= 15
+                    ? 'url(/assets/mainbadge/badge_study02.svg)'
+                    : userInfoData?.characterInfo.study >= 5
+                    ? 'url(/assets/mainbadge/badge_study03.svg)'
+                    : ''
+                }
+              ></BadgeImgBox>
+              <TodoNumberBox>
+                <EvFontBox margin="-0.2rem 0 0 0">
+                  <EvKoreanFont size={1} color="#FFFFFF" weight={700}>
+                    {userInfoData?.characterInfo.study}
                   </EvKoreanFont>
-                </EvBox>
-              </EvBox>
-            </EvBox>
-            <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
-              <EvBox
-                width={'4.3125rem'}
-                height={4.3125}
-                margin={'auto 0 0 0'}
-                border={'1px solid #1A1A1A'}
-                borderRadius="50%"
-                backgroundColor="#ffffff"
-              >
-                <EvBox width={'3.5rem'} height={3.5} margin={'auto'} backgroundColor="#fffff">
-                  <Excercise />
-                  <EvKoreanFont size={0.875} color="#000000" weight={600}>
+                </EvFontBox>
+              </TodoNumberBox>
+            </BadgeBox>
+
+            <BadgeBox margin="auto">
+              <EvFontBox width={'2.4375rem'} height={1.3125} margin={'0.625rem auto 0 auto'}>
+                <EvKoreanFont size={0.875} weight={700}>
+                  운동
+                </EvKoreanFont>
+              </EvFontBox>
+              <BadgeImgBox
+                url={
+                  userInfoData?.characterInfo.exercise >= 30
+                    ? 'url(/assets/mainbadge/badge_exercise01.svg)'
+                    : userInfoData?.characterInfo.exercise >= 15
+                    ? 'url(/assets/mainbadge/badge_exercise02.svg)'
+                    : userInfoData?.characterInfo.exercise >= 5
+                    ? 'url(/assets/mainbadge/badge_exercise03.svg)'
+                    : ''
+                }
+              ></BadgeImgBox>
+              <TodoNumberBox>
+                <EvFontBox margin="-0.2rem 0 0 0">
+                  <EvKoreanFont size={1} color="#FFFFFF" weight={700}>
                     {userInfoData?.characterInfo.exercise}
                   </EvKoreanFont>
-                </EvBox>
-              </EvBox>
-            </EvBox>
-            <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
-              <EvBox
-                width={'4.3125rem'}
-                height={4.3125}
-                margin={'auto 0 0 0'}
-                border={'1px solid #1A1A1A'}
-                borderRadius="50%"
-                backgroundColor="#ffffff"
-              >
-                <EvBox width={'3.5rem'} height={3.5} margin={'auto'}>
-                  <Shopping />
-                  <EvKoreanFont size={0.875} color="#000000" weight={600}>
+                </EvFontBox>
+              </TodoNumberBox>
+            </BadgeBox>
+
+            <BadgeBox margin="auto">
+              <EvFontBox width={'2.4375rem'} height={1.3125} margin={'0.625rem auto 0 auto'}>
+                <EvKoreanFont size={0.875} weight={700}>
+                  쇼핑
+                </EvKoreanFont>
+              </EvFontBox>
+              <BadgeImgBox
+                url={
+                  userInfoData?.characterInfo.shopping >= 30
+                    ? 'url(/assets/mainbadge/badge_shopping01.svg)'
+                    : userInfoData?.characterInfo.shopping >= 15
+                    ? 'url(/assets/mainbadge/badge_shopping02.svg)'
+                    : userInfoData?.characterInfo.shopping >= 5
+                    ? 'url(/assets/mainbadge/badge_shopping03.svg)'
+                    : ''
+                }
+              ></BadgeImgBox>
+              <TodoNumberBox>
+                <EvFontBox margin="-0.2rem 0 0 0">
+                  <EvKoreanFont size={1} color="#FFFFFF" weight={700}>
                     {userInfoData?.characterInfo.shopping}
                   </EvKoreanFont>
-                </EvBox>
-              </EvBox>
-            </EvBox>
-            <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
-              <EvBox
-                width={'4.3125rem'}
-                height={4.3125}
-                margin={'auto 0 0 0'}
-                border={'1px solid #1A1A1A'}
-                borderRadius="50%"
-                backgroundColor="#ffffff"
-              >
-                <EvBox width={'3.5rem'} height={3.5} margin={'auto'} backgroundColor="#fffff">
-                  <PromiseIcon />
-                  <EvKoreanFont size={0.875} color="#000000" weight={600}>
+                </EvFontBox>
+              </TodoNumberBox>
+            </BadgeBox>
+
+            <BadgeBox margin="0 0 0 auto">
+              <EvFontBox width={'2.4375rem'} height={1.3125} margin={'0.625rem auto 0 auto'}>
+                <EvKoreanFont size={0.875} weight={700}>
+                  약속
+                </EvKoreanFont>
+              </EvFontBox>
+              <BadgeImgBox
+                url={
+                  userInfoData?.characterInfo.promise >= 30
+                    ? 'url(/assets/mainbadge/badge_promise01.svg)'
+                    : userInfoData?.characterInfo.promise >= 15
+                    ? 'url(/assets/mainbadge/badge_promise02.svg)'
+                    : userInfoData?.characterInfo.promise >= 5
+                    ? 'url(/assets/mainbadge/badge_promise03.svg)'
+                    : ''
+                }
+              ></BadgeImgBox>
+              <TodoNumberBox>
+                <EvFontBox margin="-0.2rem 0 0 0">
+                  <EvKoreanFont size={1} color="#FFFFFF" weight={700}>
                     {userInfoData?.characterInfo.promise}
                   </EvKoreanFont>
-                </EvBox>
-              </EvBox>
-            </EvBox>
-          </EvBox>
-          <EvBox width={10.0625} height={1.6875} margin={'1.75rem auto 0 8%'}>
-            <EvEnglishFont size={1.25} color="#000000" weight={700}>
-              Today_ to do list
-            </EvEnglishFont>
-          </EvBox>
+                </EvFontBox>
+              </TodoNumberBox>
+            </BadgeBox>
+          </EvRowBox>
+
+          {/* 오늘의 투두리스트 */}
+          <EvFontBox width={10.0625} height={1.6875} margin={'1.75rem auto 0 5.3%'}>
+            <EvKoreanFont size={1.125} color="#000000" weight={500}>
+              오늘의 투 두 리스트
+            </EvKoreanFont>
+          </EvFontBox>
           <ToDoBox>
             {userInfoData?.todayTodoList.map((today) => {
               return (
@@ -357,13 +432,8 @@ export const Main = () => {
             })}
           </ToDoBox>
 
-          <EvBox
-            style={{ top: '10rem', position: 'absolute' }}
-            width={'19.5rem'}
-            height="19.5"
-            // margin="-41.5rem auto auto auto"
-          >
-            <ExpBar exp={userInfoData?.characterInfo.expPercent}></ExpBar>
+          <EvBox style={{ top: '9.6rem', position: 'absolute' }} width={'19.5rem'} height="19.5">
+            <ExpBar exp={userInfoData?.characterInfo.expPercent} ismine={true}></ExpBar>
           </EvBox>
         </ContentContainer>
       </MainContainer>
