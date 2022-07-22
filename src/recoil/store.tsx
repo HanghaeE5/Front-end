@@ -41,5 +41,6 @@ export const modalGatherState = atom<modalGather>({
     editPhotoModal: false,
     profileMenuModal: false,
     friendAddModal: false,
+    explainModal: false,
   },
 });

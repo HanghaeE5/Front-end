@@ -223,14 +223,19 @@ const EditNicknameModal = () => {
                 </KoreanFont>
               </Box>
               <Box
-                width={'1.5rem'}
-                height={1.5}
+                width={'1.3rem'}
+                height={1.3}
                 margin={'auto 0rem auto auto'}
                 style={{
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: 'center',
                   backgroundSize: 'cover',
                   backgroundImage: 'url(/assets/X.svg)',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  setmodalGather({ ...modalGather, editNicknameModal: false });
+                  setNickname('');
                 }}
               ></Box>
             </RowBox>

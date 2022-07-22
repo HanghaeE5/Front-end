@@ -66,6 +66,7 @@ export const BottomNavLayout = () => {
           editPhotoModal: false,
           profileMenuModal: false,
           friendAddModal: false,
+          explainModal: false,
         });
       }}
       justifyContent="center"

@@ -127,6 +127,7 @@ export const TopNavLayout = () => {
               profileMenuModal: false,
               friendAddModal: false,
               notiModal: true,
+              explainModal: false,
             });
           }}
         ></Box>
