@@ -19,6 +19,10 @@
   "include": ["src"],
   "rules": {
     "@typescript-eslint/no-unused-vars": "off",
+<<<<<<< HEAD
     "@typescript-eslint/no-explicit-any": "off"
+=======
+    "@typescript-eslint/no-explicit-any": "warn"
+>>>>>>> 87c7c0f4b5ac3e63c00ebc62f106d3541ec9c420
   }
 }
