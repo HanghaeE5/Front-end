@@ -6,7 +6,16 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { registerApi } from '../api/callApi';
 import { FieldValues } from 'react-hook-form';
 import { accessTokenState, popNotiState } from '../recoil/store';
-import { EvAbleFont, EvBox, EvBtn, EvBtnAble, EvInputInfo, EvKoreanFont } from '../component/element/BoxStyle';
+import {
+  EvAbleFont,
+  EvBox,
+  EvBtn,
+  EvBtnAble,
+  EvFontBox,
+  EvImgBox,
+  EvInputInfo,
+  EvKoreanFont,
+} from '../component/element/BoxStyle';
 import { AxiosError } from 'axios';
 import { ConfirmType, PopNoti } from '../component/element/PopNoti';
 
@@ -91,19 +100,21 @@ export const Login = () => {
   return (
     <RegisterContainer>
       <ContentContainer>
-        <EvBox
-          width={'10.5rem'}
-          height={1.5}
-          margin={'7rem auto 1.875rem auto'}
-          url="url(/assets/TODOWITH.svg)"
-        ></EvBox>
-        <EvBox width={'2.8125rem'} height={1.5} margin={'0px auto 0.625rem 5.3%'}>
+        <EvImgBox
+          width={'7rem'}
+          height={3.4375}
+          margin={'7.1875rem auto 2.5rem auto'}
+          url="url(/assets/투두윗원형로고.svg)"
+        />
+
+        {/* 이메일 */}
+        <EvFontBox width={'2.8125rem'} height={1.5} margin={'0px auto 0.625rem 5.3%'}>
           {email && (
             <EvKoreanFont size={1} color="#939393" weight={700}>
               이메일
             </EvKoreanFont>
           )}
-        </EvBox>
+        </EvFontBox>
         <EvInputInfo
           width={'88.5%'}
           height={3.75}
@@ -114,13 +125,15 @@ export const Login = () => {
           value={email}
           onChange={onChange1}
         ></EvInputInfo>
-        <EvBox width={3.6875} height={1.5} margin={'1.4375rem auto 0.625rem 5.3%'}>
+
+        {/* 비밀번호 */}
+        <EvFontBox width={3.6875} height={1.5} margin={'1.4375rem auto 0.625rem 5.3%'}>
           {password && (
             <EvKoreanFont size={1} color="rgba(147, 147, 147, 1)" weight={700}>
               비밀번호
             </EvKoreanFont>
           )}
-        </EvBox>
+        </EvFontBox>
         <EvInputInfo
           width={'88.5%'}
           height={3.75}
