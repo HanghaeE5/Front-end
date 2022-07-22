@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scaleable=no, maximum-scale=1" />
     <meta name="theme-color" content="#000000" />
 
-    <meta name="description" content="Web site created using create-react-app" />
+    <meta name="description" content="혼자 그리고 함께 TODO WITH" />
+    <meta property="og:title" content="ToDo With" />
+    <meta property="og:description" content="혼자 그리고 함께 TODO WITH" />
 
     <!-- 구글 인증을 위한 도메인 인증 -->
     <meta name="google-site-verification" content="wzI4r-Pu1hlauL_RQNjrLs8JRNUNtLfHwfbBV6vEaHM" />
@@ -27,6 +29,27 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker
+            .register('worker.js')
+            .then(
+              function (registration) {
+                console.log('Worker registration successful', registration.scope);
+              },
+              function (err) {
+                console.log('Worker registration failed', err);
+              },
+            )
+            .catch(function (err) {
+              console.log(err);
+            });
+        });
+      } else {
+        console.log('Service Worker is not supported by browser.');
+      }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
