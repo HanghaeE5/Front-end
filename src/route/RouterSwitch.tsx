@@ -1,13 +1,12 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { PopConfirmNew } from '../component/element';
-import { PopNoti } from '../component/element/PopNoti';
-import { commonPopConfirm, commonPopConfirmState, popNotiState } from '../recoil/store';
+import { commonPopConfirmState } from '../recoil/store';
 
 import { routeList } from './routeList';
 
 export const RouterSwitch = () => {
-  const confirmState = useRecoilValue(commonPopConfirm);
+  const confirmState = useRecoilValue(commonPopConfirmState);
 
   return (
     <BrowserRouter>

@@ -1,10 +1,8 @@
 import './App.css';
 
 import styled, { ThemeProvider } from 'styled-components';
-
-import { RouterSwitch } from './route/RouterSwitch';
 import { theme } from './theme';
-import { commonPopConfirm } from './recoil/store';
+import { commonPopConfirmState } from './recoil/store';
 import { useRecoilValue } from 'recoil';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { PopConfirmNew } from './component/element';
@@ -24,7 +22,7 @@ const ResponseContainer = styled.div`
 `;
 
 function App() {
-  const confirmState = useRecoilValue(commonPopConfirm);
+  const confirmState = useRecoilValue(commonPopConfirmState);
 
   return (
     <ResponseContainer>
