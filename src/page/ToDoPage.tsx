@@ -6,7 +6,7 @@ import { createTodo, deleteTodoFn, fetchTodoList, todoQueryKey, updateTodoFn, up
 import { Button, ButtonFloating, Wrapper, PopConfirmNew, Tab, Typography, PopConfirmProps } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { ScrollWrapper, TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
+import { ScrollWrapper, SpinnerWrapper, TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
 import { TodoItem } from '../component/TodoItem';
 import { PATH } from '../route/routeList';
 import {
@@ -27,6 +27,8 @@ import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
 import { removeListDuplicate } from '../utils/removeListDuplicate';
 import { TodoModalNew, TodoModalProps } from '../component/TodoModalNew';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
+import { AxiosError } from 'axios';
+import { ErrorResponse } from '../Types/Interface';
 
 const AccessTabList: { label: string; value: TodoStatusFilter | 'all' }[] = [
   { label: '전체', value: 'all' },
@@ -127,10 +129,11 @@ export const ToDoPage = () => {
 
   const { mutate: deleteTodo } = useMutation(deleteTodoFn, {
     onSuccess: () => {
-      closeTodoModal();
-      openSuccessConfirm({ title: '삭제했습니다.' });
+      openSuccessConfirm({ title: '삭제했습니다.', button: { text: '확인', onClick: refetchTodoList } });
     },
-    onError: () => openErrorConfirm({}),
+    onError: (error: AxiosError<ErrorResponse>) => {
+      openErrorConfirm({ content: error.response?.data.msg });
+    },
   });
 
   const { mutate: updateTodoPublicScope } = useMutation(updateTodoScope, {
@@ -207,6 +210,8 @@ export const ToDoPage = () => {
       optionalButton: {
         text: '삭제',
         onClick: () => {
+          closeConfirm();
+
           if (todo.boardId) {
             setConfirmState({
               visible: true,
@@ -216,7 +221,6 @@ export const ToDoPage = () => {
               optionalButton: {
                 text: '게시물로 이동',
                 onClick: () => {
-                  closeConfirm();
                   moveToBoard(todo?.boardId);
                 },
               },
@@ -362,7 +366,7 @@ export const ToDoPage = () => {
                     handleDoneTodo={handleDoneTodo}
                   />
                 ))}
-                {list.length ? <div ref={bottomRef} /> : ''}
+                {list.length ? <SpinnerWrapper ref={bottomRef}>df</SpinnerWrapper> : ''}
               </ScrollWrapper>
             )}
           </TodoListWrapper>
