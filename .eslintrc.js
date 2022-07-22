@@ -9,6 +9,7 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-explicit-any': 'warining',
     // 'simple-import-sort/imports': 'error',
     // 'simple-import-sort/exports': 'error',
   },
