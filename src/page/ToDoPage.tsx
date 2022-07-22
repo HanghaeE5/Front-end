@@ -27,6 +27,7 @@ import StepUpModal from '../component/modallayout/StepUpModal';
 import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
 import { removeListDuplicate } from '../utils/removeListDuplicate';
 import { TodoModalNew, TodoModalProps } from '../component/TodoModalNew';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
 const AccessTabList: { label: string; value: TodoStatusFilter | 'all' }[] = [
   { label: '전체', value: 'all' },
@@ -47,7 +48,8 @@ export const ToDoPage = () => {
   const queryClient = useQueryClient();
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
-  const [commonConfrimState, setCommonConfirmState] = useRecoilState(commonPopConfirmState);
+  // const [commonConfrimState, setCommonConfirmState] = useRecoilState(commonPopConfirmState);
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   const [list, setList] = useState<ITodoItem[]>([]);
 
@@ -71,6 +73,10 @@ export const ToDoPage = () => {
       onClickButton: (todo: TodoData) => console.log(todo),
     },
   });
+
+  const closeTodoModal = () => {
+    setTodoModalStateNew((prev) => ({ ...prev, visible: false }));
+  };
 
   const [confirmState, setConfirmState] = useState<PopConfirmProps & { visible: boolean }>({
     visible: false,
@@ -105,33 +111,36 @@ export const ToDoPage = () => {
   const { mutate: addTodoItem } = useMutation(createTodo, {
     onSuccess: () => {
       refetchTodoList();
-      setCommonConfirmState({ ...commonConfrimState, type: 'success', title: '등록했습니다', visible: true });
+      closeTodoModal();
+      openSuccessConfirm({ title: '등록했습니다' });
+      // setCommonConfirmState({ ...commonConfrimState, type: 'success', title: '등록했습니다', visible: true });
     },
-    onError: () => setCommonConfirmState({ ...commonConfrimState, type: 'error', visible: true }),
+    onError: () => openErrorConfirm({}),
   });
 
   const { mutate: updateTodo } = useMutation(updateTodoFn, {
     onSuccess: () => {
       refetchTodoList();
-      setCommonConfirmState({ ...commonConfrimState, type: 'success', title: '수정했습니다', visible: true });
+      closeTodoModal();
+      openSuccessConfirm({ title: '수정했습니다.' });
     },
-    onError: () => setCommonConfirmState({ ...commonConfrimState, type: 'error', visible: true }),
+    onError: () => openErrorConfirm({}),
   });
 
   const { mutate: deleteTodo } = useMutation(deleteTodoFn, {
     onSuccess: () => {
-      refetchTodoList();
-      setCommonConfirmState({ ...commonConfrimState, type: 'success', title: '삭제했습니다', visible: true });
+      closeTodoModal();
+      openSuccessConfirm({ title: '삭제했습니다.' });
     },
-    onError: () => setCommonConfirmState({ ...commonConfrimState, type: 'error', visible: true }),
+    onError: () => openErrorConfirm({}),
   });
 
   const { mutate: updateTodoPublicScope } = useMutation(updateTodoScope, {
     onSuccess: () => {
       queryClient.invalidateQueries('fetchUserInfo');
-      setCommonConfirmState({ ...commonConfrimState, type: 'success', title: '변경했습니다', visible: true });
+      openSuccessConfirm({ title: '변경했습니다.' });
     },
-    onError: () => setCommonConfirmState({ ...commonConfrimState, type: 'error', visible: true }),
+    onError: () => openErrorConfirm({}),
   });
 
   const onChangeTab = (todoStatus: TodoStatusFilter) =>
@@ -159,13 +168,7 @@ export const ToDoPage = () => {
 
   const onClickEditButton = (todoItem: ITodoItem) => {
     if (todoItem.boardId) {
-      setCommonConfirmState({
-        ...commonConfrimState,
-        type: 'error',
-        title: '위드 투 두는 수정이 불가합니다.',
-        visible: true,
-      });
-
+      openErrorConfirm({ title: '위드 투 두는 수정이 불가합니다.' });
       return;
     }
 
@@ -236,12 +239,7 @@ export const ToDoPage = () => {
   // TODO 완료
   const handleDoneTodo = (data: TodoDoneResponse | undefined) => {
     if (!data) {
-      setCommonConfirmState({
-        ...commonConfrimState,
-        type: 'error',
-        visible: true,
-      });
-
+      openErrorConfirm({});
       return;
     }
 
@@ -265,13 +263,7 @@ export const ToDoPage = () => {
       setmodalGather({ ...modalGather, levelUpModal: true });
       return;
     }
-
-    setCommonConfirmState({
-      ...commonConfrimState,
-      type: 'success',
-      title: '투두 완료!',
-      visible: true,
-    });
+    openSuccessConfirm({ title: '투두 완료!' });
   };
 
   const moveToBoard = (boardId: number | undefined) => {

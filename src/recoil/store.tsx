@@ -10,6 +10,7 @@ export const atomKey = {
   USER_INFO: 'userInfo',
   FRIEND_INFO: 'friendInfo',
   COMMON_POP_CONFIRM: 'commonPopConfirm',
+  COMMON_POP_CONFIRM2: 'commonPopConfirm2',
 };
 
 export const accessTokenState = atom({
@@ -52,7 +53,7 @@ export const modalGatherState = atom<modalGather>({
 });
 
 export const commonPopConfirmState = atom<CommonConfirmProps>({
-  key: atomKey.COMMON_POP_CONFIRM,
+  key: atomKey.COMMON_POP_CONFIRM2,
   default: {
     visible: false,
     type: 'success',
