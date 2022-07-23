@@ -66,7 +66,7 @@ const LevelUpModal = () => {
                 LEVEL UP!
               </EvEnglishFont>
             </EvBox>
-            <EvBox width="68%" margin={'0.625rem auto 0rem auto'}>
+            <EvBox width="68%" margin={'0.1rem auto 0rem auto'}>
               <EvKoreanFont size={1.25} color="#1A1A1A" weight={700} lineHeight={'26px'}>
                 레벨업을 축하드립니다!
               </EvKoreanFont>
@@ -81,7 +81,7 @@ const LevelUpModal = () => {
             <EvBtn
               width={'84.2%'}
               height={3.75}
-              margin="0.625rem auto 1.875rem auto"
+              margin="0.1 rem auto 1.875rem auto"
               border="none"
               background="#FFD600"
               onClick={() => {
