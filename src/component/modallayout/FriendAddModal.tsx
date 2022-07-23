@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useMutation } from 'react-query';
 import { friendApi, registerApi, userApi } from '../../api/callApi';
 import { AxiosError } from 'axios';
+import { EvAbleFont, EvBtnAble, EvFontBox, EvInputInfo, EvKoreanFont } from '../element/BoxStyle';
 
 const Slide = keyframes`
     0% {
@@ -175,34 +176,51 @@ const FriendAddModal = () => {
   return (
     <>
       {modalGather.friendAddModal && (
-        <ModalBackground onClick={() => setmodalGather({ ...modalGather, friendAddModal: false })}>
+        <ModalBackground
+          onClick={() => {
+            setmodalGather({ ...modalGather, friendAddModal: false });
+            setFriendNickname('');
+          }}
+        >
           <BoxWrap
             onClick={(e) => {
               e.stopPropagation();
             }}
           >
-            <Box margin={'1.875rem auto 0.9375rem auto'}>
-              <KoreanFont size={1.25} color="rgba(147, 147, 147, 1)">
+            <EvFontBox margin={'1.875rem auto 0.9375rem auto'}>
+              <EvKoreanFont size={1.25} weight={700}>
                 친구 추가
-              </KoreanFont>
-            </Box>
-            <InputInfo
+              </EvKoreanFont>
+            </EvFontBox>
+            <EvInputInfo
+              margin="1rem auto 0 auto "
+              width="84.2%"
+              height={3.75}
               type="text"
               placeholder="친구의 닉네임을 입력해주세요"
               name="nickname"
               value={friendnickname}
               onChange={onChangeNickname}
-            ></InputInfo>
-            <BtnAble
+            ></EvInputInfo>
+            <EvBtnAble
+              width="84.2%"
+              height={3.75}
+              isDisable={!friendnickname}
               margin="0.625rem auto 1.875rem auto"
-              onClick={() => {
-                friendAdd();
-              }}
+              onClick={
+                friendnickname
+                  ? () => {
+                      friendAdd();
+                    }
+                  : () => {
+                      null;
+                    }
+              }
             >
-              <KoreanFont size={0.9375} color="rgba(147, 147, 147, 1)">
+              <EvAbleFont size={0.9375} isDisable={!friendnickname} weight={500}>
                 추가하기
-              </KoreanFont>
-            </BtnAble>
+              </EvAbleFont>
+            </EvBtnAble>
           </BoxWrap>
         </ModalBackground>
       )}
