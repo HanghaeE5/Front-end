@@ -49,28 +49,6 @@ const BoxWrap = styled.div`
   animation: ${Slide} 0.6s ease;
 `;
 
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #d07272; */
-`;
-
-const RowBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #683b3b; */
-`;
-
 const ImgLable = styled.label`
   justify-content: center;
   width: 89.3%;
@@ -89,15 +67,6 @@ type font = {
   isBold?: boolean;
 };
 
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
 export const Img = styled.img`
   width: 100%;
   /* height: 100%; */
@@ -109,29 +78,6 @@ type btnable = {
   margin?: string;
   isDisable?: boolean;
 };
-
-const BtnAble = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  width: ${(props: btnable) => props.width};
-  height: ${(props: btnable) => props.height}rem;
-  margin: ${(props: btnable) => props.margin};
-  background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
-
-  cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
-
-  &:hover {
-    ${(props: btnable) =>
-      props.isDisable
-        ? ''
-        : `color: white;
-    background-color: #358edc;`}
-  }
-`;
 
 const EditPhotoModal = () => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
@@ -196,7 +142,12 @@ const EditPhotoModal = () => {
   return (
     <>
       {modalGather.editPhotoModal && (
-        <ModalBackground onClick={() => setmodalGather({ ...modalGather, editPhotoModal: false })}>
+        <ModalBackground
+          onClick={() => {
+            setmodalGather({ ...modalGather, editPhotoModal: false });
+            setUserPhotoWait({ ...userPhotoWait, img_show: userInfoData.profileImageUrl });
+          }}
+        >
           <BoxWrap
             onClick={(e) => {
               e.stopPropagation();
@@ -216,6 +167,7 @@ const EditPhotoModal = () => {
                 url={'url(/assets/X.svg)'}
                 onClick={() => {
                   setmodalGather({ ...modalGather, editPhotoModal: false });
+                  setUserPhotoWait({ ...userPhotoWait, img_show: userInfoData.profileImageUrl });
                 }}
               ></EvImgBox>
             </EvRowBox>
