@@ -64,14 +64,14 @@ const CheckFont2 = styled.p`
   text-align: left;
 `;
 
-const SignUpInputInfo = styled(EvInputInfo)`
+export const SignUpInputInfo = styled(EvInputInfo)`
   border: none;
   width: 85%;
   height: 3.75rem;
   margin: 0;
 `;
 
-const SignUpBtnAble = styled(EvBtnAble)`
+export const SignUpBtnAble = styled(EvBtnAble)`
   width: 22.6%;
   height: 3.75rem;
   margin: 0 0 0 auto;
@@ -94,8 +94,6 @@ export const SignUpEmail = () => {
   const [popNoti, setPopNoti] = useRecoilState(popNotiState);
 
   const nav = useNavigate();
-
-  const joinDisable = !emailCheck || !emailCheckNumberOK || !nicknameCheck || password != password2 || !password;
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNameText(e.target.value);
@@ -125,6 +123,16 @@ export const SignUpEmail = () => {
     const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{5,15}$/;
     return regExp.test(asValue);
   };
+
+  const joinDisable =
+    !emailCheck ||
+    !emailCheckNumberOK ||
+    !nicknameCheck ||
+    password != password2 ||
+    !password ||
+    !checkEmail(email) ||
+    !checkNickname(nickname) ||
+    !checkPassword(password);
 
   // 이메일 인증번호 발송 API
   const emilCertificationData = useMutation((email: { email: string }) => registerApi.emilCertificationApi(email), {
@@ -400,37 +408,42 @@ export const SignUpEmail = () => {
               isCursor={true}
               onMouseDown={() => setView(!view)}
               onMouseUp={() => setView(!view)}
-              style={{
-                backgroundSize: view ? '1.4rem' : '1.25rem',
-                backgroundImage: view ? 'url(/assets/eye.svg)' : 'url(/assets/closeeye.svg)',
-              }}
+              backgroundsize={view ? '1.4rem' : '1.25rem'}
+              url={view ? 'url(/assets/eye.svg)' : 'url(/assets/closeeye.svg)'}
             />
           </EvRowBox>
 
           {password && checkPassword(password) ? (
-            <EvRowBox width={'89.3%'} margin={'0.4375rem 0 0 0'} border="1px solid #dddddd" borderRadius="6px">
-              <EvHelfInputInfo
-                width={'85%'}
-                height={3.75}
-                margin={'0 auto 0 0'}
-                placeholder="비밀번호 재입력"
-                type={view ? 'text' : 'password'}
-                value={password2}
-                onChange={onChangePw2}
-              />
-              <EvCheckHelfBox
-                width={'15%'}
-                height={3.75}
-                margin={'0 0 0 auto'}
-                isCursor={true}
-                onMouseDown={() => setView(!view)}
-                onMouseUp={() => setView(!view)}
-                style={{
-                  backgroundSize: view ? '1.4rem' : '1.25rem',
-                  backgroundImage: view ? 'url(/assets/eye.svg)' : 'url(/assets/closeeye.svg)',
-                }}
-              />
-            </EvRowBox>
+            <>
+              <EvRowBox width={'89.3%'} margin={'0.4375rem 0 0 0'} border="1px solid #dddddd" borderRadius="6px">
+                <EvHelfInputInfo
+                  width={'85%'}
+                  height={3.75}
+                  margin={'0 auto 0 0'}
+                  placeholder="비밀번호 재입력"
+                  type={view ? 'text' : 'password'}
+                  value={password2}
+                  onChange={onChangePw2}
+                />
+                <EvCheckHelfBox
+                  width={'15%'}
+                  height={3.75}
+                  margin={'0 0 0 auto'}
+                  isCursor={true}
+                  onMouseDown={() => setView(!view)}
+                  onMouseUp={() => setView(!view)}
+                  backgroundsize={view ? '1.4rem' : '1.25rem'}
+                  url={view ? 'url(/assets/eye.svg)' : 'url(/assets/closeeye.svg)'}
+                />
+              </EvRowBox>
+              <EvFontBox width={21.25} height={1.3125} margin={'0.3125rem auto 0px 5.3%'}>
+                {password2 && (
+                  <CheckFont size={0.75} color={'blue'} isCorrect={password === password2}>
+                    {password === password2 ? '비밀번호가 일치합니다' : '비밀번호가 일치하지 않습니다'}
+                  </CheckFont>
+                )}
+              </EvFontBox>
+            </>
           ) : (
             <EvFontBox width={21.25} height={1.3125} margin={'0.3125rem auto 0px 5.3%'}>
               <CheckFont2 size={0.75} color={'black'} isCorrect={!password}>
@@ -441,13 +454,6 @@ export const SignUpEmail = () => {
             </EvFontBox>
           )}
 
-          <EvFontBox width={21.25} height={1.3125} margin={'0.3125rem auto 0px 5.3%'}>
-            {password2 && (
-              <CheckFont size={0.75} color={'blue'} isCorrect={password === password2}>
-                {password === password2 ? '비밀번호가 일치합니다' : '비밀번호가 일치하지 않습니다'}
-              </CheckFont>
-            )}
-          </EvFontBox>
           <EvBtnAble
             isDisable={joinDisable}
             width={'89.3%'}

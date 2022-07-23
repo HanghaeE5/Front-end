@@ -137,7 +137,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
           margin={'auto'}
           style={{
             backgroundImage: `url(${userInfoData?.profileImageUrl})`,
-            border: '0.3px solid',
+            border: '0.1px solid #D9D9D9',
             backgroundSize: 'cover',
             borderRadius: '50%',
           }}
