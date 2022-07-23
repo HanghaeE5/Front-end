@@ -2,6 +2,7 @@ import { PropsWithChildren } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FiChevronLeft } from 'react-icons/fi';
+import { EvKoreanFont } from '../element/BoxStyle';
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -44,15 +45,6 @@ type font = {
   isBold?: boolean;
 };
 
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
 export const PageHeader = ({ title }: { title: string }) => {
   const nav = useNavigate();
   return (
@@ -62,7 +54,9 @@ export const PageHeader = ({ title }: { title: string }) => {
           nav(-1);
         }}
       />
-      <KoreanFont size={1.125}>{title}</KoreanFont>
+      <EvKoreanFont size={1.375} weight={700}>
+        {title}
+      </EvKoreanFont>
       <div />
     </HeaderWrapper>
   );

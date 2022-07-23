@@ -6,6 +6,16 @@ import { useMutation } from 'react-query';
 import { registerApi, userApi } from '../../api/callApi';
 import { AxiosError } from 'axios';
 import { userInfo } from 'os';
+import {
+  EvAbleFont,
+  EvBtnAble,
+  EvCheckHelfBox,
+  EvFontBox,
+  EvImgBox,
+  EvKoreanFont,
+  EvRowBox,
+} from '../element/BoxStyle';
+import { SignUpBtnAble, SignUpInputInfo } from '../../page';
 
 const Slide = keyframes`
     0% {
@@ -42,44 +52,12 @@ const BoxWrap = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: box) => props.width};
-  height: 34.8rem;
+  width: 100%;
+  height: 30.68rem;
   border-radius: 20px 20px 0px 0px;
   margin: auto auto 0 auto;
   background-color: #ffffff;
   animation: ${Slide} 0.6s ease;
-`;
-
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #caff8a; */
-`;
-
-const BoxSide = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #6922bb; */
-`;
-
-const RowBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #ff6969; */
 `;
 
 type font = {
@@ -88,15 +66,6 @@ type font = {
   isCorrect?: boolean;
   isBold?: boolean;
 };
-
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
 
 const CheckFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
@@ -107,60 +76,16 @@ const CheckFont = styled.p`
   text-align: left;
 `;
 
-const InputInfo = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: none;
-  padding: 0 0 0 10px;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
-type btnable = {
-  width: number | string;
-  height: number | string;
-  margin: string;
-  isDisable: boolean;
-};
-
-const BtnAble = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  width: ${(props: btnable) => props.width};
-  height: ${(props: btnable) => props.height}rem;
-  margin: ${(props: btnable) => props.margin};
-  background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
-
-  cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
-
-  &:hover {
-    ${(props: btnable) =>
-      props.isDisable
-        ? ''
-        : `color: white;
-    background-color: #358edc;`}
-  }
-`;
-
 const EditNicknameModal = () => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [nickname, setNickname] = useState<string>('');
-  const [nicknameOk, setnicknameOk] = useState<boolean>(false);
+  const [nicknameOk, setNicknameOk] = useState<boolean>(false);
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
   };
 
-  const CheckNickname = (asValue: string) => {
+  const checkNickname = (asValue: string) => {
     const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
     return regExp.test(asValue);
   };
@@ -170,8 +95,8 @@ const EditNicknameModal = () => {
     onSuccess: () => {
       // loginToken(token.headers.authorization.split(' ')[1]);
       console.log();
-      alert(`${nickname}으로 닉네임이 설정되었습니다.`);
-      setnicknameOk(true);
+      alert(`${nickname}은 사용 가능합니다.`);
+      setNicknameOk(true);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
       alert(error.response?.data.msg);
@@ -189,6 +114,8 @@ const EditNicknameModal = () => {
       setmodalGather({ ...modalGather, editNicknameModal: false });
       setUserInfoData({ ...userInfoData, nick: nickname });
       alert(`변경 완료!`);
+      setNickname('');
+      setNicknameOk(false);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
       if (error.message === 'Request failed with status code 401') {
@@ -208,71 +135,62 @@ const EditNicknameModal = () => {
   return (
     <>
       {modalGather.editNicknameModal && (
-        <ModalBackground onClick={() => setmodalGather({ ...modalGather, editNicknameModal: false })}>
+        <ModalBackground
+          onClick={() => {
+            setmodalGather({ ...modalGather, editNicknameModal: false });
+            setNickname('');
+            setNicknameOk(false);
+          }}
+        >
           <BoxWrap
-            width={'100%'}
-            height={34.8}
             onClick={(e) => {
               e.stopPropagation();
             }}
           >
-            <RowBox width="92%" height={1.875} margin={'2.5rem 1.25rem 0rem 1.25rem'}>
-              <Box width={'3.5rem'} margin={'auto auto auto 0rem'}>
-                <KoreanFont size={1} color="rgba(147, 147, 147, 1)">
+            <EvRowBox isAlignSide={true} width="89.3%" height={1.875} margin={'1.625rem 1.25rem 0rem 1.25rem'}>
+              <EvFontBox width={'3.5rem'} margin={'auto auto auto 0rem'}>
+                <EvKoreanFont size={1.25} weight={700} color="#1A1A1A">
                   닉네임
-                </KoreanFont>
-              </Box>
-              <Box
+                </EvKoreanFont>
+              </EvFontBox>
+              <EvImgBox
                 width={'1rem'}
                 height={1}
                 margin={'auto 0rem auto auto'}
-                style={{
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center',
-                  backgroundSize: 'cover',
-                  backgroundImage: 'url(/assets/X.svg)',
-                  cursor: 'pointer',
-                }}
+                url="url(/assets/X.svg)"
+                isCursor={true}
                 onClick={() => {
                   setmodalGather({ ...modalGather, editNicknameModal: false });
                   setNickname('');
                 }}
-              ></Box>
-            </RowBox>
-            <RowBox width={'92%'} margin={'2.3125rem 1.25rem 0rem 1.25rem'}>
-              <RowBox width={'73.3%'} margin={'0'} style={{ borderBottom: '1px solid black' }}>
-                <InputInfo
-                  width={'85%'}
-                  height={2.5}
-                  margin={'0px auto 0px 0rem'}
+              />
+            </EvRowBox>
+
+            <EvRowBox width={'89.3%'} margin={'3.125rem 1.25rem 0rem 1.25rem'}>
+              <EvRowBox width={'73.3%'} margin={'0'} style={{ borderBottom: '1px solid black' }}>
+                <SignUpInputInfo
                   type="text"
-                  placeholder="ex) 빨강바지3456"
+                  placeholder="예) 오늘투두윗"
                   name="nickname"
                   value={nickname}
                   onChange={onChangeNickname}
-                ></InputInfo>
-                <Box
-                  width={'8%'}
-                  height={1.5}
-                  margin={'auto 0rem auto auto'}
-                  style={{
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center',
-                    backgroundSize: '24px',
-                    backgroundImage: nicknameOk ? 'url(/assets/checkyellow.svg)' : 'url(/assets/checkgray.svg)',
-                  }}
-                  onClick={() => {
-                    setmodalGather({ ...modalGather, editNicknameModal: false });
-                  }}
-                ></Box>
-              </RowBox>
-              <BtnAble
-                isDisable={!CheckNickname(nickname)}
+                />
+                <EvCheckHelfBox
+                  width={'15%'}
+                  height={3.75}
+                  margin={'0'}
+                  backgroundsize={'1.5rem'}
+                  url={nicknameOk ? 'url(/assets/checkyellow.svg)' : 'url(/assets/checkgray.svg)'}
+                />
+              </EvRowBox>
+
+              <SignUpBtnAble
+                isDisable={!checkNickname(nickname)}
                 width={'19.4%'}
                 height={2.625}
                 margin={'0px 0rem 0px auto'}
                 onClick={
-                  CheckNickname(nickname)
+                  checkNickname(nickname)
                     ? () => {
                         const goNickCertification = {
                           nick: nickname,
@@ -284,13 +202,16 @@ const EditNicknameModal = () => {
                       }
                 }
               >
-                <KoreanFont size={1}>중복확인</KoreanFont>
-              </BtnAble>
-            </RowBox>
-            <BoxSide width={'92%'} height={1.3125} margin={'0.375rem auto 0px auto'}>
+                <EvAbleFont size={0.875} color="#939393" weight={500} isDisable={!checkNickname(nickname)}>
+                  {nicknameOk ? '확인완료' : '중복확인'}
+                </EvAbleFont>
+              </SignUpBtnAble>
+            </EvRowBox>
+
+            <EvFontBox isAlignSide={true} width={'92%'} height={1.3125} margin={'0.375rem auto 0px 5.3%'}>
               {nickname ? (
-                <CheckFont size={0.75} color={'blue'} isCorrect={CheckNickname(nickname)}>
-                  {CheckNickname(nickname)
+                <CheckFont size={0.75} color={'blue'} isCorrect={checkNickname(nickname)}>
+                  {checkNickname(nickname)
                     ? '사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.'
                     : '닉네임 형식을 확인해 주세요.'}
                 </CheckFont>
@@ -299,12 +220,12 @@ const EditNicknameModal = () => {
                   닉네임은 2-15자의 한글, 영어, 숫자입니다.
                 </CheckFont>
               )}
-            </BoxSide>
-            <BtnAble
-              isDisable={!CheckNickname(nickname)}
-              width={'92%'}
-              height={4}
-              margin={'7.375rem auto 10rem auto'}
+            </EvFontBox>
+            <EvBtnAble
+              isDisable={!nicknameOk}
+              width={'89.3%'}
+              height={3.75}
+              margin={'6.25rem auto auto auto'}
               onClick={
                 nicknameOk
                   ? () => {
@@ -315,8 +236,10 @@ const EditNicknameModal = () => {
                     }
               }
             >
-              <KoreanFont size={1}>닉네임 변경 완료</KoreanFont>
-            </BtnAble>
+              <EvAbleFont size={1.0625} isDisable={!nicknameOk} weight={700}>
+                닉네임 변경 완료
+              </EvAbleFont>
+            </EvBtnAble>
           </BoxWrap>
         </ModalBackground>
       )}
