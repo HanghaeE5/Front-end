@@ -103,7 +103,6 @@ export const ChooseCharacter = () => {
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
     if (userInfoData?.characterInfo.type) {
-      console.log(userInfoData?.characterInfo.type);
       openErrorConfirm({
         title: '🙅🏻‍♀️이미 캐릭터를 선택했습니다🙅🏻‍♀️',
         content: '캐릭터는 변경 불가합니다',
