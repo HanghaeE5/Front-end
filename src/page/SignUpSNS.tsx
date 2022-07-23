@@ -83,7 +83,7 @@ export const SignUpSNS = () => {
     onSuccess: () => {
       openSuccessConfirm({
         title: `${nickname}으로 닉네임이 설정되었습니다.`,
-        button: { text: '확인', onClick: () => console.log('닉네임설정') },
+        // button: { text: '확인', onClick: () => null },
       });
       setCheck(true);
     },
@@ -140,11 +140,10 @@ export const SignUpSNS = () => {
     //useEffect 리턴 바로 위에 써주기.
 
     if (userInformData.status === 'success' && userInformData.data.data.nick) {
-      setPopNoti({
-        openPopNoti: true,
-        informType: 'warning',
-        informMsg: '🙅🏻‍♀️회원가입이 완료되었습니다. 닉네임 변경을 이용해주세요🙅🏻‍♀️',
-        btnNav: '/',
+      openErrorConfirm({
+        title: '🙅🏻‍♀️닉네임 변경을 이용해주세요🙅🏻‍♀️',
+        content: '이미 회원가입이 완료되었습니다. ',
+        button: { text: '확인', onClick: () => nav(PATH.MAIN) },
       });
     }
   }, [userInformData.status]);

@@ -20,7 +20,9 @@ import {
   EvRowBox,
 } from '../component/element/BoxStyle';
 import { PageLayout } from '../component/layout/PageLayout';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
 import { popNotiState } from '../recoil/store';
+import { PATH } from '../route/routeList';
 
 const InfoContainer = styled.div`
   height: 100%;
@@ -134,10 +136,15 @@ export const SignUpEmail = () => {
     !checkNickname(nickname) ||
     !checkPassword(password);
 
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
+
   // 이메일 인증번호 발송 API
   const emilCertificationData = useMutation((email: { email: string }) => registerApi.emilCertificationApi(email), {
     onSuccess: () => {
-      alert(`${email} 메일로 발송된 인증번호를 입력해주세요🙂`);
+      openSuccessConfirm({
+        title: `${email} 메일로 발송된 인증번호를 입력해주세요🙂`,
+        // button: { text: '확인', onClick: () => null },
+      });
       setEmailCheckNumberInput(true);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
@@ -204,11 +211,10 @@ export const SignUpEmail = () => {
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
     if (localToken) {
-      setPopNoti({
-        openPopNoti: true,
-        informType: 'warning',
-        informMsg: '🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️',
-        btnNav: '-1',
+      openErrorConfirm({
+        title: '🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️',
+        content: '신규가입은 로그아웃 후 가능합니다.',
+        button: { text: '확인', onClick: () => nav(-1) },
       });
     }
   }, [localToken]);
