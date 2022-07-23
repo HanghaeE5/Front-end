@@ -18,7 +18,7 @@ import {
   EvKoreanFont,
   EvRowBox,
 } from '../element/BoxStyle';
-import { GradientScollWrap } from './GradientScollWrap';
+import { GradientScollWrap } from '../element/GradientScollWrap';
 
 const Slide = keyframes`
     0% {
