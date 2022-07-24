@@ -38,6 +38,7 @@ import StepUpModal from '../component/modallayout/StepUpModal';
 import ExpBar from '../component/element/ExpBar';
 import { TopNavBar } from '../component/layout/TopNavBar';
 import { BottomNavLayout } from '../component/layout/BottomNavBar';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
 const MainPageWrapper = styled(Wrapper)`
   max-width: 768px;
@@ -153,19 +154,31 @@ export const Main = () => {
   const accessToken = first[0].split('=')[1];
   const nav = useNavigate();
 
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
+
   //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
       setUserInfoData(data.data);
     },
-    onError: (error: AxiosError) => {
-      if (error.message === 'Request failed with status code 404') {
-        // nav(-1);
+    onError: (error: AxiosError<{ msg: string }>) => {
+      if (error.response?.data.msg === '해당 캐릭터가 존재하지 않습니다') {
+        nav('/choosecharacter');
+      } else if (error.response?.data.msg === '사용자를 찾을 수 없습니다') {
+        openErrorConfirm({
+          title: '🙅🏻‍♀️사용자를 찾을 수 없습니다🙅🏻‍♀️',
+          content: '다시 로그인을 해도 동일한 경우, 회원가입을 해주세요',
+          button: {
+            text: '확인',
+            onClick: () => {
+              localStorage.clear();
+              nav('/login');
+            },
+          },
+        });
       }
     },
   });
-
-  console.log(userInformData);
 
   useEffect(() => {
     if (accessToken) {
@@ -191,6 +204,10 @@ export const Main = () => {
       userInformData.refetch();
     }
   }, [userInformData]);
+
+  if (userInformData.status === 'loading') {
+    return <EvColumnBox>로딩중</EvColumnBox>;
+  }
 
   return (
     <MainPageWrapper isColumn height="100%">

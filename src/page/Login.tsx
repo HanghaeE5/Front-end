@@ -49,12 +49,23 @@ export const Login = () => {
   const [password, setPassword] = useState<string>('');
   const [autoLogin, setAutoLogin] = useState<boolean>(false);
 
+  const referrer = document.referrer;
+
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   const loginUserData = useMutation((data: { email: string; password: string }) => registerApi.loginApi(data), {
     onSuccess: (token) => {
       console.log(token);
-      openSuccessConfirm({ title: '로그인 성공🙂', button: { text: '확인', onClick: () => nav(PATH.MAIN) } });
+      openSuccessConfirm({
+        title: '로그인 성공🙂',
+        button: {
+          text: '확인',
+          onClick:
+            referrer.indexOf('login' || 'signupemail' || '/signupsns' || '/choosecharacter') === -1
+              ? () => nav(PATH.MAIN)
+              : () => nav(referrer),
+        },
+      });
       setAccessLoginToken(token.headers.authorization);
       // console.log(accessLoginToken);
     },
@@ -81,7 +92,16 @@ export const Login = () => {
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
     if (localToken) {
-      openSuccessConfirm({ title: '🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️', button: { text: '확인', onClick: () => nav(-1) } });
+      openSuccessConfirm({
+        title: '🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️',
+        button: {
+          text: '확인',
+          onClick:
+            referrer.indexOf('login' || 'signupemail' || '/signupsns' || '/choosecharacter') === -1
+              ? () => nav(PATH.MAIN)
+              : () => nav(referrer),
+        },
+      });
     }
   }, [localToken]);
   return (

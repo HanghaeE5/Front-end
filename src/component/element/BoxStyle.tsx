@@ -218,6 +218,7 @@ type font = {
   align?: string;
   weight?: number;
   lineHeight?: string;
+  isWhiteSpace?: boolean;
 };
 
 export const EvKoreanFont = styled.p`
@@ -229,6 +230,7 @@ export const EvKoreanFont = styled.p`
   text-align: ${(props: font) => (props.align ? props.align : '')};
   margin: 0;
   line-height: ${(props: font) => (props.lineHeight ? props.lineHeight : '')};
+  white-space: ${(props: font) => (props.isWhiteSpace ? 'pre-line' : '')};
 `;
 
 export const EvEnglishFont = styled.p`

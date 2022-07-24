@@ -67,7 +67,7 @@ const RowBox = styled.div`
 export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
-
+  const localToken = localStorage.getItem('recoil-persist');
   const nav = useNavigate();
 
   //유저정보 가져오기 API
@@ -85,6 +85,9 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
   useEffect(() => {
     if (userInformData.error?.message === 'Request failed with status code 401') {
       userInformData.refetch();
+    }
+    if (!localToken) {
+      nav('/login');
     }
   }, [userInformData]);
 
