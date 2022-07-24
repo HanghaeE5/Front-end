@@ -59,14 +59,26 @@ export const ChooseCharacter = () => {
 
   const nav = useNavigate();
 
+  const selectName = select === '나무늘보' ? '브라우니' : '비니';
+
   //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
       setUserInfoData(data.data);
     },
-    onError: (error: AxiosError) => {
-      if (error.message === 'Request failed with status code 404') {
-        // nav(login);
+    onError: (error: AxiosError<{ msg: string }>) => {
+      if (error.response?.data.msg === '사용자를 찾을 수 없습니다') {
+        openErrorConfirm({
+          title: '🙅🏻‍♀️사용자를 찾을 수 없습니다🙅🏻‍♀️',
+          content: '다시 로그인을 해도 동일한 경우, 회원가입을 해주세요',
+          button: {
+            text: '확인',
+            onClick: () => {
+              localStorage.clear();
+              nav('/login');
+            },
+          },
+        });
       }
     },
   });
@@ -74,21 +86,20 @@ export const ChooseCharacter = () => {
   //캐릭터 선택 API
   const userCharacterChooseData = useMutation((type: { type: string }) => registerApi.userCharacterChooseApi(type), {
     onSuccess: (token) => {
-      setPopNoti({
-        openPopNoti: true,
-        informType: 'success',
-        informMsg: `${select} 선택완료🙂`,
-        btnNav: '/',
+      openSuccessConfirm({
+        title: `${selectName} 선택완료🙂`,
+        button: {
+          text: '확인',
+          onClick: () => nav('/'),
+        },
       });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
       if (error.message === 'Request failed with status code 401') {
         setTimeout(() => userCharacterChoose({ type: select }), 200);
       } else {
-        setPopNoti({
-          openPopNoti: true,
-          informType: 'warning',
-          informMsg: error.response?.data.msg,
+        openErrorConfirm({
+          title: error.response?.data.msg,
         });
       }
     },
