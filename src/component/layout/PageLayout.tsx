@@ -13,11 +13,9 @@ const HeaderWrapper = styled.div`
   align-items: center;
   border-bottom: 1px solid #dddddd;
   padding: 1rem;
-
-  span {
-    font-size: 1.25rem;
-    font-weight: 700;
-  }
+  font-weight: 700;
+  line-height: 32.56px;
+  font-size: 1.375rem;
 
   & > svg {
     font-size: 1.25rem;
@@ -37,22 +35,6 @@ const LayoutContainer = styled.div`
   position: relative;
 `;
 
-type font = {
-  size: number;
-  color?: string;
-  isCorrect?: boolean;
-  isBold?: boolean;
-};
-
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
 export const PageHeader = ({ title }: { title: string }) => {
   const nav = useNavigate();
   return (
@@ -62,7 +44,7 @@ export const PageHeader = ({ title }: { title: string }) => {
           nav(-1);
         }}
       />
-      <KoreanFont size={1.125}>{title}</KoreanFont>
+      <span>{title}</span>
       <div />
     </HeaderWrapper>
   );

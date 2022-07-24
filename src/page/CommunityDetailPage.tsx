@@ -46,11 +46,6 @@ export const CommunityDetailPage = () => {
 
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
-  // const { visible: visibleChallange, openConfirm: openChallange, closeConfirm: closeChallange } = usePopConfirm();
-  //const { visible: visibleChat, openConfirm: openChatConfirm, closeConfirm: closeChatConfirm } = usePopConfirm();
-  // const { visible: visibleError, openConfirm: openError2Confirm, closeConfirm: closeErrorConfirm } = usePopConfirm();
-  // const { visible: visibleCancel, openConfirm: openCancelConfirm, closeConfirm: closeCacnelConfirm } = usePopConfirm();
-
   const {
     data: postDetail,
     isLoading,

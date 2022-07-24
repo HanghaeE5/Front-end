@@ -36,26 +36,23 @@
   src: url('./asset/font/OPENSANS-BOLD.TTF');
 }
 
+/*open sans*/
 @font-face {
-  font-family: 'GmarketSans';
-  font-weight: 700;
-  font-style: normal;
-  src: url('./asset/font/GmarketSansTTFBold.ttf');
-  font-display: swap;
+  font-family: 'Opensans';
+  font-weight: 400;
+  src: url('./asset/font/OPENSANS-REGULAR.TTF');
 }
+
 @font-face {
-  font-family: 'GmarketSans';
+  font-family: 'Opensans';
   font-weight: 500;
-  font-style: normal;
-  src: url('./asset/font/GmarketSansTTFMedium.ttf');
-  font-display: swap;
+  src: url('./asset/font/OPENSANS-MEDIUM.TTF');
 }
+
 @font-face {
-  font-family: 'GmarketSans';
-  font-weight: 300;
-  font-style: normal;
-  src: url('./asset/font/GmarketSansTTFLight.ttf');
-  font-display: swap;
+  font-family: 'Opensans';
+  font-weight: 700;
+  src: url('./asset/font/OPENSANS-BOLD.TTF');
 }
 
 /*gmarket sans*/
