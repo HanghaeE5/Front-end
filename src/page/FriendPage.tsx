@@ -123,11 +123,8 @@ export const FriendBadgeBox = styled(EvColumnBox)`
 export const FriendPage = () => {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [frienduserInfoData, setFriendUserInfoData] = useState<FriendInfo>();
-  const accessLoginToken = useSetRecoilState(accessTokenState);
-  const all = window.location.href;
+  const localToken = localStorage.getItem('recoil-persist');
 
-  const first = all.split('&');
-  const accessToken = first[0].split('=')[1];
   const nav = useNavigate();
 
   const queryClient = useQueryClient();
@@ -161,25 +158,8 @@ export const FriendPage = () => {
   });
 
   useEffect(() => {
-    if (accessToken) {
-      // console.log();
-      const refreshToken = first[1].split('=')[1];
-      // console.log(refreshToken);
-      const isNickname = first[2].split('=')[1];
-      // console.log(isNickname);
-      accessLoginToken(accessToken);
-
-      if (isNickname === 'N') {
-        nav('/signupsns');
-      } else {
-        window.location.replace('/');
-      }
-      if (frienduserInfoData?.nick === '') {
-        nav('/signupsns');
-      }
-      if (isNickname === 'Y' && !frienduserInfoData?.characterInfo.type) {
-        nav('/choosecharacter');
-      }
+    if (!localToken) {
+      nav('/login');
     }
   }, []);
 

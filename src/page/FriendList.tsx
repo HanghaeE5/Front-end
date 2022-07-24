@@ -6,11 +6,13 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { friendApi } from '../api/callApi';
 import { Badge } from '../component/element';
+import { EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont } from '../component/element/BoxStyle';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import FriendAddModal from '../component/modallayout/FriendAddModal';
 import { friendListState, modalGatherState } from '../recoil/store';
 import { friendList } from '../Types/user';
+import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
 
 const ContentWrapper = styled.div`
   height: 100%;
@@ -293,40 +295,53 @@ export const FriendList = () => {
             </KoreanFont>
           </Box>
           <Box width="89%" margin="0.9375rem auto 0 auto" style={{ gap: '1.25rem' }}>
-            {friendList.map((myfriend) => {
-              return (
-                <RowFriendBox key={myfriend.id}>
-                  <RowBox
-                    isCursor={true}
-                    onClick={() => {
-                      nav(`/friend/page/${myfriend.nick}`);
-                    }}
-                  >
-                    <FriendPhotoBox
-                      style={{
-                        backgroundImage: `url(${myfriend.profileImageUrl})`,
+            {friendList.length === 0 ? (
+              <EvColumnBox width={'16rem'} height={10} margin="3rem auto auto auto">
+                <EvImgBox margin="0 auto">
+                  <Empty />
+                </EvImgBox>
+                <EvFontBox margin="1.25rem auto auto auto">
+                  <EvKoreanFont align="center" isWhiteSpace={true} size={0.875} lineHeight={'20px'} color="#5F5F5F">
+                    {`아직 추가하신 친구가 없어요.\n오른쪽 하단 + 버튼을 눌러\n친구를 추가할 수 있습니다!`}
+                  </EvKoreanFont>
+                </EvFontBox>
+              </EvColumnBox>
+            ) : (
+              friendList.map((myfriend) => {
+                return (
+                  <RowFriendBox key={myfriend.id}>
+                    <RowBox
+                      isCursor={true}
+                      onClick={() => {
+                        nav(`/friend/page/${myfriend.nick}`);
                       }}
-                    ></FriendPhotoBox>
-                    <FriendNameTextBox>
-                      <KoreanFont size={1}>{myfriend.nick}</KoreanFont>
-                    </FriendNameTextBox>
-                    <Badge>{`Lv.${myfriend.characterLevel}`}</Badge>
-                  </RowBox>
-                  <Box
-                    isCursor={true}
-                    width={'1.5rem'}
-                    height={2.5}
-                    margin="auto 0 auto auto"
-                    onClick={() => {
-                      setDeleteFriendName(myfriend.nick);
-                      deleteFriend({ nick: myfriend.nick });
-                    }}
-                  >
-                    <KoreanFont size={0.81}>삭제</KoreanFont>
-                  </Box>
-                </RowFriendBox>
-              );
-            })}
+                    >
+                      <FriendPhotoBox
+                        style={{
+                          backgroundImage: `url(${myfriend.profileImageUrl})`,
+                        }}
+                      ></FriendPhotoBox>
+                      <FriendNameTextBox>
+                        <KoreanFont size={1}>{myfriend.nick}</KoreanFont>
+                      </FriendNameTextBox>
+                      <Badge>{`Lv.${myfriend.characterLevel}`}</Badge>
+                    </RowBox>
+                    <Box
+                      isCursor={true}
+                      width={'1.5rem'}
+                      height={2.5}
+                      margin="auto 0 auto auto"
+                      onClick={() => {
+                        setDeleteFriendName(myfriend.nick);
+                        deleteFriend({ nick: myfriend.nick });
+                      }}
+                    >
+                      <KoreanFont size={0.81}>삭제</KoreanFont>
+                    </Box>
+                  </RowFriendBox>
+                );
+              })
+            )}
           </Box>
 
           {/* 친구추가버튼 */}
