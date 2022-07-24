@@ -12,6 +12,7 @@ const ModalWrapper = styled.div`
 
   ::-webkit-scrollbar {
     display: none;
+  }
 `;
 
 const CloseButton = styled(MdOutlineClose)`
@@ -31,7 +32,7 @@ export const InfoModal = ({ closeModal }: InfoModalProps) => {
         <Wrapper width="100%" justifyContent="end">
           <CloseButton onClick={() => closeModal()} />
         </Wrapper>
-        <Typography isBold weight={700} size={1.25}>{`캐릭터의 레벨과 스텝은 \n 어떻게 정해지나요?`}</Typography>
+        <Typography weight={700} size={1.25}>{`캐릭터의 레벨과 스텝은 \n 어떻게 정해지나요?`}</Typography>
 
         <GradationBottom />
       </ModalWrapper>

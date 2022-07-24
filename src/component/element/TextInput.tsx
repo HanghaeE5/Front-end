@@ -18,6 +18,7 @@ const TextElement = styled.input<StyleProps>`
   }
   width: 100%;
   border: ${({ isValidError }) => isValidError && `1px solid red`};
+  text-align: ${({ align }) => align || 'left'};
 `;
 
 const SearchButton = styled(BiSearch)`
@@ -52,6 +53,7 @@ interface StyleProps {
   inputSize?: 'small' | 'large';
   inputType?: 'default' | 'primary';
   isValidError?: boolean;
+  align?: 'left' | 'right' | 'center';
 }
 
 interface TextInputProps {
@@ -61,6 +63,7 @@ interface TextInputProps {
   onEnter?: () => void;
   placeholder?: string;
   value: string;
+  align?: string;
 }
 
 export const TextInput = ({
@@ -72,6 +75,7 @@ export const TextInput = ({
   onChange,
   onSearch,
   isValidError = false,
+  align,
 }: TextInputProps & StyleProps) => {
   const onKeyDown = (key: string) => {
     if (key !== 'Enter' || !onSearch) return;
@@ -92,6 +96,7 @@ export const TextInput = ({
           isValidError={isValidError}
           inputSize={inputSize}
           inputType={inputType}
+          align={align}
         />
         {!!onSearch && <SearchButton onClick={() => onSearch()} />}
       </Wrapper>

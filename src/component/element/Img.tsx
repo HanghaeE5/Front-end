@@ -12,8 +12,8 @@ interface ImgProps {
 const StyledImg = styled.img<ImgProps>`
   max-width: 770px;
   border-radius: ${({ type }) => (type === 'profile' ? '50%' : type === 'round' ? '0.5rem' : '')};
-  width: ${({ type, width }) => (type === 'profile' ? '2rem' : width)};
-  height: ${({ type, height }) => (type === 'profile' ? '2rem' : height || '200px')};
+  width: ${({ type, width }) => (type === 'profile' ? width || '2rem' : width)};
+  height: ${({ type, height }) => (type === 'profile' ? height || '2rem' : height || '200px')};
   max-height: 500px;
   background-color: ${({ theme }) => theme.color.grayMedium};
 `;

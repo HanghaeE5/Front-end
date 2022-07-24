@@ -20,7 +20,6 @@ interface TypographyProps {
   onClick?: () => void;
   isPointer?: boolean;
   underline?: boolean;
-  isBold?: boolean;
   align?: 'left' | 'center' | 'right';
   lineHeight?: number;
 }
