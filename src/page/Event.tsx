@@ -274,7 +274,12 @@ export const Event = () => {
   const enterPhoneNumber = (phone: string) => {
     if (!luckyBoxState.eventId) return;
 
-    enterPhone({ eventId: luckyBoxState.eventId, phone });
+    enterPhone(
+      { eventId: luckyBoxState.eventId, phone },
+      {
+        onSuccess: () => refetch(),
+      },
+    );
   };
 
   return (
