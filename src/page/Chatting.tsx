@@ -9,7 +9,11 @@ import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { chattingListState, friendListState, userInfoState } from '../recoil/store';
 import Stomp from 'stompjs';
+
 import SockJS from 'sockjs-client';
+import { EvAbleFont, EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont } from '../component/element/BoxStyle';
+import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
 const ContentWrapper = styled.div`
   height: 100%;
@@ -123,18 +127,13 @@ const BtnBox = styled.button`
   border-style: solid;
   border-color: #5f5f5f;
   border-width: ${(props: btnbox) => (props.isSelect ? '1px 1px 0px 1px' : '0px 0px 1px 0px')};
-  background-color: ${(props: btnbox) => (props.isSelect ? '#89ee73' : 'white')};
+  background-color: ${(props: btnbox) => (props.isSelect ? '#FFD600' : 'white')};
   border-radius: 6px 6px 0px 0px;
-  width: 45%;
-  height: 2.6875rem;
-  margin: '0 0 0 auto';
+  width: 44.6%;
+  height: 3.125rem;
+
   background-color: ${(props: btnbox) => props.color};
   cursor: pointer;
-
-  &:hover {
-    color: white;
-    background-color: #ecee73;
-  }
 `;
 
 export const Chatting = () => {
@@ -149,15 +148,26 @@ export const Chatting = () => {
   const nav = useNavigate();
   const queryClient = useQueryClient();
 
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
+
   //채팅 목록 API
   const getChattingQuery = useQuery('chattingLists', chattingApi.chattingListApi, {
     //여기서 리코일에 저장
 
     onSuccess: (data) => {
-      // console.log(data);
+      console.log('첫번째실행');
       setChattingList(data.data);
-      console.log(data);
     },
+    // onError: (error: AxiosError<{ msg: string }>) => {
+    //   if (error.message === 'Request failed with status code 401') {
+    //     useQuery('chattingLists', chattingApi.chattingListApi, {
+    //       onSuccess: (data) => {
+    //         console.log('채팅목록불러오기 재실행');
+    //         setChattingList(data.data);
+    //       },
+    //     });
+    //   }
+    // },
   });
 
   //친구 목록 API
@@ -183,7 +193,9 @@ export const Chatting = () => {
             200,
           );
         } else {
-          alert(error.response?.data.msg);
+          openErrorConfirm({
+            title: error.response?.data.msg,
+          });
         }
       },
     },
@@ -196,13 +208,15 @@ export const Chatting = () => {
       onSuccess: () => {
         queryClient.invalidateQueries('chattingLists');
       },
-      onError: (error: AxiosError<{ msg: string }>) => {
-        if (error.message === 'Request failed with status code 401') {
-          setTimeout(() => chattingRoomDelete({ roomId: deleteChattingroom }), 200);
-        } else {
-          alert(error.response?.data.msg);
-        }
-      },
+      // onError: (error: AxiosError<{ msg: string }>) => {
+      //   if (error.message === 'Request failed with status code 401') {
+      //     setTimeout(() => chattingRoomDelete({ roomId: deleteChattingroom }), 200);
+      //   } else {
+      //     openErrorConfirm({
+      //       title: error.response?.data.msg,
+      //     });
+      //   }
+      // },
     },
   );
 
@@ -263,12 +277,6 @@ export const Chatting = () => {
     }
   }
 
-  useEffect(() => {
-    if (chattingList) {
-      getChattingQuery;
-    }
-  }, [chattingList]);
-
   return (
     <NavLayout>
       <PageLayout title="채팅">
@@ -281,9 +289,9 @@ export const Chatting = () => {
               }}
               isSelect={chattingListbtn}
             >
-              <KoreanFont size={0.875} color="#5F5F5F">
-                채팅목록
-              </KoreanFont>
+              <EvAbleFont size={0.875} isDisable={!chattingListbtn}>
+                채팅방
+              </EvAbleFont>
             </BtnBox>
             <BtnBox
               onClick={() => {
@@ -292,13 +300,28 @@ export const Chatting = () => {
               }}
               isSelect={friendListbtn}
             >
-              <KoreanFont size={0.875} color="#5F5F5F">
+              <EvAbleFont size={0.875} isDisable={!friendListbtn}>
                 친구목록
-              </KoreanFont>
+              </EvAbleFont>
             </BtnBox>
           </RowBox>
-          {chattingListbtn
-            ? chattingList.map((chatting) => {
+          {chattingListbtn ? (
+            //채팅버튼 눌렸을때
+            chattingList.length === 0 ? (
+              // 채팅방이 없으면
+              <EvColumnBox width={'16rem'} height={10} margin="5rem auto auto auto">
+                <EvImgBox margin="0 auto">
+                  <Empty />
+                </EvImgBox>
+                <EvFontBox margin="1.25rem auto auto auto">
+                  <EvKoreanFont align="center" isWhiteSpace={true} size={0.875} lineHeight={'20px'} color="#5F5F5F">
+                    {`아직 참여하신 채팅방이 없어요.\n상단의 친구목록을 눌러 친구를 선택하거나\n커뮤니티에서 위드 투 두에 참가하시면\n채팅을 시작 할 수 있습니다!`}
+                  </EvKoreanFont>
+                </EvFontBox>
+              </EvColumnBox>
+            ) : (
+              //채팅방 있으면
+              chattingList.map((chatting) => {
                 return (
                   <RowChattingBox key={chatting.roomId}>
                     <ChattingRoomPhotoBox
@@ -318,7 +341,9 @@ export const Chatting = () => {
                         nav(`/chat/room/${chatting.roomId}`);
                       }}
                     >
-                      <KoreanFont size={1}>{chatting.name}</KoreanFont>
+                      <KoreanFont size={1}>
+                        {chatting.name.length > 16 ? chatting.name.slice(0, 16) + '...' : chatting.name}
+                      </KoreanFont>
                     </ChattingRoomTextBox>
                     <RowBox
                       width={'2rem'}
@@ -339,30 +364,47 @@ export const Chatting = () => {
                   </RowChattingBox>
                 );
               })
-            : friendList.map((friend) => {
-                return (
-                  <RowChattingBox
-                    key={friend.id}
-                    onClick={() => {
-                      setMakeChattingRoomName(`${friend.nick}님과 ${userInfoData.nick}님의 대화`);
-                      setMakeChattingRoomNickname(friend.nick);
-                      makePrivateChattingRoom({
-                        name: `${friend.nick}님과 ${userInfoData.nick}님의 대화`,
-                        nick: friend.nick,
-                      });
+            )
+          ) : // 친구목록 버튼 눌렸을때
+          friendList.length === 0 ? (
+            // 친구목록이 비어있으면
+            <EvColumnBox width={'16rem'} height={10} margin="5rem auto auto auto">
+              <EvImgBox margin="0 auto">
+                <Empty />
+              </EvImgBox>
+              <EvFontBox margin="1.25rem auto auto auto">
+                <EvKoreanFont align="center" isWhiteSpace={true} size={0.875} lineHeight={'20px'} color="#5F5F5F">
+                  {`아직 추가하신 친구가 없어요.\n친구 목록 페이지에서 친구의 닉네임을\n입력하면 친구를 추가할 수 있습니다!`}
+                </EvKoreanFont>
+              </EvFontBox>
+            </EvColumnBox>
+          ) : (
+            // 친구목록 있으면
+            friendList.map((friend) => {
+              return (
+                <RowChattingBox
+                  key={friend.id}
+                  onClick={() => {
+                    setMakeChattingRoomName(`${friend.nick}님과 ${userInfoData.nick}님의 대화`);
+                    setMakeChattingRoomNickname(friend.nick);
+                    makePrivateChattingRoom({
+                      name: `${friend.nick}님과 ${userInfoData.nick}님의 대화`,
+                      nick: friend.nick,
+                    });
+                  }}
+                >
+                  <ChattingRoomPhotoBox
+                    style={{
+                      backgroundImage: `url(${friend.profileImageUrl})`,
                     }}
-                  >
-                    <ChattingRoomPhotoBox
-                      style={{
-                        backgroundImage: `url(${friend.profileImageUrl})`,
-                      }}
-                    ></ChattingRoomPhotoBox>
-                    <ChattingRoomTextBox>
-                      <KoreanFont size={1}>{friend.nick}</KoreanFont>
-                    </ChattingRoomTextBox>
-                  </RowChattingBox>
-                );
-              })}
+                  ></ChattingRoomPhotoBox>
+                  <ChattingRoomTextBox>
+                    <KoreanFont size={1}>{friend.nick}</KoreanFont>
+                  </ChattingRoomTextBox>
+                </RowChattingBox>
+              );
+            })
+          )}
         </ContentWrapper>
       </PageLayout>
     </NavLayout>

@@ -11,12 +11,22 @@ import { userInfoState } from '../recoil/store';
 import { userApi } from '../api/callApi';
 import axios, { AxiosError } from 'axios';
 import setupInterceptorsTo from '../api/Interceptiors';
-import { EvBox, EvKoreanFont } from '../component/element/BoxStyle';
+import {
+  EvBox,
+  EvCheckHelfBox,
+  EvHelfInputInfo,
+  EvImgBox,
+  EvKoreanFont,
+  EvRowBox,
+} from '../component/element/BoxStyle';
 import { chatList } from '../Types/chat';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
 const ContentWrapper = styled.div`
-  /* background-color: seagreen; */
-  height: calc(100% - 4rem);
+  background: #feed91; /* fallback for old browsers */
+  background: -webkit-linear-gradient(180deg, #fff7d1 0%, #feed91 100%); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(180deg, #fff7d1 0%, #feed91 100%);
+  height: calc(100%);
   overflow-y: auto;
   ::-webkit-scrollbar {
     display: none;
@@ -25,19 +35,6 @@ const ContentWrapper = styled.div`
   flex-direction: column-reverse;
   padding-bottom: 10px;
   //스크롤바 없애기
-
-  section:nth-of-type(1) {
-    height: 10rem;
-
-    justify-content: center;
-    padding: 1rem;
-  }
-
-  section:nth-of-type(2) {
-    overflow-y: scroll;
-    height: 100%;
-    background-color: ${({ theme }) => theme.color.grayLight};
-  }
 `;
 
 type box = {
@@ -46,15 +43,19 @@ type box = {
   margin?: string;
 };
 
-const Box = styled.div`
+const MessageTextArea = styled.textarea`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  background-color: #ffffff;
+  background: #ffffff;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  border-radius: 6px;
+  padding: 0 0 0 10px;
+  border: none;
+
+  :focus {
+    background-color: #fffbe9;
+  }
 `;
 
 const RowBox = styled.div`
@@ -196,13 +197,14 @@ const InputInfo = styled.input`
 const MessageSendBox = styled.div`
   position: fixed;
   bottom: 3.5rem;
+
   height: 3.5rem;
   width: 100%;
   max-width: 768px;
   display: flex;
   justify-content: row;
   align-items: center;
-  background: #ededed;
+
   z-index: 3;
 `;
 
@@ -220,6 +222,7 @@ export const ChattingRoom = () => {
   const sock = new SockJS('https://todowith.shop/ws');
   const ws = Stomp.over(sock);
   const roomIdName = useParams().roomId;
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
   const keyUpEvent = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       sendMessage();
@@ -245,7 +248,6 @@ export const ChattingRoom = () => {
   const chattingMessageData = useQuery('chattingData', chattingMessageApi, {
     onSuccess: (data) => {
       setchatData(data.data.content);
-      console.log(data);
     },
     // onError: (error: AxiosError<{ msg: string }>) => {
     //   if (error.message === 'Request failed with status code 401') {
@@ -256,17 +258,17 @@ export const ChattingRoom = () => {
     // },
   });
 
-  //유저정보 가져오기 API
-  const userInformData = useQuery('userData', userApi.userInformApi, {
-    onSuccess: (data) => {
-      setUserInfoData(data.data);
-    },
-    onError: (error: AxiosError) => {
-      if (error.message === 'Request failed with status code 404') {
-        // nav(-1);
-      }
-    },
-  });
+  //유저정보 가져오기 API >> 상단 nav 있으니까 문제없으면 삭제하기
+  // const userInformData = useQuery('userData', userApi.userInformApi, {
+  //   onSuccess: (data) => {
+  //     setUserInfoData(data.data);
+  //   },
+  //   onError: (error: AxiosError) => {
+  //     if (error.message === 'Request failed with status code 404') {
+  //       // nav(-1);
+  //     }
+  //   },
+  // });
 
   //시간 변환
   function messageTime(msgtime: string) {
@@ -363,8 +365,17 @@ export const ChattingRoom = () => {
     try {
       // token이 없으면 로그인 페이지로 이동
       if (!localToken) {
-        alert('로그인 정보가 없습니다. 다시 로그인 해주세요.');
-        nav('/login');
+        openErrorConfirm({
+          title: '🙅🏻‍♀️로그인 정보가 없습니다.🙅🏻‍♀️',
+          content: '다시 로그인 해주세요.',
+          button: {
+            text: '확인',
+            onClick: () => {
+              localStorage.clear();
+              nav('/login');
+            },
+          },
+        });
       }
       // send할 데이터
       const data = {
@@ -451,46 +462,42 @@ export const ChattingRoom = () => {
               );
             }
           })}
+          <MessageSendBox>
+            <EvRowBox
+              style={{ boxShadow: '0px 2px 8px rgba(235, 197, 0, 0.25)' }}
+              borderRadius="6px"
+              backgroundColor="#ffffff"
+              width={'89.3%'}
+              height={2.75}
+              margin={'auto'}
+            >
+              <EvHelfInputInfo
+                width={'90%'}
+                height={2.75}
+                margin={'0'}
+                type="text"
+                placeholder="메시지를 입력해주세요"
+                name="myText"
+                value={myText}
+                onChange={onChangeMyText}
+                onKeyUp={keyUpEvent}
+              />
+              <EvCheckHelfBox
+                width={'10%'}
+                height={2.75}
+                margin={'0'}
+                url={'url(/assets/send.svg)'}
+                isCursor={true}
+                backgroundColor="#FFFFFF"
+                backgroundsize="27px"
+                onClick={() => {
+                  sendMessage();
+                  setmyText('');
+                }}
+              />
+            </EvRowBox>
+          </MessageSendBox>
         </ContentWrapper>
-        <MessageSendBox>
-          <RowBox width={'89%'} height={2.75} margin={'auto'}>
-            <InputInfo
-              width={'90%'}
-              height={2.75}
-              margin={'0'}
-              type="text"
-              placeholder="메시지를 입력해주세요"
-              name="myText"
-              value={myText}
-              onChange={onChangeMyText}
-              style={{
-                border: 'none',
-                borderTopLeftRadius: '6px',
-                borderBottomLeftRadius: '6px',
-              }}
-              onKeyUp={keyUpEvent}
-            ></InputInfo>
-            <Box
-              width={'10%'}
-              height={2.75}
-              margin={'0'}
-              style={{
-                border: 'none',
-                borderTopRightRadius: '6px',
-                borderBottomRightRadius: '6px',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                backgroundSize: '27px',
-                backgroundImage: 'url(/assets/send.svg)',
-                cursor: 'pointer',
-              }}
-              onClick={() => {
-                sendMessage();
-                setmyText('');
-              }}
-            ></Box>
-          </RowBox>
-        </MessageSendBox>
       </PageLayout>
     </NavLayout>
   );
