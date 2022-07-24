@@ -17,9 +17,12 @@ const HeaderWrapper = styled.div`
   line-height: 32.56px;
   font-size: 1.375rem;
 
-  & > svg {
+  & > svg:nth-of-type(1) {
     font-size: 1.25rem;
     cursor: pointer;
+  }
+  & > svg:nth-of-type(2) {
+    color: white;
   }
 `;
 
@@ -45,7 +48,7 @@ export const PageHeader = ({ title }: { title: string }) => {
         }}
       />
       <span>{title}</span>
-      <div />
+      <FiChevronLeft />
     </HeaderWrapper>
   );
 };

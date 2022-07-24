@@ -26,7 +26,7 @@ const PostInfo = styled.span`
 `;
 
 const Title = styled.div<{ isSummary?: boolean }>`
-  width: 80%;
+  width: 75%;
   margin: 1rem 0;
   white-space: ${({ isSummary }) => (isSummary ? 'nowrap' : 'pre-line')};
   word-wrap: break-word;
