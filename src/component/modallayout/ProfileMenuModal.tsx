@@ -93,7 +93,7 @@ const ProfileMenuModal = ({ isWithBanner }: { isWithBanner?: boolean }) => {
               e.stopPropagation();
             }}
           >
-            {!userInfoData.nick && (
+            {!userInfoData?.nick && (
               <RowBox
                 onClick={() => {
                   setmodalGather({ ...modalGather, profileMenuModal: false });
@@ -103,7 +103,7 @@ const ProfileMenuModal = ({ isWithBanner }: { isWithBanner?: boolean }) => {
                 Log(삭제예정)
               </RowBox>
             )}
-            {userInfoData.nick && (
+            {userInfoData?.nick && (
               <RowBox
                 onClick={() => {
                   localStorage.clear();
