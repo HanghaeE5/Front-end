@@ -28,7 +28,7 @@ const ModalBackground = styled.div`
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 8;
 `;
 
 type box = {

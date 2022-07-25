@@ -28,7 +28,7 @@ const ModalBackground = styled.div`
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 8;
 `;
 
 type box = {
@@ -69,6 +69,9 @@ const StepUpModal = () => {
 
   useEffect(() => {
     userInformData;
+    if (userInformData.error?.message === 'Request failed with status code 401') {
+      userInformData.refetch();
+    }
   }, [userInformData]);
 
   return (

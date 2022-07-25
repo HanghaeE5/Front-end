@@ -235,7 +235,7 @@ export const ChattingRoom = () => {
   // 이전, 현재 채팅 받는 API
   const baseApi = axios.create({
     baseURL: 'https://todowith.shop',
-    timeout: 1000,
+    timeout: 2000,
   });
 
   const callApi = setupInterceptorsTo(baseApi);

@@ -3,7 +3,7 @@ import setupInterceptorsTo from './Interceptiors';
 
 const baseApi = axios.create({
   baseURL: 'https://todowith.shop',
-  timeout: 1000,
+  timeout: 2000,
 });
 
 export const callApi = setupInterceptorsTo(baseApi);

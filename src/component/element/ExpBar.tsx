@@ -1,20 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ChartArea,
-  ChartData,
-} from 'chart.js';
+import { Chart as ChartJS, ArcElement, ChartArea, ChartData } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
-import { useRecoilState } from 'recoil';
-import { userInfoState } from '../../recoil/store';
-import { GrAnalytics } from 'react-icons/gr';
 
 ChartJS.register(ArcElement);
 interface exptype {

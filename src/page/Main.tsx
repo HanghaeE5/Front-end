@@ -204,9 +204,9 @@ export const Main = () => {
     }
   }, [userInformData]);
 
-  if (userInformData.status === 'loading') {
-    return <EvColumnBox>로딩중</EvColumnBox>;
-  }
+  // if (userInformData.status === 'loading') {
+  //   return <EvColumnBox>로딩중</EvColumnBox>;
+  // }
 
   return (
     <MainPageWrapper isColumn height="100%">

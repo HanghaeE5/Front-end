@@ -117,9 +117,13 @@ const EditNicknameModal = () => {
       setNicknameGather({ ...nicknameGather, nicknameOk: true });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      openErrorConfirm({
-        title: error.response?.data.msg,
-      });
+      if (error.message === 'Request failed with status code 401') {
+        setTimeout(() => NickCertification({ nick: nicknameGather.nickname }), 200);
+      } else {
+        openErrorConfirm({
+          title: error.response?.data.msg,
+        });
+      }
     },
   });
 

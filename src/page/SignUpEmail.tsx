@@ -291,7 +291,7 @@ export const SignUpEmail = () => {
                     }
               }
             >
-              <EvAbleFont size={0.875} color="#939393" weight={500} isDisable={!checkEmail(email)}>
+              <EvAbleFont size={0.875} weight={500} isDisable={!checkEmail(email)}>
                 {emailCheck ? '유효확인' : '인증'}
               </EvAbleFont>
             </SignUpBtnAble>
@@ -330,9 +330,9 @@ export const SignUpEmail = () => {
                 />
               </EvRowBox>
               <SignUpBtnAble
-                isDisable={!emailCheckNumber}
+                isDisable={emailCheckNumber.length != 6}
                 onClick={
-                  !emailCheckNumber
+                  emailCheckNumber.length != 6
                     ? () => {
                         null;
                       }
@@ -346,7 +346,7 @@ export const SignUpEmail = () => {
                       }
                 }
               >
-                <EvAbleFont size={0.875} color="#939393" weight={500} isDisable={!emailCheckNumberOK}>
+                <EvAbleFont size={0.875} weight={500} isDisable={emailCheckNumber.length != 6}>
                   {emailCheckNumberOK ? '인증완료' : '확인'}
                 </EvAbleFont>
               </SignUpBtnAble>

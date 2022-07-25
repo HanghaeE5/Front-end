@@ -208,15 +208,15 @@ export const Chatting = () => {
       onSuccess: () => {
         queryClient.invalidateQueries('chattingLists');
       },
-      // onError: (error: AxiosError<{ msg: string }>) => {
-      //   if (error.message === 'Request failed with status code 401') {
-      //     setTimeout(() => chattingRoomDelete({ roomId: deleteChattingroom }), 200);
-      //   } else {
-      //     openErrorConfirm({
-      //       title: error.response?.data.msg,
-      //     });
-      //   }
-      // },
+      onError: (error: AxiosError<{ msg: string }>) => {
+        if (error.message === 'Request failed with status code 401') {
+          setTimeout(() => chattingRoomDelete({ roomId: deleteChattingroom }), 200);
+        } else {
+          openErrorConfirm({
+            title: error.response?.data.msg,
+          });
+        }
+      },
     },
   );
 

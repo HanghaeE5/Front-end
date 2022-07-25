@@ -130,7 +130,7 @@ export const FriendPage = () => {
   // 친구 유저정보 가져오는 API
   const baseApi = axios.create({
     baseURL: 'https://todowith.shop',
-    timeout: 1000,
+    timeout: 2000,
   });
 
   const callApi = setupInterceptorsTo(baseApi);

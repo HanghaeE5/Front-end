@@ -26,9 +26,6 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
 };
 
 const onRequestError = (error: AxiosError): Promise<AxiosError> => {
-  const nav = useNavigate();
-
-  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
   // console.error(`[request error] [${JSON.stringify(error)}]`);
   if (error.message === 'Request failed with status code 401') {
     const localToken = localStorage.getItem('recoil-persist');
@@ -57,17 +54,9 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
         })
         .catch((error) => {
           console.log('refesh 토큰 못 받아옴');
-          openErrorConfirm({
-            title: '🙅🏻‍♀️로그인 시간이 만료되었습니다🙅🏻‍♀️',
-            content: '다시 로그인 해주세요.',
-            button: {
-              text: '확인',
-              onClick: () => {
-                localStorage.clear();
-                nav('/login');
-              },
-            },
-          });
+          alert('로그인 시간이 만료되었습니다. 다시 로그인 해주세요.');
+          localStorage.clear();
+          window.location.href = '/login';
         });
     }
 
@@ -83,10 +72,6 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 
 const onResponseError = (error: AxiosError): Promise<AxiosError> => {
   console.error(`[response error] [${JSON.stringify(error)}]`);
-  const nav = useNavigate();
-
-  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
-
   if (error.message === 'Request failed with status code 401') {
     const localToken = localStorage.getItem('recoil-persist');
 
@@ -115,17 +100,9 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
         })
         .catch((error) => {
           console.log('refesh 토큰 못 받아옴');
-          openErrorConfirm({
-            title: '🙅🏻‍♀️로그인 시간이 만료되었습니다🙅🏻‍♀️',
-            content: '다시 로그인 해주세요.',
-            button: {
-              text: '확인',
-              onClick: () => {
-                localStorage.clear();
-                nav('/login');
-              },
-            },
-          });
+          alert('로그인 시간이 만료되었습니다. 다시 로그인 해주세요.');
+          localStorage.clear();
+          window.location.href = '/login';
         });
     }
     return Promise.reject(error);

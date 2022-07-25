@@ -29,7 +29,7 @@ const ModalBackground = styled.div`
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 5;
 `;
 
 type box = {
@@ -156,10 +156,12 @@ const FriendAddModal = () => {
 
   //닉네임 친구추가 API
   const friendAddData = useMutation((nick: { nick: string }) => friendApi.friendAddApi(nick), {
-    onSuccess: (token) =>
+    onSuccess: (token) => {
       openSuccessConfirm({
         title: `${friendnickname}님께 친구 요청을 보냈습니다!`,
       }),
+        setmodalGather({ ...modalGather, friendAddModal: false });
+    },
     onError: (error: AxiosError<{ msg: string }>) => {
       if (error.message === 'Request failed with status code 401') {
         setTimeout(() => friendAdd(), 200);

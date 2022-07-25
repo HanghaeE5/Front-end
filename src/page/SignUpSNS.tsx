@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import { registerApi, userApi } from '../api/callApi';
 import { AxiosError } from 'axios';
 import { accessTokenState, popNotiState, userInfoState } from '../recoil/store';
-import { PopNoti } from '../component/element/PopNoti';
 import {
   EvBox,
   EvBtnAble,

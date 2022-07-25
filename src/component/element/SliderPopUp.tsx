@@ -1,6 +1,5 @@
 import { PropsWithChildren } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { Wrapper } from './Wrapper';
 
 export const ModalContainer = styled.div`
   position: absolute;
