@@ -218,7 +218,7 @@ export const Login = () => {
             url={'url(/assets/kakaoicon.png)'}
             onClick={() => {
               window.location.replace(
-                'https://todowith.shop/oauth2/authorization/kakao?redirect_uri=http://localhost:3000',
+                'https://todowith.shop/oauth2/authorization/kakao?redirect_uri=https://www.todowith.co.kr',
               );
             }}
           />
