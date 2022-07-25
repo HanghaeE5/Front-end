@@ -280,7 +280,7 @@ export const Event = () => {
           <Wrapper isColumn alignItems="center">
             <EventBadge>STEP 01</EventBadge>
             <EventTitle justifyContent="center" padding="1rem">
-              투 두 완료하고 도장받기
+              투두 완료하고 도장받기
             </EventTitle>
             <EventContent alignItems="center" justifyContent="center">
               미완료된 투두리스트 없이 1개 이상의 투두를 완료하면 <br />

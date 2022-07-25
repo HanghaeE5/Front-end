@@ -315,7 +315,7 @@ export const Chatting = () => {
                 </EvImgBox>
                 <EvFontBox margin="1.25rem auto auto auto">
                   <EvKoreanFont align="center" isWhiteSpace={true} size={0.875} lineHeight={'20px'} color="#5F5F5F">
-                    {`아직 참여하신 채팅방이 없어요.\n상단의 친구목록을 눌러 친구를 선택하거나\n커뮤니티에서 위드 투 두에 참가하시면\n채팅을 시작 할 수 있습니다!`}
+                    {`아직 참여하신 채팅방이 없어요.\n상단의 친구목록을 눌러 친구를 선택하거나\n커뮤니티에서 위드 투두에 참가하시면\n채팅을 시작 할 수 있습니다!`}
                   </EvKoreanFont>
                 </EvFontBox>
               </EvColumnBox>

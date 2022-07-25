@@ -115,7 +115,7 @@ const PostTitle = ({ children, category }: PropsWithChildren<Pick<Board, 'catego
   return (
     <Wrapper justifyContent="space-between" padding="0 1rem">
       <Title>{children}</Title>
-      <Badge>{category === 'CHALLENGE' ? '위드 투 두' : '일상'}</Badge>
+      <Badge>{category === 'CHALLENGE' ? '위드 투두' : '일상'}</Badge>
     </Wrapper>
   );
 };

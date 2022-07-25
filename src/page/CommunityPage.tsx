@@ -24,7 +24,7 @@ const serachOptions: SelectOption[] = [
 // filter
 const postFilterOptions: SelectOption[] = [
   { value: 'all', label: '전체' },
-  { value: 'challenge', label: '위드 투 두' },
+  { value: 'challenge', label: '위드 투두' },
   { value: 'daily', label: '일상' },
   { value: 'my', label: '내 글만' },
 ];

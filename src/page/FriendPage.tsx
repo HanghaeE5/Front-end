@@ -350,7 +350,7 @@ export const FriendPage = () => {
 
             <EvFontBox width={10.0625} height={1.6875} margin={'1.75rem auto 0 5.3%'}>
               <EvKoreanFont size={1.125} color="#000000" weight={500}>
-                오늘의 투 두 리스트
+                오늘의 투두리스트
               </EvKoreanFont>
             </EvFontBox>
             <ToDoBox>

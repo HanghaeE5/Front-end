@@ -55,7 +55,7 @@ export const CommunitiPostingPage = () => {
   }>({
     visible: false,
     todoProps: {
-      modalTitle: '마이 투 두 추가하기',
+      modalTitle: '마이 투두 추가하기',
       closeModal: () => setTodoModalStateNew((prev) => ({ ...prev, visible: false })),
       buttonTitle: '추가하기',
       onClickButton: (todo: TodoData) => console.log(todo),
@@ -129,7 +129,7 @@ export const CommunitiPostingPage = () => {
       visible: true,
       todoProps: {
         isWithTodo: true,
-        modalTitle: '위드 투 두 추가하기',
+        modalTitle: '위드 투두 추가하기',
         closeModal: () => setTodoModalStateNew((prev) => ({ ...prev, visible: false })),
         buttonTitle: '추가하기',
         onClickButton: (todo: TodoData) => {
@@ -145,7 +145,7 @@ export const CommunitiPostingPage = () => {
       visible: true,
       todoProps: {
         isWithTodo: true,
-        modalTitle: '위드 투 두 수정하기',
+        modalTitle: '위드 투두 수정하기',
         closeModal: () => setTodoModalStateNew((prev) => ({ ...prev, visible: false })),
         buttonTitle: '수정하기',
         todoData,
@@ -228,7 +228,7 @@ export const CommunitiPostingPage = () => {
                   width="49%"
                   onClick={() => addWithTodo()}
                 >
-                  위드 투 두
+                  위드 투두
                 </Button>
               </Wrapper>
               {post.postType === 'CHALLENGE' && todoData && (

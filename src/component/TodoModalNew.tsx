@@ -192,8 +192,8 @@ export const TodoModalNew = ({
         {isWithTodo && (
           <Wrapper padding="0.5rem 1rem">
             <Typography color="#8D8D8D" size={0.875}>
-              잠깐! 위 드 투 두 게시물은 작성 이후 수정, 삭제가 불가합니다. 제목, 카테고리, 날짜/기간을 유의하여
-              신중하게 작성해주세요.
+              잠깐! 위 드 투두 게시물은 작성 이후 수정, 삭제가 불가합니다. 제목, 카테고리, 날짜/기간을 유의하여 신중하게
+              작성해주세요.
             </Typography>
           </Wrapper>
         )}
@@ -203,9 +203,9 @@ export const TodoModalNew = ({
             inputType="default"
             value={todo.content}
             onChange={onChangeTitleInput}
-            placeholder="투 두 제목을 입력해주세요"
+            placeholder="투두 제목을 입력해주세요"
           />
-          <WarningText>투 두 제목은 필수사항입니다!</WarningText>
+          <WarningText>투두 제목은 필수사항입니다!</WarningText>
         </Wrapper>
         <CategorySection isColumn alignItems="start">
           <span>카테고리</span>

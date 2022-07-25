@@ -142,7 +142,7 @@ export const ChooseCharacter = () => {
 
         <EvFontBox width={15.5} height={3.9375} margin={'0.625rem auto 0 auto'}>
           <EvKoreanFont size={0.9375} align={'center'} lineHeight={'21px'} color={'#5F5F5F'}>
-            투두윗에서는 투 두 리스트를 완료할수록 <br />
+            투두윗에서는 투두리스트를 완료할수록 <br />
             나의 캐릭터가 함께 성장합니다. <br />
             아래 캐릭터 중 1개를 선택해주세요.
           </EvKoreanFont>
