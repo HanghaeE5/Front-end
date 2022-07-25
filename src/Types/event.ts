@@ -7,4 +7,5 @@ export interface EventResponse {
 export interface LuckyBoxResponse {
   eventId: number;
   name: string;
+  imageUrl: string;
 }

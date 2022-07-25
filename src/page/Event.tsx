@@ -5,6 +5,7 @@ import EventImg from '../asset/event.png';
 import {
   Badge,
   Button,
+  Img,
   PopConfirmNew,
   PopConfirmProps,
   Slide,
@@ -201,14 +202,20 @@ const EventButton = styled.div<{ bgColor: string }>`
 `;
 export const Event = () => {
   const [eventData, setEventData] = useState<EventResponse>({ couponCnt: 0, stampCnt: 0, stampDates: [] });
-  const [luckyBoxState, setLuckyBoxState] = useState<{ visible: boolean; eventId: number | undefined; item: string }>({
+  const [luckyBoxState, setLuckyBoxState] = useState<{
+    visible: boolean;
+    eventId: number | undefined;
+    item: string;
+    itemImg: string;
+  }>({
     visible: false,
     eventId: undefined,
     item: '',
+    itemImg: '',
   });
 
   const resetLuckyBoxState = () => {
-    setLuckyBoxState({ visible: false, eventId: undefined, item: '' });
+    setLuckyBoxState({ visible: false, eventId: undefined, item: '', itemImg: '' });
   };
   const [confirmState, setConfirmState] = useState<PopConfirmProps & { visible: boolean }>({
     visible: false,
@@ -236,7 +243,8 @@ export const Event = () => {
   });
 
   const { mutate: openLuckybox } = useMutation(openLuckyboxFn, {
-    onSuccess: (data) => setLuckyBoxState({ visible: true, eventId: data.eventId, item: data.name }),
+    onSuccess: (data) =>
+      setLuckyBoxState({ visible: true, eventId: data.eventId, item: data.name, itemImg: data.imageUrl }),
   });
 
   const { mutate: enterPhone } = useMutation(enterPhoneFn, {
@@ -266,7 +274,12 @@ export const Event = () => {
   const enterPhoneNumber = (phone: string) => {
     if (!luckyBoxState.eventId) return;
 
-    enterPhone({ eventId: luckyBoxState.eventId, phone });
+    enterPhone(
+      { eventId: luckyBoxState.eventId, phone },
+      {
+        onSuccess: () => refetch(),
+      },
+    );
   };
 
   return (
@@ -371,6 +384,7 @@ export const Event = () => {
           <LuckyBoxModal
             closeModal={resetLuckyBoxState}
             item={luckyBoxState.item}
+            itemImg={luckyBoxState.itemImg}
             onClickConfirmButton={enterPhoneNumber}
           />
         )}
@@ -383,7 +397,7 @@ const Modal = styled.div`
   background-color: white;
   width: 20rem;
   border-radius: 1.25rem;
-  padding: 2rem;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -392,20 +406,24 @@ const Modal = styled.div`
   button {
     margin: 0.5rem 0;
   }
+
+  & > span:nth-of-type(1) {
+    border: 4px solid white;
+  }
 `;
 
 const MentWrapper = styled(Wrapper)`
-  font-family: 'NotoLight';
+  font-family: NotoSans;
 
   & > span {
     color: black;
-    font-family: 'NotoRegu';
     font-size: 15px;
     font-weight: 500;
-    margin: 0.5rem;
+    margin: 0.25rem;
   }
 
   & > div {
+    font-weight: 400;
     margin: 0.5rem;
     font-size: 0.813rem;
     color: #5f5f5f;
@@ -417,10 +435,12 @@ const LuckyBoxModal = ({
   closeModal,
   onClickConfirmButton,
   item,
+  itemImg,
 }: {
   closeModal: () => void;
   onClickConfirmButton: (number: string) => void;
   item: string;
+  itemImg: string;
 }) => {
   const { value: phoneNumber, onChangeValue } = useInput();
 
@@ -429,11 +449,12 @@ const LuckyBoxModal = ({
     onChangeValue(onlyNumber.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/, '$1-$2-$3'));
   };
   return (
-    <SliderPopUp>
+    <SliderPopUp onClickBackground={closeModal}>
       <Modal>
-        <Typography isBold size={1.563}>
+        <Typography weight={700} size={1.563}>
           축하합니다!
         </Typography>
+        <Img url={itemImg} type="profile" width="120px" height="120px" />
         <MentWrapper isColumn>
           <span>{`${item}에 당첨되셨습니다`}</span>
           <div>
@@ -444,16 +465,22 @@ const LuckyBoxModal = ({
             해당 경품은 7월 23일 일괄지급됩니다
           </div>
         </MentWrapper>
-        <TextInput value={phoneNumber} onChange={setHipen} placeholder="핸드폰 번호를 입력해주세요" />
-        <Button buttonType="primary" onClick={closeModal}>
-          닫기
-        </Button>
+        <TextInput
+          inputSize="small"
+          value={phoneNumber}
+          onChange={setHipen}
+          placeholder="핸드폰 번호를 입력해주세요"
+          align="center"
+        />
         <Button buttonType="primary" onClick={() => onClickConfirmButton(phoneNumber)}>
           확인
         </Button>
         <Typography
           size={0.688}
           align="center"
+          weight={400}
+          lineHeight={1.063}
+          color="#272727"
         >{`관련 문의는 todowith@naver.com으로 주시면 \n 빠른 시일 내 답변 드리겠습니다.`}</Typography>
       </Modal>
     </SliderPopUp>

@@ -38,11 +38,11 @@ export const SliderWrapper = styled.div`
   z-index: 4;
 `;
 
-export const SliderPopUp = ({ children }: PropsWithChildren) => {
+export const SliderPopUp = ({ children, onClickBackground }: PropsWithChildren<{ onClickBackground?: () => void }>) => {
   return (
     <ModalContainer>
       <SliderWrapper>{children}</SliderWrapper>
-      <Background />
+      <Background onClick={() => onClickBackground && onClickBackground()} />
     </ModalContainer>
   );
 };

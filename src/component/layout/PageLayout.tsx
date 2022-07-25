@@ -14,15 +14,16 @@ const HeaderWrapper = styled.div`
   align-items: center;
   border-bottom: 1px solid #dddddd;
   padding: 1rem;
+  font-weight: 700;
+  line-height: 32.56px;
+  font-size: 1.375rem;
 
-  span {
-    font-size: 1.25rem;
-    font-weight: 700;
-  }
-
-  & > svg {
+  & > svg:nth-of-type(1) {
     font-size: 1.25rem;
     cursor: pointer;
+  }
+  & > svg:nth-of-type(2) {
+    color: white;
   }
 `;
 
@@ -37,13 +38,6 @@ const LayoutContainer = styled.div`
   height: 100%;
   position: relative;
 `;
-
-type font = {
-  size: number;
-  color?: string;
-  isCorrect?: boolean;
-  isBold?: boolean;
-};
 
 export const PageHeader = ({ title }: { title: string }) => {
   const nav = useNavigate();

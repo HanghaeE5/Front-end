@@ -128,7 +128,9 @@ export const CommunityPage = () => {
                         <Img url={post.imageUrl} type="round" />
                       </Wrapper>
                     )}
-                    <PostCard.PostTitle category={post.category}>{post.title}</PostCard.PostTitle>
+                    <PostCard.PostTitle isSummary category={post.category}>
+                      {post.title}
+                    </PostCard.PostTitle>
                     <PostCard.Content isSummary>{post.boardContent}</PostCard.Content>
                     {post.category === 'CHALLENGE' && <PostCard.Gather>{post.participatingCount}</PostCard.Gather>}
                   </PostCard>

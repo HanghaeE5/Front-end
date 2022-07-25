@@ -46,11 +46,6 @@ export const CommunityDetailPage = () => {
 
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
-  // const { visible: visibleChallange, openConfirm: openChallange, closeConfirm: closeChallange } = usePopConfirm();
-  //const { visible: visibleChat, openConfirm: openChatConfirm, closeConfirm: closeChatConfirm } = usePopConfirm();
-  // const { visible: visibleError, openConfirm: openError2Confirm, closeConfirm: closeErrorConfirm } = usePopConfirm();
-  // const { visible: visibleCancel, openConfirm: openCancelConfirm, closeConfirm: closeCacnelConfirm } = usePopConfirm();
-
   const {
     data: postDetail,
     isLoading,
@@ -216,11 +211,7 @@ export const CommunityDetailPage = () => {
                 onDelete: onDeleteBoard,
               }}
             />
-            {postDetail.imageUrl && (
-              <Wrapper height="40%">
-                <Img url={postDetail.imageUrl} type="square" height="100%" />
-              </Wrapper>
-            )}
+            {postDetail.imageUrl && <Img url={postDetail.imageUrl} type="square" height="50rem" />}
             <PostCard.PostTitle category={postDetail.category}>{postDetail.title}</PostCard.PostTitle>
             <PostCard.Content>{postDetail.boardContent}</PostCard.Content>
             {postDetail.category === 'CHALLENGE' && <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>}

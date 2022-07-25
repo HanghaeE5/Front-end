@@ -57,8 +57,8 @@ export const TodoItemWrapper = styled(Wrapper)<{ done: boolean }>`
 
 export const TodoLabel = styled.span<{ done: boolean }>`
   position: absolute;
-  right: ${({ done }) => (done ? '-0.3rem' : ' -0.35rem')};
-  top: ${({ done }) => (done ? '0rem' : ' -0.25rem')};
+  right: ${({ done }) => (done ? '-1px' : ' -3px')};
+  top: ${({ done }) => (done ? '-1px' : ' -3px')};
 
   background-color: ${({ done, theme }) => (done ? theme.color.grayMedium : theme.mainColor)};
   color: ${({ done }) => (done ? 'white' : 'black')};
@@ -76,6 +76,8 @@ export const ScrollWrapper = styled(Wrapper)`
   padding-bottom: 2rem;
   position: relative;
   overflow-y: scroll;
+  justify-content: start;
+  height: 100%;
   ::-webkit-scrollbar {
     display: none;
   }

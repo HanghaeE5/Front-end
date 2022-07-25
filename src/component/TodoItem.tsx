@@ -52,7 +52,7 @@ export const TodoItem = ({
         <TodoLabel done={todoData.state}>{todoData.boardId ? 'With To Do' : 'My To Do'}</TodoLabel>
         {todoData.state ? <AiFillCheckCircle /> : <AiOutlineCheckCircle onClick={onClickDone} />}
         <Wrapper isColumn alignItems="start" justifyContent="space-between" height="2.5rem">
-          <Typography isBold>{todoData.todoContent}</Typography>
+          <Typography>{todoData.todoContent}</Typography>
           <Wrapper>
             <Typography size={0.75}>{todoData.todoDate}</Typography>
             <Dot />
