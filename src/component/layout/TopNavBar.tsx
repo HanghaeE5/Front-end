@@ -6,6 +6,7 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { userApi } from '../../api/callApi';
 import { modalGatherState, userInfoState } from '../../recoil/store';
+import { EvImgBox } from '../element/BoxStyle';
 import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
 
@@ -93,18 +94,15 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
 
   return (
     <TopNavWrapper>
-      <Box
+      <EvImgBox
         width="4.1875rem"
         height={2.02}
         margin={'auto auto auto 5.3%'}
-        style={{
-          backgroundImage: 'url(/assets/로고.svg)',
-          backgroundSize: 'cover',
-        }}
+        url="url(/assets/로고.svg)"
         onClick={() => {
           nav('/');
         }}
-      ></Box>
+      />
       <RowBox
         width="5rem"
         height={2.02}
@@ -114,13 +112,11 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
         }}
       >
         {' '}
-        <Box
+        <EvImgBox
           width="2rem"
           height={2.02}
           margin={'auto'}
-          style={{
-            backgroundImage: 'url(/assets/nav/알림.svg)',
-          }}
+          url="url(/assets/nav/알림.svg)"
           onClick={() => {
             setmodalGather({
               levelUpModal: false,
@@ -133,7 +129,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
               explainModal: false,
             });
           }}
-        ></Box>
+        />
         <Box
           width="1.6rem"
           height={1.6}
@@ -149,7 +145,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
               profileMenuModal: true,
             });
           }}
-        ></Box>
+        />
       </RowBox>
       <NotiModal />
       <ProfileMenuModal isWithBanner={isWithBanner} />
