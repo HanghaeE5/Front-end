@@ -18,6 +18,11 @@ export const accessTokenState = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const snsSignupNickname = atom<boolean | undefined>({
+  key: 'snsSignupNicknameState',
+  default: undefined,
+});
+
 export const friendListState = atom<friendList>({
   key: 'friendListState',
   default: [],

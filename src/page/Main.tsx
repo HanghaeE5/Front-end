@@ -5,7 +5,7 @@ import { AiOutlineCheck } from 'react-icons/ai';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { ReactComponent as DirectionIcon } from '../asset/icons/direction.svg';
 
-import { accessTokenState, modalGatherState, userInfoState } from '../recoil/store';
+import { accessTokenState, modalGatherState, snsSignupNickname, userInfoState } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 import ExplainModal from '../component/modallayout/ExplainModal';
@@ -146,6 +146,7 @@ export const Main = () => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
+  const [snsSignupNicknameOk, setSnsSignupNicknameOk] = useRecoilState(snsSignupNickname);
   const localToken = localStorage.getItem('recoil-persist');
   const all = window.location.href;
 
@@ -162,6 +163,7 @@ export const Main = () => {
     },
     onError: (error: AxiosError<{ msg: string }>) => {
       if (error.response?.data.msg === '닉네임 입력 후 서비스 이용 가능합니다.') {
+        setSnsSignupNicknameOk(false);
         nav('/signupsns');
       } else if (error.response?.data.msg === '해당 캐릭터가 존재하지 않습니다') {
         nav('/choosecharacter');
@@ -206,9 +208,9 @@ export const Main = () => {
     }
   }, [userInformData]);
 
-  // if (userInformData.status === 'loading') {
-  //   return <EvColumnBox>로딩중</EvColumnBox>;
-  // }
+  if (userInformData.status === 'loading') {
+    return <EvColumnBox>로딩중</EvColumnBox>;
+  }
 
   return (
     <MainPageWrapper isColumn height="100%">

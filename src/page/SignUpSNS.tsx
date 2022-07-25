@@ -5,7 +5,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { registerApi, userApi } from '../api/callApi';
 import { AxiosError } from 'axios';
-import { accessTokenState, popNotiState, userInfoState } from '../recoil/store';
+import { accessTokenState, popNotiState, snsSignupNickname, userInfoState } from '../recoil/store';
 import {
   EvBox,
   EvBtnAble,
@@ -57,6 +57,7 @@ export const SignUpSNS = () => {
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [nickname, setNickname] = useState<string>('');
   const [popNoti, setPopNoti] = useRecoilState(popNotiState);
+  const [snsSignupNicknameOk, setSnsSignupNicknameOk] = useRecoilState(snsSignupNickname);
   const [check, setCheck] = useState<boolean>(false);
   const accessLoginToken = useSetRecoilState(accessTokenState);
 
@@ -107,7 +108,12 @@ export const SignUpSNS = () => {
       accessLoginToken(token.headers.authorization);
       openSuccessConfirm({
         title: `${nickname}님 반가워요!`,
-        button: { text: '확인', onClick: () => nav('/choosecharacter') },
+        button: {
+          text: '확인',
+          onClick: () => {
+            setSnsSignupNicknameOk(true), nav('/choosecharacter');
+          },
+        },
       });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
@@ -126,6 +132,7 @@ export const SignUpSNS = () => {
   const joinSocial = (nick: { nick: string }) => {
     joinSocialApiData.mutate(nick);
   };
+  console.log(snsSignupNicknameOk);
 
   //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
@@ -150,6 +157,12 @@ export const SignUpSNS = () => {
       });
     }
   }, [userInformData.status]);
+
+  useEffect(() => {
+    if (snsSignupNicknameOk === true || userInformData.data?.data.nick) {
+      nav('/choosecharacter');
+    }
+  }, []);
 
   return (
     <RegisterContainer>
