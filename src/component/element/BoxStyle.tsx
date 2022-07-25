@@ -223,7 +223,6 @@ type font = {
 
 export const EvKoreanFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
   color: ${(props: font) => (props.color ? props.color : '#1A1A1A')};
   display: flex;
   font-weight: ${(props: font) => (props.weight ? props.weight : 400)};
@@ -246,7 +245,6 @@ export const EvEnglishFont = styled.p`
 
 export const EvAbleFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
   color: ${(props: font) => (props.isDisable ? '#989898' : '#1A1A1A')};
   display: flex;
   margin: 0;
