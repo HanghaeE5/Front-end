@@ -161,7 +161,11 @@ export const Main = () => {
       setUserInfoData(data.data);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      if (error.response?.data.msg === '사용자를 찾을 수 없습니다') {
+      if (error.response?.data.msg === '닉네임 입력 후 서비스 이용 가능합니다.') {
+        nav('/signupsns');
+      } else if (error.response?.data.msg === '해당 캐릭터가 존재하지 않습니다') {
+        nav('/choosecharacter');
+      } else if (error.response?.data.msg === '사용자를 찾을 수 없습니다') {
         openErrorConfirm({
           title: '🙅🏻‍♀️사용자를 찾을 수 없습니다🙅🏻‍♀️',
           content: '다시 로그인을 해도 동일한 경우, 회원가입을 해주세요',
@@ -179,13 +183,13 @@ export const Main = () => {
 
   useEffect(() => {
     if (accessToken) {
-      console.log(all);
       setAccessLoginToken(accessToken);
       const isNickname = first[1].split('=')[1];
       console.log(accessToken);
       if (isNickname === 'N' || userInfoData?.nick === '') {
         nav('/signupsns');
-      } else if (isNickname === 'Y' && !userInfoData?.characterInfo.type) {
+      }
+      if (isNickname === 'Y' && !userInfoData?.characterInfo.type) {
         nav('/choosecharacter');
       } else {
         window.location.replace('/');
@@ -202,9 +206,9 @@ export const Main = () => {
     }
   }, [userInformData]);
 
-  if (userInformData.status === 'loading') {
-    return <EvColumnBox>로딩중</EvColumnBox>;
-  }
+  // if (userInformData.status === 'loading') {
+  //   return <EvColumnBox>로딩중</EvColumnBox>;
+  // }
 
   return (
     <MainPageWrapper isColumn height="100%">

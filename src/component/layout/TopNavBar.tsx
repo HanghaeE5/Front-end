@@ -79,7 +79,11 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
       setUserInfoData(data.data);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      if (error.response?.data.msg === '사용자를 찾을 수 없습니다') {
+      if (error.response?.data.msg === '닉네임 입력 후 서비스 이용 가능합니다.') {
+        nav('/signupsns');
+      } else if (error.response?.data.msg === '해당 캐릭터가 존재하지 않습니다') {
+        nav('/choosecharacter');
+      } else if (error.response?.data.msg === '사용자를 찾을 수 없습니다') {
         openErrorConfirm({
           title: '🙅🏻‍♀️사용자를 찾을 수 없습니다🙅🏻‍♀️',
           content: '다시 로그인을 해도 동일한 경우, 회원가입을 해주세요',
