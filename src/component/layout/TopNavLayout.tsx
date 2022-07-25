@@ -66,7 +66,6 @@ type font = {
 const KoreanFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
 
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
   color: ${(props: font) => props.color};
   display: flex;
   margin: 0 0 0 0;
