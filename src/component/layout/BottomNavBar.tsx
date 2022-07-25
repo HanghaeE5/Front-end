@@ -23,13 +23,6 @@ const NavWrapper = styled(Wrapper)`
   height: 3.375rem;
   & div {
     cursor: pointer;
-
-    &:hover {
-      svg {
-        transform: scale(1.2);
-        transition: 0.2s ease;
-      }
-    }
   }
 `;
 
