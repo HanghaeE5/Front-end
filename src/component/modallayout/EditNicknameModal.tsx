@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { useMutation } from 'react-query';
 import { registerApi, userApi } from '../../api/callApi';
 import { AxiosError } from 'axios';
-import { userInfo } from 'os';
 import {
   EvAbleFont,
   EvBtnAble,
@@ -42,12 +41,6 @@ const ModalBackground = styled.div`
   width: 100%;
   z-index: 5;
 `;
-
-type box = {
-  width?: number | string;
-  height?: number | string;
-  margin?: string;
-};
 
 const BoxWrap = styled.div`
   display: flex;

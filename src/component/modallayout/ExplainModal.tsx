@@ -1,23 +1,10 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { modalGatherState, userInfoState } from '../../recoil/store';
-import { PropsWithChildren, useEffect, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
-import { registerApi, userApi } from '../../api/callApi';
-import { AxiosError } from 'axios';
+import { modalGatherState } from '../../recoil/store';
+import React, { useState } from 'react';
 import '../../style/noScorll.css';
 
-import {
-  EvBox,
-  EvBtn,
-  EvBtnAble,
-  EvColumnBox,
-  EvEnglishFont,
-  EvFontBox,
-  EvImgBox,
-  EvKoreanFont,
-  EvRowBox,
-} from '../element/BoxStyle';
+import { EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont, EvRowBox } from '../element/BoxStyle';
 import { GradientScollWrap } from '../element/GradientScollWrap';
 
 const Slide = keyframes`

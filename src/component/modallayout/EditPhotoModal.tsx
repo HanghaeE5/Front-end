@@ -4,16 +4,7 @@ import { modalGatherState, userInfoState } from '../../recoil/store';
 import React, { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { userApi } from '../../api/callApi';
-import {
-  EvAbleFont,
-  EvBtn,
-  EvBtnAble,
-  EvColumnBox,
-  EvFontBox,
-  EvImgBox,
-  EvKoreanFont,
-  EvRowBox,
-} from '../element/BoxStyle';
+import { EvAbleFont, EvBtn, EvBtnAble, EvFontBox, EvImgBox, EvKoreanFont, EvRowBox } from '../element/BoxStyle';
 
 const Slide = keyframes`
     0% {
@@ -39,12 +30,6 @@ const ModalBackground = styled.div`
   z-index: 5;
 `;
 
-type box = {
-  width?: number | string;
-  height?: number | string;
-  margin?: string;
-};
-
 const BoxWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -69,24 +54,10 @@ const ImgLable = styled.label`
   cursor: pointer;
 `;
 
-type font = {
-  size: number;
-  color?: string;
-  isCorrect?: boolean;
-  isBold?: boolean;
-};
-
 export const Img = styled.img`
   width: 100%;
   /* height: 100%; */
 `;
-
-type btnable = {
-  width?: number | string;
-  height?: number | string;
-  margin?: string;
-  isDisable?: boolean;
-};
 
 const EditPhotoModal = () => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
