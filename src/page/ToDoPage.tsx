@@ -37,9 +37,9 @@ const AccessTabList: { label: string; value: TodoStatusFilter | 'all' }[] = [
 ];
 
 const emptyParagraph: { [key in TodoStatusFilter | 'all']: string } = {
-  all: `아직 투 두 리스트가 없어요. \n 오른쪽 하단에 버튼을 눌러 추가하거나 \n 커뮤니티에서 위드 투 두에 참여해보세요!`,
-  doingList: `진행중인 투 두 리스트가 없어요. \n 오른쪽 하단에 버튼을 눌러 추가하거나 \n 커뮤니티에서 위드 투 두에 참여해보세요!`,
-  doneList: `완료한 투 두 리스트가 없어요. \n 혼자서 그리고 함께 투 두 리스트를 완료해보세요!`,
+  all: `아직 투두리스트가 없어요. \n 오른쪽 하단에 버튼을 눌러 추가하거나 \n 커뮤니티에서 위드 투두에 참여해보세요!`,
+  doingList: `진행중인 투두리스트가 없어요. \n 오른쪽 하단에 버튼을 눌러 추가하거나 \n 커뮤니티에서 위드 투두에 참여해보세요!`,
+  doneList: `완료한 투두리스트가 없어요. \n 혼자서 그리고 함께 투두리스트를 완료해보세요!`,
 };
 
 // TODO : context API 써볼까
@@ -68,7 +68,7 @@ export const ToDoPage = () => {
   }>({
     visible: false,
     todoProps: {
-      modalTitle: '마이 투 두 추가하기',
+      modalTitle: '마이 투두 추가하기',
       closeModal: () => setTodoModalStateNew((prev) => ({ ...prev, visible: false })),
       buttonTitle: '추가하기',
       onClickButton: (todo: TodoData) => console.log(todo),
@@ -159,7 +159,7 @@ export const ToDoPage = () => {
     setTodoModalStateNew({
       visible: true,
       todoProps: {
-        modalTitle: '마이 투 두 추가하기',
+        modalTitle: '마이 투두 추가하기',
         closeModal: () => setTodoModalStateNew((prev) => ({ ...prev, visible: false })),
         buttonTitle: '추가하기',
         onClickButton: (todo: TodoData) => addTodoItem(todo),
@@ -169,14 +169,14 @@ export const ToDoPage = () => {
 
   const onClickEditButton = (todoItem: ITodoItem) => {
     if (todoItem.boardId) {
-      openErrorConfirm({ title: '위드 투 두는 수정이 불가합니다.' });
+      openErrorConfirm({ title: '위드 투두는 수정이 불가합니다.' });
       return;
     }
 
     setTodoModalStateNew({
       visible: true,
       todoProps: {
-        modalTitle: '마이 투 두 수정하기',
+        modalTitle: '마이 투두 수정하기',
         closeModal: () => setTodoModalStateNew((prev) => ({ ...prev, visible: false })),
         buttonTitle: '수정하기',
         todoData: {
@@ -216,7 +216,7 @@ export const ToDoPage = () => {
             setConfirmState({
               visible: true,
               iconType: 'warning',
-              title: '위드 투 두는 게시물에서 \n 신청을 취소할 수 있습니다.',
+              title: '위드 투두는 게시물에서 \n 신청을 취소할 수 있습니다.',
               content: '모집 마감일까지 취소 가능합니다',
               optionalButton: {
                 text: '게시물로 이동',
@@ -289,7 +289,7 @@ export const ToDoPage = () => {
       {confirmState.visible && <PopConfirmNew {...confirmState} />}
       <LevelUpModal />
       <StepUpModal />
-      <PageLayout title="투 두 리스트">
+      <PageLayout title="투두리스트">
         <Wrapper padding="1rem" isColumn alignItems="start" height="100%">
           <Typography weight={500} size={1.125}>
             공개 범위 설정

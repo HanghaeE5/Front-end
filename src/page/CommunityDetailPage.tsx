@@ -108,7 +108,7 @@ export const CommunityDetailPage = () => {
     if (!postDetail) return;
 
     if (postDetail.category === 'CHALLENGE') {
-      openErrorConfirm({ title: `위드 투 두 게시물은 작성 이후  \n 수정, 삭제가 불가합니다` });
+      openErrorConfirm({ title: `위드 투두 게시물은 작성 이후  \n 수정, 삭제가 불가합니다` });
       return;
     }
     nav(`${PATH.COMMUNITY_POST}/${postDetail.boardId}`);
@@ -118,7 +118,7 @@ export const CommunityDetailPage = () => {
     if (!postDetail) return;
 
     if (postDetail.category === 'CHALLENGE') {
-      openErrorConfirm({ title: `위드 투 두 게시물은 작성 이후  \n 수정, 삭제가 불가합니다` });
+      openErrorConfirm({ title: `위드 투두 게시물은 작성 이후  \n 수정, 삭제가 불가합니다` });
       return;
     }
     deleteBoard(postDetail.boardId);
@@ -138,7 +138,7 @@ export const CommunityDetailPage = () => {
       setConfirmState({
         visible: true,
         iconType: 'warning',
-        title: `위드 투 두 참여를 \n 취소하시겠어요?`,
+        title: `위드 투두 참여를 \n 취소하시겠어요?`,
         content: '모집 마감일 이후 취소가 불가합니다',
         button: {
           text: '네',
@@ -162,7 +162,7 @@ export const CommunityDetailPage = () => {
       setConfirmState({
         visible: true,
         iconType: 'withTodo',
-        title: '위드 투 두에 참여하시겠어요?',
+        title: '위드 투두에 참여하시겠어요?',
         content: '모집 마감일 이후 취소가 불가합니다',
         button: { text: '네', onClick: onConfirmChallenge },
         optionalButton: {
@@ -236,7 +236,7 @@ export const CommunityDetailPage = () => {
                   ? '마감되었습니다'
                   : postDetail.participating
                   ? '참여 취소하기'
-                  : '위드 투 두 참여하기'}
+                  : '위드 투두 참여하기'}
               </Button>
             </Wrapper>
           )}
