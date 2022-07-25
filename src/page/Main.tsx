@@ -161,6 +161,7 @@ export const Main = () => {
     onSuccess: (data) => {
       setUserInfoData(data.data);
     },
+
     onError: (error: AxiosError<{ msg: string }>) => {
       if (error.response?.data.msg === '닉네임 입력 후 서비스 이용 가능합니다.') {
         setSnsSignupNicknameOk(false);
@@ -196,8 +197,7 @@ export const Main = () => {
       } else {
         window.location.replace('/');
       }
-    }
-    if (!localToken) {
+    } else if (!localToken) {
       nav('/login');
     }
   }, []);
