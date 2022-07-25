@@ -79,8 +79,6 @@ type nicknametype = {
 const EditNicknameModal = () => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
-  // const [nickname, setNickname] = useState<string>('');
-  // const [nicknameOk, setNicknameOk] = useState<boolean>(false);
   const [nicknameGather, setNicknameGather] = useState<nicknametype>({
     nickname: '',
     nicknameOk: false,
