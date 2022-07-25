@@ -5,6 +5,7 @@ import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+// import {Client} from "@stomp/stompjs"
 import { useQuery, useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/store';
