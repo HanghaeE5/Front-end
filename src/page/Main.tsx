@@ -179,13 +179,13 @@ export const Main = () => {
 
   useEffect(() => {
     if (accessToken) {
+      console.log(all);
       setAccessLoginToken(accessToken);
       const isNickname = first[1].split('=')[1];
       console.log(accessToken);
       if (isNickname === 'N' || userInfoData?.nick === '') {
         nav('/signupsns');
-      }
-      if (isNickname === 'Y' && !userInfoData?.characterInfo.type) {
+      } else if (isNickname === 'Y' && !userInfoData?.characterInfo.type) {
         nav('/choosecharacter');
       } else {
         window.location.replace('/');
@@ -202,9 +202,9 @@ export const Main = () => {
     }
   }, [userInformData]);
 
-  // if (userInformData.status === 'loading') {
-  //   return <EvColumnBox>로딩중</EvColumnBox>;
-  // }
+  if (userInformData.status === 'loading') {
+    return <EvColumnBox>로딩중</EvColumnBox>;
+  }
 
   return (
     <MainPageWrapper isColumn height="100%">
