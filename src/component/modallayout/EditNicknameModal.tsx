@@ -16,6 +16,8 @@ import {
   EvRowBox,
 } from '../element/BoxStyle';
 import { SignUpBtnAble, SignUpInputInfo } from '../../page';
+import { useCommonConfirm } from '../../hooks/useCommonConfirm';
+import { useNavigate } from 'react-router';
 
 const Slide = keyframes`
     0% {
@@ -38,7 +40,7 @@ const ModalBackground = styled.div`
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 5;
 `;
 
 type box = {
@@ -76,14 +78,26 @@ const CheckFont = styled.p`
   text-align: left;
 `;
 
+type nicknametype = {
+  nickname: string;
+  nicknameOk: boolean;
+};
+
 const EditNicknameModal = () => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
-  const [nickname, setNickname] = useState<string>('');
-  const [nicknameOk, setNicknameOk] = useState<boolean>(false);
+  // const [nickname, setNickname] = useState<string>('');
+  // const [nicknameOk, setNicknameOk] = useState<boolean>(false);
+  const [nicknameGather, setNicknameGather] = useState<nicknametype>({
+    nickname: '',
+    nicknameOk: false,
+  });
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
+    setNicknameGather({ ...nicknameGather, nickname: e.target.value });
   };
+
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
+  const nav = useNavigate();
 
   const checkNickname = (asValue: string) => {
     const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
@@ -93,13 +107,19 @@ const EditNicknameModal = () => {
   //닉네임 중복확인 API
   const NickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
     onSuccess: () => {
-      // loginToken(token.headers.authorization.split(' ')[1]);
-      console.log();
-      alert(`${nickname}은 사용 가능합니다.`);
-      setNicknameOk(true);
+      openSuccessConfirm({
+        title: `${nicknameGather.nickname} 은(는) 사용 가능합니다.`,
+        button: {
+          text: '확인',
+          onClick: () => nav('/'),
+        },
+      });
+      setNicknameGather({ ...nicknameGather, nicknameOk: true });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      alert(error.response?.data.msg);
+      openErrorConfirm({
+        title: error.response?.data.msg,
+      });
     },
   });
 
@@ -112,21 +132,24 @@ const EditNicknameModal = () => {
   const NicknameEditData = useMutation((nick: { nick: string }) => userApi.nicknameEditApi(nick), {
     onSuccess: () => {
       setmodalGather({ ...modalGather, editNicknameModal: false });
-      setUserInfoData({ ...userInfoData, nick: nickname });
-      alert(`변경 완료!`);
-      setNickname('');
-      setNicknameOk(false);
+      setUserInfoData({ ...userInfoData, nick: nicknameGather.nickname });
+      openSuccessConfirm({
+        title: `변경 완료!`,
+      });
+      setNicknameGather({ nickname: '', nicknameOk: false });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
       if (error.message === 'Request failed with status code 401') {
         setTimeout(() => NicknameEdit(), 200);
       } else {
-        alert(error.response?.data.msg);
+        openErrorConfirm({
+          title: error.response?.data.msg,
+        });
       }
     },
   });
 
-  const goNicknameEdit = { nick: nickname };
+  const goNicknameEdit = { nick: nicknameGather.nickname };
 
   const NicknameEdit = () => {
     NicknameEditData.mutate(goNicknameEdit);
@@ -138,8 +161,7 @@ const EditNicknameModal = () => {
         <ModalBackground
           onClick={() => {
             setmodalGather({ ...modalGather, editNicknameModal: false });
-            setNickname('');
-            setNicknameOk(false);
+            setNicknameGather({ nickname: '', nicknameOk: false });
           }}
         >
           <BoxWrap
@@ -161,7 +183,7 @@ const EditNicknameModal = () => {
                 isCursor={true}
                 onClick={() => {
                   setmodalGather({ ...modalGather, editNicknameModal: false });
-                  setNickname('');
+                  setNicknameGather({ nickname: '', nicknameOk: false });
                 }}
               />
             </EvRowBox>
@@ -172,7 +194,7 @@ const EditNicknameModal = () => {
                   type="text"
                   placeholder="예) 오늘투두윗"
                   name="nickname"
-                  value={nickname}
+                  value={nicknameGather.nickname}
                   onChange={onChangeNickname}
                 />
                 <EvCheckHelfBox
@@ -180,20 +202,20 @@ const EditNicknameModal = () => {
                   height={3.75}
                   margin={'0'}
                   backgroundsize={'1.5rem'}
-                  url={nicknameOk ? 'url(/assets/checkyellow.svg)' : 'url(/assets/checkgray.svg)'}
+                  url={nicknameGather.nicknameOk ? 'url(/assets/checkyellow.svg)' : 'url(/assets/checkgray.svg)'}
                 />
               </EvRowBox>
 
               <SignUpBtnAble
-                isDisable={!checkNickname(nickname)}
+                isDisable={!checkNickname(nicknameGather.nickname)}
                 width={'19.4%'}
                 height={2.625}
                 margin={'0px 0rem 0px auto'}
                 onClick={
-                  checkNickname(nickname)
+                  checkNickname(nicknameGather.nickname)
                     ? () => {
                         const goNickCertification = {
-                          nick: nickname,
+                          nick: nicknameGather.nickname,
                         };
                         NickCertification(goNickCertification);
                       }
@@ -202,16 +224,21 @@ const EditNicknameModal = () => {
                       }
                 }
               >
-                <EvAbleFont size={0.875} color="#939393" weight={500} isDisable={!checkNickname(nickname)}>
-                  {nicknameOk ? '확인완료' : '중복확인'}
+                <EvAbleFont
+                  size={0.875}
+                  color="#939393"
+                  weight={500}
+                  isDisable={!checkNickname(nicknameGather.nickname)}
+                >
+                  {nicknameGather.nicknameOk ? '확인완료' : '중복확인'}
                 </EvAbleFont>
               </SignUpBtnAble>
             </EvRowBox>
 
             <EvFontBox isAlignSide={true} width={'92%'} height={1.3125} margin={'0.375rem auto 0px 5.3%'}>
-              {nickname ? (
-                <CheckFont size={0.75} color={'blue'} isCorrect={checkNickname(nickname)}>
-                  {checkNickname(nickname)
+              {nicknameGather.nickname ? (
+                <CheckFont size={0.75} color={'blue'} isCorrect={checkNickname(nicknameGather.nickname)}>
+                  {checkNickname(nicknameGather.nickname)
                     ? '사용 가능한 형식입니다. 중복 확인 버튼을 눌러주세요.'
                     : '닉네임 형식을 확인해 주세요.'}
                 </CheckFont>
@@ -222,12 +249,12 @@ const EditNicknameModal = () => {
               )}
             </EvFontBox>
             <EvBtnAble
-              isDisable={!nicknameOk}
+              isDisable={!nicknameGather.nicknameOk}
               width={'89.3%'}
               height={3.75}
               margin={'6.25rem auto auto auto'}
               onClick={
-                nicknameOk
+                nicknameGather.nicknameOk
                   ? () => {
                       NicknameEdit();
                     }
@@ -236,7 +263,7 @@ const EditNicknameModal = () => {
                     }
               }
             >
-              <EvAbleFont size={1.0625} isDisable={!nicknameOk} weight={700}>
+              <EvAbleFont size={1.0625} isDisable={!nicknameGather.nicknameOk} weight={700}>
                 닉네임 변경 완료
               </EvAbleFont>
             </EvBtnAble>

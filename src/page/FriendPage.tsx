@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 import { useQuery, useQueryClient } from 'react-query';
 import { userApi } from '../api/callApi';
-import { InfoModal } from '../component/InfoModal';
 import { Typography, Wrapper } from '../component/element';
 import { PATH } from '../route/routeList';
 import { NoHeaderPageLayout } from '../component/layout/NoHeaderPageLayout';
@@ -152,7 +151,9 @@ export const FriendPage = () => {
     //   if (error.message === 'Request failed with status code 401') {
     //     setTimeout(() => chattingMessage((data: FieldValues)), 200);
     //   } else {
-    //     alert(error.response?.data.msg);
+    // openErrorConfirm({
+    //   title: error.response?.data.msg,
+    // });
     //   }
     // },
   });

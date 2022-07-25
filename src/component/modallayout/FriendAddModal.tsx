@@ -6,6 +6,7 @@ import { useMutation } from 'react-query';
 import { friendApi, registerApi, userApi } from '../../api/callApi';
 import { AxiosError } from 'axios';
 import { EvAbleFont, EvBtnAble, EvFontBox, EvInputInfo, EvKoreanFont } from '../element/BoxStyle';
+import { useCommonConfirm } from '../../hooks/useCommonConfirm';
 
 const Slide = keyframes`
     0% {
@@ -151,18 +152,21 @@ const FriendAddModal = () => {
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFriendNickname(e.target.value);
   };
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   //닉네임 친구추가 API
   const friendAddData = useMutation((nick: { nick: string }) => friendApi.friendAddApi(nick), {
-    onSuccess: (token) => {
-      console.log(token);
-      alert(`${friendnickname}님께 친구 요청을 보냈습니다!`);
-    },
+    onSuccess: (token) =>
+      openSuccessConfirm({
+        title: `${friendnickname}님께 친구 요청을 보냈습니다!`,
+      }),
     onError: (error: AxiosError<{ msg: string }>) => {
       if (error.message === 'Request failed with status code 401') {
         setTimeout(() => friendAdd(), 200);
       } else {
-        alert(error.response?.data.msg);
+        openErrorConfirm({
+          title: error.response?.data.msg,
+        });
       }
     },
   });

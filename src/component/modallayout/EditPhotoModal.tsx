@@ -4,7 +4,16 @@ import { modalGatherState, userInfoState } from '../../recoil/store';
 import React, { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { userApi } from '../../api/callApi';
-import { EvBtn, EvBtnAble, EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont, EvRowBox } from '../element/BoxStyle';
+import {
+  EvAbleFont,
+  EvBtn,
+  EvBtnAble,
+  EvColumnBox,
+  EvFontBox,
+  EvImgBox,
+  EvKoreanFont,
+  EvRowBox,
+} from '../element/BoxStyle';
 
 const Slide = keyframes`
     0% {
@@ -27,7 +36,7 @@ const ModalBackground = styled.div`
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 5;
 `;
 
 type box = {
@@ -216,12 +225,12 @@ const EditPhotoModal = () => {
             </EvBtn>
 
             <EvBtnAble
-              isDisable={!userPhotoWait}
+              isDisable={userPhotoWait.img_show === userInfoData.profileImageUrl}
               width={'100%'}
               height={3.75}
               margin={'auto 0 0 0'}
               onClick={
-                userPhotoWait
+                userPhotoWait.img_show != userInfoData.profileImageUrl
                   ? () => {
                       profilePhotoEdit();
                     }
@@ -230,7 +239,9 @@ const EditPhotoModal = () => {
                     }
               }
             >
-              <EvKoreanFont size={1}>완료하기</EvKoreanFont>
+              <EvAbleFont isDisable={userPhotoWait.img_show === userInfoData.profileImageUrl} size={1}>
+                완료하기
+              </EvAbleFont>
             </EvBtnAble>
           </BoxWrap>
         </ModalBackground>

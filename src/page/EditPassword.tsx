@@ -18,6 +18,7 @@ import {
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { ContentWrapper } from '../component/styledComponent/TodoPageComponents';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
 import { userInfoState } from '../recoil/store';
 
 type font = {
@@ -73,20 +74,28 @@ export const EditPassword = () => {
 
   const editDisable = !prePassword || newPassword != newPassword2 || !newPassword || !checkPassword(newPassword);
 
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
+
   //비밀번호 변경 API
   const editPasswordData = useMutation(
     (data: { newPassword: string; oldPassword: string }) => userApi.editPasswordApi(data),
     {
       onSuccess: () => {
-        console.log();
-        alert(`${userInfoData.nick}님의 비밀번호가 변경되었습니다`);
-        nav('/');
+        openSuccessConfirm({
+          title: `${userInfoData.nick}님의 비밀번호가 변경되었습니다`,
+          button: {
+            text: '확인',
+            onClick: () => nav('/'),
+          },
+        });
       },
       onError: (error: AxiosError<{ msg: string }>) => {
         if (error.message === 'Request failed with status code 401') {
           setTimeout(() => editPassword({ newPassword: newPassword, oldPassword: prePassword }), 200);
         } else {
-          alert(error.response?.data.msg);
+          openErrorConfirm({
+            title: error.response?.data.msg,
+          });
         }
       },
     },
@@ -99,8 +108,17 @@ export const EditPassword = () => {
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
     if (!localToken) {
-      alert('🙅🏻‍♀️로그인이 되어있지 않습니다🙅🏻‍♀️');
-      nav('/login');
+      openErrorConfirm({
+        title: '🙅🏻‍♀️로그인이 되어있지 않습니다🙅🏻‍♀️',
+        content: '로그인 후 이용해주세요',
+        button: {
+          text: '확인',
+          onClick: () => {
+            localStorage.clear();
+            nav('/login');
+          },
+        },
+      });
     }
   }, []);
 

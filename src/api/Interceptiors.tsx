@@ -1,4 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { useNavigate } from 'react-router';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
 // axios.defaults.withCredentials = true;
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
@@ -24,6 +26,9 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
 };
 
 const onRequestError = (error: AxiosError): Promise<AxiosError> => {
+  const nav = useNavigate();
+
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
   // console.error(`[request error] [${JSON.stringify(error)}]`);
   if (error.message === 'Request failed with status code 401') {
     const localToken = localStorage.getItem('recoil-persist');
@@ -49,8 +54,23 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
               // refreshTokenState: res.headers.refresh,
             }),
           );
+        })
+        .catch((error) => {
+          console.log('refesh 토큰 못 받아옴');
+          openErrorConfirm({
+            title: '🙅🏻‍♀️로그인 시간이 만료되었습니다🙅🏻‍♀️',
+            content: '다시 로그인 해주세요.',
+            button: {
+              text: '확인',
+              onClick: () => {
+                localStorage.clear();
+                nav('/login');
+              },
+            },
+          });
         });
     }
+
     return Promise.reject(error);
   }
   return Promise.reject(error);
@@ -63,6 +83,9 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 
 const onResponseError = (error: AxiosError): Promise<AxiosError> => {
   console.error(`[response error] [${JSON.stringify(error)}]`);
+  const nav = useNavigate();
+
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   if (error.message === 'Request failed with status code 401') {
     const localToken = localStorage.getItem('recoil-persist');
@@ -92,8 +115,17 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
         })
         .catch((error) => {
           console.log('refesh 토큰 못 받아옴');
-          localStorage.clear();
-          alert('로그인 시간 만료로 로그인이 필요합니다.');
+          openErrorConfirm({
+            title: '🙅🏻‍♀️로그인 시간이 만료되었습니다🙅🏻‍♀️',
+            content: '다시 로그인 해주세요.',
+            button: {
+              text: '확인',
+              onClick: () => {
+                localStorage.clear();
+                nav('/login');
+              },
+            },
+          });
         });
     }
     return Promise.reject(error);

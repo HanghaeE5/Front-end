@@ -143,12 +143,14 @@ export const SignUpEmail = () => {
     onSuccess: () => {
       openSuccessConfirm({
         title: `${email} 메일로 발송된 인증번호를 입력해주세요🙂`,
-        // button: { text: '확인', onClick: () => null },
       });
       setEmailCheckNumberInput(true);
     },
+
     onError: (error: AxiosError<{ msg: string }>) => {
-      alert(error.response?.data.msg);
+      openErrorConfirm({
+        title: error.response?.data.msg,
+      });
     },
   });
 
@@ -163,10 +165,15 @@ export const SignUpEmail = () => {
       onSuccess: () => {
         // loginToken(token.headers.authorization.split(' ')[1]);
         setEmailCheckNumberOK(true);
-        alert('인증완료🙂');
+        openSuccessConfirm({
+          title: '인증완료🙂',
+        });
       },
+
       onError: () => {
-        alert('인증번호를 다시 확인해주세요.');
+        openErrorConfirm({
+          title: '인증번호를 다시 확인해주세요.',
+        });
       },
     },
   );
@@ -180,10 +187,14 @@ export const SignUpEmail = () => {
     onSuccess: () => {
       // loginToken(token.headers.authorization.split(' ')[1]);
       setNicknameCheck(true);
-      alert(`${nickname}으로 닉네임이 설정되었습니다.`);
+      openSuccessConfirm({
+        title: `${nickname}으로 닉네임이 설정되었습니다.`,
+      });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      alert(error.response?.data.msg);
+      openErrorConfirm({
+        title: error.response?.data.msg,
+      });
     },
   });
 
@@ -196,13 +207,18 @@ export const SignUpEmail = () => {
   //회원가입 API
   const joinData = useMutation((data: { email: string; nick: string; password: string }) => registerApi.joinApi(data), {
     onSuccess: () => {
-      // loginToken(token.headers.authorization.split(' ')[1]);
-      console.log();
-      alert(`${nickname}님 반가워요! 로그인해주세요`);
-      nav('/login');
+      openSuccessConfirm({
+        title: `${nickname}님 반가워요! 로그인해주세요`,
+        button: {
+          text: '확인',
+          onClick: () => nav('/login'),
+        },
+      });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      alert(error.response?.data.msg);
+      openErrorConfirm({
+        title: error.response?.data.msg,
+      });
     },
   });
 

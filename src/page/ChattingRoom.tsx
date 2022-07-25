@@ -253,7 +253,9 @@ export const ChattingRoom = () => {
     //   if (error.message === 'Request failed with status code 401') {
     //     setTimeout(() => chattingMessage((data: FieldValues)), 200);
     //   } else {
-    //     alert(error.response?.data.msg);
+    // openErrorConfirm({
+    //   title: error.response?.data.msg,
+    // });
     //   }
     // },
   });

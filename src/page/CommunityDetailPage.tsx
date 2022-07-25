@@ -185,7 +185,9 @@ export const CommunityDetailPage = () => {
         if (error.message === 'Request failed with status code 401') {
           setTimeout(() => enterPublicChattingRoom({ roomId: publicChattingRoomId }), 200);
         } else {
-          alert(error.response?.data.msg);
+          openErrorConfirm({
+            title: error.response?.data.msg,
+          });
         }
       },
     },

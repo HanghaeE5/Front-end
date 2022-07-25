@@ -13,6 +13,7 @@ import FriendAddModal from '../component/modallayout/FriendAddModal';
 import { friendListState, modalGatherState } from '../recoil/store';
 import { friendList } from '../Types/user';
 import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
 const ContentWrapper = styled.div`
   height: 100%;
@@ -146,6 +147,8 @@ export const FriendList = () => {
   const nav = useNavigate();
   const queryClient = useQueryClient();
 
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
+
   //친구요청 목록 API
   const getRequestFriendQuery = useQuery('requestFriendLists', friendApi.requestFriendListApi, {
     //여기서 리코일에 저장
@@ -175,7 +178,9 @@ export const FriendList = () => {
       if (error.message === 'Request failed with status code 401') {
         setTimeout(() => allowFriend({ nick: allowFriendName }), 200);
       } else {
-        alert(error.response?.data.msg);
+        openErrorConfirm({
+          title: error.response?.data.msg,
+        });
       }
     },
   });
@@ -193,7 +198,9 @@ export const FriendList = () => {
       if (error.message === 'Request failed with status code 401') {
         setTimeout(() => deleteFriend({ nick: deleteFriendName }), 200);
       } else {
-        alert(error.response?.data.msg);
+        openErrorConfirm({
+          title: error.response?.data.msg,
+        });
       }
     },
   });
@@ -211,7 +218,9 @@ export const FriendList = () => {
       if (error.message === 'Request failed with status code 401') {
         setTimeout(() => rejectFriend({ nick: rejectRequestFriendName }), 200);
       } else {
-        alert(error.response?.data.msg);
+        openErrorConfirm({
+          title: error.response?.data.msg,
+        });
       }
     },
   });

@@ -6,6 +6,7 @@ import { EvBox, EvKoreanFont } from '../element/BoxStyle';
 import { useMutation } from 'react-query';
 import { userApi } from '../../api/callApi';
 import { useEffect, useState } from 'react';
+import { useCommonConfirm } from '../../hooks/useCommonConfirm';
 
 const Slide = keyframes`
     0% {
@@ -82,6 +83,8 @@ const ProfileMenuModal = ({ isWithBanner }: { isWithBanner?: boolean }) => {
     joinType();
   }, [userJoinType]);
 
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
+
   return (
     <>
       {modalGather.profileMenuModal && (
@@ -96,10 +99,16 @@ const ProfileMenuModal = ({ isWithBanner }: { isWithBanner?: boolean }) => {
             {userInfoData.nick && (
               <RowBox
                 onClick={() => {
-                  localStorage.clear();
-                  alert('로그아웃되었습니다');
                   setmodalGather({ ...modalGather, profileMenuModal: false });
-                  nav('/login');
+                  openSuccessConfirm({
+                    title: '로그아웃되었습니다',
+                    button: {
+                      text: '확인',
+                      onClick: () => {
+                        localStorage.clear(), nav('/login');
+                      },
+                    },
+                  });
                 }}
               >
                 <EvBox width={'5.5rem'} margin="auto 1.9rem auto 1rem" isAlignSide={true}>

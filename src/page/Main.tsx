@@ -13,7 +13,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useQuery } from 'react-query';
 import { userApi } from '../api/callApi';
-import { InfoModal } from '../component/InfoModal';
 import { Typography, Wrapper } from '../component/element';
 import { PATH } from '../route/routeList';
 import { NoHeaderPageLayout } from '../component/layout/NoHeaderPageLayout';
