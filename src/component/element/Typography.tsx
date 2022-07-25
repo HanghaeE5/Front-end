@@ -6,7 +6,6 @@ const SteyledTypo = styled.span<TypographyProps>`
   color: ${({ color }) => color};
   cursor: ${({ isPointer }) => (isPointer ? 'pointer' : '')};
   text-decoration: ${({ underline }) => underline && 'underline'};
-  font-family: 'NotoSans';
   font-weight: ${({ weight }) => weight || 500};
   white-space: pre-line;
   text-align: ${({ align }) => align || 'left'};

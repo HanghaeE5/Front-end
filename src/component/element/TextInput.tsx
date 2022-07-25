@@ -43,7 +43,6 @@ const TextAreaElement = styled.textarea<{ isValidError?: boolean }>`
     background-color: #fffbe9;
   }
   width: 100%;
-  font-family: NotoRegu;
   font-weight: 400;
   resize: none;
   border: ${({ isValidError }) => isValidError && `1px solid red`};
