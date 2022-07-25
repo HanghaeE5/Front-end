@@ -13,7 +13,7 @@ import {
   FriendPage,
   ChooseCharacter,
   CommunitiPostingPage,
-  Event,
+  EventPage,
 } from '../page';
 import { ReactElement } from 'react';
 
@@ -114,6 +114,6 @@ export const routeList: IRoute[] = [
   {
     id: 'event',
     path: PATH.EVENT,
-    page: Event,
+    page: EventPage,
   },
 ];

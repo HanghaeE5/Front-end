@@ -18,7 +18,6 @@ const ResponseContainer = styled.div`
   height: 100%;
   background-color: ${(props) => props.theme.mainColor};
   box-sizing: border-box;
-  font-family: 'NotoSans';
 `;
 
 function App() {

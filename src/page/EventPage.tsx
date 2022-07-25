@@ -15,13 +15,22 @@ import {
   Wrapper,
 } from '../component/element';
 import { ReactComponent as Stamp } from '../asset/icons/stamp.svg';
-import { ReactComponent as LuckyBox } from '../asset/luckybox.svg';
+import { ReactComponent as LuckyBoxImg } from '../asset/luckybox.svg';
 import { useState } from 'react';
 import { EventResponse } from '../Types/event';
 import { useInput } from '../hooks/useInput';
 import { AxiosError } from 'axios';
 import { PageHeader, PageLayout } from '../component/layout/PageLayout';
 import { TopNavBar } from '../component/layout/TopNavBar';
+
+const EventPageContainer = styled(Wrapper)`
+  position: relative;
+  width: 375px;
+`;
+
+const LuckyBox = styled(LuckyBoxImg)`
+  border: none;
+`;
 
 const ScrollWrapper = styled.div`
   font-family: 'GmarketSans';
@@ -200,7 +209,7 @@ const EventButton = styled.div<{ bgColor: string }>`
   cursor: pointer;
   margin: 0.5rem 0;
 `;
-export const Event = () => {
+export const EventPage = () => {
   const [eventData, setEventData] = useState<EventResponse>({ couponCnt: 0, stampCnt: 0, stampDates: [] });
   const [luckyBoxState, setLuckyBoxState] = useState<{
     visible: boolean;
@@ -283,7 +292,7 @@ export const Event = () => {
   };
 
   return (
-    <Wrapper height="100%" width="375px" isColumn>
+    <EventPageContainer height="100%" isColumn>
       <TopNavBar />
       <PageHeader title="이벤트" />
       <ScrollWrapper>
@@ -337,12 +346,14 @@ export const Event = () => {
                 ))}
               </Wrapper>
               <Wrapper justifyContent="space-between">
-                {['24', '25', '26', '27', '28', '29', '31'].map((dd) => (
+                {['24', '25', '26', '27', '28', '29', '30'].map((dd) => (
                   <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
                 ))}
               </Wrapper>
               <Wrapper justifyContent="space-between">
-                <Day dd="31" stampedList={eventData.stampDates} />
+                {['31', '8/1', '8/2', '8/3', '8/4', '8/5', ''].map((dd) => (
+                  <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
+                ))}
               </Wrapper>
             </div>
           </EventCalendar>
@@ -389,7 +400,7 @@ export const Event = () => {
           />
         )}
       </ScrollWrapper>
-    </Wrapper>
+    </EventPageContainer>
   );
 };
 
@@ -413,7 +424,7 @@ const Modal = styled.div`
 `;
 
 const MentWrapper = styled(Wrapper)`
-  font-family: NotoSans;
+  font-family: 'Noto Sans KR';
 
   & > span {
     color: black;
