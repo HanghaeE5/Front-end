@@ -137,10 +137,7 @@ export const ToDoPage = () => {
   });
 
   const { mutate: updateTodoPublicScope } = useMutation(updateTodoScope, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('fetchUserInfo');
-      openSuccessConfirm({ title: '변경했습니다.' });
-    },
+    onSuccess: () => queryClient.invalidateQueries('fetchUserInfo'),
     onError: () => openErrorConfirm({}),
   });
 
