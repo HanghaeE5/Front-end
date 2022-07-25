@@ -87,8 +87,12 @@ export const SignUpSNS = () => {
       setCheck(true);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      openErrorConfirm({ title: error.response?.data.msg });
-      setCheck(false);
+      if (error.message === 'Request failed with status code 401') {
+        setTimeout(() => nickCertification({ nick: nickname }), 200);
+      } else {
+        openErrorConfirm({ title: error.response?.data.msg });
+        setCheck(false);
+      }
     },
   });
 
@@ -103,7 +107,7 @@ export const SignUpSNS = () => {
       accessLoginToken(token.headers.authorization);
       openSuccessConfirm({
         title: `${nickname}님 반가워요!`,
-        button: { text: '확인', onClick: () => nav(PATH.MAIN) },
+        button: { text: '확인', onClick: () => nav('/choosecharacter') },
       });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
@@ -201,6 +205,7 @@ export const SignUpSNS = () => {
                     const goNickCertification = {
                       nick: nickname,
                     };
+                    nickCertification(goNickCertification);
                   }
                 : () => {
                     null;
@@ -238,12 +243,16 @@ export const SignUpSNS = () => {
           width={'89.3%'}
           height={3.75}
           margin={'1.4375rem 1.25rem 0px 1.25rem'}
-          onClick={() => {
-            const gojoinSocial = {
-              nick: nickname,
-            };
-            joinSocial(gojoinSocial);
-          }}
+          onClick={
+            check
+              ? () => {
+                  const gojoinSocial = {
+                    nick: nickname,
+                  };
+                  joinSocial(gojoinSocial);
+                }
+              : () => null
+          }
         >
           <EvAbleFont size={0.875} isDisable={!check} weight={500}>
             회원가입
