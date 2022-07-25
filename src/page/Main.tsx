@@ -200,7 +200,7 @@ export const Main = () => {
     } else if (!localToken) {
       nav('/login');
     }
-  }, []);
+  }, [accessToken]);
 
   useEffect(() => {
     if (userInformData.error?.message === 'Request failed with status code 401') {

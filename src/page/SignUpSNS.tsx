@@ -161,8 +161,10 @@ export const SignUpSNS = () => {
   useEffect(() => {
     if (snsSignupNicknameOk === true || userInformData.data?.data.nick) {
       nav('/choosecharacter');
+    } else if (!localToken) {
+      nav('/login');
     }
-  }, []);
+  }, [snsSignupNicknameOk]);
 
   return (
     <RegisterContainer>

@@ -119,6 +119,8 @@ export const ChooseCharacter = () => {
         content: '캐릭터는 변경 불가합니다',
         button: { text: '확인', onClick: () => nav(PATH.MAIN) },
       });
+    } else if (!localToken) {
+      nav('/login');
     }
   }, [userInfoData]);
 

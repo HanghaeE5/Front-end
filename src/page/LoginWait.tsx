@@ -30,7 +30,7 @@ export const LoginWait = () => {
     if (!localToken) {
       nav('/login');
     }
-  }, []);
+  }, [localToken]);
 
   return <div>로그인중</div>;
 };
