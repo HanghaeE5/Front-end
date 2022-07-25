@@ -151,6 +151,10 @@ textarea:focus {
   box-sizing: border-box;
 }
 
+div {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
 @font-face {
   font-family: 'OpensansRegu';
   src: url('./asset/font/OPENSANS-REGULAR.TTF');

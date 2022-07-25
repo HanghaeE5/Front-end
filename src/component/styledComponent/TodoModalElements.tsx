@@ -66,7 +66,6 @@ export const CategoryWrapper = styled.div<{ isSelect: boolean }>`
   & > span {
     margin: 0.25rem;
     text-align: center;
-    font-family: NotoLight;
     font-size: 0.823rem;
   }
 `;

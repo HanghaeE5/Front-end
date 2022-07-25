@@ -252,7 +252,6 @@ export const EvAbleFont = styled.p`
 
 export const EvCheckFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoRegu';
   color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'blue' : 'red') : props.color)};
   display: flex;
   margin: 0 0 0 0;

@@ -30,7 +30,6 @@ type font = {
 
 const CheckFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoRegu';
   color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'blue' : 'red') : props.color)};
   display: flex;
   margin: 0 0 0 0;
@@ -39,7 +38,6 @@ const CheckFont = styled.p`
 
 const CheckFont2 = styled.p`
   font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoRegu';
   color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'black' : 'red') : props.color)};
   display: flex;
   margin: 0 0 0 0;
