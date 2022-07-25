@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { notiModalState, profileMenuModalState } from '../../recoil/store';
+import { modalGatherState } from '../../recoil/store';
 import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
 
@@ -66,15 +66,13 @@ type font = {
 const KoreanFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
 
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
   color: ${(props: font) => props.color};
   display: flex;
   margin: 0 0 0 0;
 `;
 
 export const TopNavLayout = () => {
-  const [, setModalNoti] = useRecoilState(notiModalState);
-  const [, setModalProfileMenu] = useRecoilState(profileMenuModalState);
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
 
   const nav = useNavigate();
 
@@ -119,7 +117,7 @@ export const TopNavLayout = () => {
             cursor: 'pointer',
           }}
           onClick={() => {
-            setModalNoti(true);
+            setmodalGather({ ...modalGather, notiModal: true });
           }}
         ></Box>
         <Box
@@ -136,7 +134,7 @@ export const TopNavLayout = () => {
             cursor: 'pointer',
           }}
           onClick={() => {
-            setModalProfileMenu(true);
+            setmodalGather({ ...modalGather, profileMenuModal: true });
           }}
         ></Box>
       </RowBox>

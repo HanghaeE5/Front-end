@@ -75,3 +75,13 @@ export interface FriendInfo {
     },
   ];
 }
+
+type friend = {
+  id: number;
+  userId: string;
+  nick: string;
+  profileImageUrl: string;
+  characterLevel: number;
+};
+
+export type friendList = friend[];

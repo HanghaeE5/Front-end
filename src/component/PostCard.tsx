@@ -5,6 +5,13 @@ import { Badge, DropdownMenu, Img, Typography, Wrapper } from './element';
 import { BsDot } from 'react-icons/bs';
 import { BiShareAlt } from 'react-icons/bi';
 
+const DropdownMenuButton = styled(DropdownMenu)`
+  cursor: pointer;
+`;
+
+const ShareButton = styled(BiShareAlt)`
+  cursor: pointer;
+`;
 const UserName = styled.span`
   font-size: 0.875rem;
   font-weight: 500;
@@ -12,18 +19,19 @@ const UserName = styled.span`
 
 const PostInfo = styled.span`
   font-size: 12px;
-  font-family: 'Noto Sans CJK Light KR';
-  font-weight: 600;
+  font-weight: 500;
   color: ${({ theme }) => theme.color.grayText};
   margin-top: 0.25rem;
+  font-family: Opensans;
 `;
 
-const Title = styled.div`
-  width: 65%;
+const Title = styled.div<{ isSummary?: boolean }>`
+  width: 75%;
   margin: 1rem 0;
-  white-space: nowrap;
+  white-space: ${({ isSummary }) => (isSummary ? 'nowrap' : 'pre-line')};
+  word-wrap: break-word;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ${({ isSummary }) => isSummary && 'ellipsis'};
   font-size: 1.25rem;
   font-weight: 600;
 `;
@@ -39,7 +47,6 @@ const ContentWrapper = styled.div<ContentWrapperProps>`
   color: ${({ theme }) => theme.color.grayText};
   font-size: 14px;
   line-height: 19.6px;
-  font-family: 'NotoLight';
   font-weight: 400;
   height: ${({ isSummary }) => (isSummary ? '2.5rem' : '14rem')};
   overflow-y: ${({ isSummary }) => (isSummary ? 'hidden' : 'scroll')};
@@ -84,8 +91,8 @@ const PostHeader = ({
 }) => {
   return (
     <Wrapper margin="0.5rem 0" padding="0.5rem 1rem">
-      <Wrapper width="2rem">
-        <Img url={userImg} type="profile" />
+      <Wrapper width={boardId ? '2.5rem' : '2rem'}>
+        <Img url={userImg} type="profile" width={boardId ? '2.5rem' : '2rem'} height={boardId ? '2.5rem' : '2rem'} />
       </Wrapper>
 
       <Wrapper isColumn alignItems="start" margin="0 0 0 0.5rem">
@@ -98,17 +105,21 @@ const PostHeader = ({
           </PostInfo>
         )}
       </Wrapper>
-      {boardId && isMine && dropDownProps && <DropdownMenu isMine={isMine} {...dropDownProps} />}
-      {!isMine && dropDownProps && <BiShareAlt onClick={() => dropDownProps.onShare()} />}
+      {boardId && isMine && dropDownProps && <DropdownMenuButton isMine={isMine} {...dropDownProps} />}
+      {!isMine && dropDownProps && <ShareButton onClick={() => dropDownProps.onShare()} />}
     </Wrapper>
   );
 };
 
-const PostTitle = ({ children, category }: PropsWithChildren<Pick<Board, 'category'>>) => {
+const PostTitle = ({
+  children,
+  category,
+  isSummary,
+}: PropsWithChildren<Pick<Board, 'category'> & { isSummary?: boolean }>) => {
   return (
     <Wrapper justifyContent="space-between" padding="0 1rem">
       <Title>{children}</Title>
-      <Badge>{category === 'CHALLENGE' ? '위드 투 두' : '일상'}</Badge>
+      <Badge>{category === 'CHALLENGE' ? '위드 투두' : '일상'}</Badge>
     </Wrapper>
   );
 };

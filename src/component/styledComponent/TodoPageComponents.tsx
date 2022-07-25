@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { Wrapper } from '../element';
+import { GrTrash } from 'react-icons/gr';
 
+// TODO : 다른데서어떻게 쓰는지 확인하고 지우던지 옮기던지
 export const ContentWrapper = styled.div`
   height: 100%;
   section:nth-of-type(1) {
@@ -30,30 +32,33 @@ export const TodoItemWrapper = styled(Wrapper)<{ done: boolean }>`
     margin: 0.5rem;
     color: ${({ done, theme }) => (done ? theme.color.grayMedium : theme.mainColor)};
     font-size: 4rem;
+    cursor: ${({ done }) => (done ? 'auto' : 'pointer')};
   }
 
   & > svg:nth-of-type(2) {
     margin: 0.5rem;
-    color: ${({ done, theme }) => (done ? theme.color.grayMedium : theme.mainColor)};
-    font-size: 1.5rem;
+    font-size: 1.75rem;
+    color: ${({ done, theme }) => (done ? theme.color.grayMedium : 'black')};
   }
 
   & svg {
     cursor: pointer;
   }
 
+  // dot
   & > div > div > svg {
     font-size: 0.5rem;
     position: relative;
     bottom: 25%;
     margin-left: 0.25rem;
+    cursor: auto;
   }
 `;
 
 export const TodoLabel = styled.span<{ done: boolean }>`
   position: absolute;
-  right: ${({ done }) => (done ? '-0.3rem' : ' -0.35rem')};
-  top: ${({ done }) => (done ? '0rem' : ' -0.25rem')};
+  right: ${({ done }) => (done ? '-1px' : ' -3px')};
+  top: ${({ done }) => (done ? '-1px' : ' -3px')};
 
   background-color: ${({ done, theme }) => (done ? theme.color.grayMedium : theme.mainColor)};
   color: ${({ done }) => (done ? 'white' : 'black')};
@@ -64,10 +69,21 @@ export const TodoLabel = styled.span<{ done: boolean }>`
 `;
 
 export const TodoListWrapper = styled(Wrapper)`
-  height: 25rem;
-  overflow-y: scroll;
+  height: calc(78% - 4rem);
+`;
 
+export const ScrollWrapper = styled(Wrapper)`
+  padding-bottom: 2rem;
+  position: relative;
+  overflow-y: scroll;
+  justify-content: start;
+  height: 100%;
   ::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera*/
+    display: none;
   }
+`;
+
+export const SpinnerWrapper = styled.div`
+  background-color: ${({ theme }) => theme.color.grayLight};
+  color: ${({ theme }) => theme.color.grayLight};
 `;

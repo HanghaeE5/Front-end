@@ -2,51 +2,24 @@ import { AxiosError } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { userApi } from '../api/callApi';
+import {
+  EvAbleFont,
+  EvBtnAble,
+  EvCheckHelfBox,
+  EvFontBox,
+  EvHelfInputInfo,
+  EvInputInfo,
+  EvKoreanFont,
+  EvRowBox,
+} from '../component/element/BoxStyle';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { ContentWrapper } from '../component/styledComponent/TodoPageComponents';
-import { userNicknameState } from '../recoil/store';
-
-type box = {
-  width?: number | string;
-  height?: number | string;
-  margin?: string;
-};
-
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  background-color: #e0ff91;
-`;
-
-const BoxSide = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #6922bb; */
-`;
-
-const RowBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #683b3b; */
-`;
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
+import { userInfoState } from '../recoil/store';
 
 type font = {
   size: number;
@@ -55,18 +28,8 @@ type font = {
   isBold?: boolean;
 };
 
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
-  color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
-`;
-
 const CheckFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoRegu';
   color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'blue' : 'red') : props.color)};
   display: flex;
   margin: 0 0 0 0;
@@ -75,65 +38,19 @@ const CheckFont = styled.p`
 
 const CheckFont2 = styled.p`
   font-size: ${(props: font) => props.size}rem;
-  font-family: 'NotoRegu';
   color: ${(props: font) => (props.isCorrect !== undefined ? (props.isCorrect ? 'black' : 'red') : props.color)};
   display: flex;
   margin: 0 0 0 0;
   text-align: left;
 `;
 
-const InputInfoNoneBorder = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  /* border-radius: 6px; */
-  padding: 0 0 0 10px;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
-type btnable = {
-  width: number | string;
-  height: number | string;
-  margin: string;
-  isDisable: boolean;
-};
-
-const BtnAble = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  width: ${(props: btnable) => props.width};
-  height: ${(props: btnable) => props.height}rem;
-  margin: ${(props: btnable) => props.margin};
-  background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
-
-  cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
-
-  &:hover {
-    ${(props: btnable) =>
-      props.isDisable
-        ? ''
-        : `color: white;
-    background-color: #358edc;`}
-  }
-`;
-
 export const EditPassword = () => {
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [prePassword, setPrePassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [newPassword2, setNewPassword2] = useState<string>('');
 
   const [view, setView] = useState<boolean>(false);
-  const userNickname = useRecoilValue(userNicknameState);
   const localToken = localStorage.getItem('recoil-persist');
 
   const nav = useNavigate();
@@ -153,20 +70,30 @@ export const EditPassword = () => {
     return regExp.test(asValue);
   };
 
+  const editDisable = !prePassword || newPassword != newPassword2 || !newPassword || !checkPassword(newPassword);
+
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
+
   //비밀번호 변경 API
   const editPasswordData = useMutation(
     (data: { newPassword: string; oldPassword: string }) => userApi.editPasswordApi(data),
     {
       onSuccess: () => {
-        console.log();
-        alert(`${userNickname}님의 비밀번호가 변경되었습니다`);
-        nav('/');
+        openSuccessConfirm({
+          title: `${userInfoData.nick}님의 비밀번호가 변경되었습니다`,
+          button: {
+            text: '확인',
+            onClick: () => nav('/'),
+          },
+        });
       },
       onError: (error: AxiosError<{ msg: string }>) => {
         if (error.message === 'Request failed with status code 401') {
           setTimeout(() => editPassword({ newPassword: newPassword, oldPassword: prePassword }), 200);
         } else {
-          alert(error.response?.data.msg);
+          openErrorConfirm({
+            title: error.response?.data.msg,
+          });
         }
       },
     },
@@ -179,8 +106,17 @@ export const EditPassword = () => {
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
     if (!localToken) {
-      alert('🙅🏻‍♀️로그인이 되어있지 않습니다🙅🏻‍♀️');
-      nav('/login');
+      openErrorConfirm({
+        title: '🙅🏻‍♀️로그인이 되어있지 않습니다🙅🏻‍♀️',
+        content: '로그인 후 이용해주세요',
+        button: {
+          text: '확인',
+          onClick: () => {
+            localStorage.clear();
+            nav('/login');
+          },
+        },
+      });
     }
   }, []);
 
@@ -188,163 +124,117 @@ export const EditPassword = () => {
     <NavLayout>
       <PageLayout title="비밀번호 변경">
         <ContentWrapper>
-          <Box width={'5.4375rem'} height={1.375} margin={'1.875rem auto 0 5.3%'}>
+          <EvFontBox width={'5.4375rem'} height={1.375} margin={'1.875rem auto 0 5.3%'}>
             {prePassword && (
-              <KoreanFont size={0.9375} color="#1A1A1A">
+              <EvKoreanFont size={0.9375} weight={500} color="#1A1A1A">
                 현재 비밀번호
-              </KoreanFont>
+              </EvKoreanFont>
             )}
-          </Box>
-
-          <RowBox
+          </EvFontBox>
+          <EvInputInfo
             width={'89.3%'}
-            margin={'0.625rem auto 0 auto '}
-            style={{
-              border: '1px solid #dddddd',
-              borderRadius: '6px',
-            }}
-          >
-            <InputInfoNoneBorder
-              width={'100%'}
-              height={3.75}
-              margin={'0'}
-              placeholder="현재 비밀번호"
-              type={'password'}
-              value={prePassword}
-              onChange={onChangePrePw}
-              style={{
-                border: 'none',
-                borderTopLeftRadius: '6px',
-                borderBottomLeftRadius: '6px',
-              }}
-            ></InputInfoNoneBorder>
-          </RowBox>
+            height={3.75}
+            margin={'0.625rem auto 0 auto'}
+            placeholder="현재 비밀번호"
+            type={'password'}
+            value={prePassword}
+            onChange={onChangePrePw}
+          ></EvInputInfo>
 
-          <Box width={'5.4375rem'} height={1.375} margin={'1.875rem auto 0 5.3%'}>
+          <EvFontBox width={'5.4375rem'} height={1.375} margin={'1.875rem auto 0 5.3%'}>
             {newPassword && (
-              <KoreanFont size={0.9375} color="#1A1A1A">
+              <EvKoreanFont size={0.9375} weight={500} color="#1A1A1A">
                 신규 비밀번호
-              </KoreanFont>
+              </EvKoreanFont>
             )}
-          </Box>
-          <RowBox
-            width={'89.3%'}
-            margin={'0.625rem auto 0 auto '}
-            style={{
-              border: '1px solid #dddddd',
-              borderRadius: '6px',
-            }}
-          >
-            <InputInfoNoneBorder
+          </EvFontBox>
+          <EvRowBox width={'89.3%'} margin={'0.625rem auto 0 auto '} border="1px solid #dddddd" borderRadius="6px">
+            <EvHelfInputInfo
               width={'85%'}
               height={3.75}
-              margin={'0'}
-              // margin={'0px 0px 0px 0.9375rem'}
+              margin={'0 auto 0 0'}
               placeholder="신규 비밀번호"
               type={view ? 'text' : 'password'}
               value={newPassword}
               onChange={onChangeNewPw1}
-              style={{
-                border: 'none',
-                borderTopLeftRadius: '6px',
-                borderBottomLeftRadius: '6px',
-              }}
-            ></InputInfoNoneBorder>
-            <Box
+            />
+            <EvCheckHelfBox
               width={'15%'}
               height={3.75}
-              margin={'0'}
+              margin={'0 0 0 auto'}
               onMouseDown={() => setView(!view)}
               onMouseUp={() => setView(!view)}
-              style={{
-                border: 'none',
-                borderTopRightRadius: '6px',
-                borderBottomRightRadius: '6px',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                backgroundSize: '1.5625rem',
-                backgroundImage: view ? 'url(/assets/eye.png)' : 'url(/assets/closeeye.png)',
-              }}
-            ></Box>
-          </RowBox>
+              isCursor={true}
+              backgroundsize={view ? '1.4rem' : '1.25rem'}
+              url={view ? 'url(/assets/eye.svg)' : 'url(/assets/closeeye.svg)'}
+            />
+          </EvRowBox>
 
           {newPassword && checkPassword(newPassword) ? (
             <div>
-              <Box width={'7.375rem'} height={1.375} margin={'1.875rem auto 0 5.3%'}>
-                <KoreanFont size={0.9375} color="#1A1A1A">
+              <EvFontBox width={'7.375rem'} height={1.375} margin={'1.875rem auto 0 5.3%'}>
+                <EvKoreanFont size={0.9375} weight={500} color="#1A1A1A">
                   신규 비밀번호 확인
-                </KoreanFont>
-              </Box>
-              <RowBox
-                width={'89.3%'}
-                margin={'0.625rem auto 0 auto '}
-                style={{
-                  border: '1px solid #dddddd',
-                  borderRadius: '6px',
-                }}
-              >
-                <InputInfoNoneBorder
+                </EvKoreanFont>
+              </EvFontBox>
+              <EvRowBox width={'89.3%'} margin={'0.625rem auto 0 auto '} border="1px solid #dddddd" borderRadius="6px">
+                <EvHelfInputInfo
                   width={'85%'}
                   height={3.75}
-                  margin={'0'}
-                  placeholder="비밀번호를 재입력하세요."
+                  margin={'0 auto 0 0'}
+                  placeholder="신규 비밀번호 재입력"
                   type={view ? 'text' : 'password'}
                   value={newPassword2}
                   onChange={onChangeNewPw2}
-                  style={{
-                    border: 'none',
-                    borderTopLeftRadius: '6px',
-                    borderBottomLeftRadius: '6px',
-                  }}
-                ></InputInfoNoneBorder>
-                <Box
+                />
+                <EvCheckHelfBox
                   width={'15%'}
                   height={3.75}
-                  margin={'0'}
+                  margin={'0 0 0 auto'}
                   onMouseDown={() => setView(!view)}
                   onMouseUp={() => setView(!view)}
-                  style={{
-                    border: 'none',
-                    borderTopRightRadius: '6px',
-                    borderBottomRightRadius: '6px',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center',
-                    backgroundSize: '1.5625rem',
-                    backgroundImage: view ? 'url(/assets/eye.png)' : 'url(/assets/closeeye.png)',
-                  }}
-                ></Box>
-              </RowBox>
+                  isCursor={true}
+                  backgroundsize={view ? '1.4rem' : '1.25rem'}
+                  url={view ? 'url(/assets/eye.svg)' : 'url(/assets/closeeye.svg)'}
+                />
+              </EvRowBox>
             </div>
           ) : (
-            <BoxSide width={21.25} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
+            <EvFontBox isAlignSide={true} width={21.25} height={1.3125} margin={'0.3125rem auto 0px 5.3%'}>
               <CheckFont2 size={0.75} color={'black'} isCorrect={!newPassword}>
                 {newPassword
                   ? '비밀번호 형식을 확인해 주세요.'
                   : '비밀번호는 5-10자의 영문,숫자,특수문자(!@#$%^&*) 조합입니다.'}
               </CheckFont2>
-            </BoxSide>
+            </EvFontBox>
           )}
 
-          <BoxSide width={21.25} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
+          <EvFontBox isAlignSide={true} width={21.25} height={1.3125} margin={'0.3125rem auto 0px 5.3%'}>
             {newPassword2 && checkPassword(newPassword) && (
               <CheckFont size={0.75} color={'blue'} isCorrect={newPassword === newPassword2}>
                 {newPassword === newPassword2 ? '비밀번호가 일치합니다' : '비밀번호가 일치하지 않습니다'}
               </CheckFont>
             )}
-          </BoxSide>
-          <BtnAble
-            isDisable={!prePassword || newPassword !== newPassword2}
+          </EvFontBox>
+          <EvBtnAble
+            isDisable={editDisable}
             width={'89.3%'}
             height={3.75}
-            margin={'1.875rem auto 0rem auto'}
-            onClick={() => {
-              editPassword({ newPassword: newPassword, oldPassword: prePassword });
-            }}
+            margin={'3.3125rem auto 0rem auto'}
+            onClick={
+              editDisable
+                ? () => {
+                    null;
+                  }
+                : () => {
+                    editPassword({ newPassword: newPassword, oldPassword: prePassword });
+                  }
+            }
           >
-            <KoreanFont size={1.0625} color="#1A1A1A">
+            <EvAbleFont size={1.0625} isDisable={editDisable} weight={500}>
               비밀번호 변경 완료
-            </KoreanFont>
-          </BtnAble>
+            </EvAbleFont>
+          </EvBtnAble>
         </ContentWrapper>
       </PageLayout>
     </NavLayout>

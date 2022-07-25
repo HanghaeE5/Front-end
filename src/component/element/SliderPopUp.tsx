@@ -1,16 +1,17 @@
 import { PropsWithChildren } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { Wrapper } from './Wrapper';
 
 export const ModalContainer = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 15;
+  z-index: 10;
+  // max-width: ${({ theme }) => theme.maxWidth};
 `;
 
 export const Background = styled.div`
@@ -37,11 +38,11 @@ export const SliderWrapper = styled.div`
   z-index: 4;
 `;
 
-export const SliderPopUp = ({ children }: PropsWithChildren) => {
+export const SliderPopUp = ({ children, onClickBackground }: PropsWithChildren<{ onClickBackground?: () => void }>) => {
   return (
     <ModalContainer>
       <SliderWrapper>{children}</SliderWrapper>
-      <Background />
+      <Background onClick={() => onClickBackground && onClickBackground()} />
     </ModalContainer>
   );
 };

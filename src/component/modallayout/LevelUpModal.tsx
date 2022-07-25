@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { editNicknameModalState, levelUpModalState, userInfoState, userNicknameState } from '../../recoil/store';
+import { modalGatherState } from '../../recoil/store';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 import { registerApi, userApi } from '../../api/callApi';
@@ -28,7 +28,7 @@ const ModalBackground = styled.div`
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 8;
 `;
 
 type box = {
@@ -50,12 +50,12 @@ const BoxWrap = styled.div`
 `;
 
 const LevelUpModal = () => {
-  const [modalLevelUp, setModalLevelUp] = useRecoilState(levelUpModalState);
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
 
   return (
     <>
-      {modalLevelUp && (
-        <ModalBackground onClick={() => setModalLevelUp(false)}>
+      {modalGather.levelUpModal && (
+        <ModalBackground onClick={() => setmodalGather({ ...modalGather, levelUpModal: false })}>
           <BoxWrap
             onClick={(e) => {
               e.stopPropagation();
@@ -66,7 +66,7 @@ const LevelUpModal = () => {
                 LEVEL UP!
               </EvEnglishFont>
             </EvBox>
-            <EvBox width="68%" margin={'0.625rem auto 0rem auto'}>
+            <EvBox width="68%" margin={'0.1rem auto 0rem auto'}>
               <EvKoreanFont size={1.25} color="#1A1A1A" weight={700} lineHeight={'26px'}>
                 레벨업을 축하드립니다!
               </EvKoreanFont>
@@ -81,14 +81,13 @@ const LevelUpModal = () => {
             <EvBtn
               width={'84.2%'}
               height={3.75}
-              margin="0.625rem auto 1.875rem auto"
+              margin="0.1 rem auto 1.875rem auto"
               border="none"
               background="#FFD600"
               onClick={() => {
-                setModalLevelUp(false);
+                setmodalGather({ ...modalGather, levelUpModal: false });
               }}
             >
-              {' '}
               <EvKoreanFont size={1.25} color="#1A1A1A" weight={700} lineHeight={'26px'}>
                 닫기
               </EvKoreanFont>

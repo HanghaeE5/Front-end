@@ -1,5 +1,8 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { useNavigate } from 'react-router';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
+// axios.defaults.withCredentials = true;
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   // console.info(`[request] [${JSON.stringify(config)}]`);
 
@@ -13,7 +16,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
       // console.log(config);
       config.headers = {
         Authorization: toto.accessTokenState || 0 || false,
-        Refresh: toto.refreshTokenState || 0 || false,
+        // Refresh: toto.refreshTokenState || 0 || false,
         'Content-Type': 'application/json',
       };
     }
@@ -30,13 +33,13 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
     if (localToken) {
       const toto = JSON.parse(localToken);
       const accessToken = toto.accessTokenState;
-      const refreshToken = toto.refreshTokenState;
+      // const refreshToken = toto.refreshTokenState;
 
       axios
         .get('https://todowith.shop/refresh', {
           headers: {
             Authorization: accessToken,
-            Refresh: refreshToken,
+            // Refresh: refreshToken,
             'Content-Type': 'application/json',
           },
         })
@@ -45,11 +48,18 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
             'recoil-persist',
             JSON.stringify({
               accessTokenState: res.headers.authorization,
-              refreshTokenState: res.headers.refresh,
+              // refreshTokenState: res.headers.refresh,
             }),
           );
+        })
+        .catch((error) => {
+          console.log('refesh 토큰 못 받아옴');
+          alert('로그인 시간이 만료되었습니다. 다시 로그인 해주세요.');
+          localStorage.clear();
+          window.location.href = '/login';
         });
     }
+
     return Promise.reject(error);
   }
   return Promise.reject(error);
@@ -62,20 +72,19 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 
 const onResponseError = (error: AxiosError): Promise<AxiosError> => {
   console.error(`[response error] [${JSON.stringify(error)}]`);
-
   if (error.message === 'Request failed with status code 401') {
     const localToken = localStorage.getItem('recoil-persist');
 
     if (localToken) {
       const toto = JSON.parse(localToken);
       const accessToken = toto.accessTokenState;
-      const refreshToken = toto.refreshTokenState;
+      // const refreshToken = toto.refreshTokenState;
 
       axios
         .get('https://todowith.shop/refresh', {
           headers: {
             Authorization: accessToken,
-            Refresh: refreshToken,
+            // Refresh: refreshToken,
             'Content-Type': 'application/json',
           },
         })
@@ -85,13 +94,15 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
             'recoil-persist',
             JSON.stringify({
               accessTokenState: res.headers.authorization,
-              refreshTokenState: res.headers.refresh,
+              // refreshTokenState: res.headers.refresh,
             }),
           );
         })
         .catch((error) => {
           console.log('refesh 토큰 못 받아옴');
+          alert('로그인 시간이 만료되었습니다. 다시 로그인 해주세요.');
           localStorage.clear();
+          window.location.href = '/login';
         });
     }
     return Promise.reject(error);

@@ -14,21 +14,15 @@ import { ReactComponent as TodoOn } from '../../asset/icons/nav/td_on.svg';
 import { ReactComponent as TodoOff } from '../../asset/icons/nav/td_off.svg';
 
 import { PATH } from '../../route/routeList';
+import { useRecoilState } from 'recoil';
+import { modalGatherState } from '../../recoil/store';
 
 const NavWrapper = styled(Wrapper)`
   padding-top: 0.75rem;
-  border: 1px solid ${({ theme }) => theme.color.grayMedium};
-  z-index: 10;
+  border-top: 1px solid ${({ theme }) => theme.color.grayMedium};
   height: 3.375rem;
   & div {
     cursor: pointer;
-
-    &:hover {
-      svg {
-        transform: scale(1.2);
-        transition: 0.2s ease;
-      }
-    }
   }
 `;
 
@@ -48,14 +42,28 @@ const MenuItem = ({ isCurrentMenu, onClick, icon, selectIcon }: MenuItemProps) =
 };
 export const BottomNavLayout = () => {
   const nav = useNavigate();
-
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const isCurrentMenu = (menuPath: string) => window.location.pathname.includes(menuPath);
   const movePage = (path: string) => {
     nav(path);
   };
 
   return (
-    <NavWrapper justifyContent="center">
+    <NavWrapper
+      onClick={() => {
+        setmodalGather({
+          levelUpModal: false,
+          stepUpModal: false,
+          editNicknameModal: false,
+          notiModal: false,
+          editPhotoModal: false,
+          profileMenuModal: false,
+          friendAddModal: false,
+          explainModal: false,
+        });
+      }}
+      justifyContent="center"
+    >
       <MenuItem
         icon={<HomeOff />}
         selectIcon={<HomeOn />}

@@ -8,7 +8,7 @@ export class jwtUtils {
     }
     const decoded: TokenList = jwtDecode(token);
     // console.log(decoded);
-    if (decoded.exp > new Date().getTime() / 1000) {
+    if (decoded.exp > new Date().getTime() / 2000) {
       return true;
     } else {
       return false;

@@ -6,7 +6,6 @@ const WarningTextWrapper = styled.div`
   color: ${({ theme }) => theme.color.grayDark};
   width: 100%;
   font-weight: 400;
-  font-family: 'NotoRegu';
   display: flex;
   align-items: center;
   margin: 0.5rem 0;

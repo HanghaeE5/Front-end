@@ -1,13 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { registerApi } from '../api/callApi';
+import { registerApi, userApi } from '../api/callApi';
 import { AxiosError } from 'axios';
-import { accessTokenState, popNotiState, refreshTokenState } from '../recoil/store';
-import { PopNoti } from '../component/element/PopNoti';
-import { EvBox, EvBtnAble, EvInputInfo, EvKoreanFont, EvCheckFont, EvAbleFont } from '../component/element/BoxStyle';
+import { accessTokenState, popNotiState, userInfoState } from '../recoil/store';
+import {
+  EvBox,
+  EvBtnAble,
+  EvInputInfo,
+  EvKoreanFont,
+  EvCheckFont,
+  EvAbleFont,
+  EvLogoBox,
+  EvRowBox,
+  EvColumnBox,
+  EvFontBox,
+  EvHelfInputInfo,
+  EvCheckHelfBox,
+  EvLineBox,
+} from '../component/element/BoxStyle';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
+import { PATH } from '../route/routeList';
 
 const RegisterContainer = styled.div`
   width: 100%;
@@ -39,15 +54,12 @@ const ContentContainer = styled.div`
 `;
 
 export const SignUpSNS = () => {
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [nickname, setNickname] = useState<string>('');
   const [popNoti, setPopNoti] = useRecoilState(popNotiState);
-  const [informType, setInformType] = useState<ConfirmType | undefined>(undefined);
-  const [informMsg, setInformMsg] = useState<string | undefined>('');
-  const [quitOk, setQuitOk] = useState<boolean>(false);
   const [check, setCheck] = useState<boolean>(false);
-  const [nickConfirm, setNickConfirm] = useState<boolean>(false);
   const accessLoginToken = useSetRecoilState(accessTokenState);
-  const refreshLoginToken = useSetRecoilState(refreshTokenState);
+
   const localToken = localStorage.getItem('accessToken');
 
   type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
@@ -63,48 +75,19 @@ export const SignUpSNS = () => {
     setNickname(e.target.value);
   };
 
-  //소셜로그인 닉네임 저장 API
-  const joinSocialApiData = useMutation((nick: { nick: string }) => registerApi.joinSocialApi(nick), {
-    onSuccess: (token) => {
-      localStorage.clear();
-      accessLoginToken(token.headers.authorization);
-      refreshLoginToken(token.headers.refresh);
-      setQuitOk(true);
-      setPopNoti(true);
-      setInformType('success');
-      setInformMsg(`${nickname}님 반가워요!`);
-    },
-    onError: (error: AxiosError<{ msg: string }>) => {
-      if (error.message === 'Request failed with status code 401') {
-        setTimeout(() => joinSocial({ nick: nickname }), 200);
-      } else {
-        setPopNoti(true);
-        setQuitOk(false);
-        setInformType('warning');
-        setInformMsg(error.response?.data.msg);
-      }
-    },
-  });
-
-  const joinSocial = (nick: { nick: string }) => {
-    joinSocialApiData.mutate(nick);
-  };
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   //닉네임 중복확인 API
   const nickCertificationData = useMutation((nick: { nick: string }) => registerApi.nickCertificationApi(nick), {
     onSuccess: () => {
-      setPopNoti(true);
-      setQuitOk(false);
-      setInformType('success');
-      setInformMsg(`${nickname}으로 닉네임이 설정되었습니다.`);
-      setNickConfirm(true);
+      openSuccessConfirm({
+        title: `${nickname}으로 닉네임이 설정되었습니다.`,
+        // button: { text: '확인', onClick: () => null },
+      });
       setCheck(true);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      setPopNoti(true);
-      setQuitOk(false);
-      setInformType('warning');
-      setInformMsg(error.response?.data.msg);
+      openErrorConfirm({ title: error.response?.data.msg });
       setCheck(false);
     },
   });
@@ -113,17 +96,56 @@ export const SignUpSNS = () => {
     nickCertificationData.mutate(nick);
   };
 
+  //소셜로그인 닉네임 저장 API
+  const joinSocialApiData = useMutation((nick: { nick: string }) => registerApi.joinSocialApi(nick), {
+    onSuccess: (token) => {
+      localStorage.clear();
+      accessLoginToken(token.headers.authorization);
+      openSuccessConfirm({
+        title: `${nickname}님 반가워요!`,
+        button: { text: '확인', onClick: () => nav(PATH.MAIN) },
+      });
+    },
+    onError: (error: AxiosError<{ msg: string }>) => {
+      if (error.message === 'Request failed with status code 401') {
+        setTimeout(() => joinSocial({ nick: nickname }), 200);
+      } else {
+        setPopNoti({
+          openPopNoti: true,
+          informType: 'warning',
+          informMsg: error.response?.data.msg,
+        });
+      }
+    },
+  });
+
+  const joinSocial = (nick: { nick: string }) => {
+    joinSocialApiData.mutate(nick);
+  };
+
+  //유저정보 가져오기 API
+  const userInformData = useQuery('userData', userApi.userInformApi, {
+    onSuccess: (data) => {
+      setUserInfoData(data.data);
+    },
+    onError: (error: AxiosError) => {
+      if (error.message === 'Request failed with status code 404') {
+        // nav(-1);
+      }
+    },
+  });
+
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
-    if (localToken) {
-      setPopNoti(true);
-      setQuitOk(true);
-      setInformType('warning');
-      setInformMsg('🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️');
 
-      nav('/');
+    if (userInformData.status === 'success' && userInformData.data.data.nick) {
+      openErrorConfirm({
+        title: '🙅🏻‍♀️닉네임 변경을 이용해주세요🙅🏻‍♀️',
+        content: '이미 회원가입이 완료되었습니다. ',
+        button: { text: '확인', onClick: () => nav(PATH.MAIN) },
+      });
     }
-  }, []);
+  }, [userInformData.status]);
 
   return (
     <RegisterContainer>
@@ -136,71 +158,62 @@ export const SignUpSNS = () => {
           </EvBox>
         </EvBox>
       </HeaderContainer>
-      <ContentContainer>
-        <EvBox width={'10.5rem'} height={1.5} margin={'4.75rem auto 0px auto'} url="url(/assets/TODOWITH.svg)"></EvBox>
 
-        <EvBox width={2.8125} height={1.5} margin={'5rem auto 0.625rem 5.3%'}>
+      <ContentContainer>
+        <EvLogoBox margin={'3.4375rem auto 0 auto'} />
+        <EvFontBox width={2.8125} height={1.5} margin={'4.375rem auto 0.625rem 5.3%'}>
           {nickname && (
             <EvKoreanFont size={1} color="#939393" weight={700}>
               닉네임
             </EvKoreanFont>
           )}
-        </EvBox>
+        </EvFontBox>
 
-        <EvBox direction={'row'} width={'100%'} margin={'0px 0px 0px 0px'}>
-          <EvBox
-            direction={'row'}
-            width={'66.9%'}
-            margin={'auto auto auto 1.25rem'}
-            border="1px solid #dddddd"
-            borderRadius="6px"
-          >
-            <EvInputInfo
+        <EvRowBox width={'89.3%'} margin={'0 auto'}>
+          <EvRowBox width={'75%'} margin={'0 auto 0 0 '} border="1px solid #dddddd" borderRadius="6px">
+            <EvHelfInputInfo
               width={'85%'}
               height={3.75}
-              margin={'0'}
-              helfBorder={true}
+              margin={'0 auto 0 0'}
               type="text"
               placeholder="닉네임    ex) 투두윗3456"
               name="nickname"
               value={nickname}
               onChange={onChangeNickname}
             />
-            <EvBox
+            <EvCheckHelfBox
               width={'15%'}
               height={3.75}
-              margin={'0'}
-              helfBorder={true}
+              margin={'0 0 0 auto'}
               backgroundsize={'1.5rem'}
               url={check ? 'url(/assets/checkyellow.svg)' : 'url(/assets/checkgray.svg)'}
-            ></EvBox>
-          </EvBox>
+            />
+          </EvRowBox>
 
           <EvBtnAble
             isDisable={!checkNickname(nickname)}
-            width={'19.4%'}
+            width={'22.6%'}
             height={3.75}
-            margin={'0px 1.25rem 0px 0px'}
+            margin={'0 0 0 auto'}
             onClick={
               checkNickname(nickname)
                 ? () => {
                     const goNickCertification = {
                       nick: nickname,
                     };
-                    nickCertification(goNickCertification);
                   }
                 : () => {
                     null;
                   }
             }
           >
-            <EvKoreanFont size={1} color="#939393" weight={500}>
+            <EvAbleFont size={1} color="#939393" weight={500} isDisable={!nickname}>
               {check ? '확인완료' : '중복확인'}
-            </EvKoreanFont>
+            </EvAbleFont>
           </EvBtnAble>
-        </EvBox>
+        </EvRowBox>
 
-        <EvBox isAlignSide={true} width={20} height={1.3125} margin={'0.3125rem auto 0px 5.7%'}>
+        <EvFontBox isAlignSide={true} width={20} height={1.3125} margin={'0.3125rem auto 0px 5.3%'}>
           {check ? (
             <EvCheckFont size={0.875} color={'blue'}>
               중복되지 않는 새로운 닉네임입니다.
@@ -216,20 +229,15 @@ export const SignUpSNS = () => {
               닉네임은 2-15자의 한글, 영어, 숫자입니다.
             </EvCheckFont>
           )}
-        </EvBox>
+        </EvFontBox>
 
-        <EvBox
-          width={'89.3%'}
-          height={0.0625}
-          margin={'5.125rem 1.25rem 0px 1.25rem'}
-          style={{ backgroundColor: '#989898' }}
-        ></EvBox>
+        <EvLineBox width={'89.3%'} margin={'9rem 1.25rem 0px 1.25rem'} />
 
         <EvBtnAble
           isDisable={!check}
           width={'89.3%'}
           height={3.75}
-          margin={'2.9375rem 1.25rem 0px 1.25rem'}
+          margin={'1.4375rem 1.25rem 0px 1.25rem'}
           onClick={() => {
             const gojoinSocial = {
               nick: nickname,
@@ -241,19 +249,6 @@ export const SignUpSNS = () => {
             회원가입
           </EvAbleFont>
         </EvBtnAble>
-        <PopNoti
-          confirmType={informType}
-          visible={popNoti}
-          msg={informMsg}
-          quitOk={quitOk}
-          oneButton={{
-            nav: '/choosecharacter',
-            text: '확인',
-            onClick: () => {
-              setPopNoti(false);
-            },
-          }}
-        />
       </ContentContainer>
     </RegisterContainer>
   );

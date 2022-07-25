@@ -7,8 +7,8 @@ const FloatingButton = styled(HiPlus)`
   border-radius: 50%;
   background-color: ${({ theme }) => theme.mainColor};
   color: black;
-  position: fixed;
-  bottom: 4.5rem;
+  position: absolute;
+  bottom: 1rem;
   right: 1rem;
   box-sizing: border-box;
   padding: 0.35rem;

@@ -11,7 +11,6 @@ const TextElement = styled.input<StyleProps>`
   ::placeholder {
     color: ${(props) => props.theme.color.grayMedium};
     font-size: ${({ inputSize }) => (inputSize === 'small' ? '0.938rem' : '1.063rem')};
-    font-family: NotoLight;
   }
 
   :focus {
@@ -19,6 +18,7 @@ const TextElement = styled.input<StyleProps>`
   }
   width: 100%;
   border: ${({ isValidError }) => isValidError && `1px solid red`};
+  text-align: ${({ align }) => align || 'left'};
 `;
 
 const SearchButton = styled(BiSearch)`
@@ -43,7 +43,6 @@ const TextAreaElement = styled.textarea<{ isValidError?: boolean }>`
     background-color: #fffbe9;
   }
   width: 100%;
-  font-family: NotoRegu;
   font-weight: 400;
   resize: none;
   border: ${({ isValidError }) => isValidError && `1px solid red`};
@@ -53,6 +52,7 @@ interface StyleProps {
   inputSize?: 'small' | 'large';
   inputType?: 'default' | 'primary';
   isValidError?: boolean;
+  align?: 'left' | 'right' | 'center';
 }
 
 interface TextInputProps {
@@ -62,6 +62,7 @@ interface TextInputProps {
   onEnter?: () => void;
   placeholder?: string;
   value: string;
+  align?: string;
 }
 
 export const TextInput = ({
@@ -73,6 +74,7 @@ export const TextInput = ({
   onChange,
   onSearch,
   isValidError = false,
+  align,
 }: TextInputProps & StyleProps) => {
   const onKeyDown = (key: string) => {
     if (key !== 'Enter' || !onSearch) return;
@@ -93,6 +95,7 @@ export const TextInput = ({
           isValidError={isValidError}
           inputSize={inputSize}
           inputType={inputType}
+          align={align}
         />
         {!!onSearch && <SearchButton onClick={() => onSearch()} />}
       </Wrapper>

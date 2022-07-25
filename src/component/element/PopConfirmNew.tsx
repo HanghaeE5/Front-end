@@ -10,7 +10,8 @@ const PopupWrapper = styled.div`
   width: 17.85rem;
   border-radius: 12px;
   background-color: white;
-  z-index: 5;
+  z-index: 10;
+  overflow: hidden;
 
   & > div:nth-of-type(1) {
     display: flex;

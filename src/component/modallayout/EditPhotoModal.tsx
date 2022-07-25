@@ -1,9 +1,10 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { editPhotoModalState, userPhotoWaitState, userprofilephotoState } from '../../recoil/store';
-import React, { useState } from 'react';
+import { modalGatherState, userInfoState } from '../../recoil/store';
+import React, { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { userApi } from '../../api/callApi';
+import { EvAbleFont, EvBtn, EvBtnAble, EvFontBox, EvImgBox, EvKoreanFont, EvRowBox } from '../element/BoxStyle';
 
 const Slide = keyframes`
     0% {
@@ -26,78 +27,31 @@ const ModalBackground = styled.div`
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 5;
 `;
-
-type box = {
-  width?: number | string;
-  height?: number | string;
-  margin?: string;
-};
 
 const BoxWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${(props: box) => props.width};
-  height: 34.8rem;
+  width: 100%;
+  height: 30.68rem;
   border-radius: 20px 20px 0px 0px;
   margin: auto auto 0 auto;
   background-color: #ffffff;
   animation: ${Slide} 0.6s ease;
 `;
 
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #d07272; */
-`;
-
-const RowBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  /* background-color: #683b3b; */
-`;
-
 const ImgLable = styled.label`
   justify-content: center;
-  width: 25%;
-  height: 3rem;
-  background-color: #94cef2;
-  border: 1px solid white;
+  width: 89.3%;
+  height: 3.75rem;
+  border: 1px dashed #1a1a1a;
   border-radius: 6px;
-  cursor: pointer;
-  &:hover {
-    color: white;
-    background-color: #1763a6;
-  }
-`;
-
-type font = {
-  size: number;
-  color?: string;
-  isCorrect?: boolean;
-  isBold?: boolean;
-};
-
-const KoreanFont = styled.p`
-  font-size: ${(props: font) => props.size}rem;
-
-  font-family: ${(props: font) => (props.isBold ? 'NotoBold' : 'NotoMed')};
-  color: ${(props: font) => props.color};
+  align-items: center;
   display: flex;
-  margin: 0 0 0 0;
+  cursor: pointer;
 `;
 
 export const Img = styled.img`
@@ -105,48 +59,19 @@ export const Img = styled.img`
   /* height: 100%; */
 `;
 
-type btnable = {
-  width?: number | string;
-  height?: number | string;
-  margin?: string;
-  isDisable?: boolean;
-};
-
-const BtnAble = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #dddddd;
-  border-radius: 6px;
-  width: ${(props: btnable) => props.width};
-  height: ${(props: btnable) => props.height}rem;
-  margin: ${(props: btnable) => props.margin};
-  background: ${(props: btnable) => (props.isDisable ? '#f3f3f3' : '#8ac2f0')};
-
-  cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
-
-  &:hover {
-    ${(props: btnable) =>
-      props.isDisable
-        ? ''
-        : `color: white;
-    background-color: #358edc;`}
-  }
-`;
-
 const EditPhotoModal = () => {
-  const [modalEditPhoto, setModalEditPhoto] = useRecoilState(editPhotoModalState);
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
+  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   type Img = {
     img_show: string;
-    img_file: File | string | Blob;
+    img_file: File | string | Blob | undefined;
   };
 
-  //파일 미리볼 url을 저장해줄 state
-  const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
-
   //파일 임시 미리봄
-  const [userPhotoWait, setUserPhotoWait] = useRecoilState(userPhotoWaitState);
+  const [userPhotoWait, setUserPhotoWait] = useState<Img>({
+    img_show: '',
+    img_file: '',
+  });
 
   // 파일 가져오기
   const saveFileImage = (event: React.ChangeEvent) => {
@@ -163,7 +88,7 @@ const EditPhotoModal = () => {
 
   // 파일 삭제
   const deleteFileImage = () => {
-    URL.revokeObjectURL(fileImage.img_show);
+    URL.revokeObjectURL(userPhotoWait.img_show);
     setUserPhotoWait({
       img_show: '',
       img_file: '',
@@ -174,118 +99,121 @@ const EditPhotoModal = () => {
   // 사진파일 저장 API
   const profilePhotoEditData = useMutation((forms: FormData) => userApi.profilePhotoEditApi(forms), {
     onSuccess: () => {
-      setModalEditPhoto(false);
+      setmodalGather({ ...modalGather, editPhotoModal: false });
       queryClient.invalidateQueries('userData'); //userData 키값 query 실행
     },
   });
 
   const profilePhotoEdit = () => {
     const formData = new FormData();
-    if (userPhotoWait) {
+    if (userPhotoWait.img_file != undefined) {
       formData.append('file', userPhotoWait.img_file);
     }
+    console.log(userPhotoWait.img_file);
     profilePhotoEditData.mutate(formData);
   };
 
+  useEffect(() => {
+    if (userInfoData) {
+      setUserPhotoWait({ ...userPhotoWait, img_show: userInfoData.profileImageUrl });
+    }
+  }, [userInfoData]);
+
   return (
     <>
-      {modalEditPhoto && (
-        <ModalBackground onClick={() => setModalEditPhoto(false)}>
+      {modalGather.editPhotoModal && (
+        <ModalBackground
+          onClick={() => {
+            setmodalGather({ ...modalGather, editPhotoModal: false });
+            setUserPhotoWait({ ...userPhotoWait, img_show: userInfoData.profileImageUrl });
+          }}
+        >
           <BoxWrap
-            width={'100%'}
-            height={34.8}
             onClick={(e) => {
               e.stopPropagation();
             }}
           >
-            <RowBox width="89.3%" height={1.625} margin={'2.5rem 1.25rem 0rem 1.25rem'}>
-              <Box width={'6.0625rem'} margin={'auto auto auto 0rem'}>
-                <KoreanFont size={1.25} color="#1A1A1A">
+            <EvRowBox width="89.3%" height={1.875} margin={'1.625rem 1.25rem 0rem 1.25rem'}>
+              <EvFontBox width={'6.0625rem'} margin={'auto auto auto 0rem'}>
+                <EvKoreanFont size={1.25} weight={700} color="#1A1A1A">
                   프로필 편집
-                </KoreanFont>
-              </Box>
-              <Box
-                width={'1.5rem'}
-                height={1.5}
+                </EvKoreanFont>
+              </EvFontBox>
+              <EvImgBox
+                width={'1rem'}
+                height={1}
                 margin={'auto 0rem auto auto'}
-                style={{
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center',
-                  backgroundSize: 'cover',
-                  backgroundImage: 'url(/assets/X.svg)',
-                  cursor: 'pointer',
-                }}
+                isCursor={true}
+                url={'url(/assets/X.svg)'}
                 onClick={() => {
-                  setModalEditPhoto(false);
+                  setmodalGather({ ...modalGather, editPhotoModal: false });
+                  setUserPhotoWait({ ...userPhotoWait, img_show: userInfoData.profileImageUrl });
                 }}
-              ></Box>
-            </RowBox>
+              ></EvImgBox>
+            </EvRowBox>
 
-            <Box
-              width={'20rem'}
-              height="20"
-              margin="2rem auto 2rem auto"
+            <EvImgBox
+              width={'9.375rem'}
+              height={9.375}
+              margin="2rem auto 1.81rem auto"
+              url={`url(${userPhotoWait.img_show})`}
               style={{
                 borderRadius: '50%',
                 border: '1px solid #989898',
-                overflow: 'hidden',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                backgroundImage: `url(${userPhotoWait.img_show})`,
               }}
             >
-              {!userPhotoWait.img_show && <Box style={{ margin: 'auto' }}>📷사진 업로드를 클릭! </Box>}
-            </Box>
+              {!userPhotoWait.img_show && <EvImgBox margin={'auto'}>📷사진 업로드를 클릭! </EvImgBox>}
+            </EvImgBox>
 
-            <RowBox width="92%" height={2} margin={'1rem 1.25rem auto 1.25rem'}>
-              <ImgLable
-                htmlFor="img"
-                style={{
-                  alignItems: 'center',
+            <ImgLable htmlFor="img" style={{}}>
+              <EvImgBox
+                width={'1.5rem'}
+                height={1.5}
+                margin={'0.1rem 0.25rem 0 0'}
+                url={'url(/assets/icon_camera.svg)'}
+              ></EvImgBox>
+              <EvKoreanFont size={1.06} weight={500}>
+                사진 업로드
+              </EvKoreanFont>
+            </ImgLable>
+            <input id="img" type="file" accept="image/*" onChange={saveFileImage} style={{ display: 'none' }} />
+            <EvBtn
+              width={'89.3%'}
+              height={3.75}
+              margin={'1rem auto 2.5rem auto'}
+              background="#ffffff"
+              border="1px solid #1A1A1A"
+              onClick={() => {
+                setUserPhotoWait({
+                  img_show: '/assets/defaultprofile.svg',
+                  img_file: '',
+                });
+              }}
+            >
+              <EvKoreanFont size={1.06} weight={500}>
+                기본이미지로 변경
+              </EvKoreanFont>
+            </EvBtn>
 
-                  display: 'flex',
-                }}
-              >
-                <KoreanFont size={1}>사진 업로드</KoreanFont>
-              </ImgLable>
-              <input id="img" type="file" accept="image/*" onChange={saveFileImage} style={{ display: 'none' }} />
-              {fileImage ? (
-                <BtnAble
-                  width={'25%'}
-                  height={3}
-                  margin={'0 0 0 1.5rem'}
-                  onClick={() => {
-                    console.log('얍');
-                    setUserPhotoWait({
-                      img_show: '/assets/defaultprofile.svg',
-                      img_file: '/assets/defaultprofile.svg',
-                    });
-                  }}
-                >
-                  <KoreanFont size={1}>기본이미지</KoreanFont>
-                </BtnAble>
-              ) : (
-                ''
-              )}
-              <BtnAble
-                isDisable={!userPhotoWait}
-                width={'25%'}
-                height={3}
-                margin={'0 0 0 1.5rem'}
-                onClick={
-                  userPhotoWait
-                    ? () => {
-                        profilePhotoEdit();
-                      }
-                    : () => {
-                        null;
-                      }
-                }
-              >
-                <KoreanFont size={1}>사진변경 완료</KoreanFont>
-              </BtnAble>
-            </RowBox>
+            <EvBtnAble
+              isDisable={userPhotoWait.img_show === userInfoData.profileImageUrl}
+              width={'100%'}
+              height={3.75}
+              margin={'auto 0 0 0'}
+              onClick={
+                userPhotoWait.img_show != userInfoData.profileImageUrl
+                  ? () => {
+                      profilePhotoEdit();
+                    }
+                  : () => {
+                      null;
+                    }
+              }
+            >
+              <EvAbleFont isDisable={userPhotoWait.img_show === userInfoData.profileImageUrl} size={1}>
+                완료하기
+              </EvAbleFont>
+            </EvBtnAble>
           </BoxWrap>
         </ModalBackground>
       )}

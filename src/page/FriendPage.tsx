@@ -5,31 +5,26 @@ import { AiOutlineCheck } from 'react-icons/ai';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { ReactComponent as DirectionIcon } from '../asset/icons/direction.svg';
 
-import {
-  accessTokenState,
-  editNicknameModalState,
-  editPhotoModalState,
-  friendInfoState,
-  levelUpModalState,
-  refreshTokenState,
-  stepUpModalState,
-  userChatacterTypeState,
-  userInfoState,
-  userPhotoWaitState,
-  userprofilephotoState,
-} from '../recoil/store';
+import { accessTokenState, userInfoState } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 import { useQuery, useQueryClient } from 'react-query';
 import { userApi } from '../api/callApi';
-import { InfoModal } from '../component/InfoModal';
 import { Typography, Wrapper } from '../component/element';
 import { PATH } from '../route/routeList';
 import { NoHeaderPageLayout } from '../component/layout/NoHeaderPageLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { EvBox, EvBtn, EvEnglishFont, EvKoreanFont } from '../component/element/BoxStyle';
+import {
+  EvBox,
+  EvBtn,
+  EvColumnBox,
+  EvEnglishFont,
+  EvFontBox,
+  EvKoreanFont,
+  EvRowBox,
+} from '../component/element/BoxStyle';
 import { ReactComponent as Excercise } from '../asset/icons/todoIcon/icon_exercise.svg';
 import { ReactComponent as PromiseIcon } from '../asset/icons/todoIcon/icon_promise.svg';
 import { ReactComponent as Shopping } from '../asset/icons/todoIcon/icon_shopping.svg';
@@ -40,6 +35,8 @@ import StepUpModal from '../component/modallayout/StepUpModal';
 import ExpBar from '../component/element/ExpBar';
 import setupInterceptorsTo from '../api/Interceptiors';
 import { useParams } from 'react-router';
+import { FriendInfo } from '../Types/user';
+import { BadgeImgBox, TodoNumberBox } from './Main';
 
 const MainContainer = styled.div`
   height: 100%;
@@ -48,7 +45,7 @@ const MainContainer = styled.div`
   background: linear-gradient(
     to bottom,
     #ffffff 25%,
-    #96dcff
+    #c4e27d
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
   position: relative;
@@ -97,20 +94,14 @@ const Box = styled.div`
 const ToDoBox = styled.div`
   display: flex;
   width: 89.3%;
-  max-height: 6.1875rem;
   margin: 0.375rem 5.3% 0 5.3%;
   flex-direction: column;
   align-items: center;
   overflow-x: hidden;
-  overflow-y: scroll;
   padding: 1rem 0;
   gap: 0.7rem;
   background-color: #ffffff;
   border-radius: 6px;
-  //스크롤바 없애기
-  ::-webkit-scrollbar {
-    display: none;
-  }
   width: ${(props: box) => props.width};
   height: ${(props: box) => props.height}rem;
   margin: ${(props: box) => props.margin};
@@ -120,26 +111,26 @@ const EventWrapper = styled(Wrapper)`
   cursor: pointer;
 `;
 
-console.log(window.location.href);
+export const FriendBadgeBox = styled(EvColumnBox)`
+  background-color: #ffffff;
+  width: 4.875rem;
+  height: 7.9375rem;
+  box-shadow: 0px 2px 8px rgba(148, 174, 74, 0.5);
+  border-radius: 6px;
+`;
 
 export const FriendPage = () => {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
-  const [frienduserInfoData, setFriendUserInfoData] = useRecoilState(friendInfoState);
-  const accessLoginToken = useSetRecoilState(accessTokenState);
-  const refreshLoginToken = useSetRecoilState(refreshTokenState);
-  const [fileImage, setFileImage] = useRecoilState(userprofilephotoState);
-  const setUserPhotoWait = useSetRecoilState(userPhotoWaitState);
-  const all = window.location.href;
+  const [frienduserInfoData, setFriendUserInfoData] = useState<FriendInfo>();
+  const localToken = localStorage.getItem('recoil-persist');
 
-  const first = all.split('&');
-  const accessToken = first[0].split('=')[1];
   const nav = useNavigate();
 
   const queryClient = useQueryClient();
   // 친구 유저정보 가져오는 API
   const baseApi = axios.create({
     baseURL: 'https://todowith.shop',
-    timeout: 1000,
+    timeout: 2000,
   });
 
   const callApi = setupInterceptorsTo(baseApi);
@@ -160,32 +151,16 @@ export const FriendPage = () => {
     //   if (error.message === 'Request failed with status code 401') {
     //     setTimeout(() => chattingMessage((data: FieldValues)), 200);
     //   } else {
-    //     alert(error.response?.data.msg);
+    // openErrorConfirm({
+    //   title: error.response?.data.msg,
+    // });
     //   }
     // },
   });
 
   useEffect(() => {
-    if (accessToken) {
-      // console.log();
-      const refreshToken = first[1].split('=')[1];
-      // console.log(refreshToken);
-      const isNickname = first[2].split('=')[1];
-      // console.log(isNickname);
-      accessLoginToken(accessToken);
-      refreshLoginToken(refreshToken);
-
-      if (isNickname === 'N') {
-        nav('/signupsns');
-      } else {
-        window.location.replace('/');
-      }
-      if (frienduserInfoData?.nick === '') {
-        nav('/signupsns');
-      }
-      if (isNickname === 'Y' && !frienduserInfoData?.characterInfo.type) {
-        nav('/choosecharacter');
-      }
+    if (!localToken) {
+      nav('/login');
     }
   }, []);
 
@@ -198,171 +173,210 @@ export const FriendPage = () => {
   return (
     <NavLayout>
       <MainContainer>
-        <ContentContainer>
-          <EvBox direction="row" margin="3rem 0 0 0 " height={4.75}>
+        {frienduserInfoData && (
+          <ContentContainer>
+            <EvBox direction="row" margin="1.875rem 0 0 0 " height={4.75}>
+              <EvBox
+                width={'5.625rem'}
+                height={5.625}
+                margin={'0 auto '}
+                url={`url(${frienduserInfoData?.profileImageUrl})`}
+                borderRadius="50%"
+                border="1px solid #D9D9D9"
+              />
+            </EvBox>
+            <EvBox direction="row" margin="0.625rem 0 0 0 " height={2.125} style={{ zIndex: 3 }}>
+              <EvBox
+                width={'9.125rem'}
+                height={2.125}
+                margin={'0 auto '}
+                border="1px solid #DDDDDD"
+                borderRadius="100px"
+                backgroundColor="#ffffff"
+              >
+                <EvKoreanFont size={0.875} weight={700}>
+                  {frienduserInfoData?.nick}
+                </EvKoreanFont>
+              </EvBox>
+            </EvBox>
+            <EditNicknameModal />
+
             <EvBox
-              width={'4.75rem'}
-              height={4.75}
-              margin={'0 auto '}
-              url={`url(${frienduserInfoData?.profileImageUrl})`}
+              width={'19.375rem'}
+              height={19.375}
+              margin={' 0.5rem auto 0 auto '}
               borderRadius="50%"
-              border="1px solid #D9D9D9"
+              url={`url(${frienduserInfoData?.characterInfo.characterUrl})`}
             />
-          </EvBox>
-          <EditPhotoModal />
-          <EvBox direction="row" margin="1rem 0 0 0 " height={2.125} style={{ zIndex: 3 }}>
+
             <EvBox
-              width={'9.125rem'}
-              height={2.125}
-              margin={'0 auto '}
-              border="1px solid #DDDDDD"
-              borderRadius="100px"
-              backgroundColor="#ffffff"
-            >
-              <EvKoreanFont size={0.875} weight={700}>
-                {frienduserInfoData?.nick}
-              </EvKoreanFont>
-            </EvBox>
-          </EvBox>
-          <EditNicknameModal />
+              width={'5.25rem'}
+              height={0.75}
+              margin={'-2.5rem 9.0625rem 0 9.0625rem '}
+              url={`url(/assets/shadow.svg)`}
+            />
+            <EvBox
+              width={'1.3125rem'}
+              height={1.3125}
+              margin={'-1rem 2rem 0 21.0625rem '}
+              url="url(/assets/물음표.svg)"
+              isCursor={true}
+            />
 
-          <EvBox
-            width={'19.375rem'}
-            height={19.375}
-            margin={'auto '}
-            borderRadius="50%"
-            url={`url(${frienduserInfoData?.characterInfo.characterUrl})`}
-            backgroundsize="19rem"
-          />
+            <EvBox width={'22rem'} height={4} margin={'1rem auto 0 auto '}>
+              <EvBox width={'10rem'} height={1.375}>
+                <EvKoreanFont size={1.25} color="#000000" weight={500}>
+                  {`Lv.${frienduserInfoData?.characterInfo.level}`}
+                </EvKoreanFont>
+              </EvBox>
+              <EvBox width={'22rem'} height={1.375} margin={'0.875rem auto 0 auto '}>
+                <EvKoreanFont size={1.64} color="#000000" weight={700}>
+                  {frienduserInfoData?.characterInfo.characterName}
+                </EvKoreanFont>
+              </EvBox>
+            </EvBox>
 
-          <EvBox
-            width={'5.25rem'}
-            height={0.75}
-            margin={'-4rem 9.0625rem 0 9.0625rem '}
-            url={`url(/assets/shadow.svg)`}
-          />
-          <EvBox
-            width={'1.3125rem'}
-            height={1.3125}
-            margin={'-1rem 2rem 0 21.0625rem '}
-            url="url(/assets/물음표.svg)"
-            isCursor={true}
-            backgroundsize="1.5rem"
-          />
+            <EvFontBox width={10.0625} height={1.6875} margin={'2.5rem auto 0 5.3%'}>
+              <EvKoreanFont size={1.125} color="#000000" weight={500}>
+                나의 보유 아이템
+              </EvKoreanFont>
+            </EvFontBox>
 
-          <EvBox width={'22rem'} height={4} margin={'1rem auto 0 auto '}>
-            <EvBox width={'10rem'} height={1.375}>
-              <EvKoreanFont size={1.25} color="#000000" weight={500}>
-                {`Lv.${frienduserInfoData?.characterInfo.level}`}
-              </EvKoreanFont>
-            </EvBox>
-            <EvBox width={'22rem'} height={1.375} margin={'0.875rem auto 0 auto '}>
-              <EvKoreanFont size={1.64} color="#000000" weight={700}>
-                {frienduserInfoData?.characterInfo.characterName}
-              </EvKoreanFont>
-            </EvBox>
-          </EvBox>
-          <EvBox direction={'row'} width={'92%'} height={5.75} columnGap={'10px'} margin={'1.125rem auto 0 auto '}>
-            <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
-              <EvBox
-                width={'4.3125rem'}
-                height={4.3125}
-                margin={'auto 0 0 0'}
-                border={'1px solid #1A1A1A'}
-                borderRadius="50%"
-                backgroundColor="#ffffff"
-              >
-                <EvBox width={'3.5rem'} height={3.5} margin={'auto'}>
-                  <Study />
-                  <EvKoreanFont size={0.875} color="#000000" weight={600}>
-                    {frienduserInfoData?.characterInfo.shopping}
+            <EvRowBox width={'89.3%'} height={7.9375} margin={'0.625rem auto 0 auto '} style={{ columnGap: '2.1%' }}>
+              <FriendBadgeBox margin="0 auto 0 0">
+                <EvFontBox width={'2.4375rem'} height={1.3125} margin={'0.625rem auto 0 auto'}>
+                  <EvKoreanFont size={0.875} weight={700}>
+                    스터디
                   </EvKoreanFont>
-                </EvBox>
-              </EvBox>
-            </EvBox>
-            <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
-              <EvBox
-                width={'4.3125rem'}
-                height={4.3125}
-                margin={'auto 0 0 0'}
-                border={'1px solid #1A1A1A'}
-                borderRadius="50%"
-                backgroundColor="#ffffff"
-              >
-                <EvBox width={'3.5rem'} height={3.5} margin={'auto'} backgroundColor="#fffff">
-                  <Excercise />
-                  <EvKoreanFont size={0.875} color="#000000" weight={600}>
-                    {frienduserInfoData?.characterInfo.exercise}
-                  </EvKoreanFont>
-                </EvBox>
-              </EvBox>
-            </EvBox>
-            <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
-              <EvBox
-                width={'4.3125rem'}
-                height={4.3125}
-                margin={'auto 0 0 0'}
-                border={'1px solid #1A1A1A'}
-                borderRadius="50%"
-                backgroundColor="#ffffff"
-              >
-                <EvBox width={'3.5rem'} height={3.5} margin={'auto'}>
-                  <Shopping />
-                  <EvKoreanFont size={0.875} color="#000000" weight={600}>
-                    {frienduserInfoData?.characterInfo.shopping}
-                  </EvKoreanFont>
-                </EvBox>
-              </EvBox>
-            </EvBox>
-            <EvBox width={'4.3125rem'} height={5.75} margin={'0 auto'}>
-              <EvBox
-                width={'4.3125rem'}
-                height={4.3125}
-                margin={'auto 0 0 0'}
-                border={'1px solid #1A1A1A'}
-                borderRadius="50%"
-                backgroundColor="#ffffff"
-              >
-                <EvBox width={'3.5rem'} height={3.5} margin={'auto'} backgroundColor="#fffff">
-                  <PromiseIcon />
-                  <EvKoreanFont size={0.875} color="#000000" weight={600}>
-                    {frienduserInfoData?.characterInfo.promise}
-                  </EvKoreanFont>
-                </EvBox>
-              </EvBox>
-            </EvBox>
-          </EvBox>
-          <EvBox width={10.0625} height={1.6875} margin={'1.75rem auto 0 8%'}>
-            <EvEnglishFont size={1.25} color="#000000" weight={700}>
-              Today_ to do list
-            </EvEnglishFont>
-          </EvBox>
-          <ToDoBox>
-            {frienduserInfoData?.todoList.map((today) => {
-              return (
-                <EvBox direction={'row'} width={'100%'} key={today.todoId}>
-                  <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
-                    <AiOutlineCheck color={today.state ? '#000000' : ' #BABABA'} />
-                  </EvBox>
-                  <EvBox width={'83%'} margin={'0rem auto 0 0'} isAlignSide={true}>
-                    <EvKoreanFont size={0.87} color="#000000">
-                      {today.todoContent}
+                </EvFontBox>
+                <BadgeImgBox
+                  url={
+                    frienduserInfoData?.characterInfo.study >= 30
+                      ? 'url(/assets/mainbadge/badge_study01.svg)'
+                      : frienduserInfoData?.characterInfo.study >= 15
+                      ? 'url(/assets/mainbadge/badge_study02.svg)'
+                      : frienduserInfoData?.characterInfo.study >= 5
+                      ? 'url(/assets/mainbadge/badge_study03.svg)'
+                      : ''
+                  }
+                ></BadgeImgBox>
+                <TodoNumberBox>
+                  <EvFontBox margin="-0.2rem 0 0 0">
+                    <EvKoreanFont size={1} color="#FFFFFF" weight={700}>
+                      {frienduserInfoData?.characterInfo.study}
                     </EvKoreanFont>
-                  </EvBox>
-                </EvBox>
-              );
-            })}
-          </ToDoBox>
+                  </EvFontBox>
+                </TodoNumberBox>
+              </FriendBadgeBox>
 
-          <EvBox
-            style={{ top: '10rem', position: 'absolute' }}
-            width={'19.5rem'}
-            height="19.5"
-            // margin="-41.5rem auto auto auto"
-          >
-            <ExpBar exp={frienduserInfoData?.characterInfo.expPercent}></ExpBar>
-          </EvBox>
-        </ContentContainer>
+              <FriendBadgeBox margin="auto">
+                <EvFontBox width={'2.4375rem'} height={1.3125} margin={'0.625rem auto 0 auto'}>
+                  <EvKoreanFont size={0.875} weight={700}>
+                    운동
+                  </EvKoreanFont>
+                </EvFontBox>
+                <BadgeImgBox
+                  url={
+                    frienduserInfoData?.characterInfo.exercise >= 30
+                      ? 'url(/assets/mainbadge/badge_exercise01.svg)'
+                      : frienduserInfoData?.characterInfo.exercise >= 15
+                      ? 'url(/assets/mainbadge/badge_exercise02.svg)'
+                      : frienduserInfoData?.characterInfo.exercise >= 5
+                      ? 'url(/assets/mainbadge/badge_exercise03.svg)'
+                      : ''
+                  }
+                ></BadgeImgBox>
+                <TodoNumberBox>
+                  <EvFontBox margin="-0.2rem 0 0 0">
+                    <EvKoreanFont size={1} color="#FFFFFF" weight={700}>
+                      {frienduserInfoData?.characterInfo.exercise}
+                    </EvKoreanFont>
+                  </EvFontBox>
+                </TodoNumberBox>
+              </FriendBadgeBox>
+
+              <FriendBadgeBox margin="auto">
+                <EvFontBox width={'2.4375rem'} height={1.3125} margin={'0.625rem auto 0 auto'}>
+                  <EvKoreanFont size={0.875} weight={700}>
+                    쇼핑
+                  </EvKoreanFont>
+                </EvFontBox>
+                <BadgeImgBox
+                  url={
+                    frienduserInfoData?.characterInfo.shopping >= 30
+                      ? 'url(/assets/mainbadge/badge_shopping01.svg)'
+                      : frienduserInfoData?.characterInfo.shopping >= 15
+                      ? 'url(/assets/mainbadge/badge_shopping02.svg)'
+                      : frienduserInfoData?.characterInfo.shopping >= 5
+                      ? 'url(/assets/mainbadge/badge_shopping03.svg)'
+                      : ''
+                  }
+                ></BadgeImgBox>
+                <TodoNumberBox>
+                  <EvFontBox margin="-0.2rem 0 0 0">
+                    <EvKoreanFont size={1} color="#FFFFFF" weight={700}>
+                      {frienduserInfoData?.characterInfo.shopping}
+                    </EvKoreanFont>
+                  </EvFontBox>
+                </TodoNumberBox>
+              </FriendBadgeBox>
+
+              <FriendBadgeBox margin="0 0 0 auto">
+                <EvFontBox width={'2.4375rem'} height={1.3125} margin={'0.625rem auto 0 auto'}>
+                  <EvKoreanFont size={0.875} weight={700}>
+                    약속
+                  </EvKoreanFont>
+                </EvFontBox>
+                <BadgeImgBox
+                  url={
+                    frienduserInfoData?.characterInfo.promise >= 30
+                      ? 'url(/assets/mainbadge/badge_promise01.svg)'
+                      : frienduserInfoData?.characterInfo.promise >= 15
+                      ? 'url(/assets/mainbadge/badge_promise02.svg)'
+                      : frienduserInfoData?.characterInfo.promise >= 5
+                      ? 'url(/assets/mainbadge/badge_promise03.svg)'
+                      : ''
+                  }
+                ></BadgeImgBox>
+                <TodoNumberBox>
+                  <EvFontBox margin="-0.2rem 0 0 0">
+                    <EvKoreanFont size={1} color="#FFFFFF" weight={700}>
+                      {frienduserInfoData?.characterInfo.promise}
+                    </EvKoreanFont>
+                  </EvFontBox>
+                </TodoNumberBox>
+              </FriendBadgeBox>
+            </EvRowBox>
+
+            <EvFontBox width={10.0625} height={1.6875} margin={'1.75rem auto 0 5.3%'}>
+              <EvKoreanFont size={1.125} color="#000000" weight={500}>
+                오늘의 투두리스트
+              </EvKoreanFont>
+            </EvFontBox>
+            <ToDoBox>
+              {frienduserInfoData?.todoList
+                ? frienduserInfoData.todoList.map((today) => {
+                    return (
+                      <EvBox direction={'row'} width={'100%'} key={today.todoId}>
+                        <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
+                          <AiOutlineCheck color={today.state ? '#000000' : ' #BABABA'} />
+                        </EvBox>
+                        <EvBox width={'83%'} margin={'0rem auto 0 0'} isAlignSide={true}>
+                          <EvKoreanFont size={0.87} color="#000000">
+                            {today.todoContent}
+                          </EvKoreanFont>
+                        </EvBox>
+                      </EvBox>
+                    );
+                  })
+                : '오늘 ToDo가 없거나, 비공개입니다'}
+            </ToDoBox>
+
+            <EvBox style={{ top: '9.5rem', position: 'absolute' }} width={'19.5rem'} height="19.5">
+              {frienduserInfoData && <ExpBar exp={frienduserInfoData?.characterInfo.expPercent} ismine={false} />}
+            </EvBox>
+          </ContentContainer>
+        )}
       </MainContainer>
     </NavLayout>
   );
