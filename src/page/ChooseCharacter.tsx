@@ -131,7 +131,7 @@ export const ChooseCharacter = () => {
           width={'5.625rem'}
           height={2.7}
           margin={'3.125rem auto 0px auto'}
-          url="url(/assets/logoyellow.svg)"
+          url="url(/assets/투두윗원형로고.svg)"
         ></EvImgBox>
 
         <EvFontBox width={14.625} height={5.625} margin={'1.28rem auto 0 auto'}>
@@ -213,7 +213,7 @@ export const ChooseCharacter = () => {
           onClick={
             select
               ? () => {
-                  userCharacterChoose({ type: select });
+                  // userCharacterChoose({ type: select });
                 }
               : () => {
                   null;

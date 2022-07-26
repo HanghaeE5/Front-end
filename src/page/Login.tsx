@@ -107,7 +107,7 @@ export const Login = () => {
   return (
     <RegisterContainer>
       <ContentContainer>
-        <EvLogoBox margin={'7.1875rem auto 2.5rem auto'} />
+        <EvLogoBox margin={'3.4375rem auto 2.5rem auto'} />
 
         {/* 이메일 */}
         <EvFontBox width={'2.8125rem'} height={1.5} margin={'0px auto 0.625rem 5.3%'}>
@@ -182,7 +182,7 @@ export const Login = () => {
             nav('/signupemail');
           }}
         >
-          <EvKoreanFont size={0.875} weight={500} color=" #989898">
+          <EvKoreanFont size={1.0625} weight={500} color=" #989898">
             회원가입
           </EvKoreanFont>
         </EvBtn>

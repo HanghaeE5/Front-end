@@ -519,7 +519,7 @@ export const SignUpEmail = () => {
               nav('/login');
             }}
           >
-            <EvKoreanFont size={0.875} weight={500} color="#989898">
+            <EvKoreanFont size={1.0625} weight={500} color="#989898">
               로그인 페이지로 돌아가기
             </EvKoreanFont>
           </EvBtn>
