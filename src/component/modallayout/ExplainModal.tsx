@@ -27,7 +27,7 @@ const ModalBackground = styled.div`
   top: 0;
   bottom: 0;
   width: 100%;
-  z-index: 2;
+  z-index: 3;
 `;
 
 type box = {
@@ -52,6 +52,7 @@ const BoxWrap = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
+  z-index: 5;
 `;
 
 const ExplainYellowWrap = styled(EvColumnBox)`

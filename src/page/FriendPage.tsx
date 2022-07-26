@@ -5,7 +5,7 @@ import { AiOutlineCheck } from 'react-icons/ai';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { ReactComponent as DirectionIcon } from '../asset/icons/direction.svg';
 
-import { accessTokenState, userInfoState } from '../recoil/store';
+import { accessTokenState, modalGatherState, userInfoState } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -37,6 +37,7 @@ import setupInterceptorsTo from '../api/Interceptiors';
 import { useParams } from 'react-router';
 import { FriendInfo } from '../Types/user';
 import { BadgeImgBox, TodoNumberBox } from './Main';
+import ExplainModal from '../component/modallayout/ExplainModal';
 
 const MainContainer = styled.div`
   height: 100%;
@@ -122,6 +123,7 @@ export const FriendBadgeBox = styled(EvColumnBox)`
 export const FriendPage = () => {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [frienduserInfoData, setFriendUserInfoData] = useState<FriendInfo>();
+  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const localToken = localStorage.getItem('recoil-persist');
 
   const nav = useNavigate();
@@ -208,7 +210,7 @@ export const FriendPage = () => {
               backgroundsize="16rem"
               url={`url(${frienduserInfoData?.characterInfo.characterUrl})`}
             />
-
+            <ExplainModal />
             <EvBox
               width={'5.25rem'}
               height={0.75}
@@ -216,11 +218,15 @@ export const FriendPage = () => {
               url={`url(/assets/shadow.svg)`}
             />
             <EvBox
+              style={{ zIndex: 2 }}
               width={'1.3125rem'}
               height={1.3125}
               margin={'-1rem 2rem 0 21.0625rem '}
               url="url(/assets/물음표.svg)"
               isCursor={true}
+              onClick={() => {
+                setmodalGather({ ...modalGather, explainModal: true });
+              }}
             />
 
             <EvBox width={'22rem'} height={4} margin={'1rem auto 0 auto '}>
