@@ -14,6 +14,7 @@ import {
   ChooseCharacter,
   CommunitiPostingPage,
   EventPage,
+  LoginWait,
 } from '../page';
 import { ReactElement } from 'react';
 
@@ -54,6 +55,11 @@ export const routeList: IRoute[] = [
     id: 'login',
     path: '/login',
     page: Login,
+  },
+  {
+    id: 'loginwait',
+    path: '/loginwait',
+    page: LoginWait,
   },
   {
     id: 'ChooseCharacter',

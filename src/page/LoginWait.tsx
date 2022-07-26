@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { useRecoilState } from 'recoil';
+import { userApi } from '../api/callApi';
 import { accessTokenState, snsSignupNickname } from '../recoil/store';
 
-//추후 사용예정
 export const LoginWait = () => {
   const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
   const [snsSignupNicknameOk, setSnsSignupNicknameOk] = useRecoilState(snsSignupNickname);
@@ -24,10 +24,10 @@ export const LoginWait = () => {
         setSnsSignupNicknameOk(false);
         nav('/signupsns');
       } else if (isNickname === 'Y') {
+        setSnsSignupNicknameOk(true);
         window.location.replace('/');
       }
-    }
-    if (!localToken) {
+    } else if (!localToken) {
       nav('/login');
     }
   }, [localToken]);

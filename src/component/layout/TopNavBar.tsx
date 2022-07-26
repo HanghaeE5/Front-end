@@ -100,11 +100,10 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
   });
 
   useEffect(() => {
-    if (userInformData.error?.message === 'Request failed with status code 401') {
-      userInformData.refetch();
-    }
     if (!localToken) {
       nav('/login');
+    } else if (userInformData.error?.message === 'Request failed with status code 401') {
+      userInformData.refetch();
     }
   }, [userInformData]);
 

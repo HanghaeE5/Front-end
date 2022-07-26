@@ -61,7 +61,7 @@ export const SignUpSNS = () => {
   const [check, setCheck] = useState<boolean>(false);
   const accessLoginToken = useSetRecoilState(accessTokenState);
 
-  const localToken = localStorage.getItem('accessToken');
+  const localToken = localStorage.getItem('recoil-persist');
 
   type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
 
@@ -139,9 +139,25 @@ export const SignUpSNS = () => {
     onSuccess: (data) => {
       setUserInfoData(data.data);
     },
-    onError: (error: AxiosError) => {
-      if (error.message === 'Request failed with status code 404') {
-        // nav(-1);
+    onError: (error: AxiosError<{ msg: string }>) => {
+      if (error.response?.data.msg === '해당 캐릭터가 존재하지 않습니다') {
+        openErrorConfirm({
+          title: '🙅🏻‍♀️닉네임 변경을 이용해주세요🙅🏻‍♀️',
+          content: '이미 회원가입이 완료되었습니다. ',
+          button: { text: '확인', onClick: () => nav('/choosecharacter') },
+        });
+      } else if (error.response?.data.msg === '사용자를 찾을 수 없습니다') {
+        openErrorConfirm({
+          title: '🙅🏻‍♀️사용자를 찾을 수 없습니다🙅🏻‍♀️',
+          content: '다시 로그인을 해도 동일한 경우, 회원가입을 해주세요',
+          button: {
+            text: '확인',
+            onClick: () => {
+              localStorage.clear();
+              nav('/login');
+            },
+          },
+        });
       }
     },
   });
@@ -159,7 +175,7 @@ export const SignUpSNS = () => {
   }, [userInformData.status]);
 
   useEffect(() => {
-    if (snsSignupNicknameOk === true || userInformData.data?.data.nick) {
+    if (snsSignupNicknameOk === true) {
       nav('/choosecharacter');
     } else if (!localToken) {
       nav('/login');

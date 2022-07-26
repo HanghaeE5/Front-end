@@ -53,9 +53,11 @@ export const ChooseCharacter = () => {
   const [nickConfirm, setNickConfirm] = useState<boolean>(false);
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
-  const localToken = localStorage.getItem('accessToken');
+  const localToken = localStorage.getItem('recoil-persist');
 
   type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
+
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   const nav = useNavigate();
 
@@ -64,7 +66,11 @@ export const ChooseCharacter = () => {
   //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
-      setUserInfoData(data.data);
+      openErrorConfirm({
+        title: '🙅🏻‍♀️이미 캐릭터를 선택했습니다🙅🏻‍♀️',
+        content: '캐릭터는 변경 불가합니다',
+        button: { text: '확인', onClick: () => nav('/') },
+      });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
       if (error.response?.data.msg === '사용자를 찾을 수 없습니다') {
@@ -109,20 +115,12 @@ export const ChooseCharacter = () => {
     userCharacterChooseData.mutate(data);
   };
 
-  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
-
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
-    if (userInfoData?.characterInfo.type) {
-      openErrorConfirm({
-        title: '🙅🏻‍♀️이미 캐릭터를 선택했습니다🙅🏻‍♀️',
-        content: '캐릭터는 변경 불가합니다',
-        button: { text: '확인', onClick: () => nav(PATH.MAIN) },
-      });
-    } else if (!localToken) {
+    if (!localToken) {
       nav('/login');
     }
-  }, [userInfoData]);
+  });
 
   return (
     <RegisterContainer>
