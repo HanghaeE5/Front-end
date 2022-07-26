@@ -229,7 +229,7 @@ export const Login = () => {
             url={'url(/assets/googleicon.png)'}
             onClick={() => {
               window.location.replace(
-                'https://todowith.shop/oauth2/authorization/google?redirect_uri=http:https://www.todowith.co.kr/loginwait',
+                'https://todowith.shop/oauth2/authorization/google?redirect_uri=https://www.todowith.co.kr/loginwait',
               );
             }}
           />
