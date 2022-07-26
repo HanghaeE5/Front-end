@@ -92,9 +92,10 @@ export const CategorySection = styled(Wrapper)`
 export const CalendarWrapper = styled.div`
   background-color: white;
   border-radius: 6px;
-  position: fixed;
+  position: absolute;
   bottom: 8rem;
-  left: 2rem;
+  left: 50%;
+  transform: translate(-50%, 0%);
   box-shadow: 0px 3px 10px -4px rgba(0, 0, 0, 0.77);
 `;
 export const StickyButton = styled(Button)`
