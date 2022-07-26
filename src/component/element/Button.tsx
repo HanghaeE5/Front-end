@@ -26,6 +26,7 @@ const StyledButton = styled.button<ButtonProps>`
   color: ${({ buttonType, theme }) => theme.button.color[buttonType || 'primary']};
   border-color: ${({ buttonType, theme }) => theme.button.borderColor[buttonType || 'primary']};
   background-color: ${({ buttonType, theme }) => theme.button.backgroundColor[buttonType || 'primary']};
+  font-family: 'Noto Sans KR', sans-serif;
   border-radius: ${({ isSquare, theme, size }) => (isSquare ? '' : size === 'small' ? '2px' : theme.radius)};
 `;
 
