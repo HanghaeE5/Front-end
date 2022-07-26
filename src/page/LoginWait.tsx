@@ -20,6 +20,7 @@ export const LoginWait = () => {
       setAccessLoginToken(accessToken);
       const isNickname = first[1].split('=')[1];
       console.log(accessToken);
+      console.log(isNickname);
       if (isNickname === 'N') {
         setSnsSignupNicknameOk(false);
         nav('/signupsns');
@@ -28,6 +29,7 @@ export const LoginWait = () => {
         window.location.replace('/');
       }
     } else if (!localToken) {
+      console.log('로그인대기창에서 보내는것');
       nav('/login');
     }
   }, [localToken]);

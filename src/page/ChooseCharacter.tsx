@@ -81,6 +81,7 @@ export const ChooseCharacter = () => {
             text: '확인',
             onClick: () => {
               localStorage.clear();
+              console.log('캐릭터고르는창 사용자못찾아서 보내는것');
               nav('/login');
             },
           },
@@ -118,6 +119,7 @@ export const ChooseCharacter = () => {
   useEffect(() => {
     //useEffect 리턴 바로 위에 써주기.
     if (!localToken) {
+      console.log('캐릭터창 유즈이펙트에서 보내는것');
       nav('/login');
     }
   });

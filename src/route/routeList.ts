@@ -1,5 +1,6 @@
 import {
   Login,
+  LoginWait,
   Main,
   SignUpEmail,
   SignUpSNS,
@@ -14,7 +15,6 @@ import {
   ChooseCharacter,
   CommunitiPostingPage,
   EventPage,
-  LoginWait,
 } from '../page';
 import { ReactElement } from 'react';
 
