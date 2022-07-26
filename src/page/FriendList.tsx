@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { friendApi } from '../api/callApi';
-import { Badge } from '../component/element';
+import { Badge, ButtonFloating } from '../component/element';
 import { EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont } from '../component/element/BoxStyle';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
@@ -353,20 +353,11 @@ export const FriendList = () => {
           </Box>
 
           {/* 친구추가버튼 */}
-          <IconBox
-            width={'2.81rem'}
-            height={2.81}
-            style={{
-              bottom: '3rem',
-              right: '5%',
-              position: 'absolute',
-              backgroundImage: 'url(/assets/Plusbtn.svg)',
-              zIndex: 50,
-            }}
+          <ButtonFloating
             onClick={() => {
               setmodalGather({ ...modalGather, friendAddModal: true });
             }}
-          ></IconBox>
+          />
           <FriendAddModal />
         </ContentWrapper>
       </PageLayout>

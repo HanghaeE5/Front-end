@@ -27,7 +27,7 @@ const ContentWrapper = styled.div`
   background: #feed91; /* fallback for old browsers */
   background: -webkit-linear-gradient(180deg, #fff7d1 0%, #feed91 100%); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(180deg, #fff7d1 0%, #feed91 100%);
-  height: calc(100%);
+  height: calc(100% - 3.5rem);
   overflow-y: auto;
   ::-webkit-scrollbar {
     display: none;
@@ -43,31 +43,6 @@ type box = {
   height?: number | string;
   margin?: string;
 };
-
-const MessageTextArea = styled.textarea`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
-  border-radius: 6px;
-  padding: 0 0 0 10px;
-  border: none;
-
-  :focus {
-    background-color: #fffbe9;
-  }
-`;
-
-const RowBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-`;
 
 const RowChattingBox = styled.div`
   display: flex;
@@ -103,7 +78,7 @@ const ChattingRoomTextBox = styled.div`
   max-width: 80%;
   height: 2rem;
   margin: auto auto auto 0.625rem;
-  /* background-color: #8f68bc; */
+  background-color: #8f68bc;
 `;
 
 const YourChatBox = styled.div`
@@ -112,7 +87,7 @@ const YourChatBox = styled.div`
   justify-content: center;
   max-width: 70%;
   margin: 1rem auto 0 1.25rem;
-  /* background: #bdefcd; */
+  background: #bdefcd;
 `;
 
 const MyChatBox = styled.div`
@@ -139,9 +114,10 @@ const YourTextBox = styled.div`
   flex-direction: column;
   justify-content: center;
   margin: 0 auto auto 2.625rem;
-  background: #ffff7f;
+  background: #ffffff;
   border-radius: 0px 12px 12px 12px;
   padding: 10px 14px;
+  word-break: keep-all;
 `;
 
 const MyTextBox = styled.div`
@@ -150,10 +126,11 @@ const MyTextBox = styled.div`
   flex-direction: column;
   justify-content: center;
   margin: 0 0 0 auto;
-  background: #9addff;
+  background: #ffd600;
   border-radius: 12px 12px 0px 12px;
   padding: 10px 14px;
   /* word-break: break-all; */
+  word-break: keep-all;
 `;
 
 const InformTextBox = styled.div`
@@ -181,30 +158,16 @@ const KoreanFont = styled.p`
   margin: 0 0 0 0;
 `;
 
-const InputInfo = styled.input`
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  padding: 0 0 0 10px;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  :focus {
-    background-color: rgb(220, 237, 255);
-  }
-`;
-
 const MessageSendBox = styled.div`
   position: fixed;
   bottom: 3.5rem;
-
+  background: #feed91;
   height: 3.5rem;
   width: 100%;
   max-width: 768px;
   display: flex;
   justify-content: row;
   align-items: center;
-
   z-index: 3;
 `;
 
@@ -316,7 +279,7 @@ export const ChattingRoom = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -343,7 +306,7 @@ export const ChattingRoom = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -402,8 +365,8 @@ export const ChattingRoom = () => {
         }
       }
     } catch (error) {
-      console.log(error);
-      console.log(ws.ws.readyState);
+      // console.log(error);
+      // console.log(ws.ws.readyState);
     }
   }
 

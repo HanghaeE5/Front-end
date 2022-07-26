@@ -9,7 +9,6 @@ import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { chattingListState, friendListState, userInfoState } from '../recoil/store';
 import Stomp from 'stompjs';
-
 import SockJS from 'sockjs-client';
 import { EvAbleFont, EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont } from '../component/element/BoxStyle';
 import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
@@ -219,6 +218,10 @@ export const Chatting = () => {
     },
   );
 
+  const chattingRoomDelete = (roomId: { roomId: string }) => {
+    chattingRoomDeleteData.mutate(roomId);
+  };
+
   // 웹소켓이 연결될 때 까지 실행하는 함수
   function waitForConnection(ws: Stomp.Client, callback: () => void) {
     setTimeout(
@@ -234,10 +237,6 @@ export const Chatting = () => {
       1, // 밀리초 간격으로 실행
     );
   }
-
-  const chattingRoomDelete = (roomId: { roomId: string }) => {
-    chattingRoomDeleteData.mutate(roomId);
-  };
 
   const makePrivateChattingRoom = (data: { name: string; nick: string }) => {
     makePrivateChattingRoomData.mutate(data);

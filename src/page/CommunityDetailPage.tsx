@@ -19,6 +19,8 @@ import { chattingApi } from '../api/callApi';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
+import Stomp from 'stompjs';
+import SockJS from 'sockjs-client';
 
 export const CommunityDetailPage = () => {
   const nav = useNavigate();
@@ -168,6 +170,12 @@ export const CommunityDetailPage = () => {
     }
   };
 
+  console.log(userInfo?.nick);
+  const localToken = localStorage.getItem('recoil-persist');
+
+  const sock = new SockJS('https://todowith.shop/ws');
+  const ws = Stomp.over(sock);
+
   //단체채팅방 입장 API
   const enterPublicChattingRoomData = useMutation(
     (roomId: { roomId: string }) => chattingApi.enterPublicChattingRoomApi(roomId),
@@ -191,6 +199,34 @@ export const CommunityDetailPage = () => {
   const enterPublicChattingRoom = (roomId: { roomId: string }) => {
     enterPublicChattingRoomData.mutate(roomId);
   };
+
+  // 단체방 퇴장 시 알림메시지 발송 API
+  function wsDisConnectUnsubscribe(roomIdName: string) {
+    try {
+      if (localToken) {
+        const toto = JSON.parse(localToken);
+
+        if (toto) {
+          const data = {
+            type: 'QUIT',
+            roomId: roomIdName,
+            sender: userInfo.nick,
+            message: '',
+          };
+          ws.send('/pub/chat/message', { Authorization: toto.accessTokenState }, JSON.stringify(data));
+          ws.unsubscribe('sub-0');
+          ws.disconnect(
+            () => {
+              ws.unsubscribe('sub-0');
+            },
+            { Authorization: toto.accessTokenState },
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   if (isLoading || !postDetail) return <>로딩중</>;
   return (
