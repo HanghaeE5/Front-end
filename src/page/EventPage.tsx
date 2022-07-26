@@ -1,26 +1,30 @@
 import { useMutation, useQuery } from 'react-query';
 import styled from 'styled-components';
 import { enterPhoneFn, exchangeCouponFn, fetchEventFn, openLuckyboxFn } from '../api/eventApi';
-import EventImg from '../asset/event.png';
+import EventImg from '../asset/icons/eventPage/event.jpg';
+import { ReactComponent as Stamp } from '../asset/icons/eventPage/stamp.svg';
+import { ReactComponent as LuckyBoxImg } from '../asset/icons/eventPage/luckybox.svg';
+import { ReactComponent as Aug1 } from '../asset/icons/eventPage/81.svg';
+import { ReactComponent as Aug2 } from '../asset/icons/eventPage/82.svg';
+import { ReactComponent as Aug3 } from '../asset/icons/eventPage/83.svg';
+import { ReactComponent as Aug4 } from '../asset/icons/eventPage/84.svg';
+import { ReactComponent as Aug5 } from '../asset/icons/eventPage/85.svg';
+
 import {
-  Badge,
   Button,
   Img,
   PopConfirmNew,
   PopConfirmProps,
-  Slide,
   SliderPopUp,
   TextInput,
   Typography,
   Wrapper,
 } from '../component/element';
-import { ReactComponent as Stamp } from '../asset/icons/stamp.svg';
-import { ReactComponent as LuckyBoxImg } from '../asset/luckybox.svg';
-import { useState } from 'react';
+
+import { FunctionComponent, ReactComponentElement, ReactElement, ReactNode, SVGProps, useState } from 'react';
 import { EventResponse } from '../Types/event';
 import { useInput } from '../hooks/useInput';
-import { AxiosError } from 'axios';
-import { PageHeader, PageLayout } from '../component/layout/PageLayout';
+import { PageHeader } from '../component/layout/PageLayout';
 import { TopNavBar } from '../component/layout/TopNavBar';
 
 const EventPageContainer = styled(Wrapper)`
@@ -33,7 +37,6 @@ const LuckyBox = styled(LuckyBoxImg)`
 `;
 
 const ScrollWrapper = styled.div`
-  font-family: 'GmarketSans';
   background-color: #130c51;
   overflow-y: scroll;
   box-sizing: border-box;
@@ -52,6 +55,7 @@ const EventSection = styled.section`
   padding: 36px;
   border-bottom: 4px solid #251d71;
   box-sizing: border-box;
+  font-family: 'GmarketSans';
 `;
 
 const EventImage = styled.img`
@@ -127,7 +131,6 @@ const EventCalendar = styled.div`
 const DayComponent = styled.div`
   width: 40px;
   height: 40px;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -142,6 +145,8 @@ const DateComponent = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 1.125rem;
+  line-height: 18px;
+  font-size: 18px;
 `;
 
 const Day = ({ dd, stampedList }: { dd: string; stampedList: string[] }) => {
@@ -150,6 +155,31 @@ const Day = ({ dd, stampedList }: { dd: string; stampedList: string[] }) => {
     .includes(`2022-07-${dd.length === 1 ? '0' + dd : dd}`);
 
   return <DateComponent>{isComplete ? <Stamp /> : dd}</DateComponent>;
+};
+
+const AugDayWrapper = styled.div`
+  width: 40px;
+  max-width: 40px;
+  height: 40px;
+`;
+
+const AugDateImg = styled.img`
+  width: 40px;
+  max-width: 40px;
+  height: 40px;
+`;
+
+const AugDay = ({
+  dateIcon,
+  stampedList,
+  yyyyMmDd,
+}: {
+  dateIcon: ReactElement;
+  stampedList: string[];
+  yyyyMmDd: string;
+}) => {
+  const isComplete = stampedList.map((date) => date.split('T')[0]).includes(yyyyMmDd);
+  return <AugDayWrapper>{isComplete ? <Stamp /> : dateIcon}</AugDayWrapper>;
 };
 
 const ScoreBox = styled.div<{ isRed?: boolean }>`
@@ -310,7 +340,7 @@ export const EventPage = () => {
             </EventContent>
           </Wrapper>
           <EventCalendar>
-            <div>2022년 7월</div>
+            <div>2022년 7월 - 8월</div>
             <div>
               <Wrapper justifyContent="space-between">
                 <DayComponent>일</DayComponent>
@@ -351,9 +381,13 @@ export const EventPage = () => {
                 ))}
               </Wrapper>
               <Wrapper justifyContent="space-between">
-                {['31', '8/1', '8/2', '8/3', '8/4', '8/5', ''].map((dd) => (
-                  <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
-                ))}
+                <Day dd={'31'} stampedList={eventData.stampDates} />
+                <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-01" dateIcon={<Aug1 />} />
+                <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-02" dateIcon={<Aug2 />} />
+                <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-03" dateIcon={<Aug3 />} />
+                <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-04" dateIcon={<Aug4 />} />
+                <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-05" dateIcon={<Aug5 />} />
+                <Day dd="" stampedList={eventData.stampDates} />
               </Wrapper>
             </div>
           </EventCalendar>
