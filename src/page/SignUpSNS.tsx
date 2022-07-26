@@ -5,7 +5,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { registerApi, userApi } from '../api/callApi';
 import { AxiosError } from 'axios';
-import { accessTokenState, popNotiState, userInfoState } from '../recoil/store';
+import { accessTokenState, popNotiState, snsSignupNickname, userInfoState } from '../recoil/store';
 import {
   EvBox,
   EvBtnAble,
@@ -57,10 +57,11 @@ export const SignUpSNS = () => {
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [nickname, setNickname] = useState<string>('');
   const [popNoti, setPopNoti] = useRecoilState(popNotiState);
+  const [snsSignupNicknameOk, setSnsSignupNicknameOk] = useRecoilState(snsSignupNickname);
   const [check, setCheck] = useState<boolean>(false);
   const accessLoginToken = useSetRecoilState(accessTokenState);
 
-  const localToken = localStorage.getItem('accessToken');
+  const localToken = localStorage.getItem('recoil-persist');
 
   type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
 
@@ -87,8 +88,12 @@ export const SignUpSNS = () => {
       setCheck(true);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      openErrorConfirm({ title: error.response?.data.msg });
-      setCheck(false);
+      if (error.message === 'Request failed with status code 401') {
+        setTimeout(() => nickCertification({ nick: nickname }), 200);
+      } else {
+        openErrorConfirm({ title: error.response?.data.msg });
+        setCheck(false);
+      }
     },
   });
 
@@ -103,7 +108,12 @@ export const SignUpSNS = () => {
       accessLoginToken(token.headers.authorization);
       openSuccessConfirm({
         title: `${nickname}님 반가워요!`,
-        button: { text: '확인', onClick: () => nav(PATH.MAIN) },
+        button: {
+          text: '확인',
+          onClick: () => {
+            setSnsSignupNicknameOk(true), nav('/choosecharacter');
+          },
+        },
       });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
@@ -122,15 +132,32 @@ export const SignUpSNS = () => {
   const joinSocial = (nick: { nick: string }) => {
     joinSocialApiData.mutate(nick);
   };
+  console.log(snsSignupNicknameOk);
 
   //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
       setUserInfoData(data.data);
     },
-    onError: (error: AxiosError) => {
-      if (error.message === 'Request failed with status code 404') {
-        // nav(-1);
+    onError: (error: AxiosError<{ msg: string }>) => {
+      if (error.response?.data.msg === '해당 캐릭터가 존재하지 않습니다') {
+        openErrorConfirm({
+          title: '🙅🏻‍♀️닉네임 변경을 이용해주세요🙅🏻‍♀️',
+          content: '이미 회원가입이 완료되었습니다. ',
+          button: { text: '확인', onClick: () => nav('/choosecharacter') },
+        });
+      } else if (error.response?.data.msg === '사용자를 찾을 수 없습니다') {
+        openErrorConfirm({
+          title: '🙅🏻‍♀️사용자를 찾을 수 없습니다🙅🏻‍♀️',
+          content: '다시 로그인을 해도 동일한 경우, 회원가입을 해주세요',
+          button: {
+            text: '확인',
+            onClick: () => {
+              localStorage.clear();
+              nav('/login');
+            },
+          },
+        });
       }
     },
   });
@@ -146,6 +173,14 @@ export const SignUpSNS = () => {
       });
     }
   }, [userInformData.status]);
+
+  useEffect(() => {
+    if (snsSignupNicknameOk === true) {
+      nav('/choosecharacter');
+    } else if (!localToken) {
+      nav('/login');
+    }
+  }, [snsSignupNicknameOk]);
 
   return (
     <RegisterContainer>
@@ -201,6 +236,7 @@ export const SignUpSNS = () => {
                     const goNickCertification = {
                       nick: nickname,
                     };
+                    nickCertification(goNickCertification);
                   }
                 : () => {
                     null;
@@ -238,12 +274,16 @@ export const SignUpSNS = () => {
           width={'89.3%'}
           height={3.75}
           margin={'1.4375rem 1.25rem 0px 1.25rem'}
-          onClick={() => {
-            const gojoinSocial = {
-              nick: nickname,
-            };
-            joinSocial(gojoinSocial);
-          }}
+          onClick={
+            check
+              ? () => {
+                  const gojoinSocial = {
+                    nick: nickname,
+                  };
+                  joinSocial(gojoinSocial);
+                }
+              : () => null
+          }
         >
           <EvAbleFont size={0.875} isDisable={!check} weight={500}>
             회원가입

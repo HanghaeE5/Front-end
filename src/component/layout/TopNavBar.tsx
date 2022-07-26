@@ -79,7 +79,9 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
       setUserInfoData(data.data);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
-      if (error.response?.data.msg === '해당 캐릭터가 존재하지 않습니다') {
+      if (error.response?.data.msg === '닉네임 입력 후 서비스 이용 가능합니다.') {
+        nav('/signupsns');
+      } else if (error.response?.data.msg === '해당 캐릭터가 존재하지 않습니다') {
         nav('/choosecharacter');
       } else if (error.response?.data.msg === '사용자를 찾을 수 없습니다') {
         openErrorConfirm({
@@ -98,11 +100,10 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
   });
 
   useEffect(() => {
-    if (userInformData.error?.message === 'Request failed with status code 401') {
-      userInformData.refetch();
-    }
     if (!localToken) {
       nav('/login');
+    } else if (userInformData.error?.message === 'Request failed with status code 401') {
+      userInformData.refetch();
     }
   }, [userInformData]);
 

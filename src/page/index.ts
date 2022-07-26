@@ -1,4 +1,5 @@
 export * from './Login';
+export * from './LoginWait';
 export * from './Main';
 export * from './SignUpEmail';
 export * from './SignUpSNS';
