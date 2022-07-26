@@ -206,7 +206,7 @@ export const Login = () => {
             backgroundsize={'3.75rem'}
             onClick={() => {
               window.location.replace(
-                'https://todowith.shop/oauth2/authorization/naver?redirect_uri=http://localhost:3000/loginwait',
+                'https://todowith.shop/oauth2/authorization/naver?redirect_uri=https://www.todowith.co.kr/loginwait',
               );
             }}
           />
@@ -218,7 +218,7 @@ export const Login = () => {
             url={'url(/assets/kakaoicon.png)'}
             onClick={() => {
               window.location.replace(
-                'https://todowith.shop/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/loginwait',
+                'https://todowith.shop/oauth2/authorization/kakao?redirect_uri=https://www.todowith.co.kr/loginwait',
               );
             }}
           />
