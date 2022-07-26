@@ -204,15 +204,15 @@ export const FriendPage = () => {
             <EvBox
               width={'19.375rem'}
               height={19.375}
-              margin={' 0.5rem auto 0 auto '}
-              borderRadius="50%"
+              margin={'1rem auto 0 auto '}
+              backgroundsize="16rem"
               url={`url(${frienduserInfoData?.characterInfo.characterUrl})`}
             />
 
             <EvBox
               width={'5.25rem'}
               height={0.75}
-              margin={'-2.5rem 9.0625rem 0 9.0625rem '}
+              margin={'-3rem 9.0625rem 0 9.0625rem '}
               url={`url(/assets/shadow.svg)`}
             />
             <EvBox
@@ -257,7 +257,7 @@ export const FriendPage = () => {
                       ? 'url(/assets/mainbadge/badge_study02.svg)'
                       : frienduserInfoData?.characterInfo.study >= 5
                       ? 'url(/assets/mainbadge/badge_study03.svg)'
-                      : ''
+                      : 'url(/assets/mainbadge/badge_study_zero.svg)'
                   }
                 ></BadgeImgBox>
                 <TodoNumberBox>
@@ -283,7 +283,7 @@ export const FriendPage = () => {
                       ? 'url(/assets/mainbadge/badge_exercise02.svg)'
                       : frienduserInfoData?.characterInfo.exercise >= 5
                       ? 'url(/assets/mainbadge/badge_exercise03.svg)'
-                      : ''
+                      : 'url(/assets/mainbadge/badge_exercise_zero.svg)'
                   }
                 ></BadgeImgBox>
                 <TodoNumberBox>
@@ -309,7 +309,7 @@ export const FriendPage = () => {
                       ? 'url(/assets/mainbadge/badge_shopping02.svg)'
                       : frienduserInfoData?.characterInfo.shopping >= 5
                       ? 'url(/assets/mainbadge/badge_shopping03.svg)'
-                      : ''
+                      : 'url(/assets/mainbadge/badge_shopping_zero.svg)'
                   }
                 ></BadgeImgBox>
                 <TodoNumberBox>
@@ -335,7 +335,7 @@ export const FriendPage = () => {
                       ? 'url(/assets/mainbadge/badge_promise02.svg)'
                       : frienduserInfoData?.characterInfo.promise >= 5
                       ? 'url(/assets/mainbadge/badge_promise03.svg)'
-                      : ''
+                      : 'url(/assets/mainbadge/badge_promise_zero.svg)'
                   }
                 ></BadgeImgBox>
                 <TodoNumberBox>
