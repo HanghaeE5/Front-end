@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from 'react-query';
 import styled from 'styled-components';
 import { enterPhoneFn, exchangeCouponFn, fetchEventFn, openLuckyboxFn } from '../api/eventApi';
-import EventImg from '../asset/icons/eventPage/event.png';
+import EventImg from '../asset/icons/eventPage/event.jpg';
 import { ReactComponent as Stamp } from '../asset/icons/eventPage/stamp.svg';
 import { ReactComponent as LuckyBoxImg } from '../asset/icons/eventPage/luckybox.svg';
 import { ReactComponent as Aug1 } from '../asset/icons/eventPage/81.svg';
@@ -340,7 +340,7 @@ export const EventPage = () => {
             </EventContent>
           </Wrapper>
           <EventCalendar>
-            <div>2022년 7월</div>
+            <div>2022년 7월 - 8월</div>
             <div>
               <Wrapper justifyContent="space-between">
                 <DayComponent>일</DayComponent>
