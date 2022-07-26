@@ -8,7 +8,7 @@ import { EvAbleFont, EvBtn, EvBtnAble, EvFontBox, EvImgBox, EvKoreanFont, EvRowB
 
 const Slide = keyframes`
     0% {
-        transform: translateY(100%);
+        transform: translateY(20%);
     }
 
     100% {
@@ -35,10 +35,12 @@ const BoxWrap = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  max-width: 768px;
   width: 100%;
   height: 30.68rem;
   border-radius: 20px 20px 0px 0px;
-  margin: auto auto 0 auto;
+  position: fixed;
+  bottom: 3.3rem;
   background-color: #ffffff;
   animation: ${Slide} 0.6s ease;
 `;

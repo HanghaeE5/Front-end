@@ -5,7 +5,7 @@ import { EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont, EvRowBox } from '../ele
 
 const Slide = keyframes`
     0% {
-        transform: translateY(100%);
+        transform: translateY(10%);
     }
 
     100% {

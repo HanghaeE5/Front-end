@@ -10,7 +10,7 @@ import { useCommonConfirm } from '../../hooks/useCommonConfirm';
 
 const Slide = keyframes`
     0% {
-        transform: translateY(100%);
+        transform: translateY(20%);
     }
 
     100% {
@@ -43,6 +43,15 @@ const BoxWrap = styled.div`
   margin: auto 2.8125rem;
   background-color: #ffffff;
   animation: ${Slide} 0.6s ease;
+`;
+
+const FriendInputInfo = styled(EvInputInfo)`
+  margin: 1rem auto 0 auto;
+  width: 84.2%;
+  height: 3.75rem;
+  ::placeholder {
+    text-align: center;
+  }
 `;
 
 const FriendAddModal = () => {
@@ -98,16 +107,13 @@ const FriendAddModal = () => {
                 친구 추가
               </EvKoreanFont>
             </EvFontBox>
-            <EvInputInfo
-              margin="1rem auto 0 auto "
-              width="84.2%"
-              height={3.75}
+            <FriendInputInfo
               type="text"
               placeholder="친구의 닉네임을 입력해주세요"
               name="nickname"
               value={friendnickname}
               onChange={onChangeNickname}
-            ></EvInputInfo>
+            ></FriendInputInfo>
             <EvBtnAble
               width="84.2%"
               height={3.75}

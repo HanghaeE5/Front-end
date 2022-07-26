@@ -8,7 +8,7 @@ import { EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont, EvRowBox } from '../ele
 
 const Slide = keyframes`
     0% {
-        transform: translateY(100%);
+        transform: translateY(10%);
     }
 
     100% {
@@ -23,11 +23,11 @@ const ModalBackground = styled.div`
   height: 100%;
   justify-content: center;
   left: 0;
-  overflow: hidden;
-  position: absolute;
+  position: fixed;
   top: 0;
+  bottom: 0;
   width: 100%;
-  z-index: 5;
+  z-index: 2;
 `;
 
 type box = {
@@ -42,10 +42,11 @@ const BoxWrap = styled.div`
   align-items: center;
   width: 20.9375rem;
   height: 54%;
+  top: 25%;
   border-radius: 12px;
   background-color: #ffffff;
   animation: ${Slide} 0.6s ease;
-  position: relative;
+  position: fixed;
   overflow-y: auto;
   overflow-x: hidden;
   ::-webkit-scrollbar {

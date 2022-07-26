@@ -21,6 +21,7 @@ const TopNavWrapper = styled.nav`
   align-items: center;
   background-color: #ffffff;
   border-bottom: 1px solid #dddddd;
+  z-index: 4;
 
   span {
     font-size: 1.25rem;

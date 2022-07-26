@@ -20,11 +20,11 @@ import { useNavigate } from 'react-router';
 
 const Slide = keyframes`
     0% {
-        transform: translateY(100%);
+        transform: translateY(20%);
     }
 
     100% {
-        transform: translateY(0);
+        transform: translateY(0%);
     }
 `;
 
@@ -47,10 +47,12 @@ const BoxWrap = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  max-width: 768px;
+  position: fixed;
+  bottom: 3.3rem;
   width: 100%;
   height: 30.68rem;
   border-radius: 20px 20px 0px 0px;
-  margin: auto auto 0 auto;
   background-color: #ffffff;
   animation: ${Slide} 0.6s ease;
 `;
