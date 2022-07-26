@@ -434,8 +434,9 @@ export const SignUpEmail = () => {
               height={3.75}
               margin={'0 0 0 auto'}
               isCursor={true}
-              onMouseDown={() => setView(!view)}
-              onMouseUp={() => setView(!view)}
+              onClick={() => setView(!view)}
+              // onMouseDown={() => setView(!view)}
+              // onMouseUp={() => setView(!view)}
               backgroundsize={view ? '1.4rem' : '1.25rem'}
               url={view ? 'url(/assets/eye.svg)' : 'url(/assets/closeeye.svg)'}
             />
@@ -458,8 +459,9 @@ export const SignUpEmail = () => {
                   height={3.75}
                   margin={'0 0 0 auto'}
                   isCursor={true}
-                  onMouseDown={() => setView(!view)}
-                  onMouseUp={() => setView(!view)}
+                  onClick={() => setView(!view)}
+                  // onMouseDown={() => setView(!view)}
+                  // onMouseUp={() => setView(!view)}
                   backgroundsize={view ? '1.4rem' : '1.25rem'}
                   url={view ? 'url(/assets/eye.svg)' : 'url(/assets/closeeye.svg)'}
                 />
