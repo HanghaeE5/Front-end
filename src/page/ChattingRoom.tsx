@@ -52,7 +52,7 @@ const RowChattingBox = styled.div`
   max-width: 89%;
   height: 2rem;
   margin: 0 auto 0 0;
-  background-color: #274000;
+  /* background-color: #274000; */
   cursor: pointer;
 `;
 
@@ -64,7 +64,7 @@ const ChattingRoomPhotoBox = styled.div`
   width: 2rem;
   height: 2rem;
   margin: ${(props: box) => props.margin};
-  background-color: yellowgreen;
+  /* background-color: yellowgreen; */
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -78,14 +78,14 @@ const ChattingRoomTextBox = styled.div`
   max-width: 80%;
   height: 2rem;
   margin: auto auto auto 0.625rem;
-  background-color: #8f68bc;
+  /* background-color: #8f68bc; */
 `;
 
 const YourChatTimeBox = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  background: #032dff;
+  /* background: #032dff; */
 `;
 
 const YourChatBox = styled.div`
@@ -94,7 +94,7 @@ const YourChatBox = styled.div`
   justify-content: center;
   width: 100%;
   margin: 1rem auto 0 1.25rem;
-  background: #bdefcd;
+  /* background: #bdefcd; */
 `;
 
 const MyChatBox = styled.div`
@@ -102,7 +102,7 @@ const MyChatBox = styled.div`
   flex-direction: row-reverse;
   width: 100%;
   margin: 1rem 1.25rem 0 auto;
-  background: #bdefcd;
+  /* background: #bdefcd; */
 `;
 
 const InformChatBox = styled.div`
@@ -157,6 +157,7 @@ const InformTextBox = styled.div`
   margin: 0 2.625rem;
   border-radius: 12px;
   padding: 10px 14px;
+  text-align: center;
 `;
 
 type font = {
@@ -187,7 +188,7 @@ const MessageSendBox = styled.div`
 `;
 const TimeBox = styled.div`
   display: flex;
-  background-color: red;
+  /* background-color: red; */
   align-items: flex-end;
 `;
 
@@ -403,7 +404,7 @@ export const ChattingRoom = () => {
               return (
                 <InformChatBox key={chatindex}>
                   <InformTextBox>
-                    <KoreanFont size={1}>{chat.message}</KoreanFont>
+                    <KoreanFont size={0.75}>{chat.message}</KoreanFont>
                   </InformTextBox>
                 </InformChatBox>
               );
