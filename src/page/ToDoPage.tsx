@@ -59,7 +59,7 @@ export const ToDoPage = () => {
     filter: 'all',
     sort: 'desc',
     page: 0,
-    size: 10,
+    size: 50,
   });
 
   const [todoModalStateNew, setTodoModalStateNew] = useState<{

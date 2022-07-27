@@ -200,7 +200,7 @@ export const SignUpEmail = () => {
     nickCertificationData.mutate(nick);
   };
 
-  const referrer = document.referrer;
+  // const referrer = document.referrer;
 
   //회원가입 API
   const joinData = useMutation((data: { email: string; nick: string; password: string }) => registerApi.joinApi(data), {
@@ -232,10 +232,12 @@ export const SignUpEmail = () => {
         content: '신규가입은 로그아웃 후 가능합니다.',
         button: {
           text: '확인',
-          onClick:
-            referrer.indexOf('login' || 'signupemail' || '/signupsns' || '/choosecharacter') === -1
-              ? () => nav(PATH.MAIN)
-              : () => nav(referrer),
+          onClick: () => {
+            nav('/');
+          },
+          // referrer.indexOf('login' || 'signupemail' || '/signupsns' || '/choosecharacter') === -1
+          //   ? () => nav(PATH.MAIN)
+          //   : () => nav(referrer),
         },
       });
     }

@@ -433,20 +433,22 @@ export const Main = () => {
             </EvKoreanFont>
           </EvFontBox>
           <ToDoBox>
-            {userInfoData?.todayTodoList.map((today) => {
-              return (
-                <EvBox direction={'row'} width={'100%'} key={today.todoId}>
-                  <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
-                    <AiOutlineCheck color={today.state ? '#000000' : ' #BABABA'} />
-                  </EvBox>
-                  <EvBox width={'83%'} margin={'0rem auto 0 0'} isAlignSide={true}>
-                    <EvKoreanFont size={0.87} color="#000000">
-                      {today.todoContent}
-                    </EvKoreanFont>
-                  </EvBox>
-                </EvBox>
-              );
-            })}
+            {userInfoData?.todayTodoList.length > 0
+              ? userInfoData?.todayTodoList.map((today) => {
+                  return (
+                    <EvBox direction={'row'} width={'100%'} key={today.todoId}>
+                      <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
+                        <AiOutlineCheck color={today.state ? '#000000' : ' #BABABA'} />
+                      </EvBox>
+                      <EvBox width={'83%'} margin={'0rem auto 0 0'} isAlignSide={true}>
+                        <EvKoreanFont size={0.87} color="#000000">
+                          {today.todoContent}
+                        </EvKoreanFont>
+                      </EvBox>
+                    </EvBox>
+                  );
+                })
+              : '오늘의 투두리스트가 없습니다.'}
           </ToDoBox>
 
           <EvBox style={{ top: '9.6rem', position: 'absolute' }} width={'19.5rem'} height="19.5">
