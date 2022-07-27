@@ -283,7 +283,7 @@ export const SignUpSNS = () => {
           isDisable={!check}
           width={'89.3%'}
           height={3.75}
-          margin={'1.4375rem 1.25rem 0px 1.25rem'}
+          margin={'1.4375rem 1.25rem 4rem 1.25rem'}
           onClick={
             check
               ? () => {

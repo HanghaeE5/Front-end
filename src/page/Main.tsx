@@ -41,6 +41,7 @@ import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
 const MainPageWrapper = styled(Wrapper)`
   max-width: 768px;
+  width: 100%;
   position: relative;
 `;
 
@@ -49,15 +50,8 @@ const MainContainer = styled.div`
   width: 100%;
   height: 100%;
   background: #ffe074; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to bottom, #ffffff 25%, #ffe074); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to bottom,
-    #ffffff 25%,
-    #ffe074
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   position: relative;
-
   overflow-y: ${(props: box) => (props.isNoScroll ? 'hidden' : 'auto')};
   ::-webkit-scrollbar {
     display: none;
@@ -68,6 +62,8 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: -webkit-linear-gradient(180deg, #ffffff 5%, #ffe074 75.32%); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(180deg, #ffffff 5%, #ffe074 75.32%);
 `;
 
 type box = {
@@ -91,8 +87,10 @@ const Box = styled.div`
 const ToDoBox = styled.div`
   display: flex;
   width: 89.3%;
-  margin: 0.375rem 5.3% 0 5.3%;
+  height: 6.25rem;
+  margin: 0.375rem 5.3% 4rem 5.3%;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   overflow-x: hidden;
   padding: 1rem 0;
@@ -109,10 +107,17 @@ const EventWrapper = styled(Wrapper)`
   cursor: pointer;
 `;
 
+export const EvRowBadgeWrap = styled(EvRowBox)`
+  width: 89.3%;
+  height: 7.9375rem;
+  margin: 0.625rem auto 0 auto;
+  column-gap: 0.5rem;
+`;
+
 export const BadgeBox = styled(EvColumnBox)`
   background-color: #ffffff;
-  width: 4.875rem;
-  height: 7.9375rem;
+  width: 25%;
+  height: 100%;
   box-shadow: 0px 2px 8px rgba(235, 197, 0, 0.5);
   border-radius: 6px;
 `;
@@ -216,7 +221,7 @@ export const Main = () => {
         alignItems="center"
         onClick={() => nav(PATH.EVENT)}
       >
-        <Typography color="#FFD600" weight={700}>
+        <Typography color="#FFD600" weight={700} size={0.875}>
           투두윗 100% 당첨 럭키박스 이벤트 바로가기 <DirectionIcon />
         </Typography>
       </EventWrapper>
@@ -233,7 +238,6 @@ export const Main = () => {
               margin={'0 0 0 9rem'}
               url={`url(${userInfoData?.profileImageUrl})`}
               borderRadius="50%"
-              border="1px solid #D9D9D9"
             />
             <EvBox
               width={'1.3294rem'}
@@ -247,7 +251,7 @@ export const Main = () => {
             />
           </EvBox>
           <EditPhotoModal />
-          <EvBox direction="row" margin="0.625rem 0 0 0 " height={2.125} style={{ zIndex: 2 }}>
+          <EvBox direction="row" margin="1rem 0 0 0 " height={2.125} style={{ zIndex: 2 }}>
             <EvBox
               width={'9.125rem'}
               height={2.125}
@@ -300,8 +304,7 @@ export const Main = () => {
           />
           <ExplainModal />
 
-          {/* 나의 보유아이템 */}
-          <EvBox width={'22rem'} height={4} margin={'-0.2rem auto 0 auto '}>
+          <EvBox width={'22rem'} height={4} margin={'-0.3rem auto 0 auto '}>
             <EvBox width={'10rem'} height={1.375}>
               <EvKoreanFont size={1.25} color="#000000" weight={500}>
                 {`Lv.${userInfoData?.characterInfo.level}`}
@@ -314,13 +317,14 @@ export const Main = () => {
             </EvBox>
           </EvBox>
 
+          {/* 나의 보유아이템 */}
           <EvFontBox width={10.0625} height={1.6875} margin={'2.5rem auto 0 5.3%'}>
             <EvKoreanFont size={1.125} color="#000000" weight={500}>
               나의 보유 아이템
             </EvKoreanFont>
           </EvFontBox>
 
-          <EvRowBox width={'89.3%'} height={7.9375} margin={'0.625rem auto 0 auto '} style={{ columnGap: '2.1%' }}>
+          <EvRowBadgeWrap>
             <BadgeBox margin="0 auto 0 0">
               <EvFontBox width={'2.4375rem'} height={1.3125} margin={'0.625rem auto 0 auto'}>
                 <EvKoreanFont size={0.875} weight={700}>
@@ -424,7 +428,7 @@ export const Main = () => {
                 </EvFontBox>
               </TodoNumberBox>
             </BadgeBox>
-          </EvRowBox>
+          </EvRowBadgeWrap>
 
           {/* 오늘의 투두리스트 */}
           <EvFontBox width={10.0625} height={1.6875} margin={'1.75rem auto 0 5.3%'}>
@@ -433,25 +437,29 @@ export const Main = () => {
             </EvKoreanFont>
           </EvFontBox>
           <ToDoBox>
-            {userInfoData?.todayTodoList.length > 0
-              ? userInfoData?.todayTodoList.map((today) => {
-                  return (
-                    <EvBox direction={'row'} width={'100%'} key={today.todoId}>
-                      <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
-                        <AiOutlineCheck color={today.state ? '#000000' : ' #BABABA'} />
-                      </EvBox>
-                      <EvBox width={'83%'} margin={'0rem auto 0 0'} isAlignSide={true}>
-                        <EvKoreanFont size={0.87} color="#000000">
-                          {today.todoContent}
-                        </EvKoreanFont>
-                      </EvBox>
+            {userInfoData?.todayTodoList.length > 0 ? (
+              userInfoData?.todayTodoList.map((today) => {
+                return (
+                  <EvBox direction={'row'} width={'100%'} key={today.todoId}>
+                    <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
+                      <AiOutlineCheck color={today.state ? '#000000' : ' #BABABA'} />
                     </EvBox>
-                  );
-                })
-              : '오늘의 투두리스트가 없습니다.'}
+                    <EvBox width={'83%'} margin={'0rem auto 0 0'} isAlignSide={true}>
+                      <EvKoreanFont size={0.875} color="#000000">
+                        {today.todoContent}
+                      </EvKoreanFont>
+                    </EvBox>
+                  </EvBox>
+                );
+              })
+            ) : (
+              <EvKoreanFont weight={500} size={0.875} color="#5F5F5F">
+                오늘의 투두리스트가 없습니다.
+              </EvKoreanFont>
+            )}
           </ToDoBox>
 
-          <EvBox style={{ top: '9.6rem', position: 'absolute' }} width={'19.5rem'} height="19.5">
+          <EvBox style={{ top: '10rem', position: 'absolute' }} width={'19.5rem'} height="19.5">
             <ExpBar exp={userInfoData?.characterInfo.expPercent} ismine={true}></ExpBar>
           </EvBox>
         </ContentContainer>

@@ -515,7 +515,7 @@ export const SignUpEmail = () => {
           <EvBtn
             width={'89.3%'}
             height={3.75}
-            margin={'0 auto'}
+            margin={'0 auto 4rem auto'}
             background="#ffffff"
             onClick={() => {
               nav('/login');

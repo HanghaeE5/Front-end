@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Chart as ChartJS, ArcElement, ChartArea, ChartData } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
+import { NONAME } from 'dns';
 
 ChartJS.register(ArcElement);
 interface exptype {
@@ -57,6 +58,7 @@ function ExpBar(props: exptype) {
           rotation: 215,
           circumference: 290,
           borderRadius: 20,
+          hoverBackgroundColor: '#ffffff',
         },
       ],
     };

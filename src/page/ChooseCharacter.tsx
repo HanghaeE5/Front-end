@@ -63,7 +63,7 @@ export const ChooseCharacter = () => {
 
   const selectName = select === '나무늘보' ? '브라우니' : '비니';
 
-  //유저정보 가져오기 API
+  // 유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
       openErrorConfirm({
@@ -154,8 +154,8 @@ export const ChooseCharacter = () => {
           width={'14.0625rem'}
           height={1.625}
           margin={'0.625rem auto 0 auto'}
-          borderRadius={'100px'}
           backgroundColor={'#F7F7F7'}
+          style={{ borderRadius: '100px' }}
         >
           <EvKoreanFont size={0.8125} align={'center'} color={'#5F5F5F'}>
             캐릭터는 선택 후 변경이 불가합니다.
@@ -169,10 +169,12 @@ export const ChooseCharacter = () => {
               height={8.125}
               margin={'0 0 0.375rem 0'}
               border={select === '나무늘보' ? '3px solid #FFD600' : '1px solid #dddddd'}
-              borderRadius="50%"
+              backgroundColor={select === '나무늘보' ? '#FFFBE9' : '#F6F6F6'}
+              backgroundsize={'6.5rem'}
               url={
-                select === '나무늘보' ? 'url(/assets/sloth_130x130_color.svg)' : 'url(/assets/sloth_130x130_gray.svg)'
+                select === '나무늘보' ? 'url(/assets/캐릭터/브라우니컬러.svg)' : 'url(/assets/캐릭터/브라우니흑백.svg)'
               }
+              style={{ borderRadius: '50%' }}
               onClick={() => {
                 setSelect('나무늘보');
               }}
@@ -189,10 +191,10 @@ export const ChooseCharacter = () => {
               height={8.125}
               margin={'0 0 0.375rem 0'}
               border={select === '거북이' ? '3px solid #FFD600' : '1px solid #dddddd'}
-              borderRadius="50%"
-              url={
-                select === '거북이' ? 'url(/assets/turtle_130x130_color.svg)' : 'url(/assets/turtle_130x130_gray.svg)'
-              }
+              backgroundColor={select === '거북이' ? '#FFFBE9' : '#F6F6F6'}
+              backgroundsize={'6.5rem'}
+              url={select === '거북이' ? 'url(/assets/캐릭터/비니컬러.svg)' : 'url(/assets/캐릭터/비니흑백.svg)'}
+              style={{ borderRadius: '50%' }}
               onClick={() => {
                 setSelect('거북이');
               }}

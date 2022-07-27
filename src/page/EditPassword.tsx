@@ -222,7 +222,7 @@ export const EditPassword = () => {
             isDisable={editDisable}
             width={'89.3%'}
             height={3.75}
-            margin={'3.3125rem auto 0rem auto'}
+            margin={'3.3125rem auto 4rem auto'}
             onClick={
               editDisable
                 ? () => {

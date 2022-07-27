@@ -14,6 +14,7 @@ import {
   EvImgBox,
   EvInputInfo,
   EvKoreanFont,
+  EvLineBox,
   EvLogoBox,
   EvRowBox,
 } from '../component/element/BoxStyle';
@@ -105,7 +106,7 @@ export const Login = () => {
         <EvLogoBox margin={'3.4375rem auto 2.5rem auto'} />
 
         {/* 이메일 */}
-        <EvFontBox width={'2.8125rem'} height={1.5} margin={'0px auto 0.625rem 5.3%'}>
+        <EvFontBox width={'3rem'} height={1.5} margin={'0px auto 0.625rem 5.3%'}>
           {email && (
             <EvKoreanFont size={1} color="#939393" weight={700}>
               이메일
@@ -113,9 +114,9 @@ export const Login = () => {
           )}
         </EvFontBox>
         <EvInputInfo
-          width={'88.5%'}
+          width={'89.3%'}
           height={3.75}
-          margin={'0px 1.25rem 0px 1.43rem'}
+          margin={'0 auto'}
           type="text"
           placeholder="이메일을 입력하세요.    예) todowith@naver.com"
           name="email"
@@ -132,9 +133,9 @@ export const Login = () => {
           )}
         </EvFontBox>
         <EvInputInfo
-          width={'88.5%'}
+          width={'89.3%'}
           height={3.75}
-          margin={'0px 1.25rem 0px 1.43rem'}
+          margin={'0 auto'}
           placeholder="비밀번호를 입력하세요."
           type="password"
           value={password}
@@ -145,7 +146,7 @@ export const Login = () => {
         {/* 로그인버튼 */}
         <EvBtnAble
           isDisable={!email || !password}
-          width={'88.5%'}
+          width={'89.3%'}
           height={3.75}
           margin={'1.4375rem auto'}
           onClick={
@@ -169,10 +170,11 @@ export const Login = () => {
 
         {/* 회원가입버튼 */}
         <EvBtn
-          width={'88.5%'}
+          width={'89.3%'}
           height={3.75}
           margin={'0rem 1.25rem 0 1.25rem'}
           border={'1px solid #989898;'}
+          background={'#ffffff'}
           onClick={() => {
             nav('/signupemail');
           }}
@@ -183,16 +185,21 @@ export const Login = () => {
         </EvBtn>
 
         <EvRowBox margin={'1.6rem 0px 0 0px'} width={'100%'}>
-          <hr style={{ width: '40%' }} />
-          <EvFontBox width={2.6875} height={1.5} margin={'0px 0.625rem 0px 0.625rem'}>
-            <EvKoreanFont size={0.75} color="#989898">
-              또는
-            </EvKoreanFont>
-          </EvFontBox>
-          <hr style={{ width: '40%' }} />
+          <EvLineBox width={'89.3%'}>
+            <EvFontBox
+              backgroundColor="#ffffff            "
+              width={'2.6875rem'}
+              height={1.5}
+              margin={'0px 0.625rem 0px 0.625rem'}
+            >
+              <EvKoreanFont size={0.75} color="#989898">
+                또는
+              </EvKoreanFont>
+            </EvFontBox>
+          </EvLineBox>
         </EvRowBox>
 
-        <EvRowBox margin={'1.25rem 0 0 0'} width={'100%'} style={{ columnGap: '3rem' }}>
+        <EvRowBox margin={'1.25rem 0 4rem 0'} width={'100%'} style={{ columnGap: '3rem' }}>
           <EvImgBox
             width={'3.75rem'}
             height={3.75}
@@ -201,7 +208,7 @@ export const Login = () => {
             backgroundsize={'3.75rem'}
             onClick={() => {
               window.location.replace(
-                'https://todowith.shop/oauth2/authorization/naver?redirect_uri=https://www.todowith.co.kr/loginwait',
+                'https://todowith.shop/oauth2/authorization/naver?redirect_uri=https://todowith.co.kr/loginwait',
               );
             }}
           />
@@ -213,7 +220,7 @@ export const Login = () => {
             url={'url(/assets/kakaoicon.png)'}
             onClick={() => {
               window.location.replace(
-                'https://todowith.shop/oauth2/authorization/kakao?redirect_uri=https://www.todowith.co.kr/loginwait',
+                'https://todowith.shop/oauth2/authorization/kakao?redirect_uri=https://todowith.co.kr/loginwait',
               );
             }}
           />
@@ -224,7 +231,7 @@ export const Login = () => {
             url={'url(/assets/googleicon.png)'}
             onClick={() => {
               window.location.replace(
-                'https://todowith.shop/oauth2/authorization/google?redirect_uri=http://localhost:3000//loginwait',
+                'https://todowith.shop/oauth2/authorization/google?redirect_uri=https://todowith.co.kr/loginwait',
               );
             }}
           />

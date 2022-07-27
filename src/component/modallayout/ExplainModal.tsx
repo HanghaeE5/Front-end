@@ -76,6 +76,10 @@ interface textType {
   margin?: string;
 }
 
+export const Img = styled.img`
+  width: 295px;
+`;
+
 const ExplainBox = ({ text }: textType) => {
   return (
     <EvRowBox>
@@ -122,13 +126,12 @@ const ExplainModal = () => {
             }}
           >
             <div className="noScroll">
-              <EvRowBox width={'18.4375rem'} margin="1.25rem">
-                <EvFontBox width={'12.2rem'} height={3.25} margin={'1.0rem 5rem 0 0'}>
-                  <EvKoreanFont size={1.25} weight={700} lineHeight={'26px'}>
-                    캐릭터의 레벨과 스텝은 어떻게 정해지나요?
-                  </EvKoreanFont>
-                </EvFontBox>
-                <EvImgBox
+              <EvFontBox width={'12.2rem'} height={3.25} margin={'1.875rem auto 1.25rem 1.25rem'}>
+                <EvKoreanFont size={1.25} weight={700} lineHeight={'26px'}>
+                  캐릭터의 레벨과 스텝은 어떻게 정해지나요?
+                </EvKoreanFont>
+              </EvFontBox>
+              {/* <EvImgBox
                   width={'1rem'}
                   height={1}
                   margin={'0 0 auto auto'}
@@ -137,8 +140,7 @@ const ExplainModal = () => {
                   onClick={() => {
                     setmodalGather({ ...modalGather, explainModal: false });
                   }}
-                ></EvImgBox>
-              </EvRowBox>
+                ></EvImgBox> */}
 
               <EvColumnBox width={'88%'} margin="0 auto 1.25rem auto " style={{ rowGap: '10px' }}>
                 <ExplainBox text={'투두를 완료하면 경험치가 1 증가해요.'} />
@@ -261,11 +263,13 @@ const ExplainModal = () => {
                   아이템은 어떻게 받을 수 있나요?
                 </EvKoreanFont>
               </EvFontBox>
-              <ExplainBox text={`투두의 카테고리는 스터디, 운동, 쇼핑,\n약속, 기타로 이루어져 있어요`} />
-              <ExplainBox
-                text={`기타를 제외한 스터디, 운동, 쇼핑, 약속\n카테고리를 누적 5개, 15개, 30개 완료하면\n아이템을 받을 수 있어요.`}
-              />
-              <img src="/assets/table.svg" style={{ margin: '1.25rem auto 1.25rem 1.25rem' }}></img>
+              <EvColumnBox width={'88%'} margin="0 auto " style={{ rowGap: '10px' }}>
+                <ExplainBox text={`투두의 카테고리는 스터디, 운동, 쇼핑,\n약속, 기타로 이루어져 있어요`} />
+                <ExplainBox
+                  text={`기타를 제외한 스터디, 운동, 쇼핑, 약속\n카테고리를 누적 5개, 15개, 30개 완료하면\n아이템을 받을 수 있어요.`}
+                />
+              </EvColumnBox>
+              <Img src="/assets/table.png" style={{ margin: '1.25rem auto 1.25rem 1.25rem' }}></Img>
             </div>
           </BoxWrap>
         </ModalBackground>

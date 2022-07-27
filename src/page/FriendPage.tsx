@@ -36,19 +36,11 @@ import ExpBar from '../component/element/ExpBar';
 import setupInterceptorsTo from '../api/Interceptiors';
 import { useParams } from 'react-router';
 import { FriendInfo } from '../Types/user';
-import { BadgeImgBox, TodoNumberBox } from './Main';
+import { BadgeImgBox, EvRowBadgeWrap, TodoNumberBox } from './Main';
 import ExplainModal from '../component/modallayout/ExplainModal';
 
 const MainContainer = styled.div`
   height: 100%;
-  background: #82d5ff; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to bottom, #ffffff 25%, #96dcff); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to bottom,
-    #ffffff 25%,
-    #c4e27d
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
   position: relative;
   overflow-y: auto;
   ::-webkit-scrollbar {
@@ -73,6 +65,13 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: #c5de7b; /* fallback for old browsers */
+  background: -webkit-linear-gradient(180deg, #ffffff 5%, #c5de7b 75.32%); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    180deg,
+    #ffffff 5%,
+    #c5de7b 75.32%
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 `;
 
 type box = {
@@ -95,7 +94,7 @@ const Box = styled.div`
 const ToDoBox = styled.div`
   display: flex;
   width: 89.3%;
-  margin: 0.375rem 5.3% 0 5.3%;
+  margin: 0.375rem 5.3% 4rem 5.3%;
   flex-direction: column;
   align-items: center;
   overflow-x: hidden;
@@ -114,8 +113,8 @@ const EventWrapper = styled(Wrapper)`
 
 export const FriendBadgeBox = styled(EvColumnBox)`
   background-color: #ffffff;
-  width: 4.875rem;
-  height: 7.9375rem;
+  width: 25%;
+  height: 100%;
   box-shadow: 0px 2px 8px rgba(148, 174, 74, 0.5);
   border-radius: 6px;
 `;
@@ -184,10 +183,9 @@ export const FriendPage = () => {
                 margin={'0 auto '}
                 url={`url(${frienduserInfoData?.profileImageUrl})`}
                 borderRadius="50%"
-                border="1px solid #D9D9D9"
               />
             </EvBox>
-            <EvBox direction="row" margin="0.625rem 0 0 0 " height={2.125} style={{ zIndex: 3 }}>
+            <EvBox direction="row" margin="1rem 0 0 0 " height={2.125} style={{ zIndex: 3 }}>
               <EvBox
                 width={'9.125rem'}
                 height={2.125}
@@ -221,7 +219,7 @@ export const FriendPage = () => {
               style={{ zIndex: 2 }}
               width={'1.3125rem'}
               height={1.3125}
-              margin={'-1rem 2rem 0 21.0625rem '}
+              margin={'-0.4rem 2rem 0 21.0625rem '}
               url="url(/assets/물음표.svg)"
               isCursor={true}
               onClick={() => {
@@ -229,7 +227,7 @@ export const FriendPage = () => {
               }}
             />
 
-            <EvBox width={'22rem'} height={4} margin={'1rem auto 0 auto '}>
+            <EvBox width={'22rem'} height={4} margin={'-0.3rem auto 0 auto '}>
               <EvBox width={'10rem'} height={1.375}>
                 <EvKoreanFont size={1.25} color="#000000" weight={500}>
                   {`Lv.${frienduserInfoData?.characterInfo.level}`}
@@ -248,7 +246,7 @@ export const FriendPage = () => {
               </EvKoreanFont>
             </EvFontBox>
 
-            <EvRowBox width={'89.3%'} height={7.9375} margin={'0.625rem auto 0 auto '} style={{ columnGap: '2.1%' }}>
+            <EvRowBadgeWrap>
               <FriendBadgeBox margin="0 auto 0 0">
                 <EvFontBox width={'2.4375rem'} height={1.3125} margin={'0.625rem auto 0 auto'}>
                   <EvKoreanFont size={0.875} weight={700}>
@@ -352,7 +350,7 @@ export const FriendPage = () => {
                   </EvFontBox>
                 </TodoNumberBox>
               </FriendBadgeBox>
-            </EvRowBox>
+            </EvRowBadgeWrap>
 
             <EvFontBox width={10.0625} height={1.6875} margin={'1.75rem auto 0 5.3%'}>
               <EvKoreanFont size={1.125} color="#000000" weight={500}>
@@ -360,25 +358,29 @@ export const FriendPage = () => {
               </EvKoreanFont>
             </EvFontBox>
             <ToDoBox>
-              {frienduserInfoData?.todoList
-                ? frienduserInfoData.todoList.map((today) => {
-                    return (
-                      <EvBox direction={'row'} width={'100%'} key={today.todoId}>
-                        <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
-                          <AiOutlineCheck color={today.state ? '#000000' : ' #BABABA'} />
-                        </EvBox>
-                        <EvBox width={'83%'} margin={'0rem auto 0 0'} isAlignSide={true}>
-                          <EvKoreanFont size={0.87} color="#000000">
-                            {today.todoContent}
-                          </EvKoreanFont>
-                        </EvBox>
+              {frienduserInfoData?.todoList.length > 0 ? (
+                frienduserInfoData.todoList.map((today) => {
+                  return (
+                    <EvBox direction={'row'} width={'100%'} key={today.todoId}>
+                      <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
+                        <AiOutlineCheck color={today.state ? '#000000' : ' #BABABA'} />
                       </EvBox>
-                    );
-                  })
-                : '오늘의 투두리스트가 없거나, 비공개입니다'}
+                      <EvBox width={'83%'} margin={'0rem auto 0 0'} isAlignSide={true}>
+                        <EvKoreanFont size={0.875} color="#000000">
+                          {today.todoContent}
+                        </EvKoreanFont>
+                      </EvBox>
+                    </EvBox>
+                  );
+                })
+              ) : (
+                <EvKoreanFont weight={500} size={0.875} color="#5F5F5F">
+                  오늘의 투두리스트가 없거나, 비공개입니다
+                </EvKoreanFont>
+              )}
             </ToDoBox>
 
-            <EvBox style={{ top: '9.5rem', position: 'absolute' }} width={'19.5rem'} height="19.5">
+            <EvBox style={{ top: '10rem', position: 'absolute' }} width={'19.5rem'} height="19.5">
               {frienduserInfoData && <ExpBar exp={frienduserInfoData?.characterInfo.expPercent} ismine={false} />}
             </EvBox>
           </ContentContainer>

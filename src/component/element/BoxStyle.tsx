@@ -120,6 +120,7 @@ export const EvImgBox = styled.div`
   background-size: ${(props: box) => (props.backgroundsize ? props.backgroundsize : 'cover')};
   background-position: center;
   background-color: ${(props: box) => (props.backgroundColor ? props.backgroundColor : '')};
+  border: ${(props: box) => props.border};
 `;
 
 export const EvLogoBox = styled(EvImgBox)`
@@ -245,6 +246,7 @@ export const EvEnglishFont = styled.p`
 
 export const EvAbleFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
+  font-weight: ${(props: font) => (props.weight ? props.weight : 400)};
   color: ${(props: font) => (props.isDisable ? '#989898' : '#1A1A1A')};
   display: flex;
   margin: 0;
