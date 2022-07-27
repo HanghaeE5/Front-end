@@ -213,7 +213,7 @@ export const ChooseCharacter = () => {
           onClick={
             select
               ? () => {
-                  // userCharacterChoose({ type: select });
+                  userCharacterChoose({ type: select });
                 }
               : () => {
                   null;
