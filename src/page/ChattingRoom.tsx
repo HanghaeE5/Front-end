@@ -52,7 +52,7 @@ const RowChattingBox = styled.div`
   max-width: 89%;
   height: 2rem;
   margin: 0 auto 0 0;
-  /* background-color: #e3f8c3; */
+  background-color: #274000;
   cursor: pointer;
 `;
 
@@ -64,7 +64,7 @@ const ChattingRoomPhotoBox = styled.div`
   width: 2rem;
   height: 2rem;
   margin: ${(props: box) => props.margin};
-  /* background-color: yellowgreen; */
+  background-color: yellowgreen;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -81,56 +81,72 @@ const ChattingRoomTextBox = styled.div`
   background-color: #8f68bc;
 `;
 
+const YourChatTimeBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background: #032dff;
+`;
+
 const YourChatBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 70%;
+  width: 100%;
   margin: 1rem auto 0 1.25rem;
   background: #bdefcd;
 `;
 
 const MyChatBox = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  max-width: 70%;
+  flex-direction: row-reverse;
+  width: 100%;
   margin: 1rem 1.25rem 0 auto;
-  /* background: #bdefcd; */
+  background: #bdefcd;
 `;
 
 const InformChatBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 100%;
-  margin: 1rem 1.25rem;
-  /* background: #bdefcd; */
+  width: 100%;
+  margin: 1rem auto;
+  background: #ffe24d;
 `;
 
 const YourTextBox = styled.div`
-  max-width: calc(100% - 6.5rem);
+  max-width: calc(70% - 6.5rem);
+  /* width: 150px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 auto auto 2.625rem;
+  margin: 0 0.25rem auto 2.625rem;
   background: #ffffff;
   border-radius: 0px 12px 12px 12px;
+  box-shadow: 0px 2px 8px rgba(235, 197, 0, 0.25);
   padding: 10px 14px;
-  word-break: keep-all;
+  /* white-space: pre-wrap; */
+  /* word-break: keep-all; */
+  word-wrap: break-word;
+  word-break: break-all;
 `;
 
 const MyTextBox = styled.div`
-  max-width: calc(100% - 3.8rem);
+  max-width: calc(70% - 3.8rem);
+  /* width: 150px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 0 0 auto;
+  margin: 0 1.25rem 0 0.25rem;
   background: #ffd600;
   border-radius: 12px 12px 0px 12px;
   padding: 10px 14px;
+  box-shadow: 0px 2px 8px rgba(235, 197, 0, 0.25);
+  /* word-break: normal; */
+  /* white-space: nowrap; */
   /* word-break: break-all; */
-  word-break: keep-all;
+  word-wrap: break-word;
+  word-break: break-all;
 `;
 
 const InformTextBox = styled.div`
@@ -139,7 +155,6 @@ const InformTextBox = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0 2.625rem;
-  background: #ccccc6cc;
   border-radius: 12px;
   padding: 10px 14px;
 `;
@@ -154,8 +169,8 @@ type font = {
 const KoreanFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
   color: ${(props: font) => props.color};
-  display: flex;
-  margin: 0 0 0 0;
+  /* display: flex; */
+  /* margin: 0 0 0 0; */
 `;
 
 const MessageSendBox = styled.div`
@@ -169,6 +184,11 @@ const MessageSendBox = styled.div`
   justify-content: row;
   align-items: center;
   z-index: 3;
+`;
+const TimeBox = styled.div`
+  display: flex;
+  background-color: red;
+  align-items: flex-end;
 `;
 
 export const ChattingRoom = () => {
@@ -369,7 +389,7 @@ export const ChattingRoom = () => {
       // console.log(ws.ws.readyState);
     }
   }
-
+  console.log(chatData);
   useEffect(() => {
     wsConnectSubscribe();
   }, []);
@@ -387,7 +407,7 @@ export const ChattingRoom = () => {
                   </InformTextBox>
                 </InformChatBox>
               );
-            } else if (chat.sender !== userInfoData.nick) {
+            } else if (chat.sender !== userInfoData?.nick) {
               return (
                 <YourChatBox key={chatindex}>
                   <RowChattingBox
@@ -404,25 +424,25 @@ export const ChattingRoom = () => {
                       <KoreanFont size={0.75}>{chat.sender}</KoreanFont>
                     </ChattingRoomTextBox>
                   </RowChattingBox>
-                  <EvBox style={{ alignItems: 'flex-end' }} direction="row">
+                  <YourChatTimeBox>
                     <YourTextBox>
                       <KoreanFont size={1}>{chat.message}</KoreanFont>
                     </YourTextBox>
-                    <EvBox width={'3.5rem'} isAlignSide={true}>
+                    <TimeBox>
                       <KoreanFont size={0.625}>{messageTime(chat.createdDate)}</KoreanFont>
-                    </EvBox>
-                  </EvBox>
+                    </TimeBox>
+                  </YourChatTimeBox>
                 </YourChatBox>
               );
             } else {
               return (
                 <MyChatBox key={chatindex} style={{ alignItems: 'flex-end' }}>
-                  <EvBox width={'3.5rem'} style={{ alignItems: 'flex-end' }}>
-                    <EvKoreanFont size={0.625}>{messageTime(chat.createdDate)}</EvKoreanFont>
-                  </EvBox>
                   <MyTextBox>
                     <KoreanFont size={1}>{chat.message}</KoreanFont>
                   </MyTextBox>
+                  <TimeBox>
+                    <KoreanFont size={0.625}>{messageTime(chat.createdDate)}</KoreanFont>
+                  </TimeBox>
                 </MyChatBox>
               );
             }
