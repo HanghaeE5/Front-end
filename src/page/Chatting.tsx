@@ -13,6 +13,7 @@ import SockJS from 'sockjs-client';
 import { EvAbleFont, EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont } from '../component/element/BoxStyle';
 import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
+import { PopConfirmNew, PopConfirmProps } from '../component/element';
 
 const ContentWrapper = styled.div`
   height: 100%;
@@ -147,6 +148,15 @@ export const Chatting = () => {
   const queryClient = useQueryClient();
 
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
+
+  const [confirmState, setConfirmState] = useState<PopConfirmProps & { visible: boolean }>({
+    visible: false,
+    iconType: 'success',
+    title: '',
+    button: { text: '확인', onClick: () => setConfirmState((prev) => ({ ...prev, setConfirmState: false })) },
+  });
+
+  const closeConfirm = () => setConfirmState((prev) => ({ ...prev, visible: false }));
 
   //채팅 목록 API
   const getChattingQuery = useQuery('chattingLists', chattingApi.chattingListApi, {
@@ -343,6 +353,7 @@ export const Chatting = () => {
                         {chatting.name.length > 16 ? chatting.name.slice(0, 16) + '...' : chatting.name}
                       </KoreanFont>
                     </ChattingRoomTextBox>
+                    {confirmState.visible && <PopConfirmNew {...confirmState} />}
                     <RowBox
                       width={'2rem'}
                       height={2}
@@ -353,10 +364,26 @@ export const Chatting = () => {
                         cursor: 'pointer',
                       }}
                       onClick={() => {
-                        wsDisConnectUnsubscribe(chatting.roomId);
-                        chattingRoomDelete({ roomId: chatting.roomId });
-                        setDeleteChattingroom(chatting.roomId);
-                        console.log(chatting.roomId);
+                        setConfirmState({
+                          visible: true,
+                          iconType: 'warning',
+                          title: `"${chatting.name}" 채팅방을 나가겠습니까?`,
+                          button: {
+                            text: '취소',
+                            onClick: () => {
+                              closeConfirm();
+                            },
+                          },
+                          optionalButton: {
+                            text: '삭제',
+                            onClick: () => {
+                              closeConfirm();
+                              wsDisConnectUnsubscribe(chatting.roomId);
+                              chattingRoomDelete({ roomId: chatting.roomId });
+                              setDeleteChattingroom(chatting.roomId);
+                            },
+                          },
+                        });
                       }}
                     ></RowBox>
                   </RowChattingBox>
@@ -388,6 +415,9 @@ export const Chatting = () => {
                     makePrivateChattingRoom({
                       name: `${friend.nick}님과 ${userInfoData.nick}님의 대화`,
                       nick: friend.nick,
+                    });
+                    openSuccessConfirm({
+                      title: `${friend.nick}님과의 채팅방이 생성되었습니다.`,
                     });
                   }}
                 >

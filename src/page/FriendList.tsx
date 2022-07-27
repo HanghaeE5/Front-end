@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { friendApi } from '../api/callApi';
-import { Badge, ButtonFloating } from '../component/element';
+import { Badge, ButtonFloating, PopConfirmNew, PopConfirmProps } from '../component/element';
 import { EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont } from '../component/element/BoxStyle';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
@@ -224,6 +224,15 @@ export const FriendList = () => {
     },
   });
 
+  const [confirmState, setConfirmState] = useState<PopConfirmProps & { visible: boolean }>({
+    visible: false,
+    iconType: 'success',
+    title: '',
+    button: { text: '확인', onClick: () => setConfirmState((prev) => ({ ...prev, setConfirmState: false })) },
+  });
+
+  const closeConfirm = () => setConfirmState((prev) => ({ ...prev, visible: false }));
+
   const rejectFriend = (data: { nick: string }) => {
     rejectFriendData.mutate(data);
   };
@@ -334,14 +343,32 @@ export const FriendList = () => {
                       </FriendNameTextBox>
                       <Badge>{`Lv.${myfriend.characterLevel}`}</Badge>
                     </RowBox>
+                    {confirmState.visible && <PopConfirmNew {...confirmState} />}
                     <Box
                       isCursor={true}
                       width={'1.5rem'}
                       height={2.5}
                       margin="auto 0 auto auto"
                       onClick={() => {
-                        setDeleteFriendName(myfriend.nick);
-                        deleteFriend({ nick: myfriend.nick });
+                        setConfirmState({
+                          visible: true,
+                          iconType: 'warning',
+                          title: `${myfriend.nick} 님을 친구에서 삭제하시겠습니까?`,
+                          button: {
+                            text: '취소',
+                            onClick: () => {
+                              closeConfirm();
+                            },
+                          },
+                          optionalButton: {
+                            text: '삭제',
+                            onClick: () => {
+                              closeConfirm;
+                              setDeleteFriendName(myfriend.nick);
+                              deleteFriend({ nick: myfriend.nick });
+                            },
+                          },
+                        });
                       }}
                     >
                       <KoreanFont size={0.81}>삭제</KoreanFont>

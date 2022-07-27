@@ -40,12 +40,10 @@ const ContentContainer = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
 
 export const ChooseCharacter = () => {
   const [nickname, setNickname] = useState<string>('');
   const [popNoti, setPopNoti] = useRecoilState(popNotiState);
-  const [informType, setInformType] = useState<ConfirmType | undefined>(undefined);
   const [informMsg, setInformMsg] = useState<string | undefined>('');
   const [quitOk, setQuitOk] = useState<boolean>(false);
   const [check, setCheck] = useState<boolean>(false);
@@ -54,8 +52,6 @@ export const ChooseCharacter = () => {
   const accessLoginToken = useSetRecoilState(accessTokenState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const localToken = localStorage.getItem('recoil-persist');
-
-  type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
 
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 

@@ -92,7 +92,7 @@ const YourChatBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100%;
+  width: 70%;
   margin: 1rem auto 0 1.25rem;
   /* background: #bdefcd; */
 `;
@@ -100,7 +100,7 @@ const YourChatBox = styled.div`
 const MyChatBox = styled.div`
   display: flex;
   flex-direction: row-reverse;
-  width: 100%;
+  width: 70%;
   margin: 1rem 1.25rem 0 auto;
   /* background: #bdefcd; */
 `;

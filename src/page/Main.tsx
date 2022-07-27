@@ -43,6 +43,7 @@ const MainPageWrapper = styled(Wrapper)`
   max-width: 768px;
   width: 100%;
   position: relative;
+  overflow-x: hidden;
 `;
 
 const MainContainer = styled.div`
@@ -52,6 +53,7 @@ const MainContainer = styled.div`
   background: #ffe074; /* fallback for old browsers */
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   position: relative;
+  overflow-x: hidden;
   overflow-y: ${(props: box) => (props.isNoScroll ? 'hidden' : 'auto')};
   ::-webkit-scrollbar {
     display: none;

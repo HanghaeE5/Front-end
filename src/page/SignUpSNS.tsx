@@ -63,8 +63,6 @@ export const SignUpSNS = () => {
 
   const localToken = localStorage.getItem('recoil-persist');
 
-  type ConfirmType = 'warning' | 'chat' | 'withTodo' | 'success';
-
   const nav = useNavigate();
 
   const checkNickname = (asValue: string) => {
@@ -119,10 +117,8 @@ export const SignUpSNS = () => {
       if (error.message === 'Request failed with status code 401') {
         setTimeout(() => joinSocial({ nick: nickname }), 200);
       } else {
-        setPopNoti({
-          openPopNoti: true,
-          informType: 'warning',
-          informMsg: error.response?.data.msg,
+        openErrorConfirm({
+          title: error.response?.data.msg,
         });
       }
     },
