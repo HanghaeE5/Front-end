@@ -84,7 +84,6 @@ const ProfileMenuModal = ({ isWithBanner }: { isWithBanner?: boolean }) => {
   }, [userJoinType]);
 
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
-
   return (
     <>
       {modalGather.profileMenuModal && (

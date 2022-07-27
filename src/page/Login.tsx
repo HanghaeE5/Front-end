@@ -49,8 +49,6 @@ export const Login = () => {
   const [password, setPassword] = useState<string>('');
   const [autoLogin, setAutoLogin] = useState<boolean>(false);
 
-  const referrer = document.referrer;
-
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   const loginUserData = useMutation((data: { email: string; password: string }) => registerApi.loginApi(data), {
@@ -60,14 +58,12 @@ export const Login = () => {
         title: '로그인 성공🙂',
         button: {
           text: '확인',
-          onClick:
-            referrer.indexOf('login' || 'signupemail' || '/signupsns' || '/choosecharacter') === -1
-              ? () => nav(PATH.MAIN)
-              : () => nav(referrer),
+          onClick: () => {
+            nav('/');
+          },
         },
       });
       setAccessLoginToken(token.headers.authorization);
-      // console.log(accessLoginToken);
     },
     onError: (error: AxiosError<{ msg: string }>) => openErrorConfirm({ title: error.response?.data.msg }),
   });
@@ -96,10 +92,9 @@ export const Login = () => {
         title: '🙅🏻‍♀️이미 로그인이 되어있습니다🙅🏻‍♀️',
         button: {
           text: '확인',
-          onClick:
-            referrer.indexOf('login' || 'signupemail' || '/signupsns' || '/choosecharacter') === -1
-              ? () => nav(PATH.MAIN)
-              : () => nav(referrer),
+          onClick: () => {
+            nav('/');
+          },
         },
       });
     }
@@ -229,7 +224,7 @@ export const Login = () => {
             url={'url(/assets/googleicon.png)'}
             onClick={() => {
               window.location.replace(
-                'https://todowith.shop/oauth2/authorization/google?redirect_uri=https://www.todowith.co.kr/loginwait',
+                'https://todowith.shop/oauth2/authorization/google?redirect_uri=http://localhost:3000//loginwait',
               );
             }}
           />
