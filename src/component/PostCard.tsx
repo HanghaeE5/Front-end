@@ -4,6 +4,7 @@ import { Board } from '../Types/community';
 import { Badge, DropdownMenu, Img, Typography, Wrapper } from './element';
 import { BsDot } from 'react-icons/bs';
 import { BiShareAlt } from 'react-icons/bi';
+import { useNavigate } from 'react-router';
 
 const DropdownMenuButton = styled(DropdownMenu)`
   cursor: pointer;
@@ -89,9 +90,15 @@ const PostHeader = ({
     onDelete: () => void;
   };
 }) => {
+  const nav = useNavigate();
   return (
     <Wrapper margin="0.5rem 0" padding="0.5rem 1rem">
-      <Wrapper width={boardId ? '2.5rem' : '2rem'}>
+      <Wrapper
+        width={boardId ? '2.5rem' : '2rem'}
+        onClick={() => {
+          nav(`/friend/page/${userName}`);
+        }}
+      >
         <Img url={userImg} type="profile" width={boardId ? '2.5rem' : '2rem'} height={boardId ? '2.5rem' : '2rem'} />
       </Wrapper>
 

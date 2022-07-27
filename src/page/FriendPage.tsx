@@ -244,7 +244,7 @@ export const FriendPage = () => {
 
             <EvFontBox width={10.0625} height={1.6875} margin={'2.5rem auto 0 5.3%'}>
               <EvKoreanFont size={1.125} color="#000000" weight={500}>
-                나의 보유 아이템
+                {frienduserInfoData?.nick}님의 보유 아이템
               </EvKoreanFont>
             </EvFontBox>
 
@@ -375,7 +375,7 @@ export const FriendPage = () => {
                       </EvBox>
                     );
                   })
-                : '오늘 ToDo가 없거나, 비공개입니다'}
+                : '오늘의 투두리스트가 없거나, 비공개입니다'}
             </ToDoBox>
 
             <EvBox style={{ top: '9.5rem', position: 'absolute' }} width={'19.5rem'} height="19.5">
