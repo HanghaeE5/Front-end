@@ -94,13 +94,18 @@ export const CategorySection = styled(Wrapper)`
     }
   }
 `;
+
+export const Calendar = styled.div`
+  width: 100%;
+  position: relative;
+`;
 export const CalendarWrapper = styled.div`
   background-color: white;
   border-radius: 6px;
   position: absolute;
-  bottom: 8rem;
+  bottom: -2rem;
   left: 50%;
-  transform: translate(-50%, 0%);
+  transform: translateX(-50%);
   box-shadow: 0px 3px 10px -4px rgba(0, 0, 0, 0.77);
 `;
 

@@ -20,6 +20,7 @@ import { Category, ITodoItem, TodoData } from '../Types/todo';
 import { Button, TextInput, Typography, Wrapper } from './element';
 import {
   Background,
+  Calendar,
   CalendarWrapper,
   CategorySection,
   CategoryWrapper,
@@ -238,7 +239,7 @@ export const TodoModalNew = ({
               {getSelectDate(selectedDay)}
             </Typography>
           </Wrapper>
-          <Wrapper margin="1rem 0">
+          <Calendar>
             <Button buttonType="default" size="large" onClick={() => setShowCalendar(true)}>
               날짜 변경하기
             </Button>
@@ -262,7 +263,7 @@ export const TodoModalNew = ({
                 />
               </CalendarWrapper>
             )}
-          </Wrapper>
+          </Calendar>
         </Wrapper>
         <StickyButton
           buttonType={todo.content.length === 0 ? 'disable' : 'primary'}
