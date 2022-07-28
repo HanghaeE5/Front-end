@@ -91,7 +91,17 @@ const ResearchPopup = () => {
               e.stopPropagation();
             }}
           >
-            <EvImgBox width={'23rem'} height={23}></EvImgBox>
+            <EvImgBox width={'23rem'} height={23}>
+              <EvBtn
+                width={'8.9rem'}
+                height={2.6}
+                margin={'14rem auto auto 1.3rem'}
+                style={{ opacity: 0 }}
+                onClick={() => {
+                  window.open('https://forms.gle/NWBga4YwCSFte9Ak9');
+                }}
+              ></EvBtn>
+            </EvImgBox>
             <EvRowBox width={'100%'} height={3.5} margin={'auto auto 0 auto'} backgroundColor="#ffffff">
               <EvBtn
                 width={'8.5rem'}
@@ -122,7 +132,7 @@ const ResearchPopup = () => {
               >
                 <EvFontBox width={'2.5rem'}>
                   <EvKoreanFont size={1} weight={500}>
-                    닫기{' '}
+                    닫기
                   </EvKoreanFont>
                 </EvFontBox>
                 <EvImgBox width={'0.8rem'} height={0.8} url="url(/assets/X.svg)" isCursor={true} />
