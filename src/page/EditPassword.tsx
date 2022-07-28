@@ -83,7 +83,7 @@ export const EditPassword = () => {
           title: `${userInfoData.nick}님의 비밀번호가 변경되었습니다`,
           button: {
             text: '확인',
-            onClick: () => nav('/'),
+            onClick: () => nav('/main'),
           },
         });
       },

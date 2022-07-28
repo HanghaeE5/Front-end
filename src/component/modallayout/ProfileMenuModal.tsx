@@ -30,7 +30,7 @@ const ModalBackground = styled.div`
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 10;
+  z-index: 5;
 `;
 
 const BoxWrap = styled.div<{ isWithBanner?: boolean }>`
@@ -48,6 +48,7 @@ const BoxWrap = styled.div<{ isWithBanner?: boolean }>`
   background-color: #ffffff;
   animation: ${Slide} 0.6s ease;
   overflow: hidden;
+  z-index: 10;
 `;
 
 const RowBox = styled.div`
@@ -104,7 +105,7 @@ const ProfileMenuModal = ({ isWithBanner }: { isWithBanner?: boolean }) => {
                     button: {
                       text: '확인',
                       onClick: () => {
-                        localStorage.clear(), nav('/login');
+                        localStorage.removeItem('recoil-persist'), nav('/login');
                       },
                     },
                   });

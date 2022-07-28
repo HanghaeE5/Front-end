@@ -104,7 +104,7 @@ const EditNicknameModal = () => {
         title: `${nicknameGather.nickname} 은(는) 사용 가능합니다.`,
         button: {
           text: '확인',
-          onClick: () => nav('/'),
+          onClick: () => nav('/main'),
         },
       });
       setNicknameGather({ ...nicknameGather, nicknameOk: true });

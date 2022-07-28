@@ -65,7 +65,7 @@ export const ChooseCharacter = () => {
       openErrorConfirm({
         title: '🙅🏻‍♀️이미 캐릭터를 선택했습니다🙅🏻‍♀️',
         content: '캐릭터는 변경 불가합니다',
-        button: { text: '확인', onClick: () => nav('/') },
+        button: { text: '확인', onClick: () => nav('/main') },
       });
     },
     onError: (error: AxiosError<{ msg: string }>) => {
@@ -93,7 +93,7 @@ export const ChooseCharacter = () => {
         title: `${selectName} 선택완료🙂`,
         button: {
           text: '확인',
-          onClick: () => nav('/'),
+          onClick: () => nav('/main'),
         },
       });
     },

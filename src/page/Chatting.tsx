@@ -271,7 +271,7 @@ export const Chatting = () => {
             message: '',
           };
           ws.send('/pub/chat/message', { Authorization: toto.accessTokenState }, JSON.stringify(data));
-          ws.unsubscribe('sub-0');
+          // ws.unsubscribe('sub-0');
           ws.disconnect(
             () => {
               ws.unsubscribe('sub-0');

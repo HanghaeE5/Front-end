@@ -26,7 +26,7 @@ export const LoginWait = () => {
         nav('/signupsns');
       } else if (isNickname === 'Y') {
         setSnsSignupNicknameOk(true);
-        nav('/');
+        nav('/main');
       }
     } else if (!localToken) {
       // console.log('로그인대기창에서 보내는것');

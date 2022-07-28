@@ -266,7 +266,7 @@ export const FriendList = () => {
                     <FriendNameTextBox>
                       <KoreanFont size={1}>{requestfriend.nick}</KoreanFont>
                     </FriendNameTextBox>
-                    <Badge>Lv.8</Badge>
+                    <Badge>Lv.{requestfriend.characterLevel}</Badge>
                   </RowBox>
                   <RowBox width="20%" height="2.5" margin="0 0 0 auto">
                     <Box

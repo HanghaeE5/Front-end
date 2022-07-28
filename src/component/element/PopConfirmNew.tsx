@@ -86,7 +86,7 @@ export interface PopConfirmProps {
 export const PopConfirmNew = ({ iconType, title, content, button, optionalButton }: PopConfirmProps) => {
   const [confirmState, setConfirmState] = useRecoilState(commonPopConfirmState);
   return (
-    <SliderPopUp>
+    <SliderPopUp onClickBackground={!optionalButton ? () => button.onClick() : undefined}>
       <PopupWrapper>
         <div>
           {iconType && <Icon>{confirmIcon[iconType]}</Icon>}

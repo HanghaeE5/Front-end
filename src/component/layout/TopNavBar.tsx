@@ -117,11 +117,22 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
         height={2.02}
         margin={'auto auto auto 5.3%'}
         url="url(/assets/로고.svg)"
-        style={{
-          backgroundImage: 'url(/assets/로고.svg)',
-        }}
+        isCursor={true}
         onClick={() => {
-          nav('/');
+          nav('/main');
+
+          setmodalGather({
+            ...modalGather,
+            levelUpModal: false,
+            stepUpModal: false,
+            editNicknameModal: false,
+            editPhotoModal: false,
+            profileMenuModal: false,
+            friendAddModal: false,
+            notiModal: false,
+            explainModal: false,
+            researchPopup: false,
+          });
         }}
       />
       <RowBox
@@ -150,6 +161,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
               friendAddModal: false,
               notiModal: true,
               explainModal: false,
+              researchPopup: false,
             });
           }}
         />
@@ -165,7 +177,16 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
           }}
           onClick={() => {
             setmodalGather({
+              ...modalGather,
+              levelUpModal: false,
+              stepUpModal: false,
+              editNicknameModal: false,
+              editPhotoModal: false,
               profileMenuModal: true,
+              friendAddModal: false,
+              notiModal: false,
+              explainModal: false,
+              researchPopup: false,
             });
           }}
         />
