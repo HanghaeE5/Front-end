@@ -115,7 +115,7 @@ const ResearchPopup = () => {
                 isCursor={true}
                 onClick={() => {
                   const minExpires = new Date();
-                  const tenMinExpire = minExpires.setMinutes(minExpires.getMinutes() + 1);
+                  const tenMinExpire = minExpires.setMinutes(minExpires.getMinutes() + 10);
                   localStorage.setItem('hasTenMinVisit', String(tenMinExpire));
                   setmodalGather({ ...modalGather, researchPopup: false });
                 }}

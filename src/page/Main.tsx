@@ -189,13 +189,13 @@ export const Main = () => {
     },
   });
 
+  if (new Date().getTime() >= Number(todayVisit)) {
+    localStorage.removeItem('hasTodayVisit');
+  }
+  if (new Date().getTime() >= Number(tenMinVisit)) {
+    localStorage.removeItem('hasTenMinVisit');
+  }
   useEffect(() => {
-    if (new Date().getTime() >= Number(todayVisit)) {
-      localStorage.removeItem('hasTodayVisit');
-    }
-    if (new Date().getTime() >= Number(tenMinVisit)) {
-      localStorage.removeItem('hasTenMinVisit');
-    }
     console.log(new Date().getTime(), Number(tenMinVisit));
     const handleShowModal = () => {
       if (!todayVisit && !tenMinVisit) {
@@ -203,7 +203,7 @@ export const Main = () => {
       }
     };
     handleShowModal();
-  }, [todayVisit]);
+  }, [todayVisit, tenMinVisit]);
 
   if (userInformData.status === 'loading') {
     return <EvImgBox width={'17rem'} height={15} margin="auto" url="url(/assets/캐릭터/브라우니2단계.gif)"></EvImgBox>;
