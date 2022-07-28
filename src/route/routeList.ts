@@ -17,6 +17,7 @@ import {
   EventPage,
 } from '../page';
 import { ReactElement } from 'react';
+import { MediaType } from '../page/MediaType';
 
 export interface IRoute {
   id: string;
@@ -28,7 +29,7 @@ export interface IRoute {
 export const PATH = {
   COMMUNITY: '/community',
   COMMUNITY_POST: '/community/post',
-  MAIN: '/',
+  MAIN: '/main',
   TODO: '/todo',
   FRIEND: '/friendlist',
   CHAT: '/chat',
@@ -40,6 +41,11 @@ export const routeList: IRoute[] = [
     id: 'main',
     path: PATH.MAIN,
     page: Main,
+  },
+  {
+    id: 'mediaType',
+    path: '/',
+    page: MediaType,
   },
   {
     id: 'signUpEmail',

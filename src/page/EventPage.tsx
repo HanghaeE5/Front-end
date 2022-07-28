@@ -507,7 +507,7 @@ const LuckyBoxModal = ({
             이 창에서 번호를 입력해주셔야하며, <br />
             잘못 입력된 번호는 책임지지 않습니다.
             <br />
-            해당 경품은 7월 23일 일괄지급됩니다
+            해당 경품은 8월 6일 일괄지급됩니다
           </div>
         </MentWrapper>
         <TextInput

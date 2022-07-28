@@ -60,7 +60,7 @@ export const Login = () => {
         button: {
           text: '확인',
           onClick: () => {
-            nav('/');
+            nav('/main');
           },
         },
       });
@@ -86,7 +86,23 @@ export const Login = () => {
     }
   };
 
+  function checkMobile() {
+    const varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
+
+    if (varUA.indexOf('android') > -1) {
+      //안드로이드
+      return 'android';
+    } else if (varUA.indexOf('iphone') > -1 || varUA.indexOf('ipad') > -1 || varUA.indexOf('ipod') > -1) {
+      //IOS
+      return 'ios';
+    } else {
+      //아이폰, 안드로이드 외
+      return 'other';
+    }
+  }
+
   useEffect(() => {
+    checkMobile();
     //useEffect 리턴 바로 위에 써주기.
     if (localToken) {
       openSuccessConfirm({
@@ -94,7 +110,7 @@ export const Login = () => {
         button: {
           text: '확인',
           onClick: () => {
-            nav('/');
+            nav('/main');
           },
         },
       });
@@ -107,18 +123,16 @@ export const Login = () => {
 
         {/* 이메일 */}
         <EvFontBox width={'3rem'} height={1.5} margin={'0px auto 0.625rem 5.3%'}>
-          {email && (
-            <EvKoreanFont size={1} color="#939393" weight={700}>
-              이메일
-            </EvKoreanFont>
-          )}
+          <EvKoreanFont size={1} color="#939393" weight={700}>
+            이메일
+          </EvKoreanFont>
         </EvFontBox>
         <EvInputInfo
           width={'89.3%'}
           height={3.75}
           margin={'0 auto'}
           type="text"
-          placeholder="이메일을 입력하세요.    예) todowith@naver.com"
+          placeholder="예) todowith@naver.com"
           name="email"
           value={email}
           onChange={onChange1}
@@ -126,17 +140,14 @@ export const Login = () => {
 
         {/* 비밀번호 */}
         <EvFontBox width={3.6875} height={1.5} margin={'1.4375rem auto 0.625rem 5.3%'}>
-          {password && (
-            <EvKoreanFont size={1} color="rgba(147, 147, 147, 1)" weight={700}>
-              비밀번호
-            </EvKoreanFont>
-          )}
+          <EvKoreanFont size={1} color="rgba(147, 147, 147, 1)" weight={700}>
+            비밀번호
+          </EvKoreanFont>
         </EvFontBox>
         <EvInputInfo
           width={'89.3%'}
           height={3.75}
           margin={'0 auto'}
-          placeholder="비밀번호를 입력하세요."
           type="password"
           value={password}
           onChange={onChange2}
