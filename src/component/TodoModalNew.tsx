@@ -1,6 +1,6 @@
 import { ko } from 'date-fns/locale';
 import { PropsWithChildren, ReactNode, useEffect, useState } from 'react';
-import { DayPicker } from 'react-day-picker';
+import { DayPicker, MonthChangeEventHandler } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { BsX } from 'react-icons/bs';
 import { ReactComponent as Reset } from '../asset/icons/icon_reset.svg';
@@ -67,7 +67,7 @@ const CalendarFooter = ({
     <Wrapper isColumn>
       <Wrapper justifyContent="space-between" margin="0.75rem 0">
         <Button buttonType="ghost" onClick={onClickEveryDay} width="calc(100% - 3.25rem)">
-          매일 선택
+          월 전체 선택
         </Button>
         <Button buttonType="ghost" onClick={reset} width="3rem">
           <Reset />
@@ -113,9 +113,10 @@ export const TodoModalNew = ({
   );
 
   const [showCalendar, setShowCalendar] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<Date[] | undefined>(
+  const [selectedDay, setSelectedDay] = useState<Date[]>(
     todoData ? todoData?.todoDateList.map((date) => new Date(date)) : [new Date()],
   );
+  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
 
   const onCloseCalendar = () => setShowCalendar(false);
 
@@ -143,7 +144,7 @@ export const TodoModalNew = ({
 
   const onClickEveryDay = () => {
     const [year, month, today] = new Intl.DateTimeFormat()
-      .format(new Date())
+      .format(calendarMonth)
       .split('.')
       .map((d) => Number(d));
 
@@ -155,7 +156,7 @@ export const TodoModalNew = ({
       allDate.push(new Date(year, month - 1, i));
     }
 
-    setSelectedDay([...allDate]);
+    setSelectedDay((prev) => [...prev, ...allDate]);
   };
 
   const translateTodoData = () => {
@@ -233,7 +234,7 @@ export const TodoModalNew = ({
           </div>
         </CategorySection>
         <Wrapper isColumn padding="1rem 1rem 2rem 1rem">
-          <Wrapper justifyContent="space-between">
+          <Wrapper justifyContent="space-between" margin="0 0 1rem 0">
             <span>날짜/기간</span>
             <Typography weight={700} size={0.95}>
               {getSelectDate(selectedDay)}
@@ -252,6 +253,7 @@ export const TodoModalNew = ({
                   min={1}
                   selected={selectedDay}
                   onSelect={onDatePick}
+                  onMonthChange={(month: Date) => setCalendarMonth(month)}
                   fromDate={new Date()}
                   footer={
                     <CalendarFooter
