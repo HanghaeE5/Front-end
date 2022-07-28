@@ -21,7 +21,7 @@ const queryClient = new QueryClient({
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <QueryClientProvider client={queryClient}>
-    <ReactQueryDevtools initialIsOpen={true} />
+    {/* <ReactQueryDevtools initialIsOpen={true} /> */}
 
     <RecoilRoot>
       <App />
