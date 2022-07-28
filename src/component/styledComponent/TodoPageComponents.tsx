@@ -84,6 +84,6 @@ export const ScrollWrapper = styled(Wrapper)`
 `;
 
 export const SpinnerWrapper = styled.div`
-  background-color: ${({ theme }) => theme.color.grayLight};
-  color: ${({ theme }) => theme.color.grayLight};
+  background-color: white;
+  color: white;
 `;
