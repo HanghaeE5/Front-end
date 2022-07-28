@@ -38,6 +38,7 @@ import ExpBar from '../component/element/ExpBar';
 import { TopNavBar } from '../component/layout/TopNavBar';
 import { BottomNavLayout } from '../component/layout/BottomNavBar';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
+import ResearchPopup from '../component/modallayout/ResearchPopup';
 
 const MainPageWrapper = styled(Wrapper)`
   max-width: 768px;
@@ -73,6 +74,8 @@ type box = {
   height?: number | string;
   margin?: string;
   isNoScroll?: boolean;
+  isAlignSide?: boolean;
+  isContentSide?: boolean;
 };
 
 const Box = styled.div`
@@ -89,11 +92,11 @@ const Box = styled.div`
 const ToDoBox = styled.div`
   display: flex;
   width: 89.3%;
-  height: 6.25rem;
+  min-height: 6.25rem;
   margin: 0.375rem 5.3% 4rem 5.3%;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: ${(props: box) => (props.isContentSide ? '' : 'center')};
+  align-items: ${(props: box) => (props.isAlignSide ? '' : 'center')};
   overflow-x: hidden;
   padding: 1rem 0;
   gap: 0.7rem;
@@ -144,6 +147,11 @@ export const Main = () => {
   const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
   const [snsSignupNicknameOk, setSnsSignupNicknameOk] = useRecoilState(snsSignupNickname);
   const localToken = localStorage.getItem('recoil-persist');
+  // interface Visit {
+  //   visitDate: Date | null;
+  // }
+  const todayVisit = localStorage.getItem('hasTodayVisit');
+  const tenMinVisit = localStorage.getItem('hasTenMinVisit');
   const all = window.location.href;
 
   const first = all.split('&');
@@ -181,36 +189,24 @@ export const Main = () => {
     },
   });
 
-  // useEffect(() => {
-  //   if (accessToken) {
-  //     setAccessLoginToken(accessToken);
-  //     const isNickname = first[1].split('=')[1];
-  //     console.log(accessToken);
-  //     if (isNickname === 'N' || userInfoData?.nick === '') {
-  //       nav('/signupsns');
-  //     }
-  //     if (isNickname === 'Y' && !userInfoData?.characterInfo.type) {
-  //       nav('/choosecharacter');
-  //     } else {
-  //       window.location.replace('/');
-  //     }
-  //   } else if (!localToken) {
-  //     nav('/login');
-  //   }
-  // }, [accessToken]);
-
-  // useEffect(() => {
-  //   if (modalGather.editPhotoModal === true) {
-  //     document.body.style.cssText = `
-  //     overflow: hidden;
-  //     `;
-  //   } else {
-  //     document.body.style.cssText = '';
-  //   }
-  // }, [modalGather]);
+  useEffect(() => {
+    if (new Date().getTime() >= Number(todayVisit)) {
+      localStorage.removeItem('hasTodayVisit');
+    }
+    if (new Date().getTime() >= Number(tenMinVisit)) {
+      localStorage.removeItem('hasTenMinVisit');
+    }
+    console.log(new Date().getTime(), Number(tenMinVisit));
+    const handleShowModal = () => {
+      if (!todayVisit && !tenMinVisit) {
+        setmodalGather({ ...modalGather, researchPopup: true });
+      }
+    };
+    handleShowModal();
+  }, [todayVisit]);
 
   if (userInformData.status === 'loading') {
-    return <EvColumnBox>로딩중</EvColumnBox>;
+    return <EvImgBox width={'17rem'} height={15} margin="auto" url="url(/assets/캐릭터/브라우니2단계.gif)"></EvImgBox>;
   }
 
   return (
@@ -233,6 +229,7 @@ export const Main = () => {
         isNoScroll={modalGather.editPhotoModal || modalGather.editNicknameModal || modalGather.explainModal}
       >
         <ContentContainer>
+          <ResearchPopup />
           <EvBox direction="row" margin="1.875rem 0 0 0 " height={4.75}>
             <EvBox
               width={'5.625rem'}
@@ -438,9 +435,10 @@ export const Main = () => {
               오늘의 투두 리스트
             </EvKoreanFont>
           </EvFontBox>
-          <ToDoBox>
-            {userInfoData?.todayTodoList.length > 0 ? (
-              userInfoData?.todayTodoList.map((today) => {
+
+          {userInfoData?.todayTodoList.length > 0 ? (
+            <ToDoBox isContentSide={true}>
+              {userInfoData?.todayTodoList.map((today) => {
                 return (
                   <EvBox direction={'row'} width={'100%'} key={today.todoId}>
                     <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
@@ -453,13 +451,15 @@ export const Main = () => {
                     </EvBox>
                   </EvBox>
                 );
-              })
-            ) : (
+              })}
+            </ToDoBox>
+          ) : (
+            <ToDoBox>
               <EvKoreanFont weight={500} size={0.875} color="#5F5F5F">
                 오늘의 투두리스트가 없습니다.
               </EvKoreanFont>
-            )}
-          </ToDoBox>
+            </ToDoBox>
+          )}
 
           <EvBox style={{ top: '10rem', position: 'absolute' }} width={'19.5rem'} height="19.5">
             <ExpBar exp={userInfoData?.characterInfo.expPercent} ismine={true}></ExpBar>
