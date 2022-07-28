@@ -111,9 +111,6 @@ export const TodoModalNew = ({
     },
   );
 
-  // const { value: title, onChangeValue: onChangeTitle } = useInput(todoData?.todoContent);
-  // const [isTitleRequired, setIsTitleRequired] = useState(false);
-  // const [category, setCategory] = useState<Category>((todoData?.category as Category) || 'STUDY');
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date[] | undefined>(
     todoData ? todoData?.todoDateList.map((date) => new Date(date)) : [new Date()],
@@ -128,19 +125,6 @@ export const TodoModalNew = ({
   const onChangeTitleInput = (value: string) => {
     setTodo((prev) => ({ ...prev, content: value }));
   };
-
-  // const onClickAddButton = () => {
-  //   // setIsTitleRequired(false);
-
-  //   if (!title) return;
-  //   // setIsTitleRequired(true);
-
-  //   const date = selectedDay?.map((date) => getYyyyMmDd(date)) || [];
-
-  //   getTodoDataFromModal({ content: title, category, todoDateList: date, todoId: todoData?.todoId });
-
-  //   closeModal();
-  // };
 
   const onDatePick = (dateList: Date[] | undefined) => {
     if (!dateList) return;
