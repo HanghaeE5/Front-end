@@ -277,6 +277,9 @@ export const ToDoPage = () => {
   }, [isBottom, loadingTodoList, todoList]);
 
   useEffect(() => {
+    {
+      confirmState.visible && <PopConfirmNew {...confirmState} />;
+    }
     if (!userInfoData) return;
     setScope(userInfoData.publicScope);
   }, [userInfoData]);

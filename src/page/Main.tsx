@@ -172,7 +172,7 @@ export const Main = () => {
             text: '확인',
             onClick: () => {
               localStorage.clear();
-              console.log('메인에서 사용자 못찾아서 보내는것');
+              // console.log('메인에서 사용자 못찾아서 보내는것');
               nav('/login');
             },
           },

@@ -141,12 +141,12 @@ export const FriendPage = () => {
     const fuia = await callApi.get(`/friend/page/${friendNick}`);
     return fuia;
   };
-  console.log(friendNick);
+  // console.log(friendNick);
 
   const friendUserInfoData = useQuery('friendUserData', friendUserInfoApi, {
     onSuccess: (data) => {
       setFriendUserInfoData(data.data);
-      console.log(data);
+      // console.log(data);
     },
     // onError: (error: AxiosError<{ msg: string }>) => {
     //   if (error.message === 'Request failed with status code 401') {

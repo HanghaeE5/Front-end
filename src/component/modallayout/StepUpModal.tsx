@@ -9,7 +9,7 @@ import { EvBox, EvBtn, EvBtnAble, EvEnglishFont, EvKoreanFont } from '../element
 
 const Slide = keyframes`
     0% {
-        transform: translateY(100%);
+        transform: translateY(50%);
     }
 
     100% {
@@ -46,7 +46,7 @@ const BoxWrap = styled.div`
   height: 23.5rem;
   border-radius: 12px;
   background-color: #ffffff;
-  animation: ${Slide} 0.6s ease;
+  animation: ${Slide} 0.4s ease;
 `;
 
 const StepUpModal = () => {
@@ -65,7 +65,7 @@ const StepUpModal = () => {
     },
   });
 
-  console.log(userInformData);
+  // console.log(userInformData);
 
   useEffect(() => {
     userInformData;

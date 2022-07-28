@@ -111,7 +111,7 @@ const EditPhotoModal = () => {
     if (userPhotoWait.img_file != undefined) {
       formData.append('file', userPhotoWait.img_file);
     }
-    console.log(userPhotoWait.img_file);
+    // console.log(userPhotoWait.img_file);
     profilePhotoEditData.mutate(formData);
   };
 
@@ -161,7 +161,6 @@ const EditPhotoModal = () => {
               url={`url(${userPhotoWait.img_show})`}
               style={{
                 borderRadius: '50%',
-                border: '1px solid #989898',
               }}
             >
               {!userPhotoWait.img_show && <EvImgBox margin={'auto'}>📷사진 업로드를 클릭! </EvImgBox>}
@@ -174,7 +173,7 @@ const EditPhotoModal = () => {
                 margin={'0.1rem 0.25rem 0 0'}
                 url={'url(/assets/icon_camera.svg)'}
               ></EvImgBox>
-              <EvKoreanFont size={1.06} weight={500}>
+              <EvKoreanFont size={1.1} weight={300}>
                 사진 업로드
               </EvKoreanFont>
             </ImgLable>
@@ -202,6 +201,7 @@ const EditPhotoModal = () => {
               width={'100%'}
               height={3.75}
               margin={'auto 0 0 0'}
+              style={{ borderRadius: '0' }}
               onClick={
                 userPhotoWait.img_show != userInfoData.profileImageUrl
                   ? () => {
@@ -212,7 +212,7 @@ const EditPhotoModal = () => {
                     }
               }
             >
-              <EvAbleFont isDisable={userPhotoWait.img_show === userInfoData.profileImageUrl} size={1}>
+              <EvAbleFont isDisable={userPhotoWait.img_show === userInfoData.profileImageUrl} size={1.06} weight={500}>
                 완료하기
               </EvAbleFont>
             </EvBtnAble>

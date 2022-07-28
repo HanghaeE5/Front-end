@@ -33,10 +33,10 @@ export const TodoItem = ({
     onSuccess: (data) => {
       refectchTodoList();
       handleDoneTodo(data);
-      console.log(data);
+      // console.log(data);
     },
     onError: (error) => {
-      console.error(error);
+      // console.error(error);
       refectchTodoList();
       handleDoneTodo(undefined);
     },

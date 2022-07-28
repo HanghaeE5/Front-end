@@ -46,7 +46,7 @@ const PopupWrapper = styled.div<{ visible: boolean }>`
   height: 11rem;
   background-color: white;
   z-index: 5;
-  animation: ${Slide} 0.6s ease;
+  /* animation: ${Slide} 0.6s ease; */
 
   & > div:nth-of-type(1) {
     display: flex;

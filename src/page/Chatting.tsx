@@ -163,7 +163,7 @@ export const Chatting = () => {
     //여기서 리코일에 저장
 
     onSuccess: (data) => {
-      console.log('첫번째실행');
+      // console.log('첫번째실행');
       setChattingList(data.data);
     },
     // onError: (error: AxiosError<{ msg: string }>) => {
@@ -281,7 +281,7 @@ export const Chatting = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 

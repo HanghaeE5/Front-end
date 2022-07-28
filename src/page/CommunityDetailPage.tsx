@@ -170,7 +170,7 @@ export const CommunityDetailPage = () => {
     }
   };
 
-  console.log(userInfo?.nick);
+  // console.log(userInfo?.nick);
   const localToken = localStorage.getItem('recoil-persist');
 
   const sock = new SockJS('https://todowith.shop/ws');
@@ -182,7 +182,7 @@ export const CommunityDetailPage = () => {
     {
       onSuccess: (token) => {
         queryClient.invalidateQueries('chattingLists');
-        console.log(token);
+        // console.log(token);
       },
       onError: (error: AxiosError<{ msg: string }>) => {
         if (error.message === 'Request failed with status code 401') {
@@ -224,7 +224,7 @@ export const CommunityDetailPage = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 

@@ -53,7 +53,7 @@ const onRequestError = (error: AxiosError): Promise<AxiosError> => {
           );
         })
         .catch((error) => {
-          console.log('refesh 토큰 못 받아옴');
+          // console.log('refesh 토큰 못 받아옴');
           alert('로그인 시간이 만료되었습니다. 다시 로그인 해주세요.');
           localStorage.clear();
           window.location.href = '/login';
@@ -71,7 +71,7 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 };
 
 const onResponseError = (error: AxiosError): Promise<AxiosError> => {
-  console.error(`[response error] [${JSON.stringify(error)}]`);
+  // console.error(`[response error] [${JSON.stringify(error)}]`);
   if (error.message === 'Request failed with status code 401') {
     const localToken = localStorage.getItem('recoil-persist');
 
@@ -89,7 +89,7 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
           },
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           localStorage.setItem(
             'recoil-persist',
             JSON.stringify({
@@ -99,7 +99,7 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
           );
         })
         .catch((error) => {
-          console.log('refesh 토큰 못 받아옴');
+          // console.log('refesh 토큰 못 받아옴');
           alert('로그인 시간이 만료되었습니다. 다시 로그인 해주세요.');
           localStorage.clear();
           window.location.href = '/login';

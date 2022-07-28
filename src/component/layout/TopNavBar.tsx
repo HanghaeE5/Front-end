@@ -92,7 +92,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
             text: '확인',
             onClick: () => {
               localStorage.clear();
-              console.log('탑바 사용자못찾아서 보내는것');
+              // console.log('탑바 사용자못찾아서 보내는것');
               nav('/login');
             },
           },
@@ -103,7 +103,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
 
   useEffect(() => {
     if (!localToken) {
-      console.log('탑바에서 보내는것');
+      // console.log('탑바에서 보내는것');
       nav('/login');
     } else if (userInformData.error?.message === 'Request failed with status code 401') {
       userInformData.refetch();

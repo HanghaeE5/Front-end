@@ -162,7 +162,7 @@ export const FriendList = () => {
     //여기서 리코일에 저장
     onSuccess: (data) => {
       setFriendList(data.data);
-      console.log(data);
+      // console.log(data);
     },
   });
 
@@ -171,7 +171,7 @@ export const FriendList = () => {
     onSuccess: (token) => {
       queryClient.invalidateQueries('friendLists');
       queryClient.invalidateQueries('requestFriendLists');
-      console.log(token);
+      // console.log(token);
     },
     onError: (error: AxiosError<{ msg: string }>) => {
       if (error.message === 'Request failed with status code 401') {
@@ -236,7 +236,7 @@ export const FriendList = () => {
   const rejectFriend = (data: { nick: string }) => {
     rejectFriendData.mutate(data);
   };
-  console.log(friendList);
+  // console.log(friendList);
 
   return (
     <NavLayout>
@@ -319,7 +319,7 @@ export const FriendList = () => {
                 </EvImgBox>
                 <EvFontBox margin="1.25rem auto auto auto">
                   <EvKoreanFont align="center" isWhiteSpace={true} size={0.875} lineHeight={'20px'} color="#5F5F5F">
-                    {`아직 추가하신 친구가 없어요.\n오른쪽 하단 + 버튼을 눌러\n친구를 추가할 수 있습니다!`}
+                    {`아직 추가하신 친구가 없어요.\n오른쪽 하단 + 버튼을 눌러\n친구를 추가할 수 있습니다!\n'투두윗'과 친구하시는 건 어떨까요?`}
                   </EvKoreanFont>
                 </EvFontBox>
               </EvColumnBox>

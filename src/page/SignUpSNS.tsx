@@ -127,7 +127,7 @@ export const SignUpSNS = () => {
   const joinSocial = (nick: { nick: string }) => {
     joinSocialApiData.mutate(nick);
   };
-  console.log(userInfoData);
+  // console.log(userInfoData);
 
   //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
@@ -148,7 +148,7 @@ export const SignUpSNS = () => {
           button: {
             text: '확인',
             onClick: () => {
-              console.log('sns닉넴 사용자못찾아서 보내는것');
+              // console.log('sns닉넴 사용자못찾아서 보내는것');
               localStorage.clear();
               nav('/login');
             },
@@ -161,7 +161,7 @@ export const SignUpSNS = () => {
             text: '확인',
             onClick: () => {
               localStorage.clear();
-              console.log('sns닉넴에서 로그인필요로 보내는것');
+              // console.log('sns닉넴에서 로그인필요로 보내는것');
               nav('/login');
             },
           },

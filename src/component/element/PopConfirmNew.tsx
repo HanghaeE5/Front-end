@@ -5,6 +5,8 @@ import { ReactComponent as Chat } from '../../asset/icons/icon_chat.svg';
 import { ReactComponent as WithTodo } from '../../asset/icons/icon_withtodo.svg';
 import { ReactComponent as Success } from '../../asset/icons/icon_success.svg';
 import { SliderPopUp } from './SliderPopUp';
+import { useRecoilState } from 'recoil';
+import { commonPopConfirmState } from '../../recoil/store';
 
 const PopupWrapper = styled.div`
   width: 17.85rem;
@@ -82,6 +84,7 @@ export interface PopConfirmProps {
   optionalButton?: { text: string; onClick: () => void };
 }
 export const PopConfirmNew = ({ iconType, title, content, button, optionalButton }: PopConfirmProps) => {
+  const [confirmState, setConfirmState] = useRecoilState(commonPopConfirmState);
   return (
     <SliderPopUp>
       <PopupWrapper>

@@ -93,7 +93,7 @@ const YourChatBox = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 70%;
-  margin: 1rem auto 0 1.25rem;
+  margin: 1rem auto 0 5.3%;
   /* background: #bdefcd; */
 `;
 
@@ -101,7 +101,7 @@ const MyChatBox = styled.div`
   display: flex;
   flex-direction: row-reverse;
   width: 70%;
-  margin: 1rem 1.25rem 0 auto;
+  margin: 1rem 5.3% 0 auto;
   /* background: #bdefcd; */
 `;
 
@@ -137,7 +137,7 @@ const MyTextBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 1.25rem 0 0.25rem;
+  margin: 0 0 0 0.25rem;
   background: #ffd600;
   border-radius: 12px 12px 0px 12px;
   padding: 10px 14px;
@@ -390,7 +390,7 @@ export const ChattingRoom = () => {
       // console.log(ws.ws.readyState);
     }
   }
-  console.log(chatData);
+  // console.log(chatData);
   useEffect(() => {
     wsConnectSubscribe();
   }, []);

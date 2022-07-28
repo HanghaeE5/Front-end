@@ -17,7 +17,7 @@ export const exchangeCouponFn = async () => {
 };
 
 export const enterPhoneFn = async (param: { eventId: number; phone: string }) => {
-  console.log('param', param);
+  // console.log('param', param);
   const { data } = await callApi.put<EventResponse>('/event/phone', param);
   return data;
 };

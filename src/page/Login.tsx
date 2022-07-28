@@ -54,7 +54,7 @@ export const Login = () => {
 
   const loginUserData = useMutation((data: { email: string; password: string }) => registerApi.loginApi(data), {
     onSuccess: (token) => {
-      console.log(token);
+      // console.log(token);
       openSuccessConfirm({
         title: '로그인 성공🙂',
         button: {
