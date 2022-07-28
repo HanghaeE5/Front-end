@@ -233,11 +233,8 @@ export const SignUpEmail = () => {
         button: {
           text: '확인',
           onClick: () => {
-            nav('/');
+            nav('/main');
           },
-          // referrer.indexOf('login' || 'signupemail' || '/signupsns' || '/choosecharacter') === -1
-          //   ? () => nav(PATH.MAIN)
-          //   : () => nav(referrer),
         },
       });
     }
@@ -251,17 +248,15 @@ export const SignUpEmail = () => {
 
           {/* 이메일 */}
           <EvFontBox width={2.8125} height={1.5} margin={'2.5rem auto 0.625rem 5.3%'}>
-            {email && (
-              <EvKoreanFont size={1} weight={700} color="rgba(147, 147, 147, 1)">
-                이메일
-              </EvKoreanFont>
-            )}
+            <EvKoreanFont size={1} weight={700} color="rgba(147, 147, 147, 1)">
+              이메일
+            </EvKoreanFont>
           </EvFontBox>
           <EvRowBox width={'89.3%'}>
             <EvRowBox width={'75%'} margin={'0 auto 0 0 '} border="1px solid #dddddd" borderRadius="6px">
               <SignUpInputInfo
                 type="text"
-                placeholder="이메일    예) todo@naver.com"
+                placeholder="예) todowith@naver.com"
                 name="email"
                 value={email}
                 onChange={onChangeEmail}
@@ -355,17 +350,15 @@ export const SignUpEmail = () => {
 
           {/* 닉네임 */}
           <EvFontBox width={2.8125} height={1.5} margin={'1.625rem auto 0.625rem 5.3%'}>
-            {nickname && (
-              <EvKoreanFont size={1} weight={700} color="rgba(147, 147, 147, 1)">
-                닉네임
-              </EvKoreanFont>
-            )}
+            <EvKoreanFont size={1} weight={700} color="rgba(147, 147, 147, 1)">
+              닉네임
+            </EvKoreanFont>
           </EvFontBox>
           <EvRowBox width={'89.3%'} margin={'0 auto'}>
             <EvRowBox width={'75%'} margin={'0 auto 0 0 '} border="1px solid #dddddd" borderRadius="6px">
               <SignUpInputInfo
                 type="text"
-                placeholder="닉네임    예) 오늘투두윗"
+                placeholder="예) 오늘투두윗"
                 name="nickname"
                 value={nickname}
                 onChange={onChangeNickname}
@@ -414,11 +407,9 @@ export const SignUpEmail = () => {
           </EvFontBox>
 
           <EvFontBox width={3.6875} height={1.5} margin={'1.625rem auto 0.625rem 5.3%'}>
-            {password && (
-              <EvKoreanFont size={1} weight={700} color="rgba(147, 147, 147, 1)">
-                비밀번호
-              </EvKoreanFont>
-            )}
+            <EvKoreanFont size={1} weight={700} color="rgba(147, 147, 147, 1)">
+              비밀번호
+            </EvKoreanFont>
           </EvFontBox>
 
           <EvRowBox width={'89.3%'} borderRadius="6px" border="1px solid #dddddd">
@@ -426,7 +417,6 @@ export const SignUpEmail = () => {
               width={'85%'}
               height={3.75}
               margin={'0 auto 0 0'}
-              placeholder="비밀번호"
               type={view ? 'text' : 'password'}
               value={password}
               onChange={onChangePw1}

@@ -61,6 +61,7 @@ export const BottomNavLayout = () => {
           profileMenuModal: false,
           friendAddModal: false,
           explainModal: false,
+          researchPopup: false,
         });
       }}
       justifyContent="center"

@@ -19,6 +19,7 @@ export type modalGather = {
   profileMenuModal?: boolean;
   friendAddModal?: boolean;
   explainModal?: boolean;
+  researchPopup?: boolean;
 };
 
 export interface CommonConfirmProps extends Partial<PopConfirmProps> {
