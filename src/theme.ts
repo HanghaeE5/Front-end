@@ -27,7 +27,7 @@ export const theme = {
       default: 'black',
       disable: 'white',
       dashed: 'black',
-      ghost: '#888888',
+      ghost: 'black',
     },
     borderColor: {
       primary: '#FFD600',

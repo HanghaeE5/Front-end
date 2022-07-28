@@ -21,7 +21,7 @@ export const TodoItem = ({
   todoData: ITodoItem;
   onClickEditButton: TodoEvent;
   onClickDeleteButton: TodoEvent;
-  handleDoneTodo: (data: TodoDoneResponse | undefined) => void;
+  handleDoneTodo: (data: TodoDoneResponse | undefined, todoId: number) => void;
 }) => {
   const queryClient = useQueryClient();
 
@@ -31,14 +31,10 @@ export const TodoItem = ({
 
   const { mutate: doneTodo } = useMutation(updateDoneTodo, {
     onSuccess: (data) => {
-      refectchTodoList();
-      handleDoneTodo(data);
-      // console.log(data);
+      handleDoneTodo(data, todoData.todoId);
     },
     onError: (error) => {
-      // console.error(error);
-      refectchTodoList();
-      handleDoneTodo(undefined);
+      handleDoneTodo(undefined, todoData.todoId);
     },
   });
 
@@ -55,10 +51,15 @@ export const TodoItem = ({
           <Typography>{todoData.todoContent}</Typography>
           <Wrapper>
             <Typography size={0.75}>{todoData.todoDate}</Typography>
-            <Dot />
-            <Typography size={0.75} underline isPointer onClick={() => onClickEditButton(todoData)}>
-              수정
-            </Typography>
+            {!todoData.state && (
+              <>
+                <Dot />
+
+                <Typography size={0.75} underline isPointer onClick={() => onClickEditButton(todoData)}>
+                  수정
+                </Typography>
+              </>
+            )}
           </Wrapper>
         </Wrapper>
         <BiTrash onClick={() => onClickDeleteButton(todoData)} />

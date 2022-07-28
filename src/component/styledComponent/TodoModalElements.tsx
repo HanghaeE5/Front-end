@@ -29,13 +29,17 @@ export const Slide = keyframes`
 `;
 
 export const TodoContents = styled.div`
-  padding-bottom: 2rem;
   bottom: 0;
   width: 100%;
   position: absolute;
   background-color: white;
   border-radius: 20px 20px 0 0;
   animation: ${Slide} 0.6s ease;
+  overflow-y: scroll;
+  height: 65%;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const HeaderTitle = styled(Wrapper)`
@@ -70,6 +74,7 @@ export const CategoryWrapper = styled.div<{ isSelect: boolean }>`
   }
 `;
 
+// TODO : 카테고리 패딩
 export const CategorySection = styled(Wrapper)`
   border-top: 0.5rem solid ${({ theme }) => theme.color.grayLight};
   border-bottom: 0.5rem solid ${({ theme }) => theme.color.grayLight};
@@ -89,17 +94,24 @@ export const CategorySection = styled(Wrapper)`
     }
   }
 `;
+
+export const Calendar = styled.div`
+  width: 100%;
+  position: relative;
+`;
 export const CalendarWrapper = styled.div`
   background-color: white;
   border-radius: 6px;
   position: absolute;
-  bottom: 8rem;
+  bottom: -2rem;
   left: 50%;
-  transform: translate(-50%, 0%);
+  transform: translateX(-50%);
   box-shadow: 0px 3px 10px -4px rgba(0, 0, 0, 0.77);
 `;
+
+// TODO : 버튼 바닥에 붙이기
 export const StickyButton = styled(Button)`
-  position: absolute;
+  // position: absolute;
   bottom: 0;
 `;
 

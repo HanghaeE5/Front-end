@@ -125,7 +125,7 @@ export const CommunityPage = () => {
                     <PostCard.PostHeader userImg={post.authorProfileImageUrl} userName={post.authorNick} />
                     {post.imageUrl && (
                       <Wrapper padding="0 1rem">
-                        <Img url={post.imageUrl} type="round" />
+                        <Img url={post.imageUrl} type="round" height="11.125rem" />
                       </Wrapper>
                     )}
                     <PostCard.PostTitle isSummary category={post.category}>

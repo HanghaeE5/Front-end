@@ -69,7 +69,7 @@ export const TodoLabel = styled.span<{ done: boolean }>`
 `;
 
 export const TodoListWrapper = styled(Wrapper)`
-  height: calc(78% - 4rem);
+  height: calc(78% - 6rem);
 `;
 
 export const ScrollWrapper = styled(Wrapper)`
@@ -84,6 +84,6 @@ export const ScrollWrapper = styled(Wrapper)`
 `;
 
 export const SpinnerWrapper = styled.div`
-  background-color: ${({ theme }) => theme.color.grayLight};
-  color: ${({ theme }) => theme.color.grayLight};
+  background-color: white;
+  color: white;
 `;

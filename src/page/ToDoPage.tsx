@@ -42,7 +42,6 @@ const emptyParagraph: { [key in TodoStatusFilter | 'all']: string } = {
   doneList: `완료한 투두리스트가 없어요. \n 혼자서 그리고 함께 투두리스트를 완료해보세요!`,
 };
 
-// TODO : context API 써볼까
 export const ToDoPage = () => {
   const [bottomRef, isBottom] = useInView();
   const nav = useNavigate();
@@ -59,7 +58,7 @@ export const ToDoPage = () => {
     filter: 'all',
     sort: 'desc',
     page: 0,
-    size: 50,
+    size: 5,
   });
 
   const [todoModalStateNew, setTodoModalStateNew] = useState<{
@@ -88,7 +87,6 @@ export const ToDoPage = () => {
 
   const closeConfirm = () => setConfirmState((prev) => ({ ...prev, visible: false }));
 
-  // TODO : 훅으로 묶어볼까
   const { data: todoList, isLoading: loadingTodoList } = useQuery(
     [todoQueryKey.fetchTodo, todoFilter],
     () => fetchTodoList(todoFilter),
@@ -236,7 +234,8 @@ export const ToDoPage = () => {
   };
 
   // TODO 완료
-  const handleDoneTodo = (data: TodoDoneResponse | undefined) => {
+  const handleDoneTodo = (data: TodoDoneResponse | undefined, todoId: number) => {
+    // 실패일 때
     if (!data) {
       openErrorConfirm({});
       return;
@@ -245,6 +244,12 @@ export const ToDoPage = () => {
     const {
       characterInfo: { levelUp, stepUp },
     } = data;
+
+    const tempList = [...list];
+    const idx = tempList.findIndex((todo) => todo.todoId === todoId);
+    tempList.splice(idx, 1, { ...list[idx], state: true });
+    setList([...tempList]);
+
     if (stepUp) {
       setUserInfoData({
         ...userInfoData,
@@ -262,6 +267,7 @@ export const ToDoPage = () => {
       setmodalGather({ ...modalGather, levelUpModal: true });
       return;
     }
+
     openSuccessConfirm({ title: '투두 완료!' });
   };
 
