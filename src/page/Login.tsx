@@ -10,6 +10,7 @@ import {
   EvBox,
   EvBtn,
   EvBtnAble,
+  EvColumnBox,
   EvFontBox,
   EvImgBox,
   EvInputInfo,
@@ -21,6 +22,7 @@ import {
 import { AxiosError } from 'axios';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 import { PATH } from '../route/routeList';
+import { Img } from '../component/modallayout/ExplainModal';
 
 const RegisterContainer = styled.div`
   width: 100%;
@@ -39,6 +41,17 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const LoginImg = styled.img`
+  height: 13.125rem;
+  width: 23.4375rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  overflow-x: hidden;
 `;
 
 export const Login = () => {
@@ -86,23 +99,7 @@ export const Login = () => {
     }
   };
 
-  function checkMobile() {
-    const varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
-
-    if (varUA.indexOf('android') > -1) {
-      //안드로이드
-      return 'android';
-    } else if (varUA.indexOf('iphone') > -1 || varUA.indexOf('ipad') > -1 || varUA.indexOf('ipod') > -1) {
-      //IOS
-      return 'ios';
-    } else {
-      //아이폰, 안드로이드 외
-      return 'other';
-    }
-  }
-
   useEffect(() => {
-    checkMobile();
     //useEffect 리턴 바로 위에 써주기.
     if (localToken) {
       openSuccessConfirm({
@@ -119,10 +116,22 @@ export const Login = () => {
   return (
     <RegisterContainer>
       <ContentContainer>
-        <EvLogoBox margin={'3.4375rem auto 2.5rem auto'} />
-
+        <EvColumnBox width={'100%'} height={13.125} backgroundColor="#FFFBE9">
+          <EvColumnBox margin="0 auto">
+            <LoginImg src="/assets/온보딩/소개 배너.png" />
+          </EvColumnBox>
+        </EvColumnBox>
+        <EvBtn
+          width={'10.1rem'}
+          height={2.2}
+          margin={'-4.7rem auto 0 auto'}
+          style={{ opacity: 0 }}
+          onClick={() => {
+            nav('/onboarding');
+          }}
+        />
         {/* 이메일 */}
-        <EvFontBox width={'3rem'} height={1.5} margin={'0px auto 0.625rem 5.3%'}>
+        <EvFontBox width={'3rem'} height={1.5} margin={'6.1375rem auto 0.625rem 5.3%'}>
           <EvKoreanFont size={1} color="#939393" weight={700}>
             이메일
           </EvKoreanFont>

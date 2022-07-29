@@ -64,23 +64,9 @@ const BoxWrap = styled.div`
   background-position: top;
 `;
 
-type font = {
-  size: number;
-  color?: string;
-  isCorrect?: boolean;
-  isBold?: boolean;
-};
-
-type nicknametype = {
-  nickname: string;
-  nicknameOk: boolean;
-};
-
 const ResearchPopup = () => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
-
-  //닉네임 변경 완료 API
 
   return (
     <>

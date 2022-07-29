@@ -145,7 +145,7 @@ const ExplainModal = () => {
               <EvColumnBox width={'88%'} margin="0 auto 1.25rem auto " style={{ rowGap: '10px' }}>
                 <ExplainBox text={'투두를 완료하면 경험치가 1 증가해요.'} />
                 <ExplainBox
-                  text={`하루 최대 얻을 수 있는 경험치는 10이에요.\n하루에 투두를  5개 완료해도 10을 받아요.`}
+                  text={`하루 최대 얻을 수 있는 경험치는 10이에요.\n하루에 투두를 15개 완료해도 10을 받아요.`}
                 />
                 <ExplainBox text={`현재 최고 레벨은 30이며,\n베타 테스트 후 더 늘어날 예정이에요.`} />
                 <ExplainBox

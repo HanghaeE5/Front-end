@@ -18,6 +18,7 @@ import {
 } from '../page';
 import { ReactElement } from 'react';
 import { MediaType } from '../page/MediaType';
+import { OnBoarding } from '../page/OnBoarding';
 
 export interface IRoute {
   id: string;
@@ -41,6 +42,11 @@ export const routeList: IRoute[] = [
     id: 'main',
     path: PATH.MAIN,
     page: Main,
+  },
+  {
+    id: 'OnBoarding',
+    path: '/onboarding',
+    page: OnBoarding,
   },
   {
     id: 'mediaType',
