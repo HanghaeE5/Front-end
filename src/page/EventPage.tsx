@@ -335,7 +335,7 @@ export const EventPage = () => {
               투두 완료하고 도장받기
             </EventTitle>
             <EventContent alignItems="center" justifyContent="center">
-              미완료된 투두리스트 없이 1개 이상의 투두를 완료하면 <br />
+              당일 미완료된 투두리스트 없이 1개 이상의 투두를 완료하면 <br />
               해당일 자정 12시에 도장이 찍힙니다.
             </EventContent>
           </Wrapper>

@@ -371,9 +371,10 @@ export const ChattingRoom = () => {
         message: myText,
       };
       // 빈문자열이면 리턴
-      // if (messageText === '') {
-      //   return;
-      // }
+      const blank = /[\s]/g;
+      if (myText === '' || blank.test(myText) == true) {
+        return;
+      }
       // 로딩 중
       if (localToken) {
         const toto = JSON.parse(localToken);
