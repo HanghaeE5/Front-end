@@ -20,6 +20,7 @@ import {
   EvHelfInputInfo,
   EvCheckHelfBox,
   EvLineBox,
+  EvImgBox,
 } from '../component/element/BoxStyle';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 import { PATH } from '../route/routeList';
@@ -66,7 +67,7 @@ export const SignUpSNS = () => {
   const nav = useNavigate();
 
   const checkNickname = (asValue: string) => {
-    const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
+    const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,8}$/;
     return regExp.test(asValue);
   };
 
@@ -188,6 +189,10 @@ export const SignUpSNS = () => {
     }
   }, [snsSignupNicknameOk]);
 
+  if (userInformData.status === 'loading') {
+    return <EvImgBox width={'17rem'} height={15} margin="auto" url="url(/assets/캐릭터/브라우니2단계.gif)"></EvImgBox>;
+  }
+
   return (
     <RegisterContainer>
       <HeaderContainer style={{ borderBottom: '1px solid #DDDDDD ' }}>
@@ -268,7 +273,7 @@ export const SignUpSNS = () => {
             </EvCheckFont>
           ) : (
             <EvCheckFont size={0.875} color={'black'}>
-              닉네임은 2-15자의 한글, 영어, 숫자입니다.
+              닉네임은 2-8자의 한글, 영어, 숫자입니다.
             </EvCheckFont>
           )}
         </EvFontBox>

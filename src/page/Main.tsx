@@ -196,7 +196,7 @@ export const Main = () => {
     localStorage.removeItem('hasTenMinVisit');
   }
   useEffect(() => {
-    console.log(new Date().getTime(), Number(tenMinVisit));
+    // console.log(new Date().getTime(), Number(tenMinVisit));
     const handleShowModal = () => {
       if (!todayVisit && !tenMinVisit) {
         setmodalGather({ ...modalGather, researchPopup: true });

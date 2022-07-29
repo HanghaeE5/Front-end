@@ -197,12 +197,7 @@ export const Login = () => {
 
         <EvRowBox margin={'1.6rem 0px 0 0px'} width={'100%'}>
           <EvLineBox width={'89.3%'}>
-            <EvFontBox
-              backgroundColor="#ffffff            "
-              width={'2.6875rem'}
-              height={1.5}
-              margin={'0px 0.625rem 0px 0.625rem'}
-            >
+            <EvFontBox backgroundColor="#ffffff" width={'2.6875rem'} height={1.5} margin={'0px 0.625rem 0px 0.625rem'}>
               <EvKoreanFont size={0.75} color="#989898">
                 또는
               </EvKoreanFont>

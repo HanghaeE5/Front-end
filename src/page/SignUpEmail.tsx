@@ -116,7 +116,7 @@ export const SignUpEmail = () => {
     return regExp.test(asValue);
   };
   const checkNickname = (asValue: string) => {
-    const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,15}$/;
+    const regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,8}$/;
     return regExp.test(asValue);
   };
   const checkPassword = (asValue: string) => {
@@ -401,7 +401,7 @@ export const SignUpEmail = () => {
               </CheckFont>
             ) : (
               <CheckFont size={0.75} color={'black'}>
-                닉네임은 2-15자의 한글, 영어, 숫자입니다.
+                닉네임은 2-8자의 한글, 영어, 숫자입니다.
               </CheckFont>
             )}
           </EvFontBox>
