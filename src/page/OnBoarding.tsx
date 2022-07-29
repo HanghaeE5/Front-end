@@ -43,7 +43,7 @@ export const OnBoarding = () => {
         <EvBtnAble
           width={'89.3% '}
           height={3.75}
-          margin={'2rem auto'}
+          margin={'2rem auto 4rem auto'}
           onClick={() => {
             nav('/login');
           }}
