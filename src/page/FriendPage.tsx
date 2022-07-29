@@ -98,6 +98,7 @@ const ToDoBox = styled.div`
   width: 89.3%;
   min-height: 6.25rem;
   margin: 0.375rem 5.3% 4rem 5.3%;
+  min-height: 6.25rem;
   flex-direction: column;
   justify-content: ${(props: box) => (props.isContentSide ? '' : 'center')};
   align-items: ${(props: box) => (props.isAlignSide ? '' : 'center')};
@@ -383,7 +384,7 @@ export const FriendPage = () => {
                       </EvBox>
                     </EvBox>
                   );
-                })}
+                })}{' '}
               </ToDoBox>
             )}
 
