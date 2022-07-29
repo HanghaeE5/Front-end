@@ -78,6 +78,8 @@ type box = {
   width?: number | string;
   height?: number | string;
   margin?: string;
+  isAlignSide?: boolean;
+  isContentSide?: boolean;
 };
 
 const Box = styled.div`
@@ -94,9 +96,11 @@ const Box = styled.div`
 const ToDoBox = styled.div`
   display: flex;
   width: 89.3%;
+  min-height: 6.25rem;
   margin: 0.375rem 5.3% 4rem 5.3%;
   flex-direction: column;
-  align-items: center;
+  justify-content: ${(props: box) => (props.isContentSide ? '' : 'center')};
+  align-items: ${(props: box) => (props.isAlignSide ? '' : 'center')};
   overflow-x: hidden;
   padding: 1rem 0;
   gap: 0.7rem;
@@ -357,9 +361,16 @@ export const FriendPage = () => {
                 오늘의 투두리스트
               </EvKoreanFont>
             </EvFontBox>
-            <ToDoBox>
-              {frienduserInfoData?.todoList.length > 0 ? (
-                frienduserInfoData.todoList.map((today) => {
+
+            {frienduserInfoData?.todoList === null || frienduserInfoData?.todoList.length < 1 ? (
+              <ToDoBox>
+                <EvKoreanFont weight={500} size={0.875} color="#5F5F5F">
+                  오늘의 투두리스트가 없거나, 비공개입니다
+                </EvKoreanFont>
+              </ToDoBox>
+            ) : (
+              <ToDoBox isContentSide={true}>
+                {frienduserInfoData.todoList.map((today) => {
                   return (
                     <EvBox direction={'row'} width={'100%'} key={today.todoId}>
                       <EvBox width={'0.875rem'} margin={'0rem 0.5rem 0 1rem'}>
@@ -372,13 +383,9 @@ export const FriendPage = () => {
                       </EvBox>
                     </EvBox>
                   );
-                })
-              ) : (
-                <EvKoreanFont weight={500} size={0.875} color="#5F5F5F">
-                  오늘의 투두리스트가 없거나, 비공개입니다
-                </EvKoreanFont>
-              )}
-            </ToDoBox>
+                })}
+              </ToDoBox>
+            )}
 
             <EvBox style={{ top: '10rem', position: 'absolute' }} width={'19.5rem'} height="19.5">
               {frienduserInfoData && <ExpBar exp={frienduserInfoData?.characterInfo.expPercent} ismine={false} />}
