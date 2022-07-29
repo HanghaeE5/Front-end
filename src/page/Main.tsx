@@ -292,9 +292,9 @@ export const Main = () => {
           />
           <EvBox
             style={{ zIndex: 2 }}
-            width={'1.3125rem'}
-            height={1.3125}
-            margin={'-0.4rem 2rem 0 20.0625rem '}
+            width={'2rem'}
+            height={2}
+            margin={'-16.5rem 2rem 0 20.0625rem '}
             url="url(/assets/물음표.svg)"
             isCursor={true}
             onClick={() => {
@@ -303,7 +303,7 @@ export const Main = () => {
           />
           <ExplainModal />
 
-          <EvBox width={'22rem'} height={4} margin={'-0.3rem auto 0 auto '}>
+          <EvBox width={'22rem'} height={4} margin={'15.5rem auto 0 auto '}>
             <EvBox width={'10rem'} height={1.375}>
               <EvKoreanFont size={1.25} color="#000000" weight={500}>
                 {`Lv.${userInfoData?.characterInfo.level}`}
