@@ -242,7 +242,7 @@ export const ToDoPage = () => {
     }
 
     const {
-      characterInfo: { levelUp, stepUp },
+      characterInfo: { levelUp, stepUp, todayDone },
     } = data;
 
     const tempList = [...list];
@@ -267,8 +267,19 @@ export const ToDoPage = () => {
       setmodalGather({ ...modalGather, levelUpModal: true });
       return;
     }
+    // console.log(userInfoData);
 
-    openSuccessConfirm({ title: '투두 완료!' });
+    if (todayDone && todayDone <= 10) {
+      openSuccessConfirm({
+        title: '투두 완료!',
+        content: `오늘 투두를 ${todayDone}개 완료했어요👍`,
+      });
+    } else if (todayDone && todayDone > 10) {
+      openSuccessConfirm({
+        title: `벌써 ${todayDone}개나 했어요😎`,
+        content: `캐릭터 경험치와 아이템 개수는 하루 10개까지만 반영됩니다. 내일도 열심히 해서 같이 성장해요!`,
+      });
+    }
   };
 
   const moveToBoard = (boardId: number | undefined) => {

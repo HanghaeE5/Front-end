@@ -79,5 +79,6 @@ export interface TodoDoneResponse {
     stepUp: boolean;
     study: number;
     type: string;
+    todayDone?: number;
   };
 }
