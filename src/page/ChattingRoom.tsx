@@ -176,7 +176,7 @@ const KoreanFont = styled.p`
 
 const MessageSendBox = styled.div`
   position: fixed;
-  bottom: 3.5rem;
+  bottom: 4.5rem;
   background: #feed91;
   height: 3.5rem;
   width: 100%;

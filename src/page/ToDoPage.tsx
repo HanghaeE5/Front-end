@@ -359,6 +359,7 @@ export const ToDoPage = () => {
                   size={0.813}
                   color={todoFilter.sort === 'today' ? 'black' : '#989898'}
                   weight={400}
+                  isPointer
                   onClick={() => onClickOrderFilter('today')}
                   lineHeight={1.203}
                 >
@@ -371,6 +372,7 @@ export const ToDoPage = () => {
               size={0.813}
               color={todoFilter.sort === 'desc' ? 'black' : '#989898'}
               weight={400}
+              isPointer
               onClick={() => onClickOrderFilter('desc')}
               lineHeight={1.203}
             >
