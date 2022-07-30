@@ -23,7 +23,7 @@ const TextElement = styled.input<StyleProps>`
 
 const SearchButton = styled(BiSearch)`
   position: absolute;
-  right: 1.5rem;
+  right: 0.75rem;
   font-size: 1.25rem;
   cursor: pointer;
 `;
@@ -84,7 +84,7 @@ export const TextInput = ({
 
   if (type === 'text') {
     return (
-      <Wrapper>
+      <Wrapper position="relative">
         <TextElement
           placeholder={placeholder}
           value={value}
