@@ -81,6 +81,7 @@ export const ScrollWrapper = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
+  scroll-behavior: smooth;
 `;
 
 export const SpinnerWrapper = styled.div`
