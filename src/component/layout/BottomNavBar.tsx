@@ -18,10 +18,11 @@ import { useRecoilState } from 'recoil';
 import { modalGatherState } from '../../recoil/store';
 
 const NavWrapper = styled(Wrapper)`
-  padding-top: 0.75rem;
+  /* padding-top: 0.75rem; */
+  padding-bottom: 10px;
   border-top: 1px solid ${({ theme }) => theme.color.grayMedium};
   /* z-index: 4; */
-  height: 3.375rem;
+  height: 5rem;
   & div {
     cursor: pointer;
   }
@@ -87,7 +88,7 @@ export const BottomNavLayout = () => {
       <MenuItem
         icon={<FriendOff />}
         selectIcon={<FriendOn />}
-        isCurrentMenu={isCurrentMenu(PATH.FRIEND)}
+        isCurrentMenu={isCurrentMenu(PATH.FRIEND) || isCurrentMenu(PATH.FRIENDMAINPAGE)}
         onClick={() => movePage(PATH.FRIEND)}
       />
       <MenuItem

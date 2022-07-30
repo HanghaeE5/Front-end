@@ -33,6 +33,7 @@ export const PATH = {
   MAIN: '/main',
   TODO: '/todo',
   FRIEND: '/friendlist',
+  FRIENDMAINPAGE: '/friend/page',
   CHAT: '/chat',
   EVENT: '/event',
 };
@@ -116,7 +117,7 @@ export const routeList: IRoute[] = [
   },
   {
     id: 'friendpage',
-    path: `/friend/page/:nick`,
+    path: `${PATH.FRIENDMAINPAGE}/:nick`,
     page: FriendPage,
   },
   {
