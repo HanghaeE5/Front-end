@@ -3,7 +3,7 @@ import { Button, Wrapper } from '../element';
 import { BsX } from 'react-icons/bs';
 export const ModalContainer = styled.div`
   position: fixed;
-  bottom: 3.375rem;
+  bottom: 4.1rem;
   width: 100%;
   height: 100%;
   max-width: ${({ theme }) => theme.maxWidth};

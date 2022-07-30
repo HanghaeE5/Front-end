@@ -63,7 +63,7 @@ const CalendarFooter = ({
   reset: () => void;
 }) => {
   return (
-    <Wrapper isColumn>
+    <Wrapper isColumn margin="auto auto auto 4.1rem">
       <Wrapper justifyContent="space-between" margin="0.75rem 0">
         <Button buttonType="ghost" onClick={onClickEveryDay} width="calc(100% - 3.25rem)">
           전체 선택
