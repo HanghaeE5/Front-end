@@ -15,7 +15,7 @@ const LayoutContainer = styled.div`
 `;
 
 const BodyWrapper = styled.div`
-  height: calc(100% - 7rem);
+  height: calc(100% - 8.75rem);
   overflow: hidden;
   top: 3.5rem;
   width: 100%;
