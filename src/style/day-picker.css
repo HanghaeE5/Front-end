@@ -14,6 +14,7 @@
 .rdp-day_selected:active:not([aria-disabled='true']),
 .rdp-day_selected:hover:not([aria-disabled='true']) {
   color: black;
+  font-weight: bold;
 }
 
 .rdp-caption_label {
