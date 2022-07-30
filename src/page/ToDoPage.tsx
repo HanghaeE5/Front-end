@@ -287,13 +287,6 @@ export const ToDoPage = () => {
     nav(`${PATH.COMMUNITY}/${boardId}`);
   };
 
-  const scrollTop = () => {
-    console.log('top');
-    if (scrollDiv.current) {
-      scrollDiv.current.scrollTop = 0;
-    }
-  };
-
   // 무한 스크롤링 로직
   useEffect(() => {
     if (loadingTodoList || !isBottom || todoList?.last) return;
@@ -399,7 +392,7 @@ export const ToDoPage = () => {
           </Wrapper>
         </ScrollWrapper>
         {todoModalStateNew.visible && <TodoModalNew {...todoModalStateNew.todoProps} />}
-        {!todoModalStateNew.visible && <ButtonFloating onClick={onClickAddButton} scrollTop={scrollTop} />}{' '}
+        {!todoModalStateNew.visible && <ButtonFloating onClick={onClickAddButton} scrollRef={scrollDiv} />}{' '}
       </PageLayout>
     </NavLayout>
   );

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { HiPlus } from 'react-icons/hi';
 import { ReactComponent as TopButton } from '../../asset/icons/topButton.svg';
 import { ReactComponent as plusBtn } from '../../asset/icons/plusBtn.svg';
+import { RefObject } from 'react';
 
 const AddButton = styled(plusBtn)`
   width: 2.813rem;
@@ -27,13 +28,19 @@ const FloatingWrapper = styled.div<{ isDobleButton?: boolean }>`
 
 interface ButtonFloatingProps {
   onClick?: () => void;
-  scrollTop?: () => void;
+  scrollRef?: RefObject<HTMLDivElement>;
 }
 
-export const ButtonFloating = ({ onClick, scrollTop }: ButtonFloatingProps) => {
+const scrollTop = (ref: RefObject<HTMLDivElement>) => {
+  if (ref.current) {
+    ref.current.scrollTop = 0;
+  }
+};
+
+export const ButtonFloating = ({ onClick, scrollRef }: ButtonFloatingProps) => {
   return (
-    <FloatingWrapper isDobleButton={!!scrollTop}>
-      {scrollTop && <FloatingTopButton onClick={() => scrollTop()} />}
+    <FloatingWrapper isDobleButton={!!scrollRef}>
+      {scrollRef && <FloatingTopButton onClick={() => scrollTop(scrollRef)} />}
       <AddButton onClick={onClick && onClick} />
     </FloatingWrapper>
   );
