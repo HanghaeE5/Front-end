@@ -30,13 +30,15 @@ const SearchButton = styled(BiSearch)`
 
 const TextAreaElement = styled.textarea<{ isValidError?: boolean }>`
   height: 11.25rem;
+  font-family: 'Noto Sans KR', sans-serif;
   border-radius: ${(props) => props.theme.radius};
   background-color: white;
   border: 1px solid ${({ theme }) => theme.color.grayMedium};
   padding: ${(props) => props.theme.inputPadding};
   ::placeholder {
-    color: ${(props) => props.theme.color.grayMedium};
-    font-size: 0.813rem;
+    color: ${(props) => props.theme.color.grayMediumDark};
+    font-size: 0.875rem;
+    font-weight: 400;
   }
 
   :focus {

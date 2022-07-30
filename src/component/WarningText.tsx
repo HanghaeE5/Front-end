@@ -10,6 +10,10 @@ const WarningTextWrapper = styled.div`
   align-items: center;
   margin: 0.5rem 0;
   font-size: 0.75rem;
+
+  & > svg {
+    margin-right: 5px;
+  }
 `;
 
 export const WarningText = ({ children }: PropsWithChildren) => {
