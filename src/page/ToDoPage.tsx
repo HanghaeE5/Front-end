@@ -64,7 +64,7 @@ export const ToDoPage = () => {
     filter: 'all',
     sort: 'desc',
     page: 0,
-    size: 5,
+    size: 50,
   });
 
   const [todoModalStateNew, setTodoModalStateNew] = useState<{
@@ -314,11 +314,11 @@ export const ToDoPage = () => {
       <StepUpModal />
       <PageLayout title="투두리스트">
         <ScrollWrapper ref={scrollDiv}>
-          <Wrapper isColumn alignItems="start" margin="1em 0">
+          <Wrapper isColumn alignItems="start" margin="0 0 1rem 0">
             <Typography weight={500} size={1.125}>
               공개 범위 설정
             </Typography>
-            <Wrapper justifyContent="space-between" margin="0.625rem 0 0 0">
+            <Wrapper justifyContent="space-between" margin="1rem 0 0 0">
               <Button
                 width="32%"
                 buttonType={scope === 'ALL' ? 'primary' : 'default'}
@@ -353,16 +353,20 @@ export const ToDoPage = () => {
             />
           </Wrapper>
           <Wrapper>
-            <Typography
-              size={0.813}
-              color={todoFilter.sort === 'today' ? 'black' : '#989898'}
-              weight={400}
-              onClick={() => onClickOrderFilter('today')}
-              lineHeight={1.203}
-            >
-              당일
-            </Typography>
-            <Divider />
+            {todoFilter.filter === 'all' && (
+              <>
+                <Typography
+                  size={0.813}
+                  color={todoFilter.sort === 'today' ? 'black' : '#989898'}
+                  weight={400}
+                  onClick={() => onClickOrderFilter('today')}
+                  lineHeight={1.203}
+                >
+                  당일
+                </Typography>
+                <Divider />
+              </>
+            )}
             <Typography
               size={0.813}
               color={todoFilter.sort === 'desc' ? 'black' : '#989898'}

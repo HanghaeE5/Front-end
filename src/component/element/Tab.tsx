@@ -8,7 +8,7 @@ const TabWrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 3.125rem;
-  margin: 0.75rem 0;
+  margin: 1rem 0;
   overflow: hidden;
   border-radius: 6px 6px 0 0;
 `;
