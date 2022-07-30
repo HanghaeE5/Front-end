@@ -156,7 +156,12 @@ export const TodoModalNew = ({
       allDate.push(new Date(year, month - 1, i));
     }
 
-    setSelectedDay((prev) => [...prev, ...allDate]);
+    const noDuplicateArray = [...selectedDay, ...allDate]
+      .map((date) => new Intl.DateTimeFormat().format(date))
+      .reduce<string[]>((acc, cur) => (acc.includes(cur) ? acc : [...acc, cur]), [])
+      .map((date) => new Date(date));
+
+    setSelectedDay([...noDuplicateArray]);
   };
 
   const translateTodoData = () => {
