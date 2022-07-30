@@ -7,7 +7,7 @@ export const theme = {
     grayMedium: '#DDDDDD',
     grayDark: '#5F5F5F',
     grayText: '#8D8D8D',
-    grayMediumDark: '#8D8D8D',
+    grayMediumDark: '#989898',
   },
   radius: '6px',
   inputPadding: '0.75rem 1.25rem',

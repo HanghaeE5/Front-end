@@ -1,8 +1,7 @@
 import { ko } from 'date-fns/locale';
-import { PropsWithChildren, ReactNode, useEffect, useState } from 'react';
-import { DayPicker, MonthChangeEventHandler } from 'react-day-picker';
+import { PropsWithChildren, ReactNode, useState } from 'react';
+import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
-import { BsX } from 'react-icons/bs';
 import { ReactComponent as Reset } from '../asset/icons/icon_reset.svg';
 import { ReactComponent as Etc } from '../asset/icons/todoIcon/icon_etc.svg';
 import { ReactComponent as EtcGray } from '../asset/icons/todoIcon/icon_etc_gray.svg';
@@ -14,9 +13,9 @@ import { ReactComponent as Shopping } from '../asset/icons/todoIcon/icon_shoppin
 import { ReactComponent as ShoppingGray } from '../asset/icons/todoIcon/icon_shopping_gray.svg';
 import { ReactComponent as Study } from '../asset/icons/todoIcon/icon_study.svg';
 import { ReactComponent as StudyGray } from '../asset/icons/todoIcon/icon_study_gray.svg';
-import { useInput } from '../hooks/useInput';
+
 import '../style/day-picker.css';
-import { Category, ITodoItem, TodoData } from '../Types/todo';
+import { Category, TodoData } from '../Types/todo';
 import { Button, TextInput, Typography, Wrapper } from './element';
 import {
   Background,
@@ -67,7 +66,7 @@ const CalendarFooter = ({
     <Wrapper isColumn>
       <Wrapper justifyContent="space-between" margin="0.75rem 0">
         <Button buttonType="ghost" onClick={onClickEveryDay} width="calc(100% - 3.25rem)">
-          월 전체 선택
+          전체 선택
         </Button>
         <Button buttonType="ghost" onClick={reset} width="3rem">
           <Reset />

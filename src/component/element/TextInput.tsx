@@ -9,7 +9,7 @@ const TextElement = styled.input<StyleProps>`
   border: ${({ theme, inputType }) => (inputType === 'primary' ? `none` : `1px solid ${theme.color.grayMedium}`)};
   padding: ${(props) => props.theme.inputPadding};
   ::placeholder {
-    color: ${(props) => props.theme.color.grayMedium};
+    color: ${(props) => props.theme.color.grayMediumDark};
     font-size: ${({ inputSize }) => (inputSize === 'small' ? '0.938rem' : '1.063rem')};
   }
 
