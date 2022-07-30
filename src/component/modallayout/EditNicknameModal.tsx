@@ -49,7 +49,7 @@ const BoxWrap = styled.div`
   justify-content: center;
   max-width: 768px;
   position: fixed;
-  bottom: 3.3rem;
+  bottom: 4.1rem;
   width: 100%;
   height: 30.68rem;
   border-radius: 20px 20px 0px 0px;
