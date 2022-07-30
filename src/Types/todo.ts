@@ -4,7 +4,7 @@ export type PublicScope = 'ALL' | 'FRIEND' | 'NONE';
 
 export type TodoStatusFilter = 'doingList' | 'doneList' | 'all';
 
-export type Sort = 'desc' | 'asc';
+export type Sort = 'desc' | 'asc' | 'today';
 
 export interface TodoParams {
   filter: TodoStatusFilter;

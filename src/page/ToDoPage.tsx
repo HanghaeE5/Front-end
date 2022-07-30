@@ -24,11 +24,13 @@ import { modalGatherState, userInfoState } from '../recoil/store';
 import LevelUpModal from '../component/modallayout/LevelUpModal';
 import StepUpModal from '../component/modallayout/StepUpModal';
 import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
+import { ReactComponent as Stroke } from '../asset/icons/stroke.svg';
 import { removeListDuplicate } from '../utils/removeListDuplicate';
 import { TodoModalNew, TodoModalProps } from '../component/TodoModalNew';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 import { AxiosError } from 'axios';
 import { ErrorResponse } from '../Types/Interface';
+import styled from 'styled-components';
 
 const AccessTabList: { label: string; value: TodoStatusFilter | 'all' }[] = [
   { label: '전체', value: 'all' },
@@ -42,6 +44,9 @@ const emptyParagraph: { [key in TodoStatusFilter | 'all']: string } = {
   doneList: `완료한 투두리스트가 없어요. \n 혼자서 그리고 함께 투두리스트를 완료해보세요!`,
 };
 
+const Divider = styled(Stroke)`
+  margin: 0 0.75rem;
+`;
 export const ToDoPage = () => {
   const [bottomRef, isBottom] = useInView();
   const scrollDiv = useRef<HTMLDivElement>(null);
@@ -347,21 +352,33 @@ export const ToDoPage = () => {
               onClickItem={onChangeTab}
             />
           </Wrapper>
-          <Wrapper width="8rem" justifyContent="space-between">
+          <Wrapper>
             <Typography
-              size={0.875}
-              color={todoFilter.sort === 'desc' ? 'black' : '#989898'}
+              size={0.813}
+              color={todoFilter.sort === 'today' ? 'black' : '#989898'}
               weight={400}
               onClick={() => onClickOrderFilter('today')}
+              lineHeight={1.203}
+            >
+              당일
+            </Typography>
+            <Divider />
+            <Typography
+              size={0.813}
+              color={todoFilter.sort === 'desc' ? 'black' : '#989898'}
+              weight={400}
+              onClick={() => onClickOrderFilter('desc')}
+              lineHeight={1.203}
             >
               최신순
             </Typography>
-            <Typography color={'#989898'}>|</Typography>
+            <Divider />
             <Typography
-              size={0.875}
+              size={0.813}
               color={todoFilter.sort === 'asc' ? 'black' : '#989898'}
               isPointer
               onClick={() => onClickOrderFilter('asc')}
+              lineHeight={1.203}
             >
               오래된순
             </Typography>
