@@ -68,11 +68,11 @@ export const TodoLabel = styled.span<{ done: boolean }>`
   border-radius: 0px 6px;
 `;
 
-export const TodoListWrapper = styled(Wrapper)`
-  height: calc(78% - 6rem);
-`;
-
-export const ScrollWrapper = styled(Wrapper)`
+export const ScrollWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  align-items: start;
   padding-bottom: 2rem;
   position: relative;
   overflow-y: scroll;

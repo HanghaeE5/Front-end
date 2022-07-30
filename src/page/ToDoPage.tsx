@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
@@ -6,7 +6,7 @@ import { createTodo, deleteTodoFn, fetchTodoList, todoQueryKey, updateTodoFn, up
 import { Button, ButtonFloating, Wrapper, PopConfirmNew, Tab, Typography, PopConfirmProps } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { ScrollWrapper, SpinnerWrapper, TodoListWrapper } from '../component/styledComponent/TodoPageComponents';
+import { ScrollWrapper, SpinnerWrapper } from '../component/styledComponent/TodoPageComponents';
 import { TodoItem } from '../component/TodoItem';
 import { PATH } from '../route/routeList';
 import {
@@ -44,6 +44,7 @@ const emptyParagraph: { [key in TodoStatusFilter | 'all']: string } = {
 
 export const ToDoPage = () => {
   const [bottomRef, isBottom] = useInView();
+  const scrollDiv = useRef<HTMLDivElement>(null);
   const nav = useNavigate();
   const queryClient = useQueryClient();
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
@@ -286,6 +287,13 @@ export const ToDoPage = () => {
     nav(`${PATH.COMMUNITY}/${boardId}`);
   };
 
+  const scrollTop = () => {
+    console.log('top');
+    if (scrollDiv.current) {
+      scrollDiv.current.scrollTop = 0;
+    }
+  };
+
   // 무한 스크롤링 로직
   useEffect(() => {
     if (loadingTodoList || !isBottom || todoList?.last) return;
@@ -307,36 +315,38 @@ export const ToDoPage = () => {
       <LevelUpModal />
       <StepUpModal />
       <PageLayout title="투두리스트">
-        <Wrapper padding="1rem" isColumn alignItems="start" height="100%">
-          <Typography weight={500} size={1.125}>
-            공개 범위 설정
-          </Typography>
-          <Wrapper justifyContent="space-between" padding="1rem 0">
-            <Button
-              width="32%"
-              buttonType={scope === 'ALL' ? 'primary' : 'default'}
-              onClick={() => onChangeScope('ALL')}
-            >
-              전체 공개
-            </Button>
-            <Button
-              width="32%"
-              buttonType={scope === 'FRIEND' ? 'primary' : 'default'}
-              onClick={() => onChangeScope('FRIEND')}
-            >
-              친구공개
-            </Button>
-            <Button
-              width="32%"
-              buttonType={scope === 'NONE' ? 'primary' : 'default'}
-              onClick={() => onChangeScope('NONE')}
-            >
-              비공개
-            </Button>
-          </Wrapper>
+        <ScrollWrapper ref={scrollDiv}>
           <Wrapper isColumn alignItems="start" margin="1em 0">
             <Typography weight={500} size={1.125}>
-              나의 TO DO LIST
+              공개 범위 설정
+            </Typography>
+            <Wrapper justifyContent="space-between" margin="0.625rem 0 0 0">
+              <Button
+                width="32%"
+                buttonType={scope === 'ALL' ? 'primary' : 'default'}
+                onClick={() => onChangeScope('ALL')}
+              >
+                전체 공개
+              </Button>
+              <Button
+                width="32%"
+                buttonType={scope === 'FRIEND' ? 'primary' : 'default'}
+                onClick={() => onChangeScope('FRIEND')}
+              >
+                친구공개
+              </Button>
+              <Button
+                width="32%"
+                buttonType={scope === 'NONE' ? 'primary' : 'default'}
+                onClick={() => onChangeScope('NONE')}
+              >
+                비공개
+              </Button>
+            </Wrapper>
+          </Wrapper>
+          <Wrapper isColumn alignItems="start" margin="1rem 0 0 0">
+            <Typography weight={500} size={1.125}>
+              나의 투두리스트
             </Typography>
             <Tab<TodoStatusFilter>
               selectedValue={todoFilter.filter}
@@ -349,7 +359,7 @@ export const ToDoPage = () => {
               size={0.875}
               color={todoFilter.sort === 'desc' ? 'black' : '#989898'}
               weight={400}
-              onClick={() => onClickOrderFilter('desc')}
+              onClick={() => onClickOrderFilter('today')}
             >
               최신순
             </Typography>
@@ -363,9 +373,9 @@ export const ToDoPage = () => {
               오래된순
             </Typography>
           </Wrapper>
-          <TodoListWrapper isColumn margin="1rem 0" justifyContent="center">
+          <Wrapper isColumn margin="1rem 0" justifyContent="start" height="100%">
             {list.length === 0 && (
-              <Wrapper isColumn justifyContent="center">
+              <Wrapper isColumn justifyContent="center" height="100%">
                 <Empty />
                 <Typography size={0.875} align="center" color="#5F5F5F" weight={400} lineHeight={1.25}>
                   {emptyParagraph[todoFilter.filter]}
@@ -373,7 +383,7 @@ export const ToDoPage = () => {
               </Wrapper>
             )}
             {list.length > 0 && (
-              <ScrollWrapper isColumn>
+              <>
                 {list.map((todo) => (
                   <TodoItem
                     key={todo.todoId}
@@ -384,12 +394,12 @@ export const ToDoPage = () => {
                   />
                 ))}
                 {list.length ? <SpinnerWrapper ref={bottomRef}>df</SpinnerWrapper> : ''}
-              </ScrollWrapper>
+              </>
             )}
-          </TodoListWrapper>
-        </Wrapper>
+          </Wrapper>
+        </ScrollWrapper>
         {todoModalStateNew.visible && <TodoModalNew {...todoModalStateNew.todoProps} />}
-        {!todoModalStateNew.visible && <ButtonFloating onClick={onClickAddButton} />}
+        {!todoModalStateNew.visible && <ButtonFloating onClick={onClickAddButton} scrollTop={scrollTop} />}{' '}
       </PageLayout>
     </NavLayout>
   );
