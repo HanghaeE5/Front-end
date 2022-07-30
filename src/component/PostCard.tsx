@@ -125,7 +125,7 @@ const PostTitle = ({
 }: PropsWithChildren<Pick<Board, 'category'> & { isSummary?: boolean }>) => {
   return (
     <Wrapper justifyContent="space-between" padding="0 1rem">
-      <Title>{children}</Title>
+      <Title isSummary={isSummary}>{children}</Title>
       <Badge>{category === 'CHALLENGE' ? '위드 투두' : '일상'}</Badge>
     </Wrapper>
   );
