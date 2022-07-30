@@ -10,9 +10,6 @@ const DropdownMenuButton = styled(DropdownMenu)`
   cursor: pointer;
 `;
 
-const ShareButton = styled(BiShareAlt)`
-  cursor: pointer;
-`;
 const UserName = styled.span`
   font-size: 0.875rem;
   font-weight: 500;
@@ -112,8 +109,7 @@ const PostHeader = ({
           </PostInfo>
         )}
       </Wrapper>
-      {boardId && isMine && dropDownProps && <DropdownMenuButton isMine={isMine} {...dropDownProps} />}
-      {!isMine && dropDownProps && <ShareButton onClick={() => dropDownProps.onShare()} />}
+      {boardId && dropDownProps && <DropdownMenuButton isMine={isMine} {...dropDownProps} />}
     </Wrapper>
   );
 };

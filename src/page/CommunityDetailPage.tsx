@@ -122,7 +122,8 @@ export const CommunityDetailPage = () => {
   };
 
   const onShare = () => {
-    const url = window.location.protocol + '//' + window.location.host + '/' + window.location.pathname;
+    const url = window.location.protocol + '//' + window.location.host + window.location.pathname;
+    console.log(url);
     navigator.clipboard.writeText(url);
 
     openSuccessConfirm({ title: '게시글 주소를 복사했습니다.' });
