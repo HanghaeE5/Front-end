@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Wrapper } from '../element';
-import { GrTrash } from 'react-icons/gr';
 
 // TODO : 다른데서어떻게 쓰는지 확인하고 지우던지 옮기던지
 export const ContentWrapper = styled.div`
@@ -22,20 +21,21 @@ export const ContentWrapper = styled.div`
 
 export const TodoItemWrapper = styled(Wrapper)<{ done: boolean }>`
   position: relative;
-  border: ${({ done, theme }) => (done ? `1px solid ${theme.color.grayMedium}` : `3px solid ${theme.mainColor}`)};
-  height: 5.625rem;
   border-radius: ${({ theme }) => theme.radius};
   margin: 0.5rem 0;
+  padding: 1.5rem 1.25rem 1.5rem 1.25rem;
   color: ${({ done, theme }) => (done ? theme.color.grayMedium : 'black')};
+  border: ${({ done, theme }) => (done ? `1px solid ${theme.color.grayMedium}` : `3px solid ${theme.mainColor}`)};
+  justify-content: space-between;
 
   & > svg:nth-of-type(1) {
-    margin: 0.5rem;
+    padding: 0;
     color: ${({ done, theme }) => (done ? theme.color.grayMedium : theme.mainColor)};
-    font-size: 4rem;
     cursor: ${({ done }) => (done ? 'auto' : 'pointer')};
   }
 
   & > svg:nth-of-type(2) {
+    text-align: right;
     margin: 0.5rem;
     font-size: 1.75rem;
     color: ${({ done, theme }) => (done ? theme.color.grayMedium : 'black')};
@@ -53,6 +53,12 @@ export const TodoItemWrapper = styled(Wrapper)<{ done: boolean }>`
     margin-left: 0.25rem;
     cursor: auto;
   }
+`;
+
+export const TodoTitle = styled.div`
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 22px;
 `;
 
 export const TodoLabel = styled.span<{ done: boolean }>`
