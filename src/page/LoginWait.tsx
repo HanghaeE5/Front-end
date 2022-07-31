@@ -3,6 +3,7 @@ import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { useRecoilState } from 'recoil';
 import { userApi } from '../api/callApi';
+import { EvImgBox } from '../component/element/BoxStyle';
 import { accessTokenState, snsSignupNickname } from '../recoil/store';
 
 export const LoginWait = () => {
@@ -18,7 +19,7 @@ export const LoginWait = () => {
   useEffect(() => {
     if (accessToken) {
       setAccessLoginToken(accessToken);
-      const isNickname = first[1].split('=')[1];
+      const isNickname = first[1].split('=')[1].slice(0, 1);
       // console.log(accessToken);
       // console.log(isNickname);
       if (isNickname === 'N') {
@@ -34,5 +35,9 @@ export const LoginWait = () => {
     }
   }, [localToken]);
 
-  return <div>로그인중</div>;
+  return (
+    <div>
+      <EvImgBox width={'17rem'} height={15} margin="auto" url="url(/assets/캐릭터/브라우니2단계.gif)"></EvImgBox>
+    </div>
+  );
 };
