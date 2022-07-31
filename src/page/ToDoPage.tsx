@@ -61,7 +61,7 @@ export const ToDoPage = () => {
   const [scope, setScope] = useState<PublicScope>(userInfoData?.publicScope || 'ALL');
   const [todoFilter, setTodoFilter] = useState<TodoParams>({
     filter: 'all',
-    sort: 'desc',
+    sort: 'today',
     page: 0,
     size: 50,
   });
@@ -149,7 +149,12 @@ export const ToDoPage = () => {
   });
 
   const onChangeTab = (todoStatus: TodoStatusFilter) =>
-    setTodoFilter((prev) => ({ ...prev, filter: todoStatus, page: 0 }));
+    setTodoFilter((prev) => ({
+      ...prev,
+      filter: todoStatus,
+      page: 0,
+      sort: prev.sort === 'today' && todoStatus !== 'all' ? 'desc' : prev.sort,
+    }));
 
   const onClickOrderFilter = (sort: Sort) => setTodoFilter((prev) => ({ ...prev, sort, page: 0 }));
 
