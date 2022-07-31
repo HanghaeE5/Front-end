@@ -110,9 +110,9 @@ const StepUpModal = () => {
                     ? 'url(/assets/캐릭터/브라우니진화1.gif)'
                     : userInfoData?.characterInfo.characterName === '현자 브라우니'
                     ? 'url(/assets/캐릭터/브라우니진화2.gif)'
-                    : userInfoData?.characterInfo.characterName === '출격 완료! 비니'
-                    ? 'url(/assets/캐릭터/비니진화2.gif)'
-                    : 'url(/assets/캐릭터/비니진화1.gif)'
+                    : userInfoData?.characterInfo.characterName === '달팽이보단 빠른 비니'
+                    ? 'url(/assets/캐릭터/비니진화1.gif)'
+                    : 'url(/assets/캐릭터/비니진화2.gif)'
                 }
               />
             </EvBox>

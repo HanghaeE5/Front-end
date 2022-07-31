@@ -92,7 +92,7 @@ const YourChatBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 70%;
+  width: 90%;
   margin: 1rem auto 0 5.3%;
   /* background: #bdefcd; */
 `;
@@ -100,7 +100,7 @@ const YourChatBox = styled.div`
 const MyChatBox = styled.div`
   display: flex;
   flex-direction: row-reverse;
-  width: 70%;
+  width: 90%;
   margin: 1rem 5.3% 0 auto;
   /* background: #bdefcd; */
 `;
@@ -115,7 +115,7 @@ const InformChatBox = styled.div`
 `;
 
 const YourTextBox = styled.div`
-  max-width: calc(70% - 6.5rem);
+  max-width: calc(80% - 6.5rem);
   /* width: 150px; */
   display: flex;
   flex-direction: column;
@@ -132,7 +132,7 @@ const YourTextBox = styled.div`
 `;
 
 const MyTextBox = styled.div`
-  max-width: calc(70% - 3.8rem);
+  max-width: calc(80% - 3.8rem);
   /* width: 150px; */
   display: flex;
   flex-direction: column;
