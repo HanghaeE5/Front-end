@@ -2,23 +2,22 @@ import { useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
-import { createTodo, deleteTodoFn, fetchTodoList, todoQueryKey, updateTodoFn, updateTodoScope } from '../api/todoApi';
+import {
+  createTodo,
+  deleteTodoFn,
+  fetchTodoList,
+  todoQueryKey,
+  updateDoneTodo,
+  updateTodoFn,
+  updateTodoScope,
+} from '../api/todoApi';
 import { Button, ButtonFloating, Wrapper, PopConfirmNew, Tab, Typography, PopConfirmProps } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { ScrollWrapper, SpinnerWrapper } from '../component/styledComponent/TodoPageComponents';
 import { TodoItem } from '../component/TodoItem';
 import { PATH } from '../route/routeList';
-import {
-  PublicScope,
-  ITodoItem,
-  Sort,
-  TodoData,
-  TodoParams,
-  TodoStatusFilter,
-  TodoDoneResponse,
-  Category,
-} from '../Types/todo';
+import { PublicScope, ITodoItem, Sort, TodoData, TodoParams, TodoStatusFilter, Category } from '../Types/todo';
 import { useRecoilState } from 'recoil';
 import { modalGatherState, userInfoState } from '../recoil/store';
 import LevelUpModal from '../component/modallayout/LevelUpModal';
@@ -140,6 +139,10 @@ export const ToDoPage = () => {
     },
   });
 
+  const { mutate: doneTodo } = useMutation(updateDoneTodo, {
+    onError: (error) => openErrorConfirm({}),
+  });
+
   const { mutate: updateTodoPublicScope } = useMutation(updateTodoScope, {
     onSuccess: () => queryClient.invalidateQueries('fetchUserInfo'),
     onError: () => openErrorConfirm({}),
@@ -239,53 +242,65 @@ export const ToDoPage = () => {
     });
   };
 
-  // TODO 완료
-  const handleDoneTodo = (data: TodoDoneResponse | undefined, todoId: number) => {
-    // 실패일 때
-    if (!data) {
-      openErrorConfirm({});
-      return;
-    }
+  const onClickDoneButton = (todoItem: ITodoItem) => {
+    setConfirmState({
+      visible: true,
+      iconType: 'withTodo',
+      title: '완료하시겠습니까?',
+      button: {
+        text: '닫기',
+        onClick: closeConfirm,
+      },
+      optionalButton: {
+        text: '완료',
+        onClick: () => {
+          closeConfirm();
+          doneTodo(todoItem.todoId, {
+            onSuccess: (data) => {
+              const {
+                characterInfo: { levelUp, stepUp, todayDone },
+              } = data;
 
-    const {
-      characterInfo: { levelUp, stepUp, todayDone },
-    } = data;
+              const tempList = [...list];
+              const idx = tempList.findIndex((todo) => todo.todoId === todoItem.todoId);
+              tempList.splice(idx, 1, { ...list[idx], state: true });
+              setList([...tempList]);
 
-    const tempList = [...list];
-    const idx = tempList.findIndex((todo) => todo.todoId === todoId);
-    tempList.splice(idx, 1, { ...list[idx], state: true });
-    setList([...tempList]);
+              if (stepUp) {
+                setUserInfoData({
+                  ...userInfoData,
+                  characterInfo: {
+                    ...userInfoData.characterInfo,
+                    characterName: data.characterInfo.characterName,
+                    characterUrl: data.characterInfo.characterUrl,
+                  },
+                });
 
-    if (stepUp) {
-      setUserInfoData({
-        ...userInfoData,
-        characterInfo: {
-          ...userInfoData.characterInfo,
-          characterName: data.characterInfo.characterName,
-          characterUrl: data.characterInfo.characterUrl,
+                setmodalGather({ ...modalGather, stepUpModal: true });
+                return;
+              }
+
+              if (!stepUp && levelUp) {
+                setmodalGather({ ...modalGather, levelUpModal: true });
+                return;
+              }
+
+              if (todayDone && todayDone <= 10) {
+                openSuccessConfirm({
+                  title: '투두 완료!',
+                  content: `오늘 투두를 ${todayDone}개 완료했어요👍`,
+                });
+              } else if (todayDone && todayDone > 10) {
+                openSuccessConfirm({
+                  title: `벌써 ${todayDone}개나 했어요😎`,
+                  content: `캐릭터 경험치와 아이템 개수는 하루 10개까지만 반영됩니다. 내일도 열심히 해서 같이 성장해요!`,
+                });
+              }
+            },
+          });
         },
-      });
-
-      setmodalGather({ ...modalGather, stepUpModal: true });
-      return;
-    }
-    if (!stepUp && levelUp) {
-      setmodalGather({ ...modalGather, levelUpModal: true });
-      return;
-    }
-    // console.log(userInfoData);
-
-    if (todayDone && todayDone <= 10) {
-      openSuccessConfirm({
-        title: '투두 완료!',
-        content: `오늘 투두를 ${todayDone}개 완료했어요👍`,
-      });
-    } else if (todayDone && todayDone > 10) {
-      openSuccessConfirm({
-        title: `벌써 ${todayDone}개나 했어요😎`,
-        content: `캐릭터 경험치와 아이템 개수는 하루 10개까지만 반영됩니다. 내일도 열심히 해서 같이 성장해요!`,
-      });
-    }
+      },
+    });
   };
 
   const moveToBoard = (boardId: number | undefined) => {
@@ -404,7 +419,7 @@ export const ToDoPage = () => {
                     todoData={todo}
                     onClickEditButton={onClickEditButton}
                     onClickDeleteButton={onClickDeleteButton}
-                    handleDoneTodo={handleDoneTodo}
+                    onClickDoneButton={onClickDoneButton}
                   />
                 ))}
                 {list.length ? <SpinnerWrapper ref={bottomRef}>df</SpinnerWrapper> : ''}

@@ -23,38 +23,19 @@ export const TodoItem = ({
   todoData,
   onClickEditButton,
   onClickDeleteButton,
-  handleDoneTodo,
+  onClickDoneButton,
 }: {
   todoData: ITodoItem;
   onClickEditButton: TodoEvent;
   onClickDeleteButton: TodoEvent;
-  handleDoneTodo: (data: TodoDoneResponse | undefined, todoId: number) => void;
+  onClickDoneButton: TodoEvent;
 }) => {
-  const queryClient = useQueryClient();
-
-  const refectchTodoList = () => {
-    queryClient.invalidateQueries(todoQueryKey.fetchTodo);
-  };
-
-  const { mutate: doneTodo } = useMutation(updateDoneTodo, {
-    onSuccess: (data) => {
-      handleDoneTodo(data, todoData.todoId);
-    },
-    onError: (error) => {
-      handleDoneTodo(undefined, todoData.todoId);
-    },
-  });
-
-  const onClickDone = () => {
-    doneTodo(todoData.todoId);
-  };
-
   return (
     <>
       <TodoItemWrapper done={todoData.state}>
         <TodoLabel done={todoData.state}>{todoData.boardId ? 'With To Do' : 'My To Do'}</TodoLabel>
         <Wrapper justifyContent="space-between">
-          {todoData.state ? <Done /> : <DoingIcon onClick={onClickDone} />}
+          {todoData.state ? <Done /> : <DoingIcon onClick={() => onClickDoneButton(todoData)} />}
 
           <Wrapper isColumn alignItems="start" justifyContent="space-between" margin="0 0.625rem">
             <TodoTitle>{todoData.todoContent}</TodoTitle>
