@@ -7,7 +7,7 @@ export * from './SignUpSNS';
 export * from './ChooseCharacter';
 export * from './EditPassword';
 export * from './CommunityPage';
-export * from './CommunityDetailPage';
+export * from './CommunityDetail';
 export * from './CommunityPostingPage';
 export * from './ToDoPage';
 export * from './FriendList';
