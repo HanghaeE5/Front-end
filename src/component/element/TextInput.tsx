@@ -8,6 +8,7 @@ const TextElement = styled.input<StyleProps>`
   background-color: ${({ theme, inputType }) => (inputType === 'default' ? 'white' : theme.color.grayLight)};
   border: ${({ theme, inputType }) => (inputType === 'primary' ? `none` : `1px solid ${theme.color.grayMedium}`)};
   padding: ${(props) => props.theme.inputPadding};
+  font-size: ${({ inputSize }) => (inputSize === 'small' ? '0.938rem' : '1.063rem')};
   ::placeholder {
     color: ${(props) => props.theme.color.grayMediumDark};
     font-size: ${({ inputSize }) => (inputSize === 'small' ? '0.938rem' : '1.063rem')};
