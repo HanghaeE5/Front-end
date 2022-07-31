@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useInView } from 'react-intersection-observer';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { communityQueryKey, fetchBoardFn } from '../api/communityApi';
 import { ButtonFloating, Img, Select, SelectOption, TextInput, Typography, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
@@ -13,6 +13,7 @@ import { PATH } from '../route/routeList';
 import { Board, CommunitySearchControl, FilterType, KeywordFilter } from '../Types/community';
 import { removeListDuplicate } from '../utils/removeListDuplicate';
 import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
+import { CommunityDetail } from './CommunityDetail';
 
 // sub
 const serachOptions: SelectOption[] = [
@@ -31,8 +32,10 @@ const postFilterOptions: SelectOption[] = [
 
 export const CommunityPage = () => {
   const nav = useNavigate();
+  const { id } = useParams();
   const [bottomRef, isBottom] = useInView();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isDetailPost, setIsDetailPost] = useState(false);
 
   const [keywordValue, setKeywordValue] = useState<{ sub: KeywordFilter | 'all'; keyword: string }>({
     sub: 'all',
@@ -72,9 +75,18 @@ export const CommunityPage = () => {
     setControl((prev) => ({ ...prev, page: prev.page + 1 }));
   }, [isBottom, isLoading, fetchBoardData]);
 
+  useEffect(() => {
+    if (id) {
+      setIsDetailPost(true);
+      return;
+    }
+    setIsDetailPost(false);
+  }, [id]);
+
   return (
     <NavLayout>
       <PageLayout title="커뮤니티">
+        {isDetailPost && <CommunityDetail />}
         <ContentWrapper ref={scrollRef}>
           <section>
             <Wrapper margin="0 0 0.75rem 0">
@@ -141,7 +153,7 @@ export const CommunityPage = () => {
             )}
           </section>
         </ContentWrapper>
-        <ButtonFloating onClick={onClickWriteButton} scrollRef={scrollRef} />
+        {!id && <ButtonFloating onClick={onClickWriteButton} scrollRef={scrollRef} />}
       </PageLayout>
     </NavLayout>
   );

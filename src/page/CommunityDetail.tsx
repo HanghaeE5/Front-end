@@ -23,7 +23,7 @@ import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import { PostImgage, PostWrapper } from '../component/styledComponent/CommunityElements';
 
-export const CommunityDetailPage = () => {
+export const CommunityDetail = () => {
   const nav = useNavigate();
   const { id } = useParams();
   const userInfo = useRecoilValue(userInfoState);
@@ -232,48 +232,47 @@ export const CommunityDetailPage = () => {
 
   if (isLoading || !postDetail) return <>로딩중</>;
   return (
-    <NavLayout>
+    <>
       {confirmState.visible && <PopConfirmNew {...confirmState} />}
-      <PageLayout title="커뮤니티">
-        <PostWrapper isColumn alignItems="start" height="100%" justifyContent="space-between">
-          <Wrapper isColumn alignItems="start" padding="0 0 2rem 0">
-            <PostCard.PostHeader
-              userImg={postDetail.authorProfileImageUrl}
-              userName={postDetail.authorNick}
-              date={postDetail.boardCreatedDate.replaceAll('T', ' ')}
-              boardId={postDetail.boardId}
-              isMine={isMine}
-              dropDownProps={{
-                onShare,
-                onEdit: onEditBoard,
-                onDelete: onDeleteBoard,
-              }}
-            />
-            {postDetail.imageUrl && <PostImgage src={postDetail.imageUrl} />}
 
-            <PostCard.PostTitle isSummary={false} category={postDetail.category}>
-              {postDetail.title}
-            </PostCard.PostTitle>
-            <PostCard.Content>{postDetail.boardContent}</PostCard.Content>
-            {postDetail.category === 'CHALLENGE' && <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>}
+      <PostWrapper isColumn alignItems="start" height="100%" justifyContent="space-between">
+        <Wrapper isColumn alignItems="start" padding="0 0 2rem 0">
+          <PostCard.PostHeader
+            userImg={postDetail.authorProfileImageUrl}
+            userName={postDetail.authorNick}
+            date={postDetail.boardCreatedDate.replaceAll('T', ' ')}
+            boardId={postDetail.boardId}
+            isMine={isMine}
+            dropDownProps={{
+              onShare,
+              onEdit: onEditBoard,
+              onDelete: onDeleteBoard,
+            }}
+          />
+          {postDetail.imageUrl && <PostImgage src={postDetail.imageUrl} />}
+
+          <PostCard.PostTitle isSummary={false} category={postDetail.category}>
+            {postDetail.title}
+          </PostCard.PostTitle>
+          <PostCard.Content>{postDetail.boardContent}</PostCard.Content>
+          {postDetail.category === 'CHALLENGE' && <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>}
+        </Wrapper>
+        {postDetail.category === 'CHALLENGE' && !isMine && (
+          <Wrapper>
+            <Button
+              margin="1rem"
+              buttonType={postDetail.withTodoDeadline ? 'disable' : 'primary'}
+              onClick={onClickParticipateButton}
+            >
+              {postDetail.withTodoDeadline
+                ? '마감되었습니다'
+                : postDetail.participating
+                ? '참여 취소하기'
+                : '위드 투두 참여하기'}
+            </Button>
           </Wrapper>
-          {postDetail.category === 'CHALLENGE' && !isMine && (
-            <Wrapper>
-              <Button
-                margin="1rem"
-                buttonType={postDetail.withTodoDeadline ? 'disable' : 'primary'}
-                onClick={onClickParticipateButton}
-              >
-                {postDetail.withTodoDeadline
-                  ? '마감되었습니다'
-                  : postDetail.participating
-                  ? '참여 취소하기'
-                  : '위드 투두 참여하기'}
-              </Button>
-            </Wrapper>
-          )}
-        </PostWrapper>
-      </PageLayout>
-    </NavLayout>
+        )}
+      </PostWrapper>
+    </>
   );
 };

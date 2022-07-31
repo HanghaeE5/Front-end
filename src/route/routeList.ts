@@ -5,7 +5,6 @@ import {
   SignUpEmail,
   SignUpSNS,
   CommunityPage,
-  CommunityDetailPage,
   ToDoPage,
   FriendList,
   Chatting,
@@ -90,10 +89,9 @@ export const routeList: IRoute[] = [
     page: CommunityPage,
   },
   {
-    // TODO : route outlet 이용하기
     id: 'communityDetail',
     path: `${PATH.COMMUNITY}/:id`,
-    page: CommunityDetailPage,
+    page: CommunityPage,
   },
   {
     id: 'community',
