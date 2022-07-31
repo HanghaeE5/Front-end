@@ -148,6 +148,7 @@ export const PostCard = ({ children, onClick }: PropsWithChildren<{ onClick: () 
       margin="0.5rem 0 0 0"
       onClick={() => onClick()}
       backgroundColor="white"
+      isPointer
     >
       {children}
     </Wrapper>
