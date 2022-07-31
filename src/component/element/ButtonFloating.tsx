@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { HiPlus } from 'react-icons/hi';
 import { ReactComponent as TopButton } from '../../asset/icons/topButton.svg';
 import { ReactComponent as plusBtn } from '../../asset/icons/plusBtn.svg';
 import { RefObject } from 'react';

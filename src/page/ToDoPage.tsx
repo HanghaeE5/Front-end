@@ -407,7 +407,7 @@ export const ToDoPage = () => {
               오래된순
             </Typography>
           </Wrapper>
-          <Wrapper isColumn margin="1rem 0" justifyContent="start" height="100%">
+          <Wrapper isColumn margin="1rem 0" justifyContent="start">
             {list.length === 0 && (
               <Wrapper isColumn justifyContent="center" height="100%">
                 <Empty />

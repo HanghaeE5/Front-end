@@ -10,6 +10,7 @@ export const ContentWrapper = styled.div`
     display: none;
   }
   scroll-behavior: smooth;
+  padding-bottom: 3rem;
 
   section:nth-of-type(1) {
     max-height: 10rem;
