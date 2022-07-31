@@ -10,9 +10,6 @@ const DropdownMenuButton = styled(DropdownMenu)`
   cursor: pointer;
 `;
 
-const ShareButton = styled(BiShareAlt)`
-  cursor: pointer;
-`;
 const UserName = styled.span`
   font-size: 0.875rem;
   font-weight: 500;
@@ -112,8 +109,7 @@ const PostHeader = ({
           </PostInfo>
         )}
       </Wrapper>
-      {boardId && isMine && dropDownProps && <DropdownMenuButton isMine={isMine} {...dropDownProps} />}
-      {!isMine && dropDownProps && <ShareButton onClick={() => dropDownProps.onShare()} />}
+      {boardId && dropDownProps && <DropdownMenuButton isMine={isMine} {...dropDownProps} />}
     </Wrapper>
   );
 };
@@ -125,7 +121,7 @@ const PostTitle = ({
 }: PropsWithChildren<Pick<Board, 'category'> & { isSummary?: boolean }>) => {
   return (
     <Wrapper justifyContent="space-between" padding="0 1rem">
-      <Title>{children}</Title>
+      <Title isSummary={isSummary}>{children}</Title>
       <Badge>{category === 'CHALLENGE' ? '위드 투두' : '일상'}</Badge>
     </Wrapper>
   );
@@ -152,6 +148,7 @@ export const PostCard = ({ children, onClick }: PropsWithChildren<{ onClick: () 
       margin="0.5rem 0 0 0"
       onClick={() => onClick()}
       backgroundColor="white"
+      isPointer
     >
       {children}
     </Wrapper>

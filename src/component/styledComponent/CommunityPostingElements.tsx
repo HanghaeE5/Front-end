@@ -60,3 +60,26 @@ export const ChallangersSection = styled.div`
     font-size: 0.875rem;
   }
 `;
+
+export const ImgButton = styled.div`
+  cursor: pointer;
+  width: 78px;
+  height: 1.625rem;
+  color: #dddddd;
+  background: #f6f6f6;
+  border: 1px solid #dddddd;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 15px;
+  gap: 10px;
+  box-sizing: border-box;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12.5px;
+  line-height: 18px;
+  color: #888888;
+`;

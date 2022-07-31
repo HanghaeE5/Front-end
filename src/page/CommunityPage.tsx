@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useInView } from 'react-intersection-observer';
 import { useQuery } from 'react-query';
@@ -32,6 +32,7 @@ const postFilterOptions: SelectOption[] = [
 export const CommunityPage = () => {
   const nav = useNavigate();
   const [bottomRef, isBottom] = useInView();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const [keywordValue, setKeywordValue] = useState<{ sub: KeywordFilter | 'all'; keyword: string }>({
     sub: 'all',
@@ -74,7 +75,7 @@ export const CommunityPage = () => {
   return (
     <NavLayout>
       <PageLayout title="커뮤니티">
-        <ContentWrapper>
+        <ContentWrapper ref={scrollRef}>
           <section>
             <Wrapper margin="0 0 0.75rem 0">
               <Wrapper width="40%" margin="0 8px 0 0">
@@ -119,7 +120,7 @@ export const CommunityPage = () => {
               </Wrapper>
             )}
             {list.length > 0 && (
-              <ScrollWrapper isColumn>
+              <Wrapper isColumn>
                 {list.map((post: Board) => (
                   <PostCard key={post.boardId} onClick={() => nav(`${PATH.COMMUNITY}/${post.boardId}`)}>
                     <PostCard.PostHeader userImg={post.authorProfileImageUrl} userName={post.authorNick} />
@@ -136,11 +137,11 @@ export const CommunityPage = () => {
                   </PostCard>
                 ))}
                 {list.length ? <SpinnerWrapper ref={bottomRef}>df</SpinnerWrapper> : ''}
-              </ScrollWrapper>
+              </Wrapper>
             )}
           </section>
         </ContentWrapper>
-        <ButtonFloating onClick={onClickWriteButton} />
+        <ButtonFloating onClick={onClickWriteButton} scrollRef={scrollRef} />
       </PageLayout>
     </NavLayout>
   );

@@ -13,7 +13,7 @@ import {
   uploadImageFn,
 } from '../api/communityApi';
 import { PostType } from '../Types/community';
-import { ChallangersSection, ScrollWraper } from '../component/styledComponent/CommunityPostingElements';
+import { ChallangersSection, ImgButton, ScrollWraper } from '../component/styledComponent/CommunityPostingElements';
 import { WarningText } from '../component/WarningText';
 import { useNavigate, useParams } from 'react-router';
 import { PATH } from '../route/routeList';
@@ -240,7 +240,7 @@ export const CommunitiPostingPage = () => {
                 </ChallangersSection>
               )}
 
-              <Wrapper isColumn justifyContent="start" padding="0.5rem 0">
+              <Wrapper isColumn justifyContent="start" padding="0.625rem 0">
                 <TextInput
                   value={post.title}
                   onChange={onChangeTitle}
@@ -249,7 +249,7 @@ export const CommunitiPostingPage = () => {
                 />
                 <WarningText>필수사항입니다!</WarningText>
               </Wrapper>
-              <Wrapper isColumn justifyContent="start">
+              <Wrapper isColumn justifyContent="start" margin="0.625rem 0">
                 <TextInput
                   type="area"
                   value={post.content}
@@ -260,7 +260,7 @@ export const CommunitiPostingPage = () => {
                 <WarningText>필수사항입니다!</WarningText>
               </Wrapper>
             </Wrapper>
-            <Wrapper isColumn padding="0 1rem">
+            <Wrapper isColumn margin="0.625rem 0" padding="0 1rem">
               <Button size="large" buttonType="dashed" onClick={() => onClickImgUploadButton()}>
                 <BiCamera /> &nbsp; 사진 업로드
               </Button>
@@ -272,12 +272,8 @@ export const CommunitiPostingPage = () => {
                       사진 업로드는 1장만 가능합니다
                     </Typography>
                     <Wrapper width="10rem" justifyContent="space-between" margin="0.5rem 0 0 0">
-                      <Button buttonType="ghost" size="small" width="48.5%" onClick={() => removeImg()}>
-                        삭제하기
-                      </Button>
-                      <Button buttonType="ghost" size="small" width="48.5%" onClick={() => onClickImgUploadButton()}>
-                        변경하기
-                      </Button>
+                      <ImgButton onClick={() => removeImg()}>삭제하기</ImgButton>
+                      <ImgButton onClick={() => onClickImgUploadButton()}>변경하기</ImgButton>
                     </Wrapper>
                   </Wrapper>
                 </Wrapper>

@@ -21,6 +21,7 @@ import { useState } from 'react';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+import { PostImgage, PostWrapper } from '../component/styledComponent/CommunityElements';
 
 export const CommunityDetailPage = () => {
   const nav = useNavigate();
@@ -122,7 +123,8 @@ export const CommunityDetailPage = () => {
   };
 
   const onShare = () => {
-    const url = window.location.protocol + '//' + window.location.host + '/' + window.location.pathname;
+    const url = window.location.protocol + '//' + window.location.host + window.location.pathname;
+    console.log(url);
     navigator.clipboard.writeText(url);
 
     openSuccessConfirm({ title: '게시글 주소를 복사했습니다.' });
@@ -233,8 +235,8 @@ export const CommunityDetailPage = () => {
     <NavLayout>
       {confirmState.visible && <PopConfirmNew {...confirmState} />}
       <PageLayout title="커뮤니티">
-        <Wrapper isColumn alignItems="start" height="100%" justifyContent="space-between">
-          <Wrapper isColumn alignItems="start" height="80%">
+        <PostWrapper isColumn alignItems="start" height="100%" justifyContent="space-between">
+          <Wrapper isColumn alignItems="start" padding="0 0 2rem 0">
             <PostCard.PostHeader
               userImg={postDetail.authorProfileImageUrl}
               userName={postDetail.authorNick}
@@ -247,8 +249,11 @@ export const CommunityDetailPage = () => {
                 onDelete: onDeleteBoard,
               }}
             />
-            {postDetail.imageUrl && <Img url={postDetail.imageUrl} type="square" height="50rem" />}
-            <PostCard.PostTitle category={postDetail.category}>{postDetail.title}</PostCard.PostTitle>
+            {postDetail.imageUrl && <PostImgage src={postDetail.imageUrl} />}
+
+            <PostCard.PostTitle isSummary={false} category={postDetail.category}>
+              {postDetail.title}
+            </PostCard.PostTitle>
             <PostCard.Content>{postDetail.boardContent}</PostCard.Content>
             {postDetail.category === 'CHALLENGE' && <PostCard.Gather>{postDetail.participatingCount}</PostCard.Gather>}
           </Wrapper>
@@ -267,7 +272,7 @@ export const CommunityDetailPage = () => {
               </Button>
             </Wrapper>
           )}
-        </Wrapper>
+        </PostWrapper>
       </PageLayout>
     </NavLayout>
   );

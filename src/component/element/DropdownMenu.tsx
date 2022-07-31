@@ -25,6 +25,7 @@ const Menu = styled.div<{ isActive: boolean }>`
   visibility: hidden;
   transform: translateY(-20px);
   transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+  overflow: hidden;
 
   ${({ isActive }) =>
     isActive &&

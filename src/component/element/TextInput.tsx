@@ -23,20 +23,22 @@ const TextElement = styled.input<StyleProps>`
 
 const SearchButton = styled(BiSearch)`
   position: absolute;
-  right: 1.5rem;
+  right: 0.75rem;
   font-size: 1.25rem;
   cursor: pointer;
 `;
 
 const TextAreaElement = styled.textarea<{ isValidError?: boolean }>`
   height: 11.25rem;
+  font-family: 'Noto Sans KR', sans-serif;
   border-radius: ${(props) => props.theme.radius};
   background-color: white;
   border: 1px solid ${({ theme }) => theme.color.grayMedium};
   padding: ${(props) => props.theme.inputPadding};
   ::placeholder {
-    color: ${(props) => props.theme.color.grayMedium};
-    font-size: 0.813rem;
+    color: ${(props) => props.theme.color.grayMediumDark};
+    font-size: 0.875rem;
+    font-weight: 400;
   }
 
   :focus {
@@ -84,7 +86,7 @@ export const TextInput = ({
 
   if (type === 'text') {
     return (
-      <Wrapper>
+      <Wrapper position="relative">
         <TextElement
           placeholder={placeholder}
           value={value}
