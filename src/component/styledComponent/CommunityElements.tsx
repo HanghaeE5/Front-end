@@ -39,4 +39,18 @@ export const ScrollWrapper = styled(Wrapper)`
 export const SpinnerWrapper = styled.div`
   background-color: ${({ theme }) => theme.color.grayLight};
   color: ${({ theme }) => theme.color.grayLight};
+  width: 100%;
+  font-size: 2px;
+`;
+
+export const PostWrapper = styled(Wrapper)`
+  height: 100%;
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const PostImgage = styled.img`
+  width: 100%;
 `;
