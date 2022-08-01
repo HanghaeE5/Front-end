@@ -158,7 +158,7 @@ export const CommunitiPostingPage = () => {
   };
 
   const onClickAddPostButton = () => {
-    if (!post.title || !post.content) return;
+    if (!post.title || !post.content || (post.postType === 'CHALLENGE' && !todoData)) return;
 
     const todo = post.postType === 'CHALLENGE' ? { todo: todoData } : undefined;
 
@@ -290,7 +290,9 @@ export const CommunitiPostingPage = () => {
             </Wrapper>
             <Wrapper padding="0 1rem" margin="0.75rem 0">
               <Button
-                buttonType={!post.title || !post.content ? 'disable' : 'primary'}
+                buttonType={
+                  !post.title || !post.content || (post.postType === 'CHALLENGE' && !todoData) ? 'disable' : 'primary'
+                }
                 size="large"
                 onClick={boardId ? onClickEditPostButton : onClickAddPostButton}
               >
