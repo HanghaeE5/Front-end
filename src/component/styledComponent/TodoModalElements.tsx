@@ -2,8 +2,8 @@ import styled, { keyframes } from 'styled-components';
 import { Button, Wrapper } from '../element';
 import { BsX } from 'react-icons/bs';
 export const ModalContainer = styled.div`
-  position: fixed;
-  bottom: 4.1rem;
+  position: absolute;
+  bottom: 0;
   width: 100%;
   height: 100%;
   max-width: ${({ theme }) => theme.maxWidth};
@@ -13,8 +13,6 @@ export const Background = styled.div`
   background-color: rgba(18, 18, 18, 0.65);
   width: 100%;
   height: 100%;
-  position: absolute;
-  top: 0;
 `;
 
 // TODO : Modal 중복많아서 하나도 빼보기
@@ -36,7 +34,10 @@ export const TodoContents = styled.div`
   border-radius: 20px 20px 0 0;
   animation: ${Slide} 0.6s ease;
   overflow-y: scroll;
-  height: 65%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 70%;
   ::-webkit-scrollbar {
     display: none;
   }

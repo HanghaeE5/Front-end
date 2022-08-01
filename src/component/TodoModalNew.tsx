@@ -182,101 +182,103 @@ export const TodoModalNew = ({
     <ModalContainer>
       <Background onClick={() => closeModal()} />
       <TodoContents>
-        <HeaderTitle justifyContent="space-between" padding="1.25rem 1rem 0 1rem">
-          <span>{modalTitle}</span>
-          <CloseButton onClick={() => closeModal()} />
-        </HeaderTitle>
-        {isWithTodo && (
-          <Wrapper padding="0.5rem 1rem">
-            <Typography color="#8D8D8D" size={0.875}>
-              잠깐! 위 드 투두 게시물은 작성 이후 수정, 삭제가 불가합니다. 제목, 카테고리, 날짜/기간을 유의하여 신중하게
-              작성해주세요.
-            </Typography>
+        <Wrapper isColumn>
+          <HeaderTitle justifyContent="space-between" padding="1.25rem 1rem 0 1rem">
+            <span>{modalTitle}</span>
+            <CloseButton onClick={() => closeModal()} />
+          </HeaderTitle>
+          {isWithTodo && (
+            <Wrapper padding="0.5rem 1rem">
+              <Typography color="#8D8D8D" size={0.875}>
+                잠깐! 위 드 투두 게시물은 작성 이후 수정, 삭제가 불가합니다. 제목, 카테고리, 날짜/기간을 유의하여
+                신중하게 작성해주세요.
+              </Typography>
+            </Wrapper>
+          )}
+          <Wrapper isColumn padding="1rem">
+            <TextInput
+              inputSize="large"
+              inputType="default"
+              value={todo.content}
+              onChange={onChangeTitleInput}
+              placeholder="투두 제목을 입력해주세요"
+            />
+            <WarningText>투두 제목은 필수사항입니다!</WarningText>
           </Wrapper>
-        )}
-        <Wrapper isColumn padding="1rem">
-          <TextInput
-            inputSize="large"
-            inputType="default"
-            value={todo.content}
-            onChange={onChangeTitleInput}
-            placeholder="투두 제목을 입력해주세요"
-          />
-          <WarningText>투두 제목은 필수사항입니다!</WarningText>
-        </Wrapper>
-        <CategorySection isColumn alignItems="start">
-          <span>카테고리</span>
-          <div>
-            <CategoryItem
-              isSelect={isSelectedCategory('STUDY')}
-              onClick={() => onClickCategoryButton('STUDY')}
-              icon={isSelectedCategory('STUDY') ? <Study /> : <StudyGray />}
-            >
-              스터디
-            </CategoryItem>
-            <CategoryItem
-              isSelect={isSelectedCategory('EXERCISE')}
-              onClick={() => onClickCategoryButton('EXERCISE')}
-              icon={isSelectedCategory('EXERCISE') ? <Excercise /> : <ExcerciseGray />}
-            >
-              운동
-            </CategoryItem>
-            <CategoryItem
-              isSelect={isSelectedCategory('SHOPPING')}
-              onClick={() => onClickCategoryButton('SHOPPING')}
-              icon={isSelectedCategory('SHOPPING') ? <Shopping /> : <ShoppingGray />}
-            >
-              쇼핑
-            </CategoryItem>
-            <CategoryItem
-              isSelect={isSelectedCategory('PROMISE')}
-              onClick={() => onClickCategoryButton('PROMISE')}
-              icon={isSelectedCategory('PROMISE') ? <PromiseIcon /> : <PromiseGray />}
-            >
-              약속
-            </CategoryItem>
-            <CategoryItem
-              isSelect={isSelectedCategory('ETC')}
-              onClick={() => onClickCategoryButton('ETC')}
-              icon={isSelectedCategory('ETC') ? <Etc /> : <EtcGray />}
-            >
-              기타
-            </CategoryItem>
-          </div>
-        </CategorySection>
-        <Wrapper isColumn padding="1rem 1rem 2rem 1rem">
-          <Wrapper justifyContent="space-between" margin="0 0 1rem 0">
-            <span>날짜/기간</span>
-            <Typography weight={700} size={0.95}>
-              {getSelectDate(selectedDay)}
-            </Typography>
+          <CategorySection isColumn alignItems="start">
+            <span>카테고리</span>
+            <div>
+              <CategoryItem
+                isSelect={isSelectedCategory('STUDY')}
+                onClick={() => onClickCategoryButton('STUDY')}
+                icon={isSelectedCategory('STUDY') ? <Study /> : <StudyGray />}
+              >
+                스터디
+              </CategoryItem>
+              <CategoryItem
+                isSelect={isSelectedCategory('EXERCISE')}
+                onClick={() => onClickCategoryButton('EXERCISE')}
+                icon={isSelectedCategory('EXERCISE') ? <Excercise /> : <ExcerciseGray />}
+              >
+                운동
+              </CategoryItem>
+              <CategoryItem
+                isSelect={isSelectedCategory('SHOPPING')}
+                onClick={() => onClickCategoryButton('SHOPPING')}
+                icon={isSelectedCategory('SHOPPING') ? <Shopping /> : <ShoppingGray />}
+              >
+                쇼핑
+              </CategoryItem>
+              <CategoryItem
+                isSelect={isSelectedCategory('PROMISE')}
+                onClick={() => onClickCategoryButton('PROMISE')}
+                icon={isSelectedCategory('PROMISE') ? <PromiseIcon /> : <PromiseGray />}
+              >
+                약속
+              </CategoryItem>
+              <CategoryItem
+                isSelect={isSelectedCategory('ETC')}
+                onClick={() => onClickCategoryButton('ETC')}
+                icon={isSelectedCategory('ETC') ? <Etc /> : <EtcGray />}
+              >
+                기타
+              </CategoryItem>
+            </div>
+          </CategorySection>
+          <Wrapper isColumn padding="1rem 1rem 2rem 1rem">
+            <Wrapper justifyContent="space-between" margin="0 0 1rem 0">
+              <span>날짜/기간</span>
+              <Typography weight={700} size={0.95}>
+                {getSelectDate(selectedDay)}
+              </Typography>
+            </Wrapper>
+            <Calendar>
+              <Button buttonType="default" size="large" onClick={() => setShowCalendar(true)}>
+                날짜 변경하기
+              </Button>
+              {showCalendar && (
+                <CalendarWrapper>
+                  <DayPicker
+                    mode="multiple"
+                    locale={ko}
+                    styles={{}}
+                    min={1}
+                    selected={selectedDay}
+                    onSelect={onDatePick}
+                    onMonthChange={(month: Date) => setCalendarMonth(month)}
+                    fromDate={new Date()}
+                    footer={
+                      <CalendarFooter
+                        onClick={onCloseCalendar}
+                        onClickEveryDay={onClickEveryDay}
+                        reset={() => setSelectedDay([new Date()])}
+                      />
+                    }
+                  />
+                </CalendarWrapper>
+              )}
+            </Calendar>
           </Wrapper>
-          <Calendar>
-            <Button buttonType="default" size="large" onClick={() => setShowCalendar(true)}>
-              날짜 변경하기
-            </Button>
-            {showCalendar && (
-              <CalendarWrapper>
-                <DayPicker
-                  mode="multiple"
-                  locale={ko}
-                  styles={{}}
-                  min={1}
-                  selected={selectedDay}
-                  onSelect={onDatePick}
-                  onMonthChange={(month: Date) => setCalendarMonth(month)}
-                  fromDate={new Date()}
-                  footer={
-                    <CalendarFooter
-                      onClick={onCloseCalendar}
-                      onClickEveryDay={onClickEveryDay}
-                      reset={() => setSelectedDay([new Date()])}
-                    />
-                  }
-                />
-              </CalendarWrapper>
-            )}
-          </Calendar>
         </Wrapper>
         <StickyButton
           buttonType={todo.content.length === 0 ? 'disable' : 'primary'}
