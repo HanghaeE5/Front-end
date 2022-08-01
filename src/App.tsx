@@ -10,16 +10,33 @@ import { routeList } from './route/routeList';
 import { MainPageWrapper } from './page/MediaType';
 import { EvBtnAble, EvFontBox, EvImgBox, EvKoreanFont } from './component/element/BoxStyle';
 
-const ResponseContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  margin: auto;
+const ResponsiveContainer = styled.div`
   width: 100%;
   height: 100%;
-  background-color: ${(props) => props.theme.mainColor};
   box-sizing: border-box;
+
+  @media (min-width: 1025px) {
+    background-image: url('/assets/pcBackground.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  & > div {
+    @media (min-width: 1025px) {
+      max-width: 32rem;
+      position: absolute;
+      right: 10rem;
+    }
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    background-color: ${(props) => props.theme.mainColor};
+  }
 `;
 
 function App() {
@@ -62,18 +79,20 @@ function App() {
     );
   }
   return (
-    <ResponseContainer>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          {confirmState.visible && <PopConfirmNew {...confirmState} />}
-          <Routes>
-            {routeList.map((route) => (
-              <Route key={route.id} path={route.path} element={<route.page />} />
-            ))}
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-    </ResponseContainer>
+    <ResponsiveContainer>
+      <div>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            {confirmState.visible && <PopConfirmNew {...confirmState} />}
+            <Routes>
+              {routeList.map((route) => (
+                <Route key={route.id} path={route.path} element={<route.page />} />
+              ))}
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
+      </div>
+    </ResponsiveContainer>
   );
 }
 
