@@ -303,7 +303,7 @@ export const EventPage = () => {
   };
 
   const onClickExchangeButton = () => {
-    if (eventData.stampCnt < 3) {
+    if (eventData.stampCnt < 1) {
       setConfirmState((prev) => ({ ...prev, visible: true, title: '도장 개수가 부족합니다', iconType: 'warning' }));
       return;
     }
@@ -397,7 +397,7 @@ export const EventPage = () => {
             <EventBadge>STEP 02</EventBadge>
             <EventTitle justifyContent="center">도장으로 이벤트 응모권 교환</EventTitle>
             <EventContent alignItems="center" justifyContent="center">
-              도장 3개당 이벤트 응모권 1개로 교환이 가능합니다.
+              도장 1개당 이벤트 응모권 1개로 교환이 가능합니다.
             </EventContent>
             <Wrapper justifyContent="space-between" margin="1rem">
               <Score isRed title="나의 도장 개수" count={eventData.stampCnt || 0} />
