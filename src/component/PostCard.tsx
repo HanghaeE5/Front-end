@@ -96,7 +96,13 @@ const PostHeader = ({
           nav(`/friend/page/${userName}`);
         }}
       >
-        <Img url={userImg} type="profile" width={boardId ? '2.5rem' : '2rem'} height={boardId ? '2.5rem' : '2rem'} />
+        <Img
+          isPointer
+          url={userImg}
+          type="profile"
+          width={boardId ? '2.5rem' : '2rem'}
+          height={boardId ? '2.5rem' : '2rem'}
+        />
       </Wrapper>
 
       <Wrapper isColumn alignItems="start" margin="0 0 0 0.5rem">

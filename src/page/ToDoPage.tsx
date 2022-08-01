@@ -144,7 +144,10 @@ export const ToDoPage = () => {
   });
 
   const { mutate: updateTodoPublicScope } = useMutation(updateTodoScope, {
-    onSuccess: () => queryClient.invalidateQueries('fetchUserInfo'),
+    onSuccess: () => {
+      queryClient.invalidateQueries('fetchUserInfo');
+      openSuccessConfirm({ title: '공개 범위가 변경되었습니다.' });
+    },
     onError: () => openErrorConfirm({}),
   });
 
