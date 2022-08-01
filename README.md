@@ -3,6 +3,8 @@
 
 ## 👉[투두윗 사용해보기][todowith-link]
 [todowith-link]: https://todowith.co.kr '투두윗 바로가기!'
+[Notion 링크](https://www.notion.so/99-E-5-35d0ee3dd2054d5aa4e2c2515c1f4f45)  
+[소개 영상](URL)  
 
 
 #### TODO 와 WITH 을 합쳐 혼자만이 아닌 함께하는 즐거움을 주고, 이를 통해 재미있게 목표를 계획하고 달성할 수 있도록 도와주는 서비스
@@ -79,7 +81,7 @@
 
   <br>
   <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black">
-  <img src="https://img.shields.io/badge/redux-764ABC?style=for-the-badge&logo=redux&logoColor=black">
+
   <img src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white">
 <br>
   <img src="https://img.shields.io/badge/CloudFront-D05C4B?style=for-the-badge&logo=Amazon AWS&logoColor=white">
@@ -102,13 +104,14 @@
 ## 🔥프론트앤드 이슈 및 트러블슈팅
 
 <details>
-<summary><b>➡️ 브라우저 호환성</b></summary>
+<summary><b>➡️ 브라우저 호환성</b></summary> 
   
 > **문제** : 타 브라우저는 정상 작동하나 네이버 앱과 삼성 기본 브라우저에서 메인페이지의 경험치 바가 마운트되지 않음. <br/><br/>
 > **원인** : 차트 JS의 그라데이션 캔버스 함수가 원인이었음. <br/><br/>
   > **접근** : 안드로이드에서 로컬 환경테스트를 함. navigator.userAgent 로 브라우저 종류 구별정보를 파악함. <br/><br/>
-> **결론** : 문제 브라우저에서 경험치바가 그라데이션이 없는 1가지 색으로 보이게 할 계획이었으나, 디자이너님의 요청으로 타 브라우저 사용 유도함.<br/><br/>
-  
+> **결론** : 문제 브라우저에서 경험치바가 그라데이션이 없는 1가지 색으로 보이게 할 계획이었으나, 디자이너님의 요청으로 타 브라우저 사용 유도함.<br/>
+[자세히보러가기](https://github.com/HanghaeE5/Front-end/wiki/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%95%A4%EB%93%9C-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85---%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%ED%98%B8%ED%99%98)
+<br/>
 </details>
 
 <details>
@@ -117,7 +120,9 @@
 > **문제** : 다른 페이지는 괜찮지만, 메인 페이지를 마운트하는 시간이 오래 걸림. 프로젝트 전체 마운트 속도를 줄이고 리렌더링을 감소하고자 분석함.<br/><br/>
 > **원인** : 초기 메인 페이지에는 여러 useState, useRecoilState, useEffect, onClick 이벤트가 있어서 마운트가 오래 걸리고 리렌더링 횟수가 많았음. 더군다나 10mb 이상의 gif 애니메이션과 차트js, 캔버스함수까지 실행되어 3G 테스트 시에는 더 악화되었음.<br/><br/>
 > **접근** : useRecoilState의 수를 줄였고, 같이 실행되는 State들은 객체 형식으로 합쳤으며 onSuccess, onError 후처리와 onClick은 공통 로직을 만들어서 리렌더링 수를 줄였음. 메인페이지에서 수행하는 많은 정보 탐색 작업을 페이지를 분리하여 유저 상황에 맞는 페이지만 거치게끔 했음. 유저 데이터를 받아오는 상태가 loading 일 때는 캐릭터 애니메이션을 넣어 이탈률을 줄이고, gif의 용량을 줄였음.<br/><br/>
-> **해결** : 로드타임과 LightHouse 테스트 점수가 향상. 문제상황에서는 빠른 3G 기준 로드타임 18.22초였으나, 수정 후에는 빠른 3G 기준 로드타임 11.58초로 빨라짐<br/><br/>
+> **결론** : 로드타임과 LightHouse 테스트 점수가 향상. 문제상황에서는 빠른 3G 기준 로드타임 18.22초였으나, 수정 후에는 빠른 3G 기준 로드타임 11.58초로 빨라짐<br/>
+[자세히보러가기](https://github.com/HanghaeE5/Front-end/wiki/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%95%A4%EB%93%9C-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-:-%EB%A7%88%EC%9A%B4%ED%8A%B8-%EC%86%8D%EB%8F%84,-%EB%A6%AC%EB%A0%8C%EB%8D%94%EB%A7%81-%EC%B5%9C%EC%A0%81%ED%99%94)
+<br/>
 </details>
 
 
