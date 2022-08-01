@@ -22,6 +22,7 @@ const NavWrapper = styled(Wrapper)`
   padding-bottom: 10px;
   border-top: 1px solid ${({ theme }) => theme.color.grayMedium};
   /* z-index: 4; */
+  background-color: white;
   height: 5rem;
   & div {
     cursor: pointer;

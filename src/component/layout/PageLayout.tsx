@@ -17,6 +17,7 @@ const HeaderWrapper = styled.div`
   font-weight: 700;
   line-height: 32.56px;
   font-size: 1.375rem;
+  background-color: white;
 
   & > svg:nth-of-type(1) {
     font-size: 1.25rem;

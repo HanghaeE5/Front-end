@@ -75,6 +75,7 @@ export const TodoLabel = styled.span<{ done: boolean }>`
 `;
 
 export const ScrollWrapper = styled.div`
+  background-color: white;
   display: flex;
   flex-direction: column;
   padding: 2rem 1rem 6rem 1rem;

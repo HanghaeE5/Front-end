@@ -6,6 +6,7 @@ export const ContentWrapper = styled.div`
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
+  background-color: white;
   ::-webkit-scrollbar {
     display: none;
   }

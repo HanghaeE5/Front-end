@@ -211,7 +211,7 @@ export const CommunitiPostingPage = () => {
   return (
     <NavLayout>
       <PageLayout title="글쓰기">
-        <Wrapper height="100%">
+        <Wrapper height="100%" backgroundColor="white">
           <ScrollWraper isColumn height="100%">
             <PostCard.PostHeader userImg={userInfo?.profileImageUrl} userName={userInfo?.nick} />
             <Wrapper isColumn padding="0 1rem">
