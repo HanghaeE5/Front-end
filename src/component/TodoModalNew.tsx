@@ -142,7 +142,14 @@ export const TodoModalNew = ({
   };
 
   const onClickEveryDay = () => {
-    const [year, month, today] = new Intl.DateTimeFormat()
+    const thisMonth = new Date().getMonth() + 1;
+
+    const [todayYear, todayMonth, today] = new Intl.DateTimeFormat()
+      .format(calendarMonth)
+      .split('.')
+      .map((d) => Number(d));
+
+    const [year, month, day] = new Intl.DateTimeFormat()
       .format(calendarMonth)
       .split('.')
       .map((d) => Number(d));
@@ -151,7 +158,7 @@ export const TodoModalNew = ({
 
     const allDate: Date[] = [];
 
-    for (let i = today; i <= lastDay; i++) {
+    for (let i = todayMonth === month ? today : day; i <= lastDay; i++) {
       allDate.push(new Date(year, month - 1, i));
     }
 
