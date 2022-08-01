@@ -7,6 +7,7 @@ interface ImgProps {
   url?: string;
   width?: string;
   height?: string;
+  isPointer?: boolean;
 }
 
 const StyledImg = styled.div<ImgProps>`
@@ -20,8 +21,9 @@ const StyledImg = styled.div<ImgProps>`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 100% 50%;
+  cursor: ${({ isPointer }) => isPointer && 'pointer'};
 `;
 
-export const Img = ({ url, type = 'round', width = '100%', height }: ImgProps) => {
-  return <StyledImg url={url} type={type} width={width} height={height} />;
+export const Img = ({ url, type = 'round', width = '100%', ...style }: ImgProps) => {
+  return <StyledImg url={url} type={type} width={width} {...style} />;
 };
