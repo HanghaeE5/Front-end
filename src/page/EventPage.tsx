@@ -288,7 +288,7 @@ export const EventPage = () => {
 
   const { mutate: enterPhone } = useMutation(enterPhoneFn, {
     onSuccess: (data) => {
-      setConfirmState((prev) => ({ ...prev, visible: true, title: '응모되었습니다' }));
+      setConfirmState((prev) => ({ ...prev, visible: true, title: '😎8월 6일 지급예정입니다!😎' }));
       resetLuckyBoxState();
     },
   });
