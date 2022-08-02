@@ -9,33 +9,43 @@ import { PopConfirmNew } from './component/element';
 import { routeList } from './route/routeList';
 import { MainPageWrapper } from './page/MediaType';
 import { EvBtnAble, EvFontBox, EvImgBox, EvKoreanFont } from './component/element/BoxStyle';
+import pcImg from './asset/pcWall.png';
 
 const ResponsiveContainer = styled.div`
   width: 100%;
   height: 100%;
   box-sizing: border-box;
 
-  @media (min-width: 1025px) {
-    background-image: url('/assets/pcBackground.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
+  & > img {
+    display: none;
   }
 
   & > div {
-    @media (min-width: 1025px) {
-      max-width: 32rem;
-      position: absolute;
-      right: 10rem;
-    }
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    margin: auto;
-    width: 100%;
     height: 100%;
     background-color: ${(props) => props.theme.mainColor};
+  }
+
+  @media (min-width: 1025px) {
+    background-color: #fffbe9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > img {
+      display: block;
+      width: 32.5rem;
+      height: 32.5rem;
+      margin-right: 5rem;
+    }
+
+    & > div {
+      width: 32rem;
+      box-shadow: 0px 1px 25px rgba(227, 215, 161, 0.45);
+    }
   }
 `;
 
@@ -80,6 +90,8 @@ function App() {
   }
   return (
     <ResponsiveContainer>
+      <img src={pcImg} />
+
       <div>
         <ThemeProvider theme={theme}>
           <BrowserRouter>
