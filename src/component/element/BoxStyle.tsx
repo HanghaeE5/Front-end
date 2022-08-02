@@ -201,13 +201,6 @@ export const EvBtnAble = styled.button`
   margin: ${(props: btnable) => props.margin};
   background: ${(props: btnable) => (props.isDisable ? '#F7F7F7  ' : '#FFD600')};
   cursor: ${(props: btnable) => (props.isDisable ? '' : 'pointer')};
-  /* &:hover {
-    ${(props: btnable) =>
-    props.isDisable
-      ? ''
-      : `color: white;
-    background-color: #358edc;`}
-  } */
 `;
 
 type font = {

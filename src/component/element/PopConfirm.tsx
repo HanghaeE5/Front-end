@@ -1,7 +1,5 @@
 import { PropsWithChildren, ReactNode } from 'react';
-import { useRecoilState } from 'recoil';
 import styled, { keyframes } from 'styled-components';
-import { commonPopConfirmState } from '../../recoil/store';
 
 // TODO : Modal 중복많아서 하나도 빼보기
 const Slide = keyframes`
@@ -89,7 +87,6 @@ interface PopConfirmProps {
 }
 
 export const PopConfirm = ({ icon, visible, onConfirm, onCancel, children }: PropsWithChildren<PopConfirmProps>) => {
-  const [confirmState, setConfirmState] = useRecoilState(commonPopConfirmState);
   if (!visible) {
     return <></>;
   }

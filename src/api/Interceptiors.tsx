@@ -2,7 +2,6 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } f
 import { useNavigate } from 'react-router';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
-// axios.defaults.withCredentials = true;
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   // console.info(`[request] [${JSON.stringify(config)}]`);
 
@@ -11,9 +10,7 @@ const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   if (localToken) {
     const toto = JSON.parse(localToken);
 
-    // console.log(toto.tokenState);
     if (toto) {
-      // console.log(config);
       config.headers = {
         Authorization: toto.accessTokenState || 0 || false,
         // Refresh: toto.refreshTokenState || 0 || false,
@@ -89,7 +86,6 @@ const onResponseError = (error: AxiosError): Promise<AxiosError> => {
           },
         })
         .then((res) => {
-          // console.log(res);
           localStorage.setItem(
             'recoil-persist',
             JSON.stringify({

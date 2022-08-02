@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+// import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { registerApi, userApi } from '../api/callApi';
 import { AxiosError } from 'axios';
-import { accessTokenState, popNotiState, userInfoState } from '../recoil/store';
-import { PopNoti } from '../component/element/PopNoti';
+// import { accessTokenState, popNotiState, userInfoState } from '../recoil/store';
 import {
-  EvBox,
   EvBtnAble,
-  EvInputInfo,
   EvKoreanFont,
-  EvCheckFont,
   EvAbleFont,
   EvImgBox,
   EvFontBox,
@@ -20,7 +16,6 @@ import {
   EvColumnBox,
 } from '../component/element/BoxStyle';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
-import { PATH } from '../route/routeList';
 
 const RegisterContainer = styled.div`
   width: 100%;
@@ -42,15 +37,15 @@ const ContentContainer = styled.div`
 `;
 
 export const ChooseCharacter = () => {
-  const [nickname, setNickname] = useState<string>('');
-  const [popNoti, setPopNoti] = useRecoilState(popNotiState);
-  const [informMsg, setInformMsg] = useState<string | undefined>('');
-  const [quitOk, setQuitOk] = useState<boolean>(false);
-  const [check, setCheck] = useState<boolean>(false);
+  // const [nickname, setNickname] = useState<string>('');
+  // const [popNoti, setPopNoti] = useRecoilState(popNotiState);
+  // const [informMsg, setInformMsg] = useState<string | undefined>('');
+  // const [quitOk, setQuitOk] = useState<boolean>(false);
+  // const [check, setCheck] = useState<boolean>(false);
   const [select, setSelect] = useState<string>('');
-  const [nickConfirm, setNickConfirm] = useState<boolean>(false);
-  const accessLoginToken = useSetRecoilState(accessTokenState);
-  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
+  // const [nickConfirm, setNickConfirm] = useState<boolean>(false);
+  // const accessLoginToken = useSetRecoilState(accessTokenState);
+  // const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const localToken = localStorage.getItem('recoil-persist');
 
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
