@@ -1,4 +1,4 @@
-import { Splide, SplideTrack, SplideSlide } from '@splidejs/react-splide';
+import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import '@splidejs/react-splide/css/skyblue';
 import { EvColumnBox, EvFontBox, EvKoreanFont } from './BoxStyle';
@@ -124,7 +124,3 @@ export const OnBoardingSplide = () => {
     </EvColumnBox>
   );
 };
-
-//   export const Img = ({ url, type = 'round', width = '100%', height }: ImgProps) => {
-//     return <StyledImg url={url} type={type} width={width} height={height} />;
-//   };

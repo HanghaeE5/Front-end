@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { ReactComponent as WarningIcon } from '../../asset/icons/icon_warning.svg';
 import { ReactComponent as Chat } from '../../asset/icons/icon_chat.svg';
@@ -147,7 +147,6 @@ export const PopNoti = ({ confirmType, visible, oneButton, msg }: PopConfirmProp
                   }
                 : oneButton.nav
                 ? () => {
-                    // oneButton.onClick;
                     navi(oneButton.nav);
                   }
                 : () => {
