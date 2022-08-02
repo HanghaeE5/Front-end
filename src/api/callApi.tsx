@@ -68,7 +68,7 @@ const profilePhotoEditApi = async (forms: FormData) => {
   return ppea;
 };
 
-const friendAddApi = async (nick: { nick: string }) => {
+const friendAddApi = async (nick: { nick: string | undefined }) => {
   const faa = await callApi.post('/friend/request', nick);
   return faa;
 };
@@ -147,7 +147,7 @@ export const userApi = {
 };
 
 export const friendApi = {
-  friendAddApi: (nick: { nick: string }) => friendAddApi(nick),
+  friendAddApi: (nick: { nick: string | undefined }) => friendAddApi(nick),
   friendListApi: () => friendListApi(),
   requestFriendListApi: () => requestFriendListApi(),
   allowFriendApi: (nick: { nick: string }) => allowFriendApi(nick),

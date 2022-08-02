@@ -241,6 +241,7 @@ export const FriendList = () => {
 
   return (
     <NavLayout>
+      {confirmState.visible && <PopConfirmNew {...confirmState} />}
       <PageLayout title="친구 목록">
         <PageContentWrapper>
           {/* 요청 온 친구 */}
@@ -344,7 +345,7 @@ export const FriendList = () => {
                       </FriendNameTextBox>
                       <Badge>{`Lv.${myfriend.characterLevel}`}</Badge>
                     </RowBox>
-                    {/* {confirmState.visible && <PopConfirmNew {...confirmState} />} */}
+
                     <Box
                       isCursor={true}
                       width={'1.5rem'}

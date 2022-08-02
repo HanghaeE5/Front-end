@@ -266,6 +266,7 @@ export const Chatting = () => {
 
   return (
     <NavLayout>
+      {confirmState.visible && <PopConfirmNew {...confirmState} />}
       <PageLayout title="채팅">
         <PageContentWrapper>
           <RowBox margin={'1.875rem 0 1.875rem 0'}>
@@ -332,7 +333,7 @@ export const Chatting = () => {
                         {chatting.name.length > 16 ? chatting.name.slice(0, 16) + '...' : chatting.name}
                       </KoreanFont>
                     </ChattingRoomTextBox>
-                    {confirmState.visible && <PopConfirmNew {...confirmState} />}
+
                     <RowBox
                       width={'2rem'}
                       height={2}
