@@ -1,9 +1,9 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
-import { Button, Img, PopConfirmNew, PopConfirmProps, TextInput, Typography, Wrapper } from '../component/element';
+import { Button, Img, TextInput, Typography, Wrapper } from '../component/element';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { BiCamera } from 'react-icons/bi';
-import { Category, ITodoItem, TodoData } from '../Types/todo';
+import { Category, TodoData } from '../Types/todo';
 import { useMutation, useQuery } from 'react-query';
 import {
   communityQueryKey,

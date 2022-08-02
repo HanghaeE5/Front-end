@@ -1,7 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { useRecoilState } from 'recoil';
 import styled, { keyframes } from 'styled-components';
-import { commonPopConfirmState } from '../../recoil/store';
 
 export const ModalContainer = styled.div`
   position: absolute;
@@ -41,7 +39,7 @@ export const SliderWrapper = styled.div`
 `;
 
 export const SliderPopUp = ({ children, onClickBackground }: PropsWithChildren<{ onClickBackground?: () => void }>) => {
-  const [confirmState, setConfirmState] = useRecoilState(commonPopConfirmState);
+  // const [confirmState, setConfirmState] = useRecoilState(commonPopConfirmState);
   return (
     <ModalContainer>
       <SliderWrapper>{children}</SliderWrapper>

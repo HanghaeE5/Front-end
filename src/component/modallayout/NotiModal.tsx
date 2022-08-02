@@ -27,12 +27,6 @@ const ModalBackground = styled.div`
   z-index: 5;
 `;
 
-type box = {
-  width?: number | string;
-  height?: number | string;
-  margin?: string;
-};
-
 const BoxWrap = styled.div`
   display: flex;
   flex-direction: column;

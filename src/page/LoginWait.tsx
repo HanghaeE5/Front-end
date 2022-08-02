@@ -5,6 +5,7 @@ import { useRecoilState } from 'recoil';
 import { userApi } from '../api/callApi';
 import { EvImgBox } from '../component/element/BoxStyle';
 import { accessTokenState, snsSignupNickname } from '../recoil/store';
+import { EventContentWrapper } from './EventPage';
 
 export const LoginWait = () => {
   const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
@@ -36,8 +37,8 @@ export const LoginWait = () => {
   }, [localToken]);
 
   return (
-    <div>
+    <EventContentWrapper>
       <EvImgBox width={'17rem'} height={15} margin="auto" url="url(/assets/캐릭터/브라우니2단계.gif)"></EvImgBox>
-    </div>
+    </EventContentWrapper>
   );
 };

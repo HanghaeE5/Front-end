@@ -2,11 +2,12 @@ import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { userApi } from '../../api/callApi';
 import { useCommonConfirm } from '../../hooks/useCommonConfirm';
-import { modalGatherState, userInfoState } from '../../recoil/store';
+import { commonPopConfirmState, modalGatherState, userInfoState } from '../../recoil/store';
+import { PopConfirmNew } from '../element';
 import { EvImgBox } from '../element/BoxStyle';
 import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
@@ -72,7 +73,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const localToken = localStorage.getItem('recoil-persist');
   const nav = useNavigate();
-
+  const confirmState = useRecoilValue(commonPopConfirmState);
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
   //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
@@ -112,6 +113,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
 
   return (
     <TopNavWrapper>
+      {/* {confirmState.visible && <PopConfirmNew {...confirmState} />} */}
       <EvImgBox
         width="4.1875rem"
         height={2.02}
@@ -143,7 +145,6 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
           gap: '1rem',
         }}
       >
-        {' '}
         <Box
           width="2rem"
           height={2.02}

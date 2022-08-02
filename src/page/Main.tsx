@@ -1,11 +1,7 @@
-import styled from 'styled-components';
-import { NavLayout } from '../component/layout/NavLayout';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import styled, { keyframes } from 'styled-components';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { AiOutlineCheck } from 'react-icons/ai';
-import { BsQuestionCircle } from 'react-icons/bs';
-import { ReactComponent as DirectionIcon } from '../asset/icons/direction.svg';
-
-import { accessTokenState, modalGatherState, snsSignupNickname, userInfoState } from '../recoil/store';
+import { commonPopConfirmState, modalGatherState, snsSignupNickname, userInfoState } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 import ExplainModal from '../component/modallayout/ExplainModal';
@@ -13,32 +9,16 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useQuery } from 'react-query';
 import { userApi } from '../api/callApi';
-import { Typography, Wrapper } from '../component/element';
+import { PopConfirmNew, Wrapper } from '../component/element';
 import { PATH } from '../route/routeList';
-import { NoHeaderPageLayout } from '../component/layout/NoHeaderPageLayout';
-import { PageLayout } from '../component/layout/PageLayout';
-import {
-  EvBox,
-  EvBtn,
-  EvColumnBox,
-  EvEnglishFont,
-  EvFontBox,
-  EvImgBox,
-  EvKoreanFont,
-  EvRowBox,
-} from '../component/element/BoxStyle';
-import { ReactComponent as Excercise } from '../asset/icons/todoIcon/icon_exercise.svg';
-import { ReactComponent as PromiseIcon } from '../asset/icons/todoIcon/icon_promise.svg';
-import { ReactComponent as Shopping } from '../asset/icons/todoIcon/icon_shopping.svg';
-import { ReactComponent as Study } from '../asset/icons/todoIcon/icon_study.svg';
+import { EvBox, EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont, EvRowBox } from '../component/element/BoxStyle';
 import { AxiosError } from 'axios';
-import LevelUpModal from '../component/modallayout/LevelUpModal';
-import StepUpModal from '../component/modallayout/StepUpModal';
 import ExpBar from '../component/element/ExpBar';
 import { TopNavBar } from '../component/layout/TopNavBar';
 import { BottomNavLayout } from '../component/layout/BottomNavBar';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 import ResearchPopup from '../component/modallayout/ResearchPopup';
+import { EventContentWrapper } from './EventPage';
 
 const MainPageWrapper = styled(Wrapper)`
   max-width: 768px;
@@ -77,17 +57,6 @@ type box = {
   isAlignSide?: boolean;
   isContentSide?: boolean;
 };
-
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: ${(props: box) => props.width};
-  height: ${(props: box) => props.height}rem;
-  margin: ${(props: box) => props.margin};
-  background-color: #ffffff;
-`;
 
 const ToDoBox = styled.div`
   display: flex;
@@ -140,24 +109,37 @@ export const TodoNumberBox = styled(EvColumnBox)`
   margin: 0 auto 0.875rem auto;
 `;
 
+const eventShow = keyframes`
+  0% {
+    color:#FFD600;
+
+  }
+  100% {
+    color:#000000;
+  }
+
+`;
+
+const EventFont = styled.p`
+  display: flex;
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #ffd600;
+  animation: ${eventShow} 0.8s infinite alternate;
+`;
+
 export const Main = () => {
   // const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
-  const [accessLoginToken, setAccessLoginToken] = useRecoilState(accessTokenState);
   const [snsSignupNicknameOk, setSnsSignupNicknameOk] = useRecoilState(snsSignupNickname);
-  const localToken = localStorage.getItem('recoil-persist');
-  // interface Visit {
-  //   visitDate: Date | null;
-  // }
   const todayVisit = localStorage.getItem('hasTodayVisit');
   const tenMinVisit = localStorage.getItem('hasTenMinVisit');
-  const all = window.location.href;
 
-  const first = all.split('&');
-  const accessToken = first[0].split('=')[1];
   const nav = useNavigate();
 
+  const confirmState = useRecoilValue(commonPopConfirmState);
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   //유저정보 가져오기 API
@@ -206,11 +188,16 @@ export const Main = () => {
   }, [todayVisit, tenMinVisit]);
 
   if (userInformData.status === 'loading') {
-    return <EvImgBox width={'17rem'} height={15} margin="auto" url="url(/assets/캐릭터/브라우니2단계.gif)"></EvImgBox>;
+    return (
+      <EventContentWrapper>
+        <EvImgBox width={'17rem'} height={15} margin="auto" url="url(/assets/캐릭터/브라우니2단계.gif)" />
+      </EventContentWrapper>
+    );
   }
 
   return (
     <MainPageWrapper isColumn height="100%">
+      {confirmState.visible && <PopConfirmNew {...confirmState} />}
       <EventWrapper
         backgroundColor="black"
         height="2.85rem"
@@ -219,9 +206,10 @@ export const Main = () => {
         alignItems="center"
         onClick={() => nav(PATH.EVENT)}
       >
-        <Typography color="#FFD600" weight={700} size={0.875}>
-          투두윗 100% 당첨 럭키박스 이벤트 바로가기 <DirectionIcon />
-        </Typography>
+        <EvRowBox>
+          <EventFont style={{}}>투두윗 100% 당첨 럭키박스 이벤트 바로가기</EventFont>
+          <EvImgBox margin="0.15rem auto auto 0.2rem"></EvImgBox>
+        </EvRowBox>
       </EventWrapper>
 
       <TopNavBar isWithBanner />

@@ -24,8 +24,22 @@ import {
 import { FunctionComponent, ReactComponentElement, ReactElement, ReactNode, SVGProps, useState } from 'react';
 import { EventResponse } from '../Types/event';
 import { useInput } from '../hooks/useInput';
-import { PageHeader } from '../component/layout/PageLayout';
+import { PageHeader, PageLayout } from '../component/layout/PageLayout';
 import { TopNavBar } from '../component/layout/TopNavBar';
+import { PageContentWrapper } from './FriendList';
+import { NavLayout } from '../component/layout/NavLayout';
+
+export const EventContentWrapper = styled(PageContentWrapper)`
+  width: 100%;
+  height: 100%;
+  max-width: 768px;
+  display: flex;
+  background-color: #ffffff;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+`;
 
 const EventPageContainer = styled(Wrapper)`
   position: relative;
@@ -327,119 +341,124 @@ export const EventPage = () => {
   };
 
   return (
-    <EventPageContainer height="100%" isColumn>
-      <TopNavBar />
-      <PageHeader title="이벤트" />
-      <ScrollWrapper>
-        {confirmState.visible && <PopConfirmNew {...confirmState} />}
-        <EventImage src={EventImg} />
-        <EventSection>
-          <Wrapper isColumn alignItems="center">
-            <EventBadge>STEP 01</EventBadge>
-            <EventTitle justifyContent="center" padding="1rem">
-              투두 완료하고 도장받기
-            </EventTitle>
-            <EventContent alignItems="center" justifyContent="center">
-              당일 미완료된 투두리스트 없이 1개 이상의 투두를 완료하면 <br />
-              해당일 자정 12시에 도장이 찍힙니다.
-            </EventContent>
-          </Wrapper>
-          <EventCalendar>
-            <div>2022년 7월 - 8월</div>
-            <div>
-              <Wrapper justifyContent="space-between">
-                <DayComponent>일</DayComponent>
-                <DayComponent>월</DayComponent>
-                <DayComponent>화</DayComponent>
-                <DayComponent>수</DayComponent>
-                <DayComponent>목</DayComponent>
-                <DayComponent>금</DayComponent>
-                <DayComponent>토</DayComponent>
-              </Wrapper>
-              <Wrapper justifyContent="space-between">
-                <DateComponent />
-                <DateComponent />
-                <DateComponent />
-                <DateComponent />
-                <DateComponent />
-                <Day dd="1" stampedList={eventData.stampDates} />
-                <Day dd="2" stampedList={eventData.stampDates} />
-              </Wrapper>
-              <Wrapper justifyContent="space-between">
-                {['3', '4', '5', '6', '7', '8', '9'].map((dd) => (
-                  <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
-                ))}
-              </Wrapper>
-              <Wrapper justifyContent="space-between">
-                {['10', '11', '12', '13', '14', '15', '16'].map((dd) => (
-                  <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
-                ))}
-              </Wrapper>
-              <Wrapper justifyContent="space-between">
-                {['17', '18', '19', '20', '21', '22', '23'].map((dd) => (
-                  <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
-                ))}
-              </Wrapper>
-              <Wrapper justifyContent="space-between">
-                {['24', '25', '26', '27', '28', '29', '30'].map((dd) => (
-                  <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
-                ))}
-              </Wrapper>
-              <Wrapper justifyContent="space-between">
-                <Day dd={'31'} stampedList={eventData.stampDates} />
-                <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-01" dateIcon={<Aug1 />} />
-                <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-02" dateIcon={<Aug2 />} />
-                <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-03" dateIcon={<Aug3 />} />
-                <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-04" dateIcon={<Aug4 />} />
-                <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-05" dateIcon={<Aug5 />} />
-                <Day dd="" stampedList={eventData.stampDates} />
-              </Wrapper>
-            </div>
-          </EventCalendar>
-        </EventSection>
-        <EventSection>
-          <Wrapper isColumn alignItems="center">
-            <EventBadge>STEP 02</EventBadge>
-            <EventTitle justifyContent="center">도장으로 이벤트 응모권 교환</EventTitle>
-            <EventContent alignItems="center" justifyContent="center">
-              도장 1개당 이벤트 응모권 1개로 교환이 가능합니다.
-            </EventContent>
-            <Wrapper justifyContent="space-between" margin="1rem">
-              <Score isRed title="나의 도장 개수" count={eventData.stampCnt || 0} />
-              <Score title="나의 응모권 개수" count={eventData.couponCnt || 0} />
-            </Wrapper>
-            <EventButton bgColor="#5441FF" onClick={() => onClickExchangeButton()}>
-              응모권으로 교환하기
-            </EventButton>
-          </Wrapper>
-        </EventSection>
-        <EventSection>
-          <Wrapper isColumn alignItems="center">
-            <EventBadge>STEP 03</EventBadge>
-            <EventTitle justifyContent="center" padding="1rem">
-              응모권으로 럭키박스 오픈
-            </EventTitle>
-            <EventContent alignItems="center" justifyContent="center">
-              100% 당첨 럭키박스를 오픈해보세요!
-            </EventContent>
-            <Wrapper justifyContent="space-between" margin="1rem">
-              <LuckyBox />
-            </Wrapper>
-            <EventButton bgColor="#FF534E" onClick={() => onClickOpenLuckyBoxButton()}>
-              럭키 박스 열기
-            </EventButton>
-          </Wrapper>
-        </EventSection>
-        {luckyBoxState.visible && (
-          <LuckyBoxModal
-            closeModal={resetLuckyBoxState}
-            item={luckyBoxState.item}
-            itemImg={luckyBoxState.itemImg}
-            onClickConfirmButton={enterPhoneNumber}
-          />
-        )}
-      </ScrollWrapper>
-    </EventPageContainer>
+    <NavLayout>
+      <PageLayout title="이벤트">
+        <EventContentWrapper>
+          <EventPageContainer height="100%" isColumn>
+            {/* <TopNavBar /> */}
+            <ScrollWrapper>
+              {confirmState.visible && <PopConfirmNew {...confirmState} />}
+              <EventImage src={EventImg} />
+              <EventSection>
+                <Wrapper isColumn alignItems="center">
+                  <EventBadge>STEP 01</EventBadge>
+                  <EventTitle justifyContent="center" padding="1rem">
+                    투두 완료하고 도장받기
+                  </EventTitle>
+                  <EventContent alignItems="center" justifyContent="center">
+                    당일 미완료된 투두리스트 없이 1개 이상의 투두를 완료하면 <br />
+                    해당일 자정 12시에 도장이 찍힙니다.
+                  </EventContent>
+                </Wrapper>
+                <EventCalendar>
+                  <div>2022년 7월 - 8월</div>
+                  <div>
+                    <Wrapper justifyContent="space-between">
+                      <DayComponent>일</DayComponent>
+                      <DayComponent>월</DayComponent>
+                      <DayComponent>화</DayComponent>
+                      <DayComponent>수</DayComponent>
+                      <DayComponent>목</DayComponent>
+                      <DayComponent>금</DayComponent>
+                      <DayComponent>토</DayComponent>
+                    </Wrapper>
+                    <Wrapper justifyContent="space-between">
+                      <DateComponent />
+                      <DateComponent />
+                      <DateComponent />
+                      <DateComponent />
+                      <DateComponent />
+                      <Day dd="1" stampedList={eventData.stampDates} />
+                      <Day dd="2" stampedList={eventData.stampDates} />
+                    </Wrapper>
+                    <Wrapper justifyContent="space-between">
+                      {['3', '4', '5', '6', '7', '8', '9'].map((dd) => (
+                        <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
+                      ))}
+                    </Wrapper>
+                    <Wrapper justifyContent="space-between">
+                      {['10', '11', '12', '13', '14', '15', '16'].map((dd) => (
+                        <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
+                      ))}
+                    </Wrapper>
+                    <Wrapper justifyContent="space-between">
+                      {['17', '18', '19', '20', '21', '22', '23'].map((dd) => (
+                        <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
+                      ))}
+                    </Wrapper>
+                    <Wrapper justifyContent="space-between">
+                      {['24', '25', '26', '27', '28', '29', '30'].map((dd) => (
+                        <Day key={dd} dd={dd} stampedList={eventData.stampDates} />
+                      ))}
+                    </Wrapper>
+                    <Wrapper justifyContent="space-between">
+                      <Day dd={'31'} stampedList={eventData.stampDates} />
+                      <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-01" dateIcon={<Aug1 />} />
+                      <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-02" dateIcon={<Aug2 />} />
+                      <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-03" dateIcon={<Aug3 />} />
+                      <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-04" dateIcon={<Aug4 />} />
+                      <AugDay stampedList={eventData.stampDates} yyyyMmDd="2022-08-05" dateIcon={<Aug5 />} />
+                      <Day dd="" stampedList={eventData.stampDates} />
+                    </Wrapper>
+                  </div>
+                </EventCalendar>
+              </EventSection>
+              <EventSection>
+                <Wrapper isColumn alignItems="center">
+                  <EventBadge>STEP 02</EventBadge>
+                  <EventTitle justifyContent="center">도장으로 이벤트 응모권 교환</EventTitle>
+                  <EventContent alignItems="center" justifyContent="center">
+                    도장 1개당 이벤트 응모권 1개로 교환이 가능합니다.
+                  </EventContent>
+                  <Wrapper justifyContent="space-between" margin="1rem">
+                    <Score isRed title="나의 도장 개수" count={eventData.stampCnt || 0} />
+                    <Score title="나의 응모권 개수" count={eventData.couponCnt || 0} />
+                  </Wrapper>
+                  <EventButton bgColor="#5441FF" onClick={() => onClickExchangeButton()}>
+                    응모권으로 교환하기
+                  </EventButton>
+                </Wrapper>
+              </EventSection>
+              <EventSection>
+                <Wrapper isColumn alignItems="center">
+                  <EventBadge>STEP 03</EventBadge>
+                  <EventTitle justifyContent="center" padding="1rem">
+                    응모권으로 럭키박스 오픈
+                  </EventTitle>
+                  <EventContent alignItems="center" justifyContent="center">
+                    100% 당첨 럭키박스를 오픈해보세요!
+                  </EventContent>
+                  <Wrapper justifyContent="space-between" margin="1rem">
+                    <LuckyBox />
+                  </Wrapper>
+                  <EventButton bgColor="#FF534E" onClick={() => onClickOpenLuckyBoxButton()}>
+                    럭키 박스 열기
+                  </EventButton>
+                </Wrapper>
+              </EventSection>
+              {luckyBoxState.visible && (
+                <LuckyBoxModal
+                  closeModal={resetLuckyBoxState}
+                  item={luckyBoxState.item}
+                  itemImg={luckyBoxState.itemImg}
+                  onClickConfirmButton={enterPhoneNumber}
+                />
+              )}
+            </ScrollWrapper>
+          </EventPageContainer>
+        </EventContentWrapper>
+      </PageLayout>
+    </NavLayout>
   );
 };
 

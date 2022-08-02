@@ -47,7 +47,7 @@ const OnBoardingContentFont = styled(EvKoreanFont)`
 
 export const OnBoardingSplide = () => {
   return (
-    <EvColumnBox width={'100%'}>
+    <EvColumnBox width={'100%'} backgroundColor="#ffffff">
       <Splide
         aria-label="My Favorite Images"
         options={{

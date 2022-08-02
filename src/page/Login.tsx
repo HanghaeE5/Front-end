@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { NavigateFunction, useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { registerApi } from '../api/callApi';
-import { accessTokenState, popNotiState } from '../recoil/store';
+import { accessTokenState, commonPopConfirmState, popNotiState } from '../recoil/store';
 import {
+  EnterContentContainer,
+  EnterPageContainer,
   EvAbleFont,
   EvBox,
   EvBtn,
@@ -23,25 +25,7 @@ import { AxiosError } from 'axios';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 import { PATH } from '../route/routeList';
 import { Img } from '../component/modallayout/ExplainModal';
-
-const RegisterContainer = styled.div`
-  width: 100%;
-  max-width: 768px;
-  height: 100%;
-  /* background-color: #8e3939; */
-  overflow-y: auto;
-  position: relative;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const ContentContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+import { PopConfirmNew, PopConfirmProps } from '../component/element';
 
 const LoginImg = styled.img`
   height: 13.125rem;
@@ -63,6 +47,7 @@ export const Login = () => {
   const [password, setPassword] = useState<string>('');
   const [autoLogin, setAutoLogin] = useState<boolean>(false);
 
+  const confirmState = useRecoilValue(commonPopConfirmState);
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   const loginUserData = useMutation((data: { email: string; password: string }) => registerApi.loginApi(data), {
@@ -114,13 +99,14 @@ export const Login = () => {
     }
   }, [localToken]);
   return (
-    <RegisterContainer>
-      <ContentContainer>
+    <EnterPageContainer>
+      <EnterContentContainer>
         <EvColumnBox width={'100%'} height={13.125} backgroundColor="#FFFBE9">
           <EvColumnBox margin="0 auto">
             <LoginImg src="/assets/온보딩/소개 배너.png" />
           </EvColumnBox>
         </EvColumnBox>
+        {confirmState.visible && <PopConfirmNew {...confirmState} />}
         <EvBtn
           width={'10.1rem'}
           height={2.2}
@@ -251,7 +237,7 @@ export const Login = () => {
             }}
           />
         </EvRowBox>
-      </ContentContainer>
-    </RegisterContainer>
+      </EnterContentContainer>
+    </EnterPageContainer>
   );
 };

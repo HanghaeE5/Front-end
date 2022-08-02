@@ -6,6 +6,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { userApi } from '../api/callApi';
 import {
+  EnterPageContainer,
   EvAbleFont,
   EvBtnAble,
   EvCheckHelfBox,
@@ -123,13 +124,11 @@ export const EditPassword = () => {
   return (
     <NavLayout>
       <PageLayout title="비밀번호 변경">
-        <ContentWrapper>
+        <EnterPageContainer>
           <EvFontBox width={'5.4375rem'} height={1.375} margin={'1.875rem auto 0 5.3%'}>
-            {prePassword && (
-              <EvKoreanFont size={0.9375} weight={500} color="#1A1A1A">
-                현재 비밀번호
-              </EvKoreanFont>
-            )}
+            <EvKoreanFont size={0.9375} weight={500} color="#1A1A1A">
+              현재 비밀번호
+            </EvKoreanFont>
           </EvFontBox>
           <EvInputInfo
             width={'89.3%'}
@@ -139,14 +138,12 @@ export const EditPassword = () => {
             type={'password'}
             value={prePassword}
             onChange={onChangePrePw}
-          ></EvInputInfo>
+          />
 
           <EvFontBox width={'5.4375rem'} height={1.375} margin={'1.875rem auto 0 5.3%'}>
-            {newPassword && (
-              <EvKoreanFont size={0.9375} weight={500} color="#1A1A1A">
-                신규 비밀번호
-              </EvKoreanFont>
-            )}
+            <EvKoreanFont size={0.9375} weight={500} color="#1A1A1A">
+              신규 비밀번호
+            </EvKoreanFont>
           </EvFontBox>
           <EvRowBox width={'89.3%'} margin={'0.625rem auto 0 auto '} border="1px solid #dddddd" borderRadius="6px">
             <EvHelfInputInfo
@@ -237,7 +234,7 @@ export const EditPassword = () => {
               비밀번호 변경 완료
             </EvAbleFont>
           </EvBtnAble>
-        </ContentWrapper>
+        </EnterPageContainer>
       </PageLayout>
     </NavLayout>
   );

@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
-// import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import styled from 'styled-components';
 import { registerApi, userApi } from '../api/callApi';
 import { AxiosError } from 'axios';
-// import { accessTokenState, popNotiState, userInfoState } from '../recoil/store';
 import {
   EvBtnAble,
   EvKoreanFont,
@@ -14,40 +11,20 @@ import {
   EvFontBox,
   EvRowBox,
   EvColumnBox,
+  EnterPageContainer,
+  EnterContentContainer,
 } from '../component/element/BoxStyle';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
-
-const RegisterContainer = styled.div`
-  width: 100%;
-  max-width: 768px;
-  height: 100%;
-  /* background-color: #8e3939; */
-  overflow-y: auto;
-  position: relative;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const ContentContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+import { useRecoilValue } from 'recoil';
+import { commonPopConfirmState } from '../recoil/store';
+import { PopConfirmNew } from '../component/element';
 
 export const ChooseCharacter = () => {
-  // const [nickname, setNickname] = useState<string>('');
-  // const [popNoti, setPopNoti] = useRecoilState(popNotiState);
-  // const [informMsg, setInformMsg] = useState<string | undefined>('');
-  // const [quitOk, setQuitOk] = useState<boolean>(false);
-  // const [check, setCheck] = useState<boolean>(false);
   const [select, setSelect] = useState<string>('');
-  // const [nickConfirm, setNickConfirm] = useState<boolean>(false);
-  // const accessLoginToken = useSetRecoilState(accessTokenState);
-  // const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const localToken = localStorage.getItem('recoil-persist');
 
+  const queryClinet = useQueryClient();
+  const confirmState = useRecoilValue(commonPopConfirmState);
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   const nav = useNavigate();
@@ -84,6 +61,7 @@ export const ChooseCharacter = () => {
   //캐릭터 선택 API
   const userCharacterChooseData = useMutation((type: { type: string }) => registerApi.userCharacterChooseApi(type), {
     onSuccess: (token) => {
+      queryClinet.cancelQueries('userData');
       openSuccessConfirm({
         title: `${selectName} 선택완료🙂`,
         button: {
@@ -116,8 +94,9 @@ export const ChooseCharacter = () => {
   });
 
   return (
-    <RegisterContainer>
-      <ContentContainer>
+    <EnterPageContainer>
+      {confirmState.visible && <PopConfirmNew {...confirmState} />}
+      <EnterContentContainer>
         <EvImgBox
           width={'5.625rem'}
           height={2.7}
@@ -217,7 +196,7 @@ export const ChooseCharacter = () => {
             시작하기
           </EvAbleFont>
         </EvBtnAble>
-      </ContentContainer>
-    </RegisterContainer>
+      </EnterContentContainer>
+    </EnterPageContainer>
   );
 };

@@ -9,17 +9,9 @@ import SockJS from 'sockjs-client';
 import { useQuery, useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/store';
-import { userApi } from '../api/callApi';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import setupInterceptorsTo from '../api/Interceptiors';
-import {
-  EvBox,
-  EvCheckHelfBox,
-  EvHelfInputInfo,
-  EvImgBox,
-  EvKoreanFont,
-  EvRowBox,
-} from '../component/element/BoxStyle';
+import { EvCheckHelfBox, EvHelfInputInfo, EvRowBox } from '../component/element/BoxStyle';
 import { chatList } from '../Types/chat';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
@@ -116,7 +108,6 @@ const InformChatBox = styled.div`
 
 const YourTextBox = styled.div`
   max-width: calc(80% - 6.5rem);
-  /* width: 150px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -125,15 +116,12 @@ const YourTextBox = styled.div`
   border-radius: 0px 12px 12px 12px;
   box-shadow: 0px 2px 8px rgba(235, 197, 0, 0.25);
   padding: 10px 14px;
-  /* white-space: pre-wrap; */
-  /* word-break: keep-all; */
   word-wrap: break-word;
   word-break: break-all;
 `;
 
 const MyTextBox = styled.div`
   max-width: calc(80% - 3.8rem);
-  /* width: 150px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -142,9 +130,6 @@ const MyTextBox = styled.div`
   border-radius: 12px 12px 0px 12px;
   padding: 10px 14px;
   box-shadow: 0px 2px 8px rgba(235, 197, 0, 0.25);
-  /* word-break: normal; */
-  /* white-space: nowrap; */
-  /* word-break: break-all; */
   word-wrap: break-word;
   word-break: break-all;
 `;
@@ -170,13 +155,11 @@ type font = {
 const KoreanFont = styled.p`
   font-size: ${(props: font) => props.size}rem;
   color: ${(props: font) => props.color};
-  /* display: flex; */
-  /* margin: 0 0 0 0; */
 `;
 
 const MessageSendBox = styled.div`
-  position: fixed;
-  bottom: 4.5rem;
+  position: absolute;
+  bottom: 0rem;
   background: #feed91;
   height: 3.5rem;
   width: 100%;
@@ -188,7 +171,6 @@ const MessageSendBox = styled.div`
 `;
 const TimeBox = styled.div`
   display: flex;
-  /* background-color: red; */
   align-items: flex-end;
 `;
 
@@ -233,28 +215,7 @@ export const ChattingRoom = () => {
     onSuccess: (data) => {
       setchatData(data.data.content);
     },
-    // onError: (error: AxiosError<{ msg: string }>) => {
-    //   if (error.message === 'Request failed with status code 401') {
-    //     setTimeout(() => chattingMessage((data: FieldValues)), 200);
-    //   } else {
-    // openErrorConfirm({
-    //   title: error.response?.data.msg,
-    // });
-    //   }
-    // },
   });
-
-  //유저정보 가져오기 API >> 상단 nav 있으니까 문제없으면 삭제하기
-  // const userInformData = useQuery('userData', userApi.userInformApi, {
-  //   onSuccess: (data) => {
-  //     setUserInfoData(data.data);
-  //   },
-  //   onError: (error: AxiosError) => {
-  //     if (error.message === 'Request failed with status code 404') {
-  //       // nav(-1);
-  //     }
-  //   },
-  // });
 
   //시간 변환
   function messageTime(msgtime: string) {
@@ -305,31 +266,31 @@ export const ChattingRoom = () => {
   }
 
   // 연결해제, 구독해제
-  function wsDisConnectUnsubscribe() {
-    try {
-      if (localToken) {
-        const toto = JSON.parse(localToken);
+  // function wsDisConnectUnsubscribe() {
+  //   try {
+  //     if (localToken) {
+  //       const toto = JSON.parse(localToken);
 
-        if (toto) {
-          const data = {
-            type: 'QUIT',
-            roomId: roomIdName,
-            sender: userInfoData.nick,
-            message: myText,
-          };
-          ws.disconnect(
-            () => {
-              ws.send('/pub/chat/message', { Authorization: toto.accessTokenState }, JSON.stringify(data));
-              ws.unsubscribe(`${roomIdName}`);
-            },
-            { Authorization: toto.accessTokenState },
-          );
-        }
-      }
-    } catch (error) {
-      // console.log(error);
-    }
-  }
+  //       if (toto) {
+  //         const data = {
+  //           type: 'QUIT',
+  //           roomId: roomIdName,
+  //           sender: userInfoData.nick,
+  //           message: myText,
+  //         };
+  //         ws.disconnect(
+  //           () => {
+  //             ws.send('/pub/chat/message', { Authorization: toto.accessTokenState }, JSON.stringify(data));
+  //             ws.unsubscribe(`${roomIdName}`);
+  //           },
+  //           { Authorization: toto.accessTokenState },
+  //         );
+  //       }
+  //     }
+  //   } catch (error) {
+  //     // console.log(error);
+  //   }
+  // }
 
   // 웹소켓이 연결될 때 까지 실행하는 함수
   function waitForConnection(ws: Stomp.Client, callback: () => void) {
@@ -343,7 +304,7 @@ export const ChattingRoom = () => {
           waitForConnection(ws, callback);
         }
       },
-      1, // 밀리초 간격으로 실행
+      // 밀리초 간격으로 실행
     );
   }
 

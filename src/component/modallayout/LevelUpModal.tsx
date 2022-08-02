@@ -1,11 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { modalGatherState } from '../../recoil/store';
-import { useState } from 'react';
-import { useMutation } from 'react-query';
-import { registerApi, userApi } from '../../api/callApi';
-import { AxiosError } from 'axios';
-import { EvBox, EvBtn, EvBtnAble, EvEnglishFont, EvKoreanFont } from '../element/BoxStyle';
+import { EvBox, EvBtn, EvEnglishFont, EvKoreanFont } from '../element/BoxStyle';
 
 const Slide = keyframes`
     0% {
@@ -30,12 +26,6 @@ const ModalBackground = styled.div`
   width: 100%;
   z-index: 8;
 `;
-
-type box = {
-  width?: number | string;
-  height?: number | string;
-  margin?: string;
-};
 
 const BoxWrap = styled.div`
   display: flex;

@@ -1,24 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { modalGatherState, userInfoState } from '../../recoil/store';
-import { useState } from 'react';
-import { useMutation } from 'react-query';
-import { registerApi, userApi } from '../../api/callApi';
-import { AxiosError } from 'axios';
-import {
-  EvAbleFont,
-  EvBtn,
-  EvBtnAble,
-  EvCheckHelfBox,
-  EvColumnBox,
-  EvFontBox,
-  EvImgBox,
-  EvKoreanFont,
-  EvRowBox,
-} from '../element/BoxStyle';
-import { SignUpBtnAble, SignUpInputInfo } from '../../page';
-import { useCommonConfirm } from '../../hooks/useCommonConfirm';
-import { useNavigate } from 'react-router';
+import { EvBtn, EvFontBox, EvImgBox, EvKoreanFont, EvRowBox } from '../element/BoxStyle';
 
 const Slide = keyframes`
     0% {
@@ -49,9 +32,8 @@ const BoxWrap = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  position: fixed;
-  bottom: 4.2rem;
+  position: absolute;
+  bottom: 0rem;
   width: 100%;
   height: 26.9375rem;
   border-radius: 20px 20px 0px 0px;
@@ -59,14 +41,12 @@ const BoxWrap = styled.div`
   animation: ${Slide} 0.6s ease;
   background-image: url(/assets/팝업_구글폼작성이벤트.svg);
   background-size: 23.4375rem;
-
   background-repeat: no-repeat;
   background-position: top;
 `;
 
 const ResearchPopup = () => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
-  const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
 
   return (
     <>

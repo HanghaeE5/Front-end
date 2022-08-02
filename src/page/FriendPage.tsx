@@ -2,36 +2,15 @@ import styled from 'styled-components';
 import { NavLayout } from '../component/layout/NavLayout';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { AiOutlineCheck } from 'react-icons/ai';
-import { BsQuestionCircle } from 'react-icons/bs';
-import { ReactComponent as DirectionIcon } from '../asset/icons/direction.svg';
 
-import { accessTokenState, modalGatherState, userInfoState } from '../recoil/store';
+import { modalGatherState } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import EditPhotoModal from '../component/modallayout/EditPhotoModal';
 import { useQuery, useQueryClient } from 'react-query';
-import { userApi } from '../api/callApi';
-import { Typography, Wrapper } from '../component/element';
-import { PATH } from '../route/routeList';
-import { NoHeaderPageLayout } from '../component/layout/NoHeaderPageLayout';
-import { PageLayout } from '../component/layout/PageLayout';
-import {
-  EvBox,
-  EvBtn,
-  EvColumnBox,
-  EvEnglishFont,
-  EvFontBox,
-  EvKoreanFont,
-  EvRowBox,
-} from '../component/element/BoxStyle';
-import { ReactComponent as Excercise } from '../asset/icons/todoIcon/icon_exercise.svg';
-import { ReactComponent as PromiseIcon } from '../asset/icons/todoIcon/icon_promise.svg';
-import { ReactComponent as Shopping } from '../asset/icons/todoIcon/icon_shopping.svg';
-import { ReactComponent as Study } from '../asset/icons/todoIcon/icon_study.svg';
-import axios, { AxiosError } from 'axios';
-import LevelUpModal from '../component/modallayout/LevelUpModal';
-import StepUpModal from '../component/modallayout/StepUpModal';
+import { Wrapper } from '../component/element';
+import { EvBox, EvColumnBox, EvFontBox, EvKoreanFont } from '../component/element/BoxStyle';
+import axios from 'axios';
 import ExpBar from '../component/element/ExpBar';
 import setupInterceptorsTo from '../api/Interceptiors';
 import { useParams } from 'react-router';
@@ -190,11 +169,12 @@ export const FriendPage = () => {
                 borderRadius="50%"
               />
             </EvBox>
+
             <EvBox direction="row" margin="1rem 0 0 0 " height={2.125} style={{ zIndex: 3 }}>
               <EvBox
                 width={'9.125rem'}
                 height={2.125}
-                margin={'0 auto '}
+                margin={'0 1rem 0 7.125rem'}
                 border="1px solid #DDDDDD"
                 borderRadius="100px"
                 backgroundColor="#ffffff"
@@ -203,6 +183,16 @@ export const FriendPage = () => {
                   {frienduserInfoData?.nick}
                 </EvKoreanFont>
               </EvBox>
+              <EvBox
+                width={'1.3rem'}
+                height={1.3}
+                margin={'auto 5.5rem auto 0rem'}
+                url="url(/assets/friendadd.png)"
+                isCursor={true}
+                onClick={() => {
+                  setmodalGather({ ...modalGather, editNicknameModal: true });
+                }}
+              ></EvBox>
             </EvBox>
             <EditNicknameModal />
 

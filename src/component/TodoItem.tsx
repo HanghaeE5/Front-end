@@ -1,10 +1,7 @@
-import { AiFillCheckCircle, AiOutlineCheckCircle } from 'react-icons/ai';
 import { VscDebugStackframeDot } from 'react-icons/vsc';
-import { ITodoItem, TodoDoneResponse, TodoEvent } from '../Types/todo';
+import { ITodoItem, TodoEvent } from '../Types/todo';
 import { Typography, Wrapper } from './element';
 import { TodoItemWrapper, TodoLabel, TodoTitle } from './styledComponent/TodoPageComponents';
-import { useMutation, useQueryClient } from 'react-query';
-import { todoQueryKey, updateDoneTodo } from '../api/todoApi';
 import styled from 'styled-components';
 import { ReactComponent as Trash } from '../asset/icons/can.svg';
 import { ReactComponent as DoingIcon } from '../asset/icons/check_doing.svg';

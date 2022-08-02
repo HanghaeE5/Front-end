@@ -45,7 +45,7 @@ const MenuItem = ({ isCurrentMenu, onClick, icon, selectIcon }: MenuItemProps) =
 };
 export const BottomNavLayout = () => {
   const nav = useNavigate();
-  const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
+  const [, setmodalGather] = useRecoilState(modalGatherState);
   const isCurrentMenu = (menuPath: string) => window.location.pathname.includes(menuPath);
   const movePage = (path: string) => {
     nav(path);

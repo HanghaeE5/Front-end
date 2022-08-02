@@ -57,7 +57,6 @@ function ExpBar(props: exptype) {
           rotation: 215,
           circumference: 290,
           borderRadius: 20,
-          hoverBackgroundColor: '#ffffff',
         },
       ],
     };

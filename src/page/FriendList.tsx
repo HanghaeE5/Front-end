@@ -15,14 +15,15 @@ import { friendList } from '../Types/user';
 import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
-const ContentWrapper = styled.div`
+export const PageContentWrapper = styled.div`
   height: 100%;
   overflow-y: auto;
+  background-color: #ffffff;
   //스크롤바 없애기
   ::-webkit-scrollbar {
     display: none;
   }
-  section:nth-of-type(1) {
+  /* section:nth-of-type(1) {
     height: 10rem;
     display: flex;
     flex-direction: column;
@@ -34,7 +35,7 @@ const ContentWrapper = styled.div`
     overflow-y: scroll;
     height: 100%;
     background-color: ${({ theme }) => theme.color.grayLight};
-  }
+  } */
 `;
 
 type box = {
@@ -241,7 +242,7 @@ export const FriendList = () => {
   return (
     <NavLayout>
       <PageLayout title="친구 목록">
-        <ContentWrapper>
+        <PageContentWrapper>
           {/* 요청 온 친구 */}
           <Box width="4.75rem" margin="1.875rem auto 0rem 5.3% ">
             <KoreanFont size={0.9375} color="#1A1A1A">
@@ -343,7 +344,7 @@ export const FriendList = () => {
                       </FriendNameTextBox>
                       <Badge>{`Lv.${myfriend.characterLevel}`}</Badge>
                     </RowBox>
-                    {confirmState.visible && <PopConfirmNew {...confirmState} />}
+                    {/* {confirmState.visible && <PopConfirmNew {...confirmState} />} */}
                     <Box
                       isCursor={true}
                       width={'1.5rem'}
@@ -386,7 +387,7 @@ export const FriendList = () => {
             }}
           />
           <FriendAddModal />
-        </ContentWrapper>
+        </PageContentWrapper>
       </PageLayout>
     </NavLayout>
   );

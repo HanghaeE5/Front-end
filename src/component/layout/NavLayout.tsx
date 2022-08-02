@@ -1,5 +1,8 @@
 import { PropsWithChildren } from 'react';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
+import { commonPopConfirmState } from '../../recoil/store';
+import { PopConfirmNew } from '../element';
 import { BottomNavLayout } from './BottomNavBar';
 import { TopNavBar } from './TopNavBar';
 
@@ -27,9 +30,11 @@ const BodyWrapper = styled.div`
 `;
 
 export const NavLayout = ({ children }: PropsWithChildren) => {
+  const confirmState = useRecoilValue(commonPopConfirmState);
   return (
     <LayoutContainer>
       <TopNavBar />
+      {confirmState.visible && <PopConfirmNew {...confirmState} />}
       <BodyWrapper>{children}</BodyWrapper>
       <BottomNavLayout />
     </LayoutContainer>

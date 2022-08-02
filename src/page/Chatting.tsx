@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { chattingApi, friendApi } from '../api/callApi';
 import { NavLayout } from '../component/layout/NavLayout';
@@ -14,28 +14,7 @@ import { EvAbleFont, EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont } from '../c
 import { ReactComponent as Empty } from '../asset/icons/icon_empty.svg';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 import { PopConfirmNew, PopConfirmProps } from '../component/element';
-
-const ContentWrapper = styled.div`
-  height: 100%;
-  overflow-y: auto;
-  //스크롤바 없애기
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  section:nth-of-type(1) {
-    height: 10rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 1rem;
-  }
-
-  section:nth-of-type(2) {
-    overflow-y: scroll;
-    height: 100%;
-    background-color: ${({ theme }) => theme.color.grayLight};
-  }
-`;
+import { PageContentWrapper } from './FriendList';
 
 type box = {
   width?: number | string;
@@ -288,7 +267,7 @@ export const Chatting = () => {
   return (
     <NavLayout>
       <PageLayout title="채팅">
-        <ContentWrapper>
+        <PageContentWrapper>
           <RowBox margin={'1.875rem 0 1.875rem 0'}>
             <BtnBox
               onClick={() => {
@@ -433,7 +412,7 @@ export const Chatting = () => {
               );
             })
           )}
-        </ContentWrapper>
+        </PageContentWrapper>
       </PageLayout>
     </NavLayout>
   );

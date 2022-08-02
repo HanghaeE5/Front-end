@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Board } from '../Types/community';
 import { Badge, DropdownMenu, Img, Typography, Wrapper } from './element';
 import { BsDot } from 'react-icons/bs';
-import { BiShareAlt } from 'react-icons/bi';
 import { useNavigate } from 'react-router';
 
 const DropdownMenuButton = styled(DropdownMenu)`

@@ -39,8 +39,8 @@ const BoxWrap = styled.div`
   width: 100%;
   height: 30.68rem;
   border-radius: 20px 20px 0px 0px;
-  position: fixed;
-  bottom: 4.1rem;
+  position: absolute;
+  bottom: 0rem;
   background-color: #ffffff;
   animation: ${Slide} 0.6s ease;
 `;

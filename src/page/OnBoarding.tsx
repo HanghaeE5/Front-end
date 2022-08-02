@@ -8,36 +8,16 @@ import { AxiosError } from 'axios';
 import { accessTokenState, popNotiState, userInfoState } from '../recoil/store';
 import { PopNoti } from '../component/element/PopNoti';
 
-import { EvBtnAble, EvAbleFont } from '../component/element/BoxStyle';
+import { EvBtnAble, EvAbleFont, EnterPageContainer, EnterContentContainer } from '../component/element/BoxStyle';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 import { PATH } from '../route/routeList';
 import { OnBoardingSplide } from '../component/element/OnBoardingSplide';
 
-const RegisterContainer = styled.div`
-  width: 100%;
-  max-width: 768px;
-  height: 100%;
-  /* background-color: #8e3939; */
-  overflow-x: hidden;
-  overflow-y: auto;
-  position: relative;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const ContentContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
 export const OnBoarding = () => {
   const nav = useNavigate();
   return (
-    <RegisterContainer>
-      <ContentContainer>
+    <EnterPageContainer>
+      <EnterContentContainer>
         <OnBoardingSplide />
 
         <EvBtnAble
@@ -52,7 +32,7 @@ export const OnBoarding = () => {
             로그인 바로가기
           </EvAbleFont>
         </EvBtnAble>
-      </ContentContainer>
-    </RegisterContainer>
+      </EnterContentContainer>
+    </EnterPageContainer>
   );
 };

@@ -6,6 +6,7 @@ import { useMutation } from 'react-query';
 import { registerApi, userApi } from '../../api/callApi';
 import { AxiosError } from 'axios';
 import {
+  EvModalBackground,
   EvAbleFont,
   EvBtnAble,
   EvCheckHelfBox,
@@ -28,28 +29,14 @@ const Slide = keyframes`
     }
 `;
 
-const ModalBackground = styled.div`
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  left: 0;
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 5;
-`;
-
 const BoxWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: absolute;
   max-width: 768px;
-  position: fixed;
-  bottom: 4.1rem;
+  bottom: 0rem;
   width: 100%;
   height: 30.68rem;
   border-radius: 20px 20px 0px 0px;
@@ -155,7 +142,7 @@ const EditNicknameModal = () => {
   return (
     <>
       {modalGather.editNicknameModal && (
-        <ModalBackground
+        <EvModalBackground
           onClick={() => {
             setmodalGather({ ...modalGather, editNicknameModal: false });
             setNicknameGather({ nickname: '', nicknameOk: false });
@@ -265,7 +252,7 @@ const EditNicknameModal = () => {
               </EvAbleFont>
             </EvBtnAble>
           </BoxWrap>
-        </ModalBackground>
+        </EvModalBackground>
       )}
     </>
   );

@@ -1,11 +1,11 @@
 import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { modalGatherState, userInfoState } from '../../recoil/store';
-import { useEffect, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
-import { registerApi, userApi } from '../../api/callApi';
+import { useEffect } from 'react';
+import { useQuery } from 'react-query';
+import { userApi } from '../../api/callApi';
 import { AxiosError } from 'axios';
-import { EvBox, EvBtn, EvBtnAble, EvEnglishFont, EvKoreanFont } from '../element/BoxStyle';
+import { EvBox, EvBtn, EvEnglishFont, EvKoreanFont } from '../element/BoxStyle';
 
 const Slide = keyframes`
     0% {
@@ -31,17 +31,10 @@ const ModalBackground = styled.div`
   z-index: 8;
 `;
 
-type box = {
-  width?: number | string;
-  height?: number | string;
-  margin?: string;
-};
-
 const BoxWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
   width: 76%;
   height: 23.5rem;
   border-radius: 12px;
@@ -116,7 +109,6 @@ const StepUpModal = () => {
                 }
               />
             </EvBox>
-
             <EvBtn
               width={'84.2%'}
               height={3.75}
@@ -127,7 +119,6 @@ const StepUpModal = () => {
                 setmodalGather({ ...modalGather, stepUpModal: false });
               }}
             >
-              {' '}
               <EvKoreanFont size={1.25} color="#1A1A1A" weight={700} lineHeight={'26px'}>
                 닫기
               </EvKoreanFont>

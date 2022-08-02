@@ -19,6 +19,40 @@ type box = {
   backgroundColor?: string;
 };
 
+export const EnterPageContainer = styled.div`
+  width: 100%;
+  max-width: 768px;
+  height: 100%;
+  background-color: #ffffff;
+  overflow-y: auto;
+  position: relative;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const EnterContentContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* position: absolute; */
+`;
+
+export const EvModalBackground = styled.div`
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 5;
+`;
+
 export const EvBox = styled.div`
   display: flex;
   flex-direction: ${(props: box) => (props.direction ? props.direction : 'column')};

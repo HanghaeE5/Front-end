@@ -1,6 +1,4 @@
-import { Button, Img, PopConfirmNew, PopConfirmProps, Wrapper } from '../component/element';
-import { NavLayout } from '../component/layout/NavLayout';
-import { PageLayout } from '../component/layout/PageLayout';
+import { Button, PopConfirmNew, PopConfirmProps, Wrapper } from '../component/element';
 import { PostCard } from '../component/PostCard';
 import { Board } from '../Types/community';
 import { useNavigate, useParams } from 'react-router';
@@ -235,7 +233,7 @@ export const CommunityDetail = () => {
     <>
       {confirmState.visible && <PopConfirmNew {...confirmState} />}
 
-      <PostWrapper isColumn alignItems="start" height="100%" justifyContent="space-between">
+      <PostWrapper isColumn alignItems="start" height="100%" justifyContent="space-between" backgroundColor="#ffffff">
         <Wrapper isColumn alignItems="start" padding="0 0 2rem 0">
           <PostCard.PostHeader
             userImg={postDetail.authorProfileImageUrl}

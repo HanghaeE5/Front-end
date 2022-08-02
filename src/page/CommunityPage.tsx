@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-
 import { useInView } from 'react-intersection-observer';
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router';
@@ -8,7 +7,7 @@ import { ButtonFloating, Img, Select, SelectOption, TextInput, Typography, Wrapp
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PostCard } from '../component/PostCard';
-import { ContentWrapper, ScrollWrapper, SpinnerWrapper } from '../component/styledComponent/CommunityElements';
+import { ContentWrapper, SpinnerWrapper } from '../component/styledComponent/CommunityElements';
 import { PATH } from '../route/routeList';
 import { Board, CommunitySearchControl, FilterType, KeywordFilter } from '../Types/community';
 import { removeListDuplicate } from '../utils/removeListDuplicate';

@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { modalGatherState, userInfoState } from '../../recoil/store';
 import { useNavigate } from 'react-router';
 import { EvBox, EvKoreanFont } from '../element/BoxStyle';

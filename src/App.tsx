@@ -95,7 +95,7 @@ function App() {
       <div>
         <ThemeProvider theme={theme}>
           <BrowserRouter>
-            {confirmState.visible && <PopConfirmNew {...confirmState} />}
+            {/* {confirmState.visible && <PopConfirmNew {...confirmState} />} */}
             <Routes>
               {routeList.map((route) => (
                 <Route key={route.id} path={route.path} element={<route.page />} />

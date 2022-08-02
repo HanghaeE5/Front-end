@@ -1,41 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { registerApi, userApi } from '../api/callApi';
 import { AxiosError } from 'axios';
-import { accessTokenState, popNotiState, snsSignupNickname, userInfoState } from '../recoil/store';
+import {
+  accessTokenState,
+  commonPopConfirmState,
+  popNotiState,
+  snsSignupNickname,
+  userInfoState,
+} from '../recoil/store';
 import {
   EvBox,
   EvBtnAble,
-  EvInputInfo,
   EvKoreanFont,
   EvCheckFont,
   EvAbleFont,
   EvLogoBox,
   EvRowBox,
-  EvColumnBox,
   EvFontBox,
   EvHelfInputInfo,
   EvCheckHelfBox,
   EvLineBox,
   EvImgBox,
+  EnterPageContainer,
+  EnterContentContainer,
 } from '../component/element/BoxStyle';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 import { PATH } from '../route/routeList';
-
-const RegisterContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  max-width: 768px;
-  /* background-color: #8e3939; */
-  overflow-y: auto;
-  position: relative;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
+import { EventContentWrapper } from './EventPage';
+import { PopConfirmNew } from '../component/element';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -45,13 +41,6 @@ const HeaderContainer = styled.div`
   height: 3.75rem;
   background-color: #ffffff;
   margin: 0px auto 0px auto;
-`;
-
-const ContentContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 `;
 
 export const SignUpSNS = () => {
@@ -75,6 +64,7 @@ export const SignUpSNS = () => {
     setNickname(e.target.value);
   };
 
+  const confirmState = useRecoilValue(commonPopConfirmState);
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   //닉네임 중복확인 API
@@ -130,7 +120,7 @@ export const SignUpSNS = () => {
   };
   // console.log(userInfoData);
 
-  //유저정보 가져오기 API
+  // 유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
       setUserInfoData(data.data);
@@ -190,11 +180,16 @@ export const SignUpSNS = () => {
   }, [snsSignupNicknameOk]);
 
   if (userInformData.status === 'loading') {
-    return <EvImgBox width={'17rem'} height={15} margin="auto" url="url(/assets/캐릭터/브라우니2단계.gif)"></EvImgBox>;
+    return (
+      <EventContentWrapper>
+        <EvImgBox width={'17rem'} height={15} margin="auto" url="url(/assets/캐릭터/브라우니2단계.gif)" />
+      </EventContentWrapper>
+    );
   }
 
   return (
-    <RegisterContainer>
+    <EnterPageContainer>
+      {confirmState.visible && <PopConfirmNew {...confirmState} />}
       <HeaderContainer style={{ borderBottom: '1px solid #DDDDDD ' }}>
         <EvBox direction={'row'} margin={'1rem 0px 1rem   0px'}>
           <EvBox height={1.6875} margin={'0px auto'}>
@@ -205,7 +200,7 @@ export const SignUpSNS = () => {
         </EvBox>
       </HeaderContainer>
 
-      <ContentContainer>
+      <EnterContentContainer>
         <EvLogoBox margin={'3.4375rem auto 0 auto'} />
         <EvFontBox width={2.8125} height={1.5} margin={'4.375rem auto 0.625rem 5.3%'}>
           {nickname && (
@@ -300,7 +295,7 @@ export const SignUpSNS = () => {
             회원가입
           </EvAbleFont>
         </EvBtnAble>
-      </ContentContainer>
-    </RegisterContainer>
+      </EnterContentContainer>
+    </EnterPageContainer>
   );
 };

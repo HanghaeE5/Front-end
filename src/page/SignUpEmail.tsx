@@ -2,10 +2,12 @@ import { AxiosError } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { registerApi } from '../api/callApi';
+import { PopConfirmNew } from '../component/element';
 import {
+  EnterContentContainer,
   EvAbleFont,
   EvBtn,
   EvBtnAble,
@@ -21,24 +23,17 @@ import {
 } from '../component/element/BoxStyle';
 import { PageLayout } from '../component/layout/PageLayout';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
-import { popNotiState } from '../recoil/store';
+import { commonPopConfirmState, popNotiState } from '../recoil/store';
 import { PATH } from '../route/routeList';
 
 const InfoContainer = styled.div`
   height: 100%;
-  /* background-color: #f5b9d5; */
+  background-color: #ffffff;
   position: relative;
   overflow-y: auto;
   ::-webkit-scrollbar {
     display: none;
   }
-`;
-
-const ContentContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 `;
 
 type font = {
@@ -134,6 +129,7 @@ export const SignUpEmail = () => {
     !checkNickname(nickname) ||
     !checkPassword(password);
 
+  const confirmState = useRecoilValue(commonPopConfirmState);
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
 
   // 이메일 인증번호 발송 API
@@ -243,9 +239,9 @@ export const SignUpEmail = () => {
   return (
     <PageLayout title="회원가입">
       <InfoContainer>
-        <ContentContainer>
+        <EnterContentContainer>
           <EvLogoBox margin={'3.4375rem auto 0 auto'} />
-
+          {confirmState.visible && <PopConfirmNew {...confirmState} />}
           {/* 이메일 */}
           <EvFontBox width={2.8125} height={1.5} margin={'2.5rem auto 0.625rem 5.3%'}>
             <EvKoreanFont size={1} weight={700} color="rgba(147, 147, 147, 1)">
@@ -515,7 +511,7 @@ export const SignUpEmail = () => {
               로그인 페이지로 돌아가기
             </EvKoreanFont>
           </EvBtn>
-        </ContentContainer>
+        </EnterContentContainer>
       </InfoContainer>
     </PageLayout>
   );

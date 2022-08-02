@@ -1,5 +1,4 @@
 import { useRecoilState } from 'recoil';
-import { PopConfirmProps } from '../component/element';
 import { commonPopConfirmState } from '../recoil/store';
 
 interface OpenConfirmProps {

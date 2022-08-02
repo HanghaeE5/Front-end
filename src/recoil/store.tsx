@@ -1,9 +1,9 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 import { PopConfirmProps } from '../component/element';
-import { chatList, chattingList } from '../Types/chat';
-import { CommonConfirmProps, modalGather, popNoti } from '../Types/modal';
-import { UserInfo, FriendInfo, friendList } from '../Types/user';
+import { chattingList } from '../Types/chat';
+import { modalGather, popNoti } from '../Types/modal';
+import { UserInfo, friendList } from '../Types/user';
 const { persistAtom } = recoilPersist();
 
 export const atomKey = {
