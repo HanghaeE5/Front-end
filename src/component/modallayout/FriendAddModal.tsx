@@ -123,6 +123,7 @@ const FriendAddModal = () => {
                 friendnickname
                   ? () => {
                       friendAdd();
+                      setFriendNickname('');
                     }
                   : () => {
                       null;

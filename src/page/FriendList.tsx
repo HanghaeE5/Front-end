@@ -365,7 +365,7 @@ export const FriendList = () => {
                           optionalButton: {
                             text: '삭제',
                             onClick: () => {
-                              closeConfirm;
+                              closeConfirm();
                               setDeleteFriendName(myfriend.nick);
                               deleteFriend({ nick: myfriend.nick });
                             },
