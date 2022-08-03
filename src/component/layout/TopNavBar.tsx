@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
@@ -72,6 +72,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const localToken = localStorage.getItem('recoil-persist');
+  const queryClient = useQueryClient();
   const nav = useNavigate();
   const confirmState = useRecoilValue(commonPopConfirmState);
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
@@ -111,7 +112,6 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
     }
   }, [userInformData]);
 
-  const [alarmStore, setAlarmStore] = useState<any>([]);
   function alarm() {
     const id = userInfoData?.id;
 
@@ -119,10 +119,12 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
 
     eventSource.addEventListener('sse', function (event) {
       console.log(event.data);
-      setAlarmStore([...alarmStore, event.data]);
-
       const data = JSON.parse(event.data);
-
+      openSuccessConfirm({
+        title: '새로운 알림이 도착했어요!',
+        content: data.message,
+        // button: { onClick: () => queryClient.invalidateQueries('requestFriendLists') },
+      });
       (async () => {
         // 브라우저 알림
         const showNotification = () => {
@@ -156,12 +158,11 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
       })();
     });
   }
-  // useEffect(() => {
-  //   if (userInformData.status === 'success') {
-  //     alarm();
-  //   }
-  // }, [alarmStore]);
-  // console.log(alarmStore);
+  useEffect(() => {
+    if (userInformData.status === 'success') {
+      alarm();
+    }
+  }, [userInformData.status]);
   return (
     <TopNavWrapper>
       {/* {confirmState.visible && <PopConfirmNew {...confirmState} />} */}

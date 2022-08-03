@@ -2,6 +2,8 @@ import styled, { keyframes } from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { modalGatherState } from '../../recoil/store';
 import { EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont, EvRowBox } from '../element/BoxStyle';
+import { useQuery } from 'react-query';
+import { alarmApi } from '../../api/callApi';
 
 const Slide = keyframes`
     0% {
@@ -40,6 +42,12 @@ const BoxWrap = styled.div`
 
 const NotiModal = () => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
+  const alarmQuery = useQuery('alarmList', alarmApi.alarmListApi, {
+    onSuccess: (res) => {
+      console.log(res);
+    },
+  });
+  console.log(alarmQuery);
   return (
     <>
       {modalGather.notiModal && (

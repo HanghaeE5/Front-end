@@ -128,6 +128,11 @@ const enterPublicChattingRoomApi = async (roomId: { roomId: string }) => {
   return epcra;
 };
 
+const alarmListApi = async () => {
+  const ala = await callApi.get('/notification');
+  return ala;
+};
+
 export const registerApi = {
   joinApi: (data: { email: string; nick: string; password: string }) => joinApi(data),
   emilCertificationApi: (email: { email: string }) => emilCertificationApi(email),
@@ -162,4 +167,8 @@ export const chattingApi = {
   chattingRoomDetailApi: (id: { id: string }) => chattingRoomDetailApi(id),
   chattingRoomDeleteAPi: (roomId: { roomId: string }) => chattingRoomDeleteAPi(roomId),
   enterPublicChattingRoomApi: (roomId: { roomId: string }) => enterPublicChattingRoomApi(roomId),
+};
+
+export const alarmApi = {
+  alarmListApi: () => alarmListApi(),
 };
