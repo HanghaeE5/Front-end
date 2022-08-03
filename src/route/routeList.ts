@@ -14,6 +14,7 @@ import {
   ChooseCharacter,
   CommunitiPostingPage,
   EventPage,
+  AlarmPage,
 } from '../page';
 import { ReactElement } from 'react';
 import { MediaType } from '../page/MediaType';
@@ -132,5 +133,10 @@ export const routeList: IRoute[] = [
     id: 'event',
     path: PATH.EVENT,
     page: EventPage,
+  },
+  {
+    id: 'alarm',
+    path: '/alarm',
+    page: AlarmPage,
   },
 ];

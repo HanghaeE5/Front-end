@@ -15,3 +15,4 @@ export * from './FriendPage';
 export * from './Chatting';
 export * from './ChattingRoom';
 export * from './EventPage';
+export * from './AlarmPage';

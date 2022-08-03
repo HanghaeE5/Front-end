@@ -129,7 +129,7 @@ const enterPublicChattingRoomApi = async (roomId: { roomId: string }) => {
 };
 
 const alarmListApi = async () => {
-  const ala = await callApi.get('/notification');
+  const ala = await callApi.get('/notifications');
   return ala;
 };
 
