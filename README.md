@@ -4,7 +4,7 @@
 ## 👉[투두윗 사용해보기][todowith-link]
 [todowith-link]: https://todowith.co.kr '투두윗 바로가기!'
 [Notion 링크](https://www.notion.so/99-E-5-35d0ee3dd2054d5aa4e2c2515c1f4f45)  
-[소개 영상](URL)  
+[소개 영상](https://youtu.be/OnX8QW4dRqw)  
 
 
 #### TODO 와 WITH 을 합쳐 혼자만이 아닌 함께하는 즐거움을 주고, 이를 통해 재미있게 목표를 계획하고 달성할 수 있도록 도와주는 서비스
