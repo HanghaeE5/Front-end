@@ -7,16 +7,18 @@ import { modalGatherState } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Wrapper } from '../component/element';
 import { EvBox, EvColumnBox, EvFontBox, EvKoreanFont } from '../component/element/BoxStyle';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import ExpBar from '../component/element/ExpBar';
 import setupInterceptorsTo from '../api/Interceptiors';
 import { useParams } from 'react-router';
 import { FriendInfo } from '../Types/user';
 import { BadgeImgBox, EvRowBadgeWrap, TodoNumberBox } from './Main';
 import ExplainModal from '../component/modallayout/ExplainModal';
+import { friendApi } from '../api/callApi';
+import { useCommonConfirm } from '../hooks/useCommonConfirm';
 
 const MainContainer = styled.div`
   height: 100%;
@@ -111,12 +113,39 @@ export const FriendPage = () => {
 
   const nav = useNavigate();
 
+  const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
+
   const queryClient = useQueryClient();
   // 친구 유저정보 가져오는 API
   const baseApi = axios.create({
     baseURL: 'https://todowith.shop',
     timeout: 2000,
   });
+
+  //닉네임 친구추가 API
+  const friendAddData = useMutation((nick: { nick: string | undefined }) => friendApi.friendAddApi(nick), {
+    onSuccess: (token) => {
+      openSuccessConfirm({
+        title: `${frienduserInfoData?.nick}님께 친구 요청을 보냈습니다!`,
+      }),
+        setmodalGather({ ...modalGather, friendAddModal: false });
+    },
+    onError: (error: AxiosError<{ msg: string }>) => {
+      if (error.message === 'Request failed with status code 401') {
+        // setTimeout(() => friendAdd(), 200);
+      } else {
+        openErrorConfirm({
+          title: error.response?.data.msg,
+        });
+      }
+    },
+  });
+
+  const goFriendAdd = { nick: frienduserInfoData?.nick };
+
+  const friendAdd = () => {
+    friendAddData.mutate(goFriendAdd);
+  };
 
   const callApi = setupInterceptorsTo(baseApi);
   const friendParam = useParams();
@@ -190,7 +219,7 @@ export const FriendPage = () => {
                 url="url(/assets/friendadd.png)"
                 isCursor={true}
                 onClick={() => {
-                  setmodalGather({ ...modalGather, editNicknameModal: true });
+                  friendAdd();
                 }}
               ></EvBox>
             </EvBox>

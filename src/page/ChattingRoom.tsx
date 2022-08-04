@@ -332,8 +332,7 @@ export const ChattingRoom = () => {
         message: myText,
       };
       // 빈문자열이면 리턴
-      const blank = /[\s]/g;
-      if (myText === '' || blank.test(myText) == true) {
+      if (myText === '' || myText === ' ' || myText === '  ') {
         return;
       }
       // 로딩 중

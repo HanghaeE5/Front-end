@@ -88,6 +88,7 @@ function App() {
       </MainPageWrapper>
     );
   }
+
   return (
     <ResponsiveContainer>
       <img src={pcImg} />

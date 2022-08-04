@@ -70,8 +70,10 @@ const FriendAddModal = () => {
         title: `${friendnickname}님께 친구 요청을 보냈습니다!`,
       }),
         setmodalGather({ ...modalGather, friendAddModal: false });
+      setFriendNickname('');
     },
     onError: (error: AxiosError<{ msg: string }>) => {
+      setFriendNickname('');
       if (error.message === 'Request failed with status code 401') {
         setTimeout(() => friendAdd(), 200);
       } else {

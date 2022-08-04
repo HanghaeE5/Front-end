@@ -3,6 +3,7 @@ import { recoilPersist } from 'recoil-persist';
 import { PopConfirmProps } from '../component/element';
 import { chattingList } from '../Types/chat';
 import { modalGather, popNoti } from '../Types/modal';
+import { notificationList } from '../Types/notification';
 import { UserInfo, friendList } from '../Types/user';
 const { persistAtom } = recoilPersist();
 
@@ -41,6 +42,16 @@ export const userInfoState = atom<UserInfo>({
 export const popNotiState = atom<popNoti>({
   key: 'popNotiState',
   default: { openPopNoti: false, informMsg: '' },
+});
+
+export const notificationListState = atom<notificationList>({
+  key: 'notificationListState',
+  default: [],
+});
+
+export const alarmOnState = atom<boolean>({
+  key: 'alarmOnState',
+  default: false,
 });
 
 export const modalGatherState = atom<modalGather>({

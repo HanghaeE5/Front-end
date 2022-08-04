@@ -68,7 +68,7 @@ const profilePhotoEditApi = async (forms: FormData) => {
   return ppea;
 };
 
-const friendAddApi = async (nick: { nick: string }) => {
+const friendAddApi = async (nick: { nick: string | undefined }) => {
   const faa = await callApi.post('/friend/request', nick);
   return faa;
 };
@@ -128,6 +128,16 @@ const enterPublicChattingRoomApi = async (roomId: { roomId: string }) => {
   return epcra;
 };
 
+const alarmListApi = async () => {
+  const ala = await callApi.get('/notifications');
+  return ala;
+};
+
+const alarmReadApi = async () => {
+  const ara = await callApi.get('/notifications/read');
+  return ara;
+};
+
 export const registerApi = {
   joinApi: (data: { email: string; nick: string; password: string }) => joinApi(data),
   emilCertificationApi: (email: { email: string }) => emilCertificationApi(email),
@@ -147,7 +157,7 @@ export const userApi = {
 };
 
 export const friendApi = {
-  friendAddApi: (nick: { nick: string }) => friendAddApi(nick),
+  friendAddApi: (nick: { nick: string | undefined }) => friendAddApi(nick),
   friendListApi: () => friendListApi(),
   requestFriendListApi: () => requestFriendListApi(),
   allowFriendApi: (nick: { nick: string }) => allowFriendApi(nick),
@@ -162,4 +172,9 @@ export const chattingApi = {
   chattingRoomDetailApi: (id: { id: string }) => chattingRoomDetailApi(id),
   chattingRoomDeleteAPi: (roomId: { roomId: string }) => chattingRoomDeleteAPi(roomId),
   enterPublicChattingRoomApi: (roomId: { roomId: string }) => enterPublicChattingRoomApi(roomId),
+};
+
+export const alarmApi = {
+  alarmListApi: () => alarmListApi(),
+  alarmReadApi: () => alarmReadApi(),
 };

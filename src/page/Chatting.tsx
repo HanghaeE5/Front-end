@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { chattingApi, friendApi } from '../api/callApi';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { chattingListState, friendListState, userInfoState } from '../recoil/store';
+import { chattingListState, friendListState, notificationListState, userInfoState } from '../recoil/store';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import { EvAbleFont, EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont } from '../component/element/BoxStyle';
@@ -123,6 +123,7 @@ export const Chatting = () => {
   const [makeChattingRoomName, setMakeChattingRoomName] = useState<string>('');
   const [makeChattingRoomNickname, setMakeChattingRoomNickname] = useState<string>('');
   const [deleteChattingroom, setDeleteChattingroom] = useState<string>('');
+
   const nav = useNavigate();
   const queryClient = useQueryClient();
 
@@ -266,6 +267,7 @@ export const Chatting = () => {
 
   return (
     <NavLayout>
+      {confirmState.visible && <PopConfirmNew {...confirmState} />}
       <PageLayout title="채팅">
         <PageContentWrapper>
           <RowBox margin={'1.875rem 0 1.875rem 0'}>
@@ -332,7 +334,7 @@ export const Chatting = () => {
                         {chatting.name.length > 16 ? chatting.name.slice(0, 16) + '...' : chatting.name}
                       </KoreanFont>
                     </ChattingRoomTextBox>
-                    {confirmState.visible && <PopConfirmNew {...confirmState} />}
+
                     <RowBox
                       width={'2rem'}
                       height={2}

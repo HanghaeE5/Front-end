@@ -3,7 +3,7 @@ import { NavLayout } from '../component/layout/NavLayout';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { AiOutlineCheck } from 'react-icons/ai';
 
-import { modalGatherState } from '../recoil/store';
+import { alarmOnState, modalGatherState, notificationListState } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -25,10 +25,11 @@ import { useParams } from 'react-router';
 import { FriendInfo } from '../Types/user';
 import { BadgeImgBox, EvRowBadgeWrap, TodoNumberBox } from './Main';
 import ExplainModal from '../component/modallayout/ExplainModal';
-import { friendApi } from '../api/callApi';
+import { alarmApi, friendApi } from '../api/callApi';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
 import { PageLayout } from '../component/layout/PageLayout';
 import { PageContentWrapper } from './FriendList';
+import { notificationList } from '../Types/notification';
 
 const AlarmBoxWrap = styled(EvColumnBox)`
   margin: 1.875rem auto;
@@ -81,7 +82,19 @@ const AlarmDateFont = styled(EvEnglishFont)`
 `;
 
 export const AlarmPage = () => {
+  const [alarmList, setAlarmList] = useRecoilState(notificationListState);
   const queryClient = useQueryClient();
+  const [alarmOn, setAlarmOn] = useRecoilState(alarmOnState);
+
+  //알림페이지 API
+  const getAlarmReadQuery = useQuery('alarmReadLists', alarmApi.alarmReadApi, {
+    //여기서 리코일에 저장
+    onSuccess: (data) => {
+      queryClient.invalidateQueries('alarmLists');
+      setAlarmOn(false);
+      // console.log(data.data);
+    },
+  });
 
   //시간 변환
   function alarmTime(altime: string) {
@@ -105,7 +118,7 @@ export const AlarmPage = () => {
     <NavLayout>
       <PageLayout title="알림">
         <PageContentWrapper>
-          {/* <AlarmBoxWrap>
+          <AlarmBoxWrap>
             {alarmList.map((alarmcontent, alarmcontentindex) => {
               if (alarmcontent.type !== '채팅') {
                 return (
@@ -131,7 +144,7 @@ export const AlarmPage = () => {
                 );
               }
             })}
-          </AlarmBoxWrap> */}
+          </AlarmBoxWrap>
         </PageContentWrapper>
       </PageLayout>
     </NavLayout>

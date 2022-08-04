@@ -1,15 +1,20 @@
 import { AxiosError } from 'axios';
-import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useEffect, useRef, useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from 'styled-components';
-import { userApi } from '../../api/callApi';
+import { alarmApi, userApi } from '../../api/callApi';
 import { useCommonConfirm } from '../../hooks/useCommonConfirm';
-import { commonPopConfirmState, modalGatherState, userInfoState } from '../../recoil/store';
+import {
+  alarmOnState,
+  commonPopConfirmState,
+  modalGatherState,
+  notificationListState,
+  userInfoState,
+} from '../../recoil/store';
 import { PopConfirmNew } from '../element';
 import { EvImgBox } from '../element/BoxStyle';
-import NotiModal from '../modallayout/NotiModal';
 import ProfileMenuModal from '../modallayout/ProfileMenuModal';
 
 const TopNavWrapper = styled.nav`
@@ -72,9 +77,13 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const localToken = localStorage.getItem('recoil-persist');
+  const queryClient = useQueryClient();
   const nav = useNavigate();
   const confirmState = useRecoilValue(commonPopConfirmState);
   const { openSuccessConfirm, openErrorConfirm } = useCommonConfirm();
+  const [alarmList, setAlarmList] = useRecoilState(notificationListState);
+  const [alarmOn, setAlarmOn] = useRecoilState(alarmOnState);
+
   //유저정보 가져오기 API
   const userInformData = useQuery('userData', userApi.userInformApi, {
     onSuccess: (data) => {
@@ -102,6 +111,61 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
     },
   });
 
+  //알림페이지 API
+  const getAlarmQuery = useQuery('alarmLists', alarmApi.alarmListApi, {
+    //여기서 리코일에 저장
+    onSuccess: (data) => {
+      setAlarmList(data.data);
+    },
+  });
+
+  function alarm() {
+    const id = userInfoData?.id;
+
+    const eventSource = new EventSource(`https://todowith.shop/subscribe/${id}`);
+
+    eventSource.addEventListener('sse', function (event) {
+      // console.log(event.data);
+      const data = JSON.parse(event.data);
+      openSuccessConfirm({
+        title: '새로운 알림이 도착했어요!',
+        content: data.message,
+        button: { onClick: () => queryClient.invalidateQueries() },
+      });
+      (async () => {
+        // 브라우저 알림
+        const showNotification = () => {
+          const notification = new Notification('코드 봐줘', {
+            body: data.content,
+          });
+
+          setTimeout(() => {
+            notification.close();
+          }, 10 * 1000);
+
+          notification.addEventListener('click', () => {
+            window.open(data.url, '_blank');
+          });
+        };
+
+        // 브라우저 알림 허용 권한
+        let granted = false;
+
+        if (Notification.permission === 'granted') {
+          granted = true;
+        } else if (Notification.permission !== 'denied') {
+          const permission = await Notification.requestPermission();
+          granted = permission === 'granted';
+        }
+
+        // 알림 보여주기
+        if (granted) {
+          showNotification();
+        }
+      })();
+    });
+  }
+
   useEffect(() => {
     if (!localToken) {
       // console.log('탑바에서 보내는것');
@@ -110,6 +174,21 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
       userInformData.refetch();
     }
   }, [userInformData]);
+
+  useEffect(() => {
+    for (let i = 0; i < alarmList.length; i++) {
+      if (alarmList[i].readState === false) {
+        setAlarmOn(true);
+        break;
+      }
+    }
+  }, [alarmList]);
+
+  useEffect(() => {
+    if (userInformData.status === 'success') {
+      alarm();
+    }
+  }, [userInformData.status]);
 
   return (
     <TopNavWrapper>
@@ -160,12 +239,22 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
               editPhotoModal: false,
               profileMenuModal: false,
               friendAddModal: false,
-              notiModal: true,
               explainModal: false,
               researchPopup: false,
             });
+            nav('/alarm');
+            setAlarmOn(false);
           }}
-        />
+        >
+          {alarmOn && (
+            <EvImgBox
+              width="0.5rem"
+              height={0.5}
+              margin={'0.3rem auto auto 1.4rem'}
+              url="url(/assets/nav/reddot.svg)"
+            />
+          )}
+        </Box>
         <Box
           width="1.6rem"
           height={1.6}
@@ -192,7 +281,6 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
           }}
         />
       </RowBox>
-      <NotiModal />
       <ProfileMenuModal isWithBanner={isWithBanner} />
     </TopNavWrapper>
   );
