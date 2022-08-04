@@ -92,7 +92,7 @@ export const AlarmPage = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries('alarmLists');
       setAlarmOn(false);
-      console.log(data.data);
+      // console.log(data.data);
     },
   });
 

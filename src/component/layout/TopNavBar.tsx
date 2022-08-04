@@ -116,8 +116,6 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
     //여기서 리코일에 저장
     onSuccess: (data) => {
       setAlarmList(data.data);
-
-      console.log(data);
     },
   });
 
@@ -127,7 +125,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
     const eventSource = new EventSource(`https://todowith.shop/subscribe/${id}`);
 
     eventSource.addEventListener('sse', function (event) {
-      console.log(event.data);
+      // console.log(event.data);
       const data = JSON.parse(event.data);
       openSuccessConfirm({
         title: '새로운 알림이 도착했어요!',
@@ -178,7 +176,6 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
   }, [userInformData]);
 
   useEffect(() => {
-    console.log(alarmList);
     for (let i = 0; i < alarmList.length; i++) {
       if (alarmList[i].readState === false) {
         setAlarmOn(true);
