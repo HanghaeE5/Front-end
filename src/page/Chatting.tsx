@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { chattingApi, friendApi } from '../api/callApi';
 import { NavLayout } from '../component/layout/NavLayout';
 import { PageLayout } from '../component/layout/PageLayout';
-import { chattingListState, friendListState, userInfoState } from '../recoil/store';
+import { chattingListState, friendListState, notificationListState, userInfoState } from '../recoil/store';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import { EvAbleFont, EvColumnBox, EvFontBox, EvImgBox, EvKoreanFont } from '../component/element/BoxStyle';
@@ -123,6 +123,7 @@ export const Chatting = () => {
   const [makeChattingRoomName, setMakeChattingRoomName] = useState<string>('');
   const [makeChattingRoomNickname, setMakeChattingRoomNickname] = useState<string>('');
   const [deleteChattingroom, setDeleteChattingroom] = useState<string>('');
+
   const nav = useNavigate();
   const queryClient = useQueryClient();
 

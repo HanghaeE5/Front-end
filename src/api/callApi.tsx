@@ -133,6 +133,11 @@ const alarmListApi = async () => {
   return ala;
 };
 
+const alarmReadApi = async () => {
+  const ara = await callApi.get('/notifications/read');
+  return ara;
+};
+
 export const registerApi = {
   joinApi: (data: { email: string; nick: string; password: string }) => joinApi(data),
   emilCertificationApi: (email: { email: string }) => emilCertificationApi(email),
@@ -171,4 +176,5 @@ export const chattingApi = {
 
 export const alarmApi = {
   alarmListApi: () => alarmListApi(),
+  alarmReadApi: () => alarmReadApi(),
 };

@@ -3,7 +3,7 @@ import { NavLayout } from '../component/layout/NavLayout';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { AiOutlineCheck } from 'react-icons/ai';
 
-import { modalGatherState, notificationListState } from '../recoil/store';
+import { alarmOnState, modalGatherState, notificationListState } from '../recoil/store';
 import EditNicknameModal from '../component/modallayout/EditNicknameModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -83,7 +83,18 @@ const AlarmDateFont = styled(EvEnglishFont)`
 
 export const AlarmPage = () => {
   const [alarmList, setAlarmList] = useRecoilState(notificationListState);
+  const queryClient = useQueryClient();
+  const [alarmOn, setAlarmOn] = useRecoilState(alarmOnState);
+
   //알림페이지 API
+  const getAlarmReadQuery = useQuery('alarmReadLists', alarmApi.alarmReadApi, {
+    //여기서 리코일에 저장
+    onSuccess: (data) => {
+      queryClient.invalidateQueries('alarmLists');
+      setAlarmOn(false);
+      console.log(data.data);
+    },
+  });
 
   //시간 변환
   function alarmTime(altime: string) {
@@ -109,27 +120,29 @@ export const AlarmPage = () => {
         <PageContentWrapper>
           <AlarmBoxWrap>
             {alarmList.map((alarmcontent, alarmcontentindex) => {
-              return (
-                <AlarmBox key={alarmcontentindex}>
-                  <AlarmTextBox>
-                    <EvRowBox width={'100%'} style={{ justifyContent: 'flex-start' }}>
-                      <EvImgBox
-                        width={'0.625rem'}
-                        height="0.625"
-                        url="url(/assets/yellowdot.svg)"
-                        margin="0.4375rem 0.625rem auto 0"
-                      />
-                      <AlarmFontBox>
-                        <AlarmFont>
-                          <span>[{alarmcontent.type}]</span> {alarmcontent.message}
-                        </AlarmFont>
+              if (alarmcontent.type !== '채팅') {
+                return (
+                  <AlarmBox key={alarmcontentindex}>
+                    <AlarmTextBox>
+                      <EvRowBox width={'100%'} style={{ justifyContent: 'flex-start' }}>
+                        <EvImgBox
+                          width={'0.625rem'}
+                          height="0.625"
+                          url="url(/assets/yellowdot.svg)"
+                          margin="0.4375rem 0.625rem auto 0"
+                        />
+                        <AlarmFontBox>
+                          <AlarmFont>
+                            <span>[{alarmcontent.type}]</span> {alarmcontent.message}
+                          </AlarmFont>
 
-                        <AlarmDateFont>{alarmTime(alarmcontent.createdDate)}</AlarmDateFont>
-                      </AlarmFontBox>
-                    </EvRowBox>
-                  </AlarmTextBox>
-                </AlarmBox>
-              );
+                          <AlarmDateFont>{alarmTime(alarmcontent.createdDate)}</AlarmDateFont>
+                        </AlarmFontBox>
+                      </EvRowBox>
+                    </AlarmTextBox>
+                  </AlarmBox>
+                );
+              }
             })}
           </AlarmBoxWrap>
         </PageContentWrapper>

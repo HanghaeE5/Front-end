@@ -116,28 +116,10 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
     //여기서 리코일에 저장
     onSuccess: (data) => {
       setAlarmList(data.data);
+
       console.log(data);
     },
   });
-
-  useEffect(() => {
-    if (!localToken) {
-      // console.log('탑바에서 보내는것');
-      nav('/login');
-    } else if (userInformData.error?.message === 'Request failed with status code 401') {
-      userInformData.refetch();
-    }
-  }, [userInformData]);
-
-  useEffect(() => {
-    console.log(alarmList);
-    for (let i = 0; i < alarmList.length; i++) {
-      if (alarmList[i].readState === false) {
-        setAlarmOn(true);
-        break;
-      }
-    }
-  }, [alarmList]);
 
   function alarm() {
     const id = userInfoData?.id;
@@ -150,7 +132,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
       openSuccessConfirm({
         title: '새로운 알림이 도착했어요!',
         content: data.message,
-        // button: { onClick: () => queryClient.invalidateQueries('requestFriendLists') },
+        button: { onClick: () => queryClient.invalidateQueries() },
       });
       (async () => {
         // 브라우저 알림
@@ -185,6 +167,25 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
       })();
     });
   }
+
+  useEffect(() => {
+    if (!localToken) {
+      // console.log('탑바에서 보내는것');
+      nav('/login');
+    } else if (userInformData.error?.message === 'Request failed with status code 401') {
+      userInformData.refetch();
+    }
+  }, [userInformData]);
+
+  useEffect(() => {
+    console.log(alarmList);
+    for (let i = 0; i < alarmList.length; i++) {
+      if (alarmList[i].readState === false) {
+        setAlarmOn(true);
+        break;
+      }
+    }
+  }, [alarmList]);
 
   useEffect(() => {
     if (userInformData.status === 'success') {
@@ -231,7 +232,7 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
           height={2.02}
           margin={'auto'}
           style={{
-            backgroundImage: alarmOn ? 'url(/assets/nav/alarmon.svg)' : 'url(/assets/nav/알림.svg)',
+            backgroundImage: 'url(/assets/nav/알림.svg)',
           }}
           onClick={() => {
             setmodalGather({
@@ -247,7 +248,16 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
             nav('/alarm');
             setAlarmOn(false);
           }}
-        />
+        >
+          {alarmOn && (
+            <EvImgBox
+              width="0.5rem"
+              height={0.5}
+              margin={'0.3rem auto auto 1.4rem'}
+              url="url(/assets/nav/reddot.svg)"
+            />
+          )}
+        </Box>
         <Box
           width="1.6rem"
           height={1.6}
