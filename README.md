@@ -16,7 +16,7 @@
 
 ### 🛠 Architecture
 
-![image](https://user-images.githubusercontent.com/105165279/182093733-4608d8f7-656b-44e6-b48d-864f5bb836b2.png)
+![image](https://user-images.githubusercontent.com/105165279/182902003-4cd908ef-ef1d-4014-9aa8-130893fd0d72.png)
 <br/>
 <hr/>
 
@@ -36,32 +36,29 @@
   
 #### 😃 간단하고 안전한 회원가입
 - 구글, 네이버, 카카오를 통한 소셜 로그인 및 이메일 인증을 통한 회원가입
-- <img src ="https://www.notion.so/TODOWITH-e2c94553e7c245ef8d411b9aa4a752b3#9f231e614159464e8b751a9449dfd7ff">
-
   
 #### 😃 귀여운 캐릭터가 성장하고 움직이는 메인페이지
 - 캐릭터와 아이템은 Todo 완료에 따리 변화함으로써, 사용자에게 To Do 달성을 더 재미있게 할 수 있도록 흥미와 동기를 부여
-- ![image](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c8e7010d-9d70-4767-983c-d6751b0f98b1/Untitled.png)
 
 #### 😃 계획 작성, 목표 달성을 위한 TO-DO 리스트 작성
 - 오늘의 할일, 미래에 해야 할 일 등 TO-DO 리스트 작성 및 완료
-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d8c37ce3-db44-425c-9acb-0f842b193eb3/Untitled.png)
 
 #### 😃 커뮤니티를 통한 With To Do 진행 및 일상 공유
 - 커뮤니티에서 TO-DO 를 함께 진행할 사람들을 모으기
-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8f6bd3d9-b5cf-4153-a115-772874041d43/Untitled.png)
 
 #### 😳 친구와 함께 공유 가능한 TO-DO 리스트 및 캐릭터
 - 친구 추가 후 TO-DO 리스트 공유 가능😃 친구와 소통하며 함께 TO-DO 를 진행할 수 있는 채팅방
-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6b5ce1a9-7fe9-4605-9d57-8136e72d5f44/Untitled.png)
+
+### 📢 알림 기능
+- 알림페이지에서 이벤트(출석 도장), 친구(친구 요청, 수락, 거절), 캐릭터(스텝업, 레벨업) 관련 알림을 확인 가능
+- 친구요청, 수락, 거절 알림의 경우 전체 페이지에 팝업됨
+- PWA 배포로 PC 백그라운드에서도 알림 확인 가능
 
 #### 💬 채팅 페이지
 - 커뮤니티의 With To Do 기능을 통해 함께 TO-DO 를 진행 중인 사람들 또는 친구와의 일대일 채팅 가능
-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c39d425c-7ac2-4678-a9bf-73545ef1c96e/Untitled.png)
 
 #### 😮 나만의 프로필 사진과 닉네임
 - 프로필 사진과 닉네임, 비밀번호를 변경 가능
-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/89d0b0fb-3a52-416e-b30d-4d473d9ec233/Untitled.png)
 
 #### 😎 TO-DO 완료하고 상품을 받을 수 있는 이벤트
 - 오늘의 TO-DO 를 전부 완료 시(당일 날짜로 지정한 미완료 TO-DO가 없는 경우) 도장을 지급
