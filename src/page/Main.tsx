@@ -270,7 +270,8 @@ export const Main = () => {
             margin={'1rem auto 0 auto '}
             backgroundsize="16rem"
             url={`url(${userInfoData?.characterInfo.characterUrl})`}
-            // url={`url(/assets/캐릭터/브라우니1단계-min.gif)`}
+            // url={`url(/assets/캐릭터/min/비니진화2-min.gif)`}
+            // url={`url(/assets/캐릭터/브라우니2단계.gif)`}
           />
 
           <EvBox
