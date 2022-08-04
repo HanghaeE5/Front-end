@@ -119,52 +119,54 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
     },
   });
 
-  function alarm() {
-    const id = userInfoData?.id;
+  // function alarm() {
+  //   const id = userInfoData?.id;
 
-    const eventSource = new EventSource(`https://todowith.shop/subscribe/${id}`);
+  //   const eventSource = new EventSource(`https://todowith.shop/subscribe/${id}`);
+  //   console.log(eventSource);
 
-    eventSource.addEventListener('sse', function (event) {
-      // console.log(event.data);
-      const data = JSON.parse(event.data);
-      openSuccessConfirm({
-        title: '새로운 알림이 도착했어요!',
-        content: data.message,
-        button: { onClick: () => queryClient.invalidateQueries() },
-      });
-      (async () => {
-        // 브라우저 알림
-        const showNotification = () => {
-          const notification = new Notification('코드 봐줘', {
-            body: data.content,
-          });
+  //   // let timerId = setInterval(() => eventSource, 2000);
+  //   eventSource.addEventListener('sse', function (event) {
+  //     // console.log(event.data);
+  //     const data = JSON.parse(event.data);
+  //     openSuccessConfirm({
+  //       title: '새로운 알림이 도착했어요!',
+  //       content: data.message,
+  //       button: { onClick: () => queryClient.invalidateQueries() },
+  //     });
+  //     (async () => {
+  //       // 브라우저 알림
+  //       const showNotification = () => {
+  //         const notification = new Notification('코드 봐줘', {
+  //           body: data.content,
+  //         });
 
-          setTimeout(() => {
-            notification.close();
-          }, 10 * 1000);
+  //         setTimeout(() => {
+  //           notification.close();
+  //         }, 10 * 1000);
 
-          notification.addEventListener('click', () => {
-            window.open(data.url, '_blank');
-          });
-        };
+  //         notification.addEventListener('click', () => {
+  //           window.open(data.url, '_blank');
+  //         });
+  //       };
 
-        // 브라우저 알림 허용 권한
-        let granted = false;
+  //       // 브라우저 알림 허용 권한
+  //       let granted = false;
 
-        if (Notification.permission === 'granted') {
-          granted = true;
-        } else if (Notification.permission !== 'denied') {
-          const permission = await Notification.requestPermission();
-          granted = permission === 'granted';
-        }
+  //       if (Notification.permission === 'granted') {
+  //         granted = true;
+  //       } else if (Notification.permission !== 'denied') {
+  //         const permission = await Notification.requestPermission();
+  //         granted = permission === 'granted';
+  //       }
 
-        // 알림 보여주기
-        if (granted) {
-          showNotification();
-        }
-      })();
-    });
-  }
+  //       // 알림 보여주기
+  //       if (granted) {
+  //         showNotification();
+  //       }
+  //     })();
+  //   });
+  // }
 
   useEffect(() => {
     if (!localToken) {
@@ -184,11 +186,11 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
     }
   }, [alarmList]);
 
-  useEffect(() => {
-    if (userInformData.status === 'success') {
-      alarm();
-    }
-  }, [userInformData.status]);
+  // useEffect(() => {
+  //   if (userInformData.status === 'success') {
+  //     alarm();
+  //   }
+  // }, [userInformData.status]);
 
   return (
     <TopNavWrapper>

@@ -100,12 +100,12 @@ const StepUpModal = () => {
                 backgroundsize="12rem"
                 url={
                   userInfoData?.characterInfo.characterName === '3종 오토 브라우니'
-                    ? 'url(/assets/캐릭터/브라우니진화1.gif)'
+                    ? `url(/assets/캐릭터/min/브라우니진화1-min.gif)`
                     : userInfoData?.characterInfo.characterName === '현자 브라우니'
-                    ? 'url(/assets/캐릭터/브라우니진화2.gif)'
+                    ? `url(/assets/캐릭터/min/브라우니진화2-min.gif)`
                     : userInfoData?.characterInfo.characterName === '달팽이보단 빠른 비니'
-                    ? 'url(/assets/캐릭터/비니진화1.gif)'
-                    : 'url(/assets/캐릭터/비니진화2.gif)'
+                    ? `url(/assets/캐릭터/min/비니진화1-min.gif)`
+                    : `url(/assets/캐릭터/min/비니진화2-min.gif)`
                 }
               />
             </EvBox>
