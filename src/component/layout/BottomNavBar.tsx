@@ -58,7 +58,6 @@ export const BottomNavLayout = () => {
           levelUpModal: false,
           stepUpModal: false,
           editNicknameModal: false,
-          notiModal: false,
           editPhotoModal: false,
           profileMenuModal: false,
           friendAddModal: false,

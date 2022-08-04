@@ -210,7 +210,6 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
             editPhotoModal: false,
             profileMenuModal: false,
             friendAddModal: false,
-            notiModal: false,
             explainModal: false,
             researchPopup: false,
           });
@@ -274,7 +273,6 @@ export const TopNavBar = ({ isWithBanner }: { isWithBanner?: boolean }) => {
               editPhotoModal: false,
               profileMenuModal: true,
               friendAddModal: false,
-              notiModal: false,
               explainModal: false,
               researchPopup: false,
             });

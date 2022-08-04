@@ -14,7 +14,6 @@ export type modalGather = {
   levelUpModal?: boolean;
   stepUpModal?: boolean;
   editNicknameModal?: boolean;
-  notiModal?: boolean;
   editPhotoModal?: boolean;
   profileMenuModal?: boolean;
   friendAddModal?: boolean;

@@ -60,7 +60,6 @@ export const modalGatherState = atom<modalGather>({
     levelUpModal: false,
     stepUpModal: false,
     editNicknameModal: false,
-    notiModal: false,
     editPhotoModal: false,
     profileMenuModal: false,
     friendAddModal: false,
