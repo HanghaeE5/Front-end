@@ -134,5 +134,24 @@
 <br/>
 </details>
 
+<details>
+<summary><b>➡️ 캐릭터 선택 API 와 유저 데이터 API 충돌</b></summary> 
+
+> **문제** : 투두윗의 튜토리얼에는 캐릭터를 선택하는 페이지가 있음. 캐릭터를 선택하고, 유저데이터에 post하는 api를 호출하면 "선택 완료되었습니다" 팝업 후 메인으로 넘어가지 않고 바로 "이미 캐릭터가 존재합니다" 의 팝업이 노출되는 문제<br/><br/>
+  > **결론** : Query Cancellation 사용<br/>
+[자세히보러가기](https://github.com/HanghaeE5/Front-end/wiki/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%95%A4%EB%93%9C-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-:-%EC%BA%90%EB%A6%AD%ED%84%B0-%EC%84%A0%ED%83%9D-API-%EC%99%80-%EC%9C%A0%EC%A0%80-%EB%8D%B0%EC%9D%B4%ED%84%B0-API-%EC%B6%A9%EB%8F%8C)
+<br/>
+</details>
+
+<details>
+<summary><b>➡️ map 함수로 인한 팝업 중첩</b></summary> 
+
+> **문제** : 모든 페이지에 동일하게 배경이 불투명한 팝업 디자인을 사용했는데, 친구삭제와 채팅방 나가기 팝업의 경우 배경이 불투명이 아닌 검정색이 나옴<br/><br/>
+  > **결론** : 팝업 컴포넌트가 map함수 안에 있었는데, 이를 map 함수 밖으로 빼냈다.<br/>
+  
+[자세히보러가기](https://github.com/HanghaeE5/Front-end/wiki/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%95%A4%EB%93%9C-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-:-map-%ED%95%A8%EC%88%98%EB%A1%9C-%EC%9D%B8%ED%95%9C-%ED%8C%9D%EC%97%85-%EC%A4%91%EC%B2%A9)
+<br/>
+</details>
+
 
 <img src="https://capsule-render.vercel.app/api?type=wave&color=gradient&customColorList=0,5,5,30,30&height=300&section=footer&text=To%20Do%20With&animation=fadeIn&fontSize=100&fontAlignY=70" />
