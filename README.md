@@ -3,7 +3,7 @@
 
 ## 👉[투두윗 사용해보기][todowith-link]
 [todowith-link]: https://todowith.co.kr '투두윗 바로가기!'
-[Notion 링크](https://www.notion.so/99-E-5-35d0ee3dd2054d5aa4e2c2515c1f4f45)  
+[Notion 링크](https://www.notion.so/TODOWITH-e2c94553e7c245ef8d411b9aa4a752b3)  
 [소개 영상](https://youtu.be/OnX8QW4dRqw)  
 
 
