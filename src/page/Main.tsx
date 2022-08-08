@@ -109,13 +109,14 @@ export const TodoNumberBox = styled(EvColumnBox)`
   margin: 0 auto 0.875rem auto;
 `;
 
+//이벤트 기간 종료로 애니메이션 삭제
 const eventShow = keyframes`
   0% {
-    color:#FFD600;
+    /* color:#FFD600; */
 
   }
   100% {
-    color:#000000;
+    /* color:#000000; */
   }
 
 `;
@@ -134,8 +135,9 @@ export const Main = () => {
   const [modalGather, setmodalGather] = useRecoilState(modalGatherState);
   const [userInfoData, setUserInfoData] = useRecoilState(userInfoState);
   const [snsSignupNicknameOk, setSnsSignupNicknameOk] = useRecoilState(snsSignupNickname);
-  const todayVisit = localStorage.getItem('hasTodayVisit');
-  const tenMinVisit = localStorage.getItem('hasTenMinVisit');
+  //팝업기능 설문조사 이벤트 종료로 주석처리
+  // const todayVisit = localStorage.getItem('hasTodayVisit');
+  // const tenMinVisit = localStorage.getItem('hasTenMinVisit');
 
   const nav = useNavigate();
 
@@ -171,21 +173,22 @@ export const Main = () => {
     },
   });
 
-  if (new Date().getTime() >= Number(todayVisit)) {
-    localStorage.removeItem('hasTodayVisit');
-  }
-  if (new Date().getTime() >= Number(tenMinVisit)) {
-    localStorage.removeItem('hasTenMinVisit');
-  }
-  useEffect(() => {
-    // console.log(new Date().getTime(), Number(tenMinVisit));
-    const handleShowModal = () => {
-      if (!todayVisit && !tenMinVisit) {
-        setmodalGather({ ...modalGather, researchPopup: true });
-      }
-    };
-    handleShowModal();
-  }, [todayVisit, tenMinVisit]);
+  //팝업기능 설문조사 이벤트 종료로 주석처리
+  // if (new Date().getTime() >= Number(todayVisit)) {
+  //   localStorage.removeItem('hasTodayVisit');
+  // }
+  // if (new Date().getTime() >= Number(tenMinVisit)) {
+  //   localStorage.removeItem('hasTenMinVisit');
+  // }
+  // useEffect(() => {
+  //   // console.log(new Date().getTime(), Number(tenMinVisit));
+  //   const handleShowModal = () => {
+  //     if (!todayVisit && !tenMinVisit) {
+  //       setmodalGather({ ...modalGather, researchPopup: true });
+  //     }
+  //   };
+  //   handleShowModal();
+  // }, [todayVisit, tenMinVisit]);
 
   if (userInformData.status === 'loading') {
     return (
@@ -207,7 +210,7 @@ export const Main = () => {
         onClick={() => nav(PATH.EVENT)}
       >
         <EvRowBox>
-          <EventFont style={{}}>투두윗 100% 당첨 럭키박스 이벤트 바로가기</EventFont>
+          <EventFont style={{}}>투두윗 100% 당첨 럭키박스 이벤트 (8/5 종료)</EventFont>
           <EvImgBox margin="0.15rem auto auto 0.2rem"></EvImgBox>
         </EvRowBox>
       </EventWrapper>
@@ -217,7 +220,7 @@ export const Main = () => {
         isNoScroll={modalGather.editPhotoModal || modalGather.editNicknameModal || modalGather.explainModal}
       >
         <ContentContainer>
-          <ResearchPopup />
+          {/* <ResearchPopup /> */}
           <EvBox direction="row" margin="1.875rem 0 0 0 " height={4.75}>
             <EvBox
               width={'5.625rem'}

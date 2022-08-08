@@ -91,7 +91,7 @@ function App() {
 
   return (
     <ResponsiveContainer>
-      <img src={pcImg} />
+      <img src={pcImg} alt="" />
 
       <div>
         <ThemeProvider theme={theme}>

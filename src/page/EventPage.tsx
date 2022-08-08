@@ -28,6 +28,7 @@ import { PageHeader, PageLayout } from '../component/layout/PageLayout';
 import { TopNavBar } from '../component/layout/TopNavBar';
 import { PageContentWrapper } from './FriendList';
 import { NavLayout } from '../component/layout/NavLayout';
+import { EvColumnBox, EvFontBox, EvKoreanFont } from '../component/element/BoxStyle';
 
 export const EventContentWrapper = styled(PageContentWrapper)`
   width: 100%;
@@ -348,7 +349,21 @@ export const EventPage = () => {
             {/* <TopNavBar /> */}
             <ScrollWrapper>
               {confirmState.visible && <PopConfirmNew {...confirmState} />}
+
+              <EvFontBox
+                width={'100%'}
+                height={4}
+                backgroundColor="#faffc3"
+                margin="2rem auto "
+                style={{ zIndex: 50, padding: '10px' }}
+              >
+                <EvKoreanFont size={1.1} lineHeight="24px">
+                  8/5 이벤트가 종료되었습니다. 남은 도장은 사용 가능합니다. 참여해주셔서 감사합니다.
+                </EvKoreanFont>
+              </EvFontBox>
+
               <EventImage src={EventImg} />
+
               <EventSection>
                 <Wrapper isColumn alignItems="center">
                   <EventBadge>STEP 01</EventBadge>
