@@ -4,7 +4,7 @@
 ## 👉[투두윗 사용해보기][todowith-link]
 [todowith-link]: https://todowith.co.kr '투두윗 바로가기!'
 [Notion 링크](https://www.notion.so/99-E-5-35d0ee3dd2054d5aa4e2c2515c1f4f45)  
-[소개 영상](URL)  
+[소개 영상](https://youtu.be/OnX8QW4dRqw)  
 
 
 #### TODO 와 WITH 을 합쳐 혼자만이 아닌 함께하는 즐거움을 주고, 이를 통해 재미있게 목표를 계획하고 달성할 수 있도록 도와주는 서비스
@@ -103,7 +103,7 @@
 
 | 이름       | 포지션       | 개인 깃허브 or 이메일          | 담당                             |
 | ---------- | ------------ | ------------------------------ |  ------------------------------ |
-| **심아영** | `프론트엔드` | https://github.com/ccimayoung | [부리더]<br/>1. CICD/무중단배포 2. 로그인/회원가입/온보딩<br/> 3. 메인페이지 4. 채팅 5. 친구목록/친구페이지<br/> 6. 알림(개발중)
+| **심아영** | `프론트엔드` | https://github.com/ccimayoung | [부리더]<br/>1. CICD/무중단배포 2. 로그인/회원가입/온보딩<br/> 3. 메인페이지 4. 채팅 5. 친구목록/친구페이지<br/> 6. 알림 7.인터셉터 로직
 | **조윤경** | `프론트엔드` | https://github.com/yooooonk | 1. 투두 페이지 2. 커뮤니티 페이지<br/> 3. 이벤트페이지 4. 공통컴포넌트
 
 
@@ -131,6 +131,25 @@
 > **접근** : useRecoilState의 수를 줄였고, 같이 실행되는 State들은 객체 형식으로 합쳤으며 onSuccess, onError 후처리와 onClick은 공통 로직을 만들어서 리렌더링 수를 줄였음. 메인페이지에서 수행하는 많은 정보 탐색 작업을 페이지를 분리하여 유저 상황에 맞는 페이지만 거치게끔 했음. 유저 데이터를 받아오는 상태가 loading 일 때는 캐릭터 애니메이션을 넣어 이탈률을 줄이고, gif의 용량을 줄였음.<br/><br/>
 > **결론** : 로드타임과 LightHouse 테스트 점수가 향상. 문제상황에서는 빠른 3G 기준 로드타임 18.22초였으나, 수정 후에는 빠른 3G 기준 로드타임 11.58초로 빨라짐<br/>
 [자세히보러가기](https://github.com/HanghaeE5/Front-end/wiki/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%95%A4%EB%93%9C-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-:-%EB%A7%88%EC%9A%B4%ED%8A%B8-%EC%86%8D%EB%8F%84,-%EB%A6%AC%EB%A0%8C%EB%8D%94%EB%A7%81-%EC%B5%9C%EC%A0%81%ED%99%94)
+<br/>
+</details>
+
+<details>
+<summary><b>➡️ 캐릭터 선택 API 와 유저 데이터 API 충돌</b></summary> 
+
+> **문제** : 투두윗의 튜토리얼에는 캐릭터를 선택하는 페이지가 있음. 캐릭터를 선택하고, 유저데이터에 post하는 api를 호출하면 "선택 완료되었습니다" 팝업 후 메인으로 넘어가지 않고 바로 "이미 캐릭터가 존재합니다" 의 팝업이 노출되는 문제<br/><br/>
+  > **결론** : Query Cancellation 사용<br/>
+[자세히보러가기](https://github.com/HanghaeE5/Front-end/wiki/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%95%A4%EB%93%9C-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-:-%EC%BA%90%EB%A6%AD%ED%84%B0-%EC%84%A0%ED%83%9D-API-%EC%99%80-%EC%9C%A0%EC%A0%80-%EB%8D%B0%EC%9D%B4%ED%84%B0-API-%EC%B6%A9%EB%8F%8C)
+<br/>
+</details>
+
+<details>
+<summary><b>➡️ map 함수로 인한 팝업 중첩</b></summary> 
+
+> **문제** : 모든 페이지에 동일하게 배경이 불투명한 팝업 디자인을 사용했는데, 친구삭제와 채팅방 나가기 팝업의 경우 배경이 불투명이 아닌 검정색이 나옴<br/><br/>
+  > **결론** : 팝업 컴포넌트가 map함수 안에 있었는데, 이를 map 함수 밖으로 빼냈다.<br/>
+  
+[자세히보러가기](https://github.com/HanghaeE5/Front-end/wiki/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%95%A4%EB%93%9C-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-:-map-%ED%95%A8%EC%88%98%EB%A1%9C-%EC%9D%B8%ED%95%9C-%ED%8C%9D%EC%97%85-%EC%A4%91%EC%B2%A9)
 <br/>
 </details>
 
