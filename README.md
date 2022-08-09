@@ -3,7 +3,7 @@
 
 ## 👉[투두윗 사용해보기][todowith-link]
 [todowith-link]: https://todowith.co.kr '투두윗 바로가기!'
-[Notion 링크](https://www.notion.so/99-E-5-35d0ee3dd2054d5aa4e2c2515c1f4f45)  
+[Notion 링크](https://www.notion.so/TODOWITH-e2c94553e7c245ef8d411b9aa4a752b3)  
 [소개 영상](https://youtu.be/OnX8QW4dRqw)  
 
 
@@ -27,6 +27,7 @@
 - 6월 24일 ~ 8월 5일 (6주)
 - 7월 28일 배포 & 마케팅 & UT 시작
 - 7월 31일 순 방문자 350명, 누적 유저 150명 돌파
+- 8월 5일 순 방문자 500명, 누적 유저 200명, 작성 TODO 3000개, 유저테스트 53개 달성
 
 <br/>
 
