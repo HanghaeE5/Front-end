@@ -20,7 +20,7 @@ import {
 } from '../component/element/BoxStyle';
 import axios, { AxiosError } from 'axios';
 import ExpBar from '../component/element/ExpBar';
-import setupInterceptorsTo from '../api/Interceptiors';
+import setupInterceptorsTo from '../api/interceptors';
 import { useParams } from 'react-router';
 import { FriendInfo } from '../Types/user';
 import { BadgeImgBox, EvRowBadgeWrap, TodoNumberBox } from './Main';

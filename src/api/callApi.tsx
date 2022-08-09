@@ -1,5 +1,5 @@
 import axios from 'axios';
-import setupInterceptorsTo from './Interceptiors';
+import setupInterceptorsTo from './interceptors';
 
 const baseApi = axios.create({
   baseURL: 'https://todowith.shop',

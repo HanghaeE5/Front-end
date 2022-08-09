@@ -10,7 +10,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '../recoil/store';
 import axios from 'axios';
-import setupInterceptorsTo from '../api/Interceptiors';
+import setupInterceptorsTo from '../api/interceptors';
 import { EvCheckHelfBox, EvHelfInputInfo, EvRowBox } from '../component/element/BoxStyle';
 import { chatList } from '../Types/chat';
 import { useCommonConfirm } from '../hooks/useCommonConfirm';
