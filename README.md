@@ -1,6 +1,10 @@
 ![image](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fb4hld8%2FbtrII2gft5I%2F9ex1XsHagTpZlewe76vIEK%2Fimg.png
 )
 
+<img src = "https://user-images.githubusercontent.com/105165279/184396839-eae469f4-392b-4421-bb5c-1db77790bd40.png" width="600px">
+항해99 7기 39개 팀 중 1위 수상😎
+<br/><br/>
+
 ## 👉[투두윗 사용해보기][todowith-link]
 [todowith-link]: https://todowith.co.kr '투두윗 바로가기!'
 [Notion 링크](https://www.notion.so/TODOWITH-e2c94553e7c245ef8d411b9aa4a752b3)  
@@ -37,33 +41,42 @@
   
 #### 😃 간단하고 안전한 회원가입
 - 구글, 네이버, 카카오를 통한 소셜 로그인 및 이메일 인증을 통한 회원가입
+![로그인/회원가입](https://github.com/HanghaeE5/.github/blob/main/image/login.png)
   
 #### 😃 귀여운 캐릭터가 성장하고 움직이는 메인페이지
-- 캐릭터와 아이템은 Todo 완료에 따리 변화함으로써, 사용자에게 To Do 달성을 더 재미있게 할 수 있도록 흥미와 동기를 부여
+- 캐릭터와 아이템은 Todo 완료에 따라 변화함으로써, 사용자에게 To Do 달성을 더 재미있게 할 수 있도록 흥미와 동기를 부여
+![메인 페이지](https://github.com/HanghaeE5/.github/blob/main/image/main.png)
 
 #### 😃 계획 작성, 목표 달성을 위한 TO-DO 리스트 작성
 - 오늘의 할일, 미래에 해야 할 일 등 TO-DO 리스트 작성 및 완료
+![Todo 리스트](https://github.com/HanghaeE5/.github/blob/main/image/Untitled.png)
 
 #### 😃 커뮤니티를 통한 With To Do 진행 및 일상 공유
 - 커뮤니티에서 TO-DO 를 함께 진행할 사람들을 모으기
+![커뮤니티](https://github.com/HanghaeE5/.github/blob/main/image/Untitled%20(1).png)
 
 #### 😳 친구와 함께 공유 가능한 TO-DO 리스트 및 캐릭터
 - 친구 추가 후 TO-DO 리스트 공유 가능😃 친구와 소통하며 함께 TO-DO 를 진행할 수 있는 채팅방
+![친구](https://github.com/HanghaeE5/.github/blob/main/image/Untitled%20(2).png)
 
 ### 📢 알림 기능
 - 알림페이지에서 이벤트(출석 도장), 친구(친구 요청, 수락, 거절), 캐릭터(스텝업, 레벨업) 관련 알림을 확인 가능
 - 친구요청, 수락, 거절 알림의 경우 전체 페이지에 팝업됨
 - PWA 배포로 PC 백그라운드에서도 알림 확인 가능
+![알림](https://github.com/HanghaeE5/.github/blob/main/image/zz.png)
 
 #### 💬 채팅 페이지
 - 커뮤니티의 With To Do 기능을 통해 함께 TO-DO 를 진행 중인 사람들 또는 친구와의 일대일 채팅 가능
+![채팅](https://github.com/HanghaeE5/.github/blob/main/image/Untitled%20(3).png)
 
 #### 😮 나만의 프로필 사진과 닉네임
 - 프로필 사진과 닉네임, 비밀번호를 변경 가능
+![프로필](https://github.com/HanghaeE5/.github/blob/main/image/Untitled%20(4).png)
 
 #### 😎 TO-DO 완료하고 상품을 받을 수 있는 이벤트
 - 오늘의 TO-DO 를 전부 완료 시(당일 날짜로 지정한 미완료 TO-DO가 없는 경우) 도장을 지급
 - 도장의 개수가 누적 3개가 모이면, 응모권으로 교환하여 이벤트 참여 가능
+![이벤트](https://github.com/HanghaeE5/.github/blob/main/image/Untitled%20(5).png)
   </details>
 
 
